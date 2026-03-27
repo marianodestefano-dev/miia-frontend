@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA - Dashboard</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      min-height: 100vh;
+    }
+    
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    
+    .header h1 {
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .user-name {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+    
+    .logout-btn {
+      padding: 10px 20px;
+      background: rgba(255,255,255,0.2);
+      color: white;
+      border: 2px solid white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+    
+    .logout-btn:hover {
+      background: white;
+      color: #667eea;
+    }
+    
+    /* Container */
+    .container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 40px;
+    }
+    
+    /* Stats Cards */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    
+    .stat-card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      transition: transform 0.3s;
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    
+    .stat-icon {
+      font-size: 2.5rem;
+      margin-bottom: 15px;
+    }
+    
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 5px;
+    }
+    
+    .stat-label {
+      color: #666;
+      font-size: 0.9rem;
+    }
+    
+    /* Main Content */
+    .main-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 30px;
+    }
+    
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .card h2 {
+      color: #333;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    /* Quick Actions */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .action-btn {
+      padding: 20px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .action-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    /* Recent Activity */
+    .activity-item {
+      padding: 15px;
+      border-left: 4px solid #667eea;
+      background: #f8f9fa;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+    
+    .activity-time {
+      font-size: 0.85rem;
+      color: #999;
+      margin-bottom: 5px;
+    }
+    
+    .activity-text {
+      color: #333;
+      font-weight: 500;
+    }
+    
+    /* Contact List */
+    .contact-item {
+      padding: 15px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .contact-item:last-child {
+      border-bottom: none;
+    }
+    
+    .contact-name {
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .contact-type {
+      font-size: 0.85rem;
+      color: #666;
+    }
+    
+    .badge {
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .badge-lead {
+      background: #fff3cd;
+      color: #856404;
+    }
+    
+    .badge-client {
+      background: #d4edda;
+      color: #155724;
+    }
+    
+    .badge-dile-a {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+    
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 40px;
+      color: #999;
+    }
+    
+    .empty-state-icon {
+      font-size: 4rem;
+      margin-bottom: 15px;
+      opacity: 0.5;
+    }
+    
+    /* Responsive */
+    @media (max-width: 968px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+      
+      .container {
+        padding: 0 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <div class="header">
+    <h1>🤖 MIIA Dashboard</h1>
+    <div class="user-info">
+      <span class="user-name" id="userName">Cargando...</span>
+      <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Stats Cards -->
+    <div class="stats">
+      <div class="stat-card">
+        <div class="stat-icon">💬</div>
+        <div class="stat-number">0</div>
+        <div class="stat-label">Conversaciones hoy</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-number">0</div>
+        <div class="stat-label">Leads activos</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-number">0</div>
+        <div class="stat-label">Clientes</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">📄</div>
+        <div class="stat-number">0</div>
+        <div class="stat-label">PDFs generados</div>
+      </div>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="main-content">
+      <!-- Left Column -->
+      <div>
+        <!-- Quick Actions -->
+        <div class="card">
+          <h2>⚡ Acciones Rápidas</h2>
+          <div class="quick-actions">
+            <button class="action-btn" onclick="showFeature('whatsapp')">
+              <span>📱</span> Conectar WhatsApp
+            </button>
+            <button class="action-btn" onclick="showFeature('train')">
+              <span>🧠</span> Entrenar MIIA
+            </button>
+            <button class="action-btn" onclick="showFeature('contacts')">
+              <span>👥</span> Gestionar Contactos
+            </button>
+            <button class="action-btn" onclick="showFeature('documents')">
+              <span>📄</span> Crear Documento
+            </button>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="card" style="margin-top: 30px;">
+          <h2>📊 Actividad Reciente</h2>
+          <div class="empty-state">
+            <div class="empty-state-icon">📭</div>
+            <p>No hay actividad aún</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">
+              Conecta tu WhatsApp para que MIIA empiece a trabajar
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column -->
+      <div>
+        <!-- User Info Card -->
+        <div class="card">
+          <h2>👤 Tu Cuenta</h2>
+          <div style="margin-top: 20px;">
+            <div style="margin-bottom: 15px;">
+              <strong>Plan:</strong> <span id="userPlan" style="color: #667eea;">Pro</span>
+            </div>
+            <div style="margin-bottom: 15px;">
+              <strong>WhatsApp:</strong> <span id="userWhatsapp" style="color: #666;">No conectado</span>
+            </div>
+            <div style="margin-bottom: 15px;">
+              <strong>Mensajes restantes:</strong> <span style="color: #667eea;">2,000 / 2,000</span>
+            </div>
+            <div style="margin-bottom: 20px;">
+              <strong>Estado MIIA:</strong> 
+              <span style="color: #f39c12;">⚠️ Pendiente configuración</span>
+            </div>
+            <button class="action-btn" style="width: 100%;" onclick="showFeature('settings')">
+              ⚙️ Configuración
+            </button>
+          </div>
+        </div>
+
+        <!-- Contacts Preview -->
+        <div class="card" style="margin-top: 30px;">
+          <h2>💬 Contactos Clasificados</h2>
+          <div class="empty-state">
+            <div class="empty-state-icon">👥</div>
+            <p>Sin contactos aún</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">
+              MIIA clasificará automáticamente tus contactos
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Verificar si el usuario está logueado
+    window.onload = function() {
+      const user = localStorage.getItem('miia_user');
+      
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      const userData = JSON.parse(user);
+      
+      if (!userData.logged_in) {
+        window.location.href = 'login.html';
+        return;
+      }
+      
+      // Mostrar datos del usuario
+      document.getElementById('userName').textContent = userData.name || userData.email;
+      
+      if (userData.plan) {
+        const planNames = {
+          'basic': 'Básico',
+          'pro': 'Pro',
+          'enterprise': 'Enterprise'
+        };
+        document.getElementById('userPlan').textContent = planNames[userData.plan] || 'Pro';
+      }
+      
+      if (userData.whatsapp) {
+        document.getElementById('userWhatsapp').textContent = userData.whatsapp;
+      }
+    };
+    
+    // Cerrar sesión
+    function handleLogout() {
+      if (confirm('¿Estás seguro que quieres cerrar sesión?')) {
+        localStorage.removeItem('miia_user');
+        window.location.href = 'login.html';
+      }
+    }
+    
+    // Mostrar features
+    function showFeature(feature) {
+      // Si es entrenar, ir a la página de training
+      if (feature === 'train') {
+        window.location.href = 'training.html';
+        return;
+      }
+      
+      // Para las demás funciones, mostrar próximamente
+      const features = {
+        'whatsapp': 'Conectar WhatsApp',
+        'contacts': 'Gestionar Contactos',
+        'documents': 'Crear Documentos',
+        'settings': 'Configuración'
+      };
+      
+      alert(`📱 ${features[feature]}\n\nEsta función estará disponible próximamente.\n\nPor ahora estamos preparando la infraestructura base de MIIA.`);
+    }
+  </script>
+</body>
+</html>

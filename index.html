@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA - Tu Asistente AI Personal en WhatsApp</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    .hero {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 80px 40px;
+      text-align: center;
+      border-radius: 20px 20px 0 0;
+    }
+    .hero h1 { font-size: 4rem; margin: 20px 0; }
+    .hero p { font-size: 1.5rem; margin-bottom: 40px; }
+    .btn {
+      display: inline-block;
+      padding: 20px 60px;
+      background: white;
+      color: #667eea;
+      text-decoration: none;
+      border-radius: 50px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+    .features { padding: 80px 40px; }
+    .features h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      color: #333;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 40px;
+    }
+    .feature { text-align: center; padding: 40px; }
+    .feature-icon { font-size: 4rem; margin-bottom: 20px; }
+    .feature h3 { font-size: 1.5rem; margin-bottom: 15px; color: #333; }
+    .feature p { color: #666; line-height: 1.8; }
+    .pricing {
+      background: #f8f9fa;
+      padding: 80px 40px;
+    }
+    .pricing h2 {
+      text-align: center;
+      font-size: 2.5rem;
+      margin-bottom: 60px;
+      color: #333;
+    }
+    .plans {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .plan {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+    .plan h3 { font-size: 1.8rem; margin-bottom: 15px; color: #333; }
+    .plan .price {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #667eea;
+      margin-bottom: 30px;
+    }
+    .plan ul {
+      list-style: none;
+      margin-bottom: 30px;
+      text-align: left;
+    }
+    .plan li {
+      padding: 10px 0;
+      color: #555;
+      border-bottom: 1px solid #f0f0f0;
+    }
+    .plan li::before {
+      content: "✓ ";
+      color: #667eea;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .plan-btn {
+      width: 100%;
+      padding: 15px;
+      background: #667eea;
+      color: white;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      display: block;
+      text-align: center;
+    }
+    .plan-btn:hover { background: #5568d3; }
+    footer {
+      background: #2d3748;
+      color: white;
+      padding: 40px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <div style="font-size: 5rem;">🤖</div>
+      <h1>MIIA</h1>
+      <p>Tu Asistente de IA que vive en WhatsApp y vende por ti 24/7</p>
+      <a href="login.html" class="btn">Comenzar Ahora</a>
+    </div>
+
+    <div class="features">
+      <h2>¿Qué hace MIIA por ti?</h2>
+      <div class="grid">
+        <div class="feature">
+          <div class="feature-icon">💬</div>
+          <h3>Conversa como tú</h3>
+          <p>MIIA se conecta a tu WhatsApp y habla con tus clientes usando tu estilo.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🧠</div>
+          <h3>Aprende tu negocio</h3>
+          <p>Solo dile "Aprende:" y enséñale sobre tus productos y servicios.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🎯</div>
+          <h3>Clasifica automáticamente</h3>
+          <p>Identifica quién es lead, cliente, amigo o familia.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🔒</div>
+          <h3>Privacidad total</h3>
+          <p>Cada contacto tiene su propia memoria. MIIA nunca mezcla información.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">💝</div>
+          <h3>Relaciones naturales</h3>
+          <p>Construye confianza gradualmente. Se adapta al nivel de cercanía.</p>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📄</div>
+          <h3>Genera documentos</h3>
+          <p>Crea cotizaciones y propuestas personalizadas automáticamente.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="pricing">
+      <h2>Elige tu plan</h2>
+      <div class="plans">
+        <div class="plan">
+          <h3>Básico</h3>
+          <div class="price">$29<span style="font-size:1rem;color:#999;">/mes</span></div>
+          <ul>
+            <li>1 WhatsApp conectado</li>
+            <li>500 mensajes/mes</li>
+            <li>10 contactos "Dile a"</li>
+            <li>5 PDFs/mes</li>
+            <li>Soporte por email</li>
+          </ul>
+          <a href="login.html?plan=basic" class="plan-btn">Empezar</a>
+        </div>
+        <div class="plan">
+          <h3>Pro</h3>
+          <div class="price">$79<span style="font-size:1rem;color:#999;">/mes</span></div>
+          <ul>
+            <li>3 WhatsApp conectados</li>
+            <li>2,000 mensajes/mes</li>
+            <li>50 contactos "Dile a"</li>
+            <li>50 PDFs/mes</li>
+            <li>Branding personalizado</li>
+            <li>Analytics avanzado</li>
+          </ul>
+          <a href="login.html?plan=pro" class="plan-btn">Empezar</a>
+        </div>
+        <div class="plan">
+          <h3>Enterprise</h3>
+          <div class="price">$199<span style="font-size:1rem;color:#999;">/mes</span></div>
+          <ul>
+            <li>10 WhatsApp conectados</li>
+            <li>10,000 mensajes/mes</li>
+            <li>Contactos ilimitados</li>
+            <li>PDFs ilimitados</li>
+            <li>API Access</li>
+            <li>Soporte 24/7</li>
+          </ul>
+          <a href="login.html?plan=enterprise" class="plan-btn">Empezar</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2024 MIIA. Todos los derechos reservados.</p>
+      <p style="margin-top: 10px; opacity: 0.7;">Hecho con 💜 para emprendedores</p>
+    </footer>
+  </div>
+</body>
+</html>
