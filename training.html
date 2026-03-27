@@ -677,38 +677,41 @@
     }
 
     function connectWhatsApp() {
-      if (socket) return;
+  if (socket) return;
 
-      console.log('Conectando a backend...');
-      socket = io(BACKEND_URL);
+  console.log('Conectando a backend...');
+  socket = io(BACKEND_URL);
 
-      socket.on('connect', () => {
-        console.log('✅ Conectado al backend');
-      });
+  socket.on('connect', () => {
+    console.log('✅ Conectado al backend');
+    
+    // Verificar si WhatsApp ya está conectado
+    socket.emit('check_status');
+  });
 
-      socket.on('qr', (qrDataUrl) => {
-        console.log('📱 QR recibido');
-        document.getElementById('qrCode').innerHTML = `<img src="${qrDataUrl}" style="max-width: 300px; border-radius: 10px; border: 2px solid #667eea;">`;
-        document.getElementById('qrStatus').textContent = 'Escanea este código con WhatsApp';
-      });
+  socket.on('qr', (qrDataUrl) => {
+    console.log('📱 QR recibido');
+    document.getElementById('qrCode').innerHTML = `<img src="${qrDataUrl}" style="max-width: 300px; border-radius: 10px; border: 2px solid #667eea;">`;
+    document.getElementById('qrStatus').textContent = 'Escanea este código con WhatsApp';
+  });
 
-      socket.on('whatsapp_ready', () => {
-        console.log('✅ WhatsApp conectado');
-        document.getElementById('qrContainer').classList.add('hidden');
-        document.getElementById('whatsappConnected').classList.remove('hidden');
-        document.getElementById('startChatBtn').classList.remove('hidden');
-      });
+  socket.on('whatsapp_ready', () => {
+    console.log('✅ WhatsApp ya conectado');
+    document.getElementById('qrContainer').classList.add('hidden');
+    document.getElementById('whatsappConnected').classList.remove('hidden');
+    document.getElementById('startChatBtn').classList.remove('hidden');
+  });
 
-      socket.on('new_message', (data) => {
-        console.log('📨 Nuevo mensaje de WhatsApp:', data);
-        addMessage('user', `💬 ${data.fromName}: ${data.body}`);
-      });
+  socket.on('new_message', (data) => {
+    console.log('📨 Nuevo mensaje de WhatsApp:', data);
+    addMessage('user', `💬 ${data.fromName}: ${data.body}`);
+  });
 
-      socket.on('whatsapp_disconnected', (data) => {
-        console.log('❌ WhatsApp desconectado:', data.reason);
-        alert('WhatsApp desconectado. Recarga la página.');
-      });
-    }
+  socket.on('whatsapp_disconnected', (data) => {
+    console.log('❌ WhatsApp desconectado:', data.reason);
+    alert('WhatsApp desconectado. Recarga la página.');
+  });
+}
 
     function goToChat() {
       document.getElementById('whatsappSetup').classList.add('hidden');
