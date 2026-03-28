@@ -5,18 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIIA - Entrenar</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       background: #f5f7fa;
       min-height: 100vh;
     }
-    
     .header {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       color: white;
@@ -26,14 +20,7 @@
       align-items: center;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
-    
-    .header h1 {
-      font-size: 1.8rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
+    .header h1 { font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
     .back-btn {
       padding: 10px 20px;
       background: rgba(255,255,255,0.2);
@@ -44,18 +31,8 @@
       font-weight: 600;
       transition: all 0.3s;
     }
-    
-    .back-btn:hover {
-      background: white;
-      color: #667eea;
-    }
-    
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 20px;
-    }
-    
+    .back-btn:hover { background: white; color: #667eea; }
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
     .setup-card {
       background: white;
       padding: 40px;
@@ -63,96 +40,7 @@
       box-shadow: 0 2px 10px rgba(0,0,0,0.05);
       margin-bottom: 30px;
     }
-    
-    .setup-card h2 {
-      color: #333;
-      margin-bottom: 25px;
-      font-size: 1.8rem;
-      text-align: center;
-    }
-    
-    .steps {
-      background: #f8f9fa;
-      padding: 25px;
-      border-radius: 10px;
-      margin-bottom: 25px;
-    }
-    
-    .step {
-      display: flex;
-      gap: 15px;
-      margin-bottom: 20px;
-      align-items: flex-start;
-    }
-    
-    .step:last-child {
-      margin-bottom: 0;
-    }
-    
-    .step-number {
-      background: #667eea;
-      color: white;
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      flex-shrink: 0;
-    }
-    
-    .step-content {
-      flex: 1;
-    }
-    
-    .step-content h3 {
-      color: #333;
-      margin-bottom: 5px;
-      font-size: 1.1rem;
-    }
-    
-    .step-content p {
-      color: #666;
-      line-height: 1.6;
-    }
-    
-    .step-content a {
-      color: #667eea;
-      font-weight: 600;
-      text-decoration: none;
-    }
-    
-    .step-content a:hover {
-      text-decoration: underline;
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: #333;
-      font-weight: 600;
-    }
-    
-    input {
-      width: 100%;
-      padding: 14px 18px;
-      border: 2px solid #eee;
-      border-radius: 8px;
-      font-size: 1rem;
-      font-family: 'Courier New', monospace;
-      transition: border-color 0.3s;
-    }
-    
-    input:focus {
-      outline: none;
-      border-color: #667eea;
-    }
-    
+    .setup-card h2 { color: #333; margin-bottom: 25px; font-size: 1.8rem; text-align: center; }
     .btn {
       width: 100%;
       padding: 15px;
@@ -165,48 +53,13 @@
       cursor: pointer;
       transition: all 0.3s;
     }
-    
     .btn:hover {
       background: #5568d3;
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
     }
-    
-    .btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      transform: none;
-    }
-    
-    .alert {
-      padding: 15px 20px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      display: none;
-    }
-    
-    .alert.show {
-      display: block;
-    }
-    
-    .alert-error {
-      background: #fee;
-      color: #c33;
-      border-left: 4px solid #c33;
-    }
-    
-    .alert-success {
-      background: #efe;
-      color: #3c3;
-      border-left: 4px solid #3c3;
-    }
-    
-    .alert-info {
-      background: #e3f2fd;
-      color: #1976d2;
-      border-left: 4px solid #2196f3;
-    }
-    
+    .hidden { display: none !important; }
+    #qrCode img { max-width: 300px; border-radius: 10px; border: 2px solid #667eea; }
     .chat-container {
       background: white;
       border-radius: 15px;
@@ -215,7 +68,6 @@
       flex-direction: column;
       height: 600px;
     }
-    
     .chat-header {
       padding: 15px 20px;
       background: #075e54;
@@ -225,450 +77,118 @@
       align-items: center;
       gap: 12px;
     }
-    
-    .chat-header-icon {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-      background: #25d366;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.8rem;
-    }
-    
-    .chat-header-info h3 {
-      font-size: 1.1rem;
-      margin-bottom: 2px;
-    }
-    
-    .chat-header-info p {
-      font-size: 0.85rem;
-      opacity: 0.8;
-    }
-    
     .chat-messages {
       flex: 1;
       padding: 20px;
       overflow-y: auto;
       background: #e5ddd5;
-      background-image: 
-        repeating-linear-gradient(
-          45deg,
-          transparent,
-          transparent 10px,
-          rgba(0,0,0,0.02) 10px,
-          rgba(0,0,0,0.02) 20px
-        );
     }
-    
-    .message {
-      margin-bottom: 12px;
-      display: flex;
-      gap: 8px;
-      animation: messageSlide 0.3s ease-out;
-    }
-    
-    @keyframes messageSlide {
-      from {
-        opacity: 0;
-        transform: translateY(10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-    
-    .message.user {
-      justify-content: flex-end;
-    }
-    
+    .message { margin-bottom: 12px; display: flex; gap: 8px; }
+    .message.user { justify-content: flex-end; }
+    .message.miia { justify-content: flex-start; }
     .message-bubble {
-      max-width: 65%;
-      padding: 8px 12px;
-      border-radius: 8px;
-      position: relative;
-      box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-    }
-    
-    .message.miia .message-bubble {
-      background: white;
-      color: #333;
-      border-radius: 0 8px 8px 8px;
-    }
-    
-    .message.user .message-bubble {
-      background: #dcf8c6;
-      color: #000;
-      border-radius: 8px 0 8px 8px;
-    }
-    
-    .message-text {
-      font-size: 0.95rem;
-      line-height: 1.5;
+      max-width: 70%;
+      padding: 10px 14px;
+      border-radius: 10px;
       word-wrap: break-word;
-      margin-bottom: 4px;
     }
-    
-    .message-time {
-      font-size: 0.7rem;
-      color: #667781;
-      text-align: right;
-      margin-top: 4px;
-    }
-    
-    .message.user .message-time {
-      color: #5a7a59;
-    }
-    
-    .chat-input-container {
-      padding: 12px 15px;
-      background: #f0f0f0;
-      border-top: 1px solid #ddd;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    
+    .message.user .message-bubble { background: #dcf8c6; }
+    .message.miia .message-bubble { background: white; }
     .chat-input {
+      display: flex;
+      padding: 15px;
+      background: #f0f0f0;
+      border-radius: 0 0 15px 15px;
+      gap: 10px;
+    }
+    .chat-input input {
       flex: 1;
-      padding: 10px 15px;
+      padding: 12px;
       border: none;
-      border-radius: 21px;
-      font-size: 0.95rem;
-      background: white;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      border-radius: 25px;
+      font-size: 1rem;
     }
-    
-    .chat-input:focus {
-      outline: none;
-    }
-    
-    .send-btn {
-      width: 45px;
-      height: 45px;
-      background: #25d366;
+    .chat-input button {
+      padding: 12px 25px;
+      background: #075e54;
       color: white;
       border: none;
-      border-radius: 50%;
-      font-size: 1.2rem;
+      border-radius: 25px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s;
-    }
-    
-    .send-btn:hover {
-      background: #1da851;
-      transform: scale(1.05);
-    }
-    
-    .send-btn:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-      transform: none;
-    }
-    
-    .typing-indicator {
-      display: none;
-      padding: 8px 12px;
-      background: white;
-      border-radius: 0 8px 8px 8px;
-      width: fit-content;
-      box-shadow: 0 1px 1px rgba(0,0,0,0.1);
-    }
-    
-    .typing-indicator.active {
-      display: block;
-    }
-    
-    .typing-dot {
-      display: inline-block;
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #90949c;
-      margin: 0 2px;
-      animation: typing 1.4s infinite;
-    }
-    
-    .typing-dot:nth-child(2) {
-      animation-delay: 0.2s;
-    }
-    
-    .typing-dot:nth-child(3) {
-      animation-delay: 0.4s;
-    }
-    
-    @keyframes typing {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-      30% { transform: translateY(-10px); opacity: 1; }
-    }
-    
-    .hidden {
-      display: none;
-    }
-    
-    .loading {
-      text-align: center;
-      color: #667eea;
-      margin-top: 10px;
-      font-size: 0.9rem;
-    }
-
-    ::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    ::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    ::-webkit-scrollbar-thumb {
-      background: rgba(0,0,0,0.2);
-      border-radius: 3px;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-      background: rgba(0,0,0,0.3);
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>🧠 Entrenar a MIIA</h1>
+    <h1>🤖 Entrenar a MIIA</h1>
     <a href="dashboard.html" class="back-btn">← Volver al Dashboard</a>
   </div>
 
   <div class="container">
-    <!-- Pantalla 1: API Key -->
-    <div class="setup-card" id="setupCard">
-      <h2>🔑 Configuración Inicial</h2>
-      
-      <div class="alert alert-info show">
-        <strong>📌 Importante:</strong> Necesitas tu propia API Key de Google Gemini para usar MIIA. Es gratis y solo toma 2 minutos configurarla.
-      </div>
-
-      <div class="steps">
-        <div class="step">
-          <div class="step-number">1</div>
-          <div class="step-content">
-            <h3>Abre Google AI Studio</h3>
-            <p>Haz click aquí: <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com/app/apikey</a></p>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-number">2</div>
-          <div class="step-content">
-            <h3>Crea tu API Key</h3>
-            <p>Click en el botón "Create API Key" → Selecciona "Create API key in new project"</p>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-number">3</div>
-          <div class="step-content">
-            <h3>Copia la clave</h3>
-            <p>Copia la API Key completa (empieza con "AIzaSy...")</p>
-          </div>
-        </div>
-
-        <div class="step">
-          <div class="step-number">4</div>
-          <div class="step-content">
-            <h3>Pégala aquí abajo</h3>
-            <p>Tu API Key se guardará de forma segura y no tendrás que volver a ingresarla</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="alert alert-error" id="errorAlert"></div>
-      <div class="alert alert-success" id="successAlert"></div>
-      
-      <div class="form-group">
-        <label>🔐 Tu API Key de Google Gemini:</label>
-        <input 
-          type="text" 
-          id="apiKeyInput" 
-          placeholder="AIzaSy...">
-      </div>
-      
-      <button class="btn" id="validateBtn" onclick="validateAndSaveApiKey()">
-        ✅ Validar y Continuar
-      </button>
-
-      <div class="loading hidden" id="loadingMsg">Validando tu API Key...</div>
+    <!-- PASO 1: Inicio simple -->
+    <div id="setupCard" class="setup-card">
+      <h2>Conectar WhatsApp</h2>
+      <p style="text-align: center; margin-bottom: 20px;">MIIA usará la API Key configurada en el servidor</p>
+      <button class="btn" onclick="showWhatsAppSetup()">Conectar WhatsApp</button>
     </div>
 
-    <!-- Pantalla 2: WhatsApp QR -->
-    <div class="setup-card hidden" id="whatsappSetup">
-      <h2>📱 Conectar WhatsApp</h2>
-      
-      <div class="alert alert-info show">
-        <strong>Paso final:</strong> Escanea el código QR con tu WhatsApp para conectar MIIA.
-      </div>
-
-      <div id="qrContainer" style="text-align: center; margin: 30px 0;">
+    <!-- PASO 2: QR de WhatsApp -->
+    <div id="whatsappSetup" class="setup-card hidden">
+      <h2>Escanea el código QR</h2>
+      <div id="qrContainer" style="text-align: center;">
+        <p id="qrStatus" style="margin-bottom: 20px;">Generando QR...</p>
         <div id="qrCode"></div>
-        <p id="qrStatus" style="margin-top: 20px; color: #667eea; font-weight: 600;">
-          Generando código QR...
-        </p>
       </div>
-
-      <div class="alert alert-success hidden" id="whatsappConnected">
-        <strong>✅ WhatsApp conectado correctamente!</strong><br>
-        MIIA ya puede leer tus mensajes.
+      <div id="whatsappConnected" class="hidden" style="text-align: center;">
+        <p style="color: #3c3; font-size: 1.2rem; margin-bottom: 20px;">✅ WhatsApp conectado correctamente</p>
+        <button id="startChatBtn" class="btn hidden" onclick="goToChat()">Empezar a entrenar</button>
       </div>
-
-      <button class="btn hidden" id="startChatBtn" onclick="goToChat()">
-        Ir al Chat
-      </button>
     </div>
 
-    <!-- Pantalla 3: Chat -->
-    <div class="chat-container hidden" id="chatContainer">
-      <div class="chat-header">
-        <div class="chat-header-icon">🤖</div>
-        <div class="chat-header-info">
-          <h3>MIIA</h3>
-          <p>Tu asistente con WhatsApp conectado</p>
+    <!-- PASO 3: Chat con MIIA -->
+    <div id="chatContainer" class="hidden">
+      <div class="chat-container">
+        <div class="chat-header">
+          <div style="width: 45px; height: 45px; border-radius: 50%; background: #25d366; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">🤖</div>
+          <div>
+            <h3>MIIA</h3>
+            <p style="font-size: 0.85rem; opacity: 0.8;">Tu asistente con WhatsApp conectado</p>
+          </div>
         </div>
-      </div>
-      
-      <div class="chat-messages" id="chatMessages"></div>
-      
-      <div class="chat-input-container">
-        <input type="text" class="chat-input" id="messageInput" placeholder="Escribe un mensaje..." onkeypress="handleKeyPress(event)">
-        <button class="send-btn" id="sendBtn" onclick="sendMessage()">➤</button>
+        <div id="chatMessages" class="chat-messages"></div>
+        <div class="chat-input">
+          <input type="text" id="messageInput" placeholder="Escribe un mensaje..." onkeypress="handleKeyPress(event)">
+          <button id="sendBtn" onclick="sendMessage()">Enviar</button>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  
+  <!-- Socket.io -->
   <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
 
   <script>
+    const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+    let socket = null;
+    let userId = 'user_' + Date.now();
+
+    // Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
       authDomain: "miia-app-8cbd0.firebaseapp.com",
       projectId: "miia-app-8cbd0",
       storageBucket: "miia-app-8cbd0.firebasestorage.app",
-      messagingSenderId: "603310007208",
-      appId: "1:603310007208:web:9bffcaf4a34a3ce465b39d"
+      messagingSenderId: "481282126913",
+      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
     };
 
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
-  </script>
-
-  <script>
-    let API_KEY = 'AIzaSyAWKYJ8utVs8xbS5MIrsiRgNT8hm_N05UU';
-    let userId = null;
-    let socket = null;
-    const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
-
-    window.onload = async function() {
-      const userStr = localStorage.getItem('miia_user');
-      if (userStr) {
-        const userData = JSON.parse(userStr);
-        userId = userData.email;
-      }
-
-      if (userId) {
-        const savedApiKey = await loadApiKeyFromFirebase();
-        if (savedApiKey) {
-          API_KEY = savedApiKey;
-          showWhatsAppSetup();
-        }
-      }
-    };
-
-    async function loadApiKeyFromFirebase() {
-      if (!userId) return null;
-      try {
-        const doc = await db.collection('users').doc(userId).get();
-        if (doc.exists && doc.data().apiKey) {
-          return doc.data().apiKey;
-        }
-      } catch (error) {
-        console.error('Error cargando API Key:', error);
-      }
-      return null;
-    }
-
-    async function saveApiKeyToFirebase(apiKey) {
-      if (!userId) return;
-      try {
-        await db.collection('users').doc(userId).set({
-          apiKey: apiKey,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-      } catch (error) {
-        console.error('Error guardando API Key:', error);
-      }
-    }
-
-    async function validateAndSaveApiKey() {
-      const apiKey = document.getElementById('apiKeyInput').value.trim();
-      const errorAlert = document.getElementById('errorAlert');
-      const successAlert = document.getElementById('successAlert');
-      const loadingMsg = document.getElementById('loadingMsg');
-      const validateBtn = document.getElementById('validateBtn');
-
-      errorAlert.classList.remove('show');
-      successAlert.classList.remove('show');
-
-      if (!apiKey) {
-        errorAlert.textContent = '❌ Por favor ingresa tu API Key';
-        errorAlert.classList.add('show');
-        return;
-      }
-
-      if (!apiKey.startsWith('AIzaSy')) {
-        errorAlert.textContent = '❌ La API Key debe empezar con "AIzaSy". Verifica que la copiaste completa.';
-        errorAlert.classList.add('show');
-        return;
-      }
-
-      validateBtn.disabled = true;
-      loadingMsg.classList.remove('hidden');
-
-      try {
-        const testResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: 'Hi' }] }]
-          })
-        });
-
-        if (!testResponse.ok) {
-          const errorData = await testResponse.json();
-          throw new Error(errorData.error?.message || 'API Key inválida');
-        }
-
-        API_KEY = apiKey;
-        await saveApiKeyToFirebase(apiKey);
-
-        successAlert.textContent = '✅ ¡API Key validada correctamente! Conectando WhatsApp...';
-        successAlert.classList.add('show');
-
-        setTimeout(() => {
-          showWhatsAppSetup();
-        }, 1500);
-
-      } catch (error) {
-        errorAlert.innerHTML = `<strong>❌ Error al validar tu API Key:</strong><br><br>${error.message}<br><br><strong>Pasos para solucionarlo:</strong><br>1. Verifica que copiaste la API Key completa<br>2. Asegúrate de que está activa en Google AI Studio<br>3. Si el problema persiste, genera una nueva API Key`;
-        errorAlert.classList.add('show');
-        validateBtn.disabled = false;
-      } finally {
-        loadingMsg.classList.add('hidden');
-      }
-    }
 
     function showWhatsAppSetup() {
       document.getElementById('setupCard').classList.add('hidden');
@@ -677,142 +197,47 @@
     }
 
     function connectWhatsApp() {
-  console.log('\n═══════════════════════════════════');
-  console.log('🚀 INICIANDO CONEXIÓN A WHATSAPP');
-  console.log('═══════════════════════════════════');
-  
-  if (socket) {
-    console.log('⚠️ Socket ya existe, abortando');
-    return;
-  }
+      console.log('\n═══════════════════════════════════');
+      console.log('🚀 INICIANDO CONEXIÓN A WHATSAPP');
+      console.log('═══════════════════════════════════');
+      
+      if (socket) {
+        console.log('⚠️ Socket ya existe, abortando');
+        return;
+      }
 
-  console.log('[DEBUG] Backend URL:', BACKEND_URL);
-  console.log('[DEBUG] Creando socket.io connection...');
-  socket = io(BACKEND_URL);
+      console.log('[DEBUG] Backend URL:', BACKEND_URL);
+      socket = io(BACKEND_URL);
 
-  socket.on('connect', () => {
-    console.log('\n✅ ═══ CONECTADO AL BACKEND ═══');
-    console.log('[DEBUG] Socket ID:', socket.id);
-    console.log('[DEBUG] Backend URL:', BACKEND_URL);
-    console.log('[DEBUG] Emitiendo evento "check_status"...');
-    socket.emit('check_status');
-    console.log('[DEBUG] Evento "check_status" emitido\n');
-  });
+      socket.on('connect', () => {
+        console.log('\n✅ ═══ CONECTADO AL BACKEND ═══');
+        console.log('[DEBUG] Socket ID:', socket.id);
+        socket.emit('check_status');
+      });
 
-  socket.on('disconnect', (reason) => {
-    console.log('\n❌ ═══ DESCONECTADO DEL BACKEND ═══');
-    console.log('[DEBUG] Razón:', reason);
-    console.log('[DEBUG] Socket ID era:', socket.id);
-  });
+      socket.on('qr', (qrDataUrl) => {
+        console.log('\n📱 ═══ QR CODE RECIBIDO ═══');
+        document.getElementById('qrCode').innerHTML = `<img src="${qrDataUrl}">`;
+        document.getElementById('qrStatus').textContent = 'Escanea este código con WhatsApp';
+      });
 
-  socket.on('connect_error', (error) => {
-    console.error('\n❌ ═══ ERROR DE CONEXIÓN ═══');
-    console.error('[DEBUG] Error:', error.message);
-    console.error('[DEBUG] Stack:', error.stack);
-  });
+      socket.on('whatsapp_ready', () => {
+        console.log('\n✅ ═══ WHATSAPP READY ═══');
+        document.getElementById('qrContainer').classList.add('hidden');
+        document.getElementById('whatsappConnected').classList.remove('hidden');
+        document.getElementById('startChatBtn').classList.remove('hidden');
+      });
 
-  socket.on('qr', (qrDataUrl) => {
-    console.log('\n📱 ═══ QR CODE RECIBIDO ═══');
-    console.log('[DEBUG] QR DataURL length:', qrDataUrl?.length || 0);
-    console.log('[DEBUG] QR inicia con:', qrDataUrl?.substring(0, 50));
-    console.log('[DEBUG] Actualizando DOM con QR...');
-    
-    const qrElement = document.getElementById('qrCode');
-    if (qrElement) {
-      qrElement.innerHTML = `<img src="${qrDataUrl}" style="max-width: 300px; border-radius: 10px; border: 2px solid #667eea;">`;
-      console.log('[DEBUG] ✅ QR insertado en DOM');
-    } else {
-      console.error('[DEBUG] ❌ Elemento #qrCode no encontrado');
+      socket.on('new_message', (data) => {
+        console.log('\n📨 ═══ NUEVO MENSAJE ═══', data);
+        addMessage('user', `💬 ${data.fromName}: ${data.body}`);
+      });
+
+      socket.on('ai_response', (data) => {
+        console.log('\n🤖 ═══ RESPUESTA DE MIIA ═══', data);
+        addMessage('miia', `🤖 MIIA: ${data.body}`);
+      });
     }
-    
-    const statusElement = document.getElementById('qrStatus');
-    if (statusElement) {
-      statusElement.textContent = 'Escanea este código con WhatsApp';
-      console.log('[DEBUG] ✅ Status actualizado');
-    } else {
-      console.error('[DEBUG] ❌ Elemento #qrStatus no encontrado');
-    }
-    
-    console.log('[DEBUG] QR code procesado completamente\n');
-  });
-
-  socket.on('whatsapp_ready', () => {
-    console.log('\n✅ ═══ WHATSAPP READY ═══');
-    console.log('[DEBUG] WhatsApp está conectado y listo');
-    
-    const qrContainer = document.getElementById('qrContainer');
-    if (qrContainer) {
-      qrContainer.classList.add('hidden');
-      console.log('[DEBUG] ✅ qrContainer ocultado');
-    } else {
-      console.error('[DEBUG] ❌ Elemento #qrContainer no encontrado');
-    }
-    
-    const connectedMsg = document.getElementById('whatsappConnected');
-    if (connectedMsg) {
-      connectedMsg.classList.remove('hidden');
-      console.log('[DEBUG] ✅ whatsappConnected mostrado');
-    } else {
-      console.error('[DEBUG] ❌ Elemento #whatsappConnected no encontrado');
-    }
-    
-    const startBtn = document.getElementById('startChatBtn');
-    if (startBtn) {
-      startBtn.classList.remove('hidden');
-      console.log('[DEBUG] ✅ startChatBtn mostrado');
-    } else {
-      console.error('[DEBUG] ❌ Elemento #startChatBtn no encontrado');
-    }
-    
-    console.log('[DEBUG] WhatsApp ready procesado completamente\n');
-  });
-
-  socket.on('whatsapp_status', (data) => {
-    console.log('\n📊 ═══ WHATSAPP STATUS ═══');
-    console.log('[DEBUG] Status data:', JSON.stringify(data, null, 2));
-  });
-
-  socket.on('new_message', (data) => {
-    console.log('\n📨 ═══ NUEVO MENSAJE RECIBIDO ═══');
-    console.log('[DEBUG] From:', data.from);
-    console.log('[DEBUG] FromName:', data.fromName);
-    console.log('[DEBUG] Body:', data.body);
-    console.log('[DEBUG] Type:', data.type);
-    console.log('[DEBUG] Timestamp:', data.timestamp);
-    console.log('[DEBUG] Agregando mensaje al chat...');
-    
-    addMessage('user', `💬 ${data.fromName}: ${data.body}`);
-    console.log('[DEBUG] ✅ Mensaje agregado al chat\n');
-  });
-
-  socket.on('ai_response', (data) => {
-    console.log('\n🤖 ═══ RESPUESTA DE MIIA RECIBIDA ═══');
-    console.log('[DEBUG] To:', data.to);
-    console.log('[DEBUG] ToName:', data.toName);
-    console.log('[DEBUG] Body:', data.body);
-    console.log('[DEBUG] Type:', data.type);
-    console.log('[DEBUG] Timestamp:', data.timestamp);
-    console.log('[DEBUG] Agregando respuesta al chat...');
-    
-    addMessage('miia', `🤖 MIIA respondió a ${data.toName}: ${data.body}`);
-    console.log('[DEBUG] ✅ Respuesta agregada al chat\n');
-  });
-
-  socket.on('whatsapp_disconnected', (data) => {
-    console.log('\n❌ ═══ WHATSAPP DESCONECTADO ═══');
-    console.log('[DEBUG] Razón:', data.reason);
-    console.log('[DEBUG] Data completa:', JSON.stringify(data, null, 2));
-    alert('WhatsApp desconectado. Recarga la página.');
-  });
-
-  socket.on('error', (error) => {
-    console.error('\n❌ ═══ ERROR DEL SERVIDOR ═══');
-    console.error('[DEBUG] Error:', error);
-  });
-
-  console.log('[DEBUG] Todos los event listeners configurados');
-  console.log('═══════════════════════════════════\n');
-}
 
     function goToChat() {
       document.getElementById('whatsappSetup').classList.add('hidden');
@@ -820,88 +245,17 @@
       showWelcomeMessage();
     }
 
-    async function loadKnowledgeFromFirebase() {
-      if (!userId) return '';
-      try {
-        const doc = await db.collection('knowledge').doc(userId).get();
-        if (doc.exists) {
-          return doc.data().businessInfo || '';
-        }
-      } catch (error) {
-        console.error('Error cargando conocimiento:', error);
-      }
-      return '';
-    }
-
-    async function saveKnowledgeToFirebase(knowledge) {
-      if (!userId) return;
-      try {
-        await db.collection('knowledge').doc(userId).set({
-          businessInfo: knowledge,
-          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true });
-      } catch (error) {
-        console.error('Error guardando conocimiento:', error);
-      }
-    }
-
     async function showWelcomeMessage() {
-      const today = new Date().toDateString();
-      const lastWelcome = localStorage.getItem('miia_last_welcome');
-      
-      if (lastWelcome !== today) {
-        const savedKnowledge = await loadKnowledgeFromFirebase();
-        
-        let welcomeMsg = `¡Hola! Soy MIIA 🤖\n\n`;
-        
-        if (savedKnowledge) {
-          welcomeMsg += `✨ Ya tengo conocimiento guardado sobre ti.\n\n`;
-        }
-        
-        welcomeMsg += `📱 WhatsApp conectado! Ahora puedo leer tus mensajes.\n\nPuedes hablarme naturalmente. Si quieres que recuerde algo, dime:\n• "Aprende que soy Mariano"\n• "Recuerda que trabajo en MediLink"\n\nPara ver lo que sé, pregúntame "¿Qué sabes de mí?"\n\n¿En qué puedo ayudarte hoy?`;
-        
-        addMessage('miia', welcomeMsg);
-        localStorage.setItem('miia_last_welcome', today);
-      }
+      addMessage('miia', '¡Hola! Soy MIIA 🤖\n\n📱 WhatsApp conectado!\n\nPuedes hablarme naturalmente.\n\n¿En qué puedo ayudarte?');
     }
 
     function addMessage(sender, text) {
       const messagesDiv = document.getElementById('chatMessages');
       const messageDiv = document.createElement('div');
       messageDiv.className = `message ${sender}`;
-      
-      const time = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-      
-      messageDiv.innerHTML = `
-        <div class="message-bubble">
-          <div class="message-text">${text.replace(/\n/g, '<br>')}</div>
-          <div class="message-time">${time}</div>
-        </div>
-      `;
-      
+      messageDiv.innerHTML = `<div class="message-bubble">${text.replace(/\n/g, '<br>')}</div>`;
       messagesDiv.appendChild(messageDiv);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-
-    function showTyping() {
-      const messagesDiv = document.getElementById('chatMessages');
-      const typingDiv = document.createElement('div');
-      typingDiv.id = 'typingIndicator';
-      typingDiv.className = 'message miia';
-      typingDiv.innerHTML = `
-        <div class="typing-indicator active">
-          <span class="typing-dot"></span>
-          <span class="typing-dot"></span>
-          <span class="typing-dot"></span>
-        </div>
-      `;
-      messagesDiv.appendChild(typingDiv);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-
-    function hideTyping() {
-      const typing = document.getElementById('typingIndicator');
-      if (typing) typing.remove();
     }
 
     async function sendMessage() {
@@ -915,121 +269,36 @@
       
       const sendBtn = document.getElementById('sendBtn');
       sendBtn.disabled = true;
-      showTyping();
-      
-      const lowerMessage = message.toLowerCase();
-      
-      if (lowerMessage.includes('aprende') || lowerMessage.includes('recuerda')) {
-        let infoToSave = message;
-        
-        if (lowerMessage.startsWith('aprende:') || lowerMessage.startsWith('recuerda:')) {
-          infoToSave = message.substring(message.indexOf(':') + 1).trim();
-        } else if (lowerMessage.includes('aprende que')) {
-          infoToSave = message.substring(message.toLowerCase().indexOf('aprende que') + 11).trim();
-        } else if (lowerMessage.includes('recuerda que')) {
-          infoToSave = message.substring(message.toLowerCase().indexOf('recuerda que') + 12).trim();
-        }
-        
-        let existingKnowledge = await loadKnowledgeFromFirebase();
-        let updatedKnowledge = existingKnowledge ? existingKnowledge + '\n' + infoToSave : infoToSave;
-        await saveKnowledgeToFirebase(updatedKnowledge);
-        
-        hideTyping();
-        addMessage('miia', `✅ ¡Guardado en la nube! ☁️\n\nYa lo tengo en mi memoria permanente.`);
-        sendBtn.disabled = false;
-        return;
-      }
-      
-      if (lowerMessage.includes('qué sabes') || lowerMessage.includes('que sabes') || lowerMessage.includes('conoces de mí') || lowerMessage.includes('conoces de mi')) {
-        const businessInfo = await loadKnowledgeFromFirebase();
-        
-        if (businessInfo && businessInfo.trim()) {
-          try {
-            const naturalResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`, {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                contents: [{
-                  role: "user",
-                  parts: [{ text: `Eres MIIA. El usuario pregunta: "${message}". Responde brevemente diciendo que según lo que te ha enseñado, sabes:\n\n${businessInfo}\n\nLuego pregunta si quiere que sepas algo más. Máximo 3 oraciones, tono amigable.` }]
-                }]
-              })
-            });
-            
-            const data = await naturalResponse.json();
-            hideTyping();
-            const response = data.candidates[0].content.parts[0].text;
-            addMessage('miia', response);
-          } catch (error) {
-            hideTyping();
-            addMessage('miia', `Según lo que me has enseñado, sé que:\n\n${businessInfo}\n\n¿Hay algo más que quieras que sepa?`);
-          }
-        } else {
-          hideTyping();
-          addMessage('miia', `Aún no me has enseñado nada. Dime "aprende que..." para que pueda recordar información sobre ti.`);
-        }
-        
-        sendBtn.disabled = false;
-        return;
-      }
-      
+
+      console.log('\n[SEND] 📤 Enviando mensaje al backend...');
+      console.log('[SEND] Message:', message);
+
       try {
-        const response = await callGeminiAPI(message);
-        hideTyping();
-        addMessage('miia', response);
+        const response = await fetch(`${BACKEND_URL}/api/chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            message: message,
+            userId: userId
+          })
+        });
+
+        console.log('[SEND] Response status:', response.status);
+
+        if (!response.ok) {
+          throw new Error('Error al procesar mensaje');
+        }
+
+        const data = await response.json();
+        console.log('[SEND] ✅ Respuesta recibida');
+        
+        addMessage('miia', data.response);
       } catch (error) {
-        hideTyping();
+        console.error('[SEND] ❌ Error:', error);
         addMessage('miia', `❌ Error: ${error.message}`);
       }
       
       sendBtn.disabled = false;
-    }
-
-    async function callGeminiAPI(userMessage) {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${API_KEY}`;
-      
-      const businessInfo = await loadKnowledgeFromFirebase();
-      const conversationHistory = [];
-      
-      if (businessInfo) {
-        conversationHistory.push({
-          role: "user",
-          parts: [{ text: `[CONTEXTO: El usuario te ha enseñado:\n${businessInfo}\nUsa esto cuando sea relevante.]` }]
-        });
-        conversationHistory.push({
-          role: "model",
-          parts: [{ text: "Entendido." }]
-        });
-      }
-      
-      conversationHistory.push({
-        role: "user",
-        parts: [{ text: userMessage }]
-      });
-      
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          contents: conversationHistory,
-          systemInstruction: {
-            parts: [{ text: "Eres MIIA, asistente amigable para emprendedores. Responde natural y brevemente." }]
-          }
-        })
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error?.message || 'Error al conectar con Gemini');
-      }
-      
-      const data = await response.json();
-      
-      if (!data.candidates || !data.candidates[0]?.content?.parts?.[0]?.text) {
-        throw new Error('Respuesta inválida de Gemini');
-      }
-      
-      return data.candidates[0].content.parts[0].text;
     }
 
     function handleKeyPress(event) {
