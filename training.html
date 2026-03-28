@@ -677,40 +677,141 @@
     }
 
     function connectWhatsApp() {
-  if (socket) return;
+  console.log('\n═══════════════════════════════════');
+  console.log('🚀 INICIANDO CONEXIÓN A WHATSAPP');
+  console.log('═══════════════════════════════════');
+  
+  if (socket) {
+    console.log('⚠️ Socket ya existe, abortando');
+    return;
+  }
 
-  console.log('Conectando a backend...');
+  console.log('[DEBUG] Backend URL:', BACKEND_URL);
+  console.log('[DEBUG] Creando socket.io connection...');
   socket = io(BACKEND_URL);
 
   socket.on('connect', () => {
-    console.log('✅ Conectado al backend');
-    
-    // Verificar si WhatsApp ya está conectado
+    console.log('\n✅ ═══ CONECTADO AL BACKEND ═══');
+    console.log('[DEBUG] Socket ID:', socket.id);
+    console.log('[DEBUG] Backend URL:', BACKEND_URL);
+    console.log('[DEBUG] Emitiendo evento "check_status"...');
     socket.emit('check_status');
+    console.log('[DEBUG] Evento "check_status" emitido\n');
+  });
+
+  socket.on('disconnect', (reason) => {
+    console.log('\n❌ ═══ DESCONECTADO DEL BACKEND ═══');
+    console.log('[DEBUG] Razón:', reason);
+    console.log('[DEBUG] Socket ID era:', socket.id);
+  });
+
+  socket.on('connect_error', (error) => {
+    console.error('\n❌ ═══ ERROR DE CONEXIÓN ═══');
+    console.error('[DEBUG] Error:', error.message);
+    console.error('[DEBUG] Stack:', error.stack);
   });
 
   socket.on('qr', (qrDataUrl) => {
-    console.log('📱 QR recibido');
-    document.getElementById('qrCode').innerHTML = `<img src="${qrDataUrl}" style="max-width: 300px; border-radius: 10px; border: 2px solid #667eea;">`;
-    document.getElementById('qrStatus').textContent = 'Escanea este código con WhatsApp';
+    console.log('\n📱 ═══ QR CODE RECIBIDO ═══');
+    console.log('[DEBUG] QR DataURL length:', qrDataUrl?.length || 0);
+    console.log('[DEBUG] QR inicia con:', qrDataUrl?.substring(0, 50));
+    console.log('[DEBUG] Actualizando DOM con QR...');
+    
+    const qrElement = document.getElementById('qrCode');
+    if (qrElement) {
+      qrElement.innerHTML = `<img src="${qrDataUrl}" style="max-width: 300px; border-radius: 10px; border: 2px solid #667eea;">`;
+      console.log('[DEBUG] ✅ QR insertado en DOM');
+    } else {
+      console.error('[DEBUG] ❌ Elemento #qrCode no encontrado');
+    }
+    
+    const statusElement = document.getElementById('qrStatus');
+    if (statusElement) {
+      statusElement.textContent = 'Escanea este código con WhatsApp';
+      console.log('[DEBUG] ✅ Status actualizado');
+    } else {
+      console.error('[DEBUG] ❌ Elemento #qrStatus no encontrado');
+    }
+    
+    console.log('[DEBUG] QR code procesado completamente\n');
   });
 
   socket.on('whatsapp_ready', () => {
-    console.log('✅ WhatsApp ya conectado');
-    document.getElementById('qrContainer').classList.add('hidden');
-    document.getElementById('whatsappConnected').classList.remove('hidden');
-    document.getElementById('startChatBtn').classList.remove('hidden');
+    console.log('\n✅ ═══ WHATSAPP READY ═══');
+    console.log('[DEBUG] WhatsApp está conectado y listo');
+    
+    const qrContainer = document.getElementById('qrContainer');
+    if (qrContainer) {
+      qrContainer.classList.add('hidden');
+      console.log('[DEBUG] ✅ qrContainer ocultado');
+    } else {
+      console.error('[DEBUG] ❌ Elemento #qrContainer no encontrado');
+    }
+    
+    const connectedMsg = document.getElementById('whatsappConnected');
+    if (connectedMsg) {
+      connectedMsg.classList.remove('hidden');
+      console.log('[DEBUG] ✅ whatsappConnected mostrado');
+    } else {
+      console.error('[DEBUG] ❌ Elemento #whatsappConnected no encontrado');
+    }
+    
+    const startBtn = document.getElementById('startChatBtn');
+    if (startBtn) {
+      startBtn.classList.remove('hidden');
+      console.log('[DEBUG] ✅ startChatBtn mostrado');
+    } else {
+      console.error('[DEBUG] ❌ Elemento #startChatBtn no encontrado');
+    }
+    
+    console.log('[DEBUG] WhatsApp ready procesado completamente\n');
+  });
+
+  socket.on('whatsapp_status', (data) => {
+    console.log('\n📊 ═══ WHATSAPP STATUS ═══');
+    console.log('[DEBUG] Status data:', JSON.stringify(data, null, 2));
   });
 
   socket.on('new_message', (data) => {
-    console.log('📨 Nuevo mensaje de WhatsApp:', data);
+    console.log('\n📨 ═══ NUEVO MENSAJE RECIBIDO ═══');
+    console.log('[DEBUG] From:', data.from);
+    console.log('[DEBUG] FromName:', data.fromName);
+    console.log('[DEBUG] Body:', data.body);
+    console.log('[DEBUG] Type:', data.type);
+    console.log('[DEBUG] Timestamp:', data.timestamp);
+    console.log('[DEBUG] Agregando mensaje al chat...');
+    
     addMessage('user', `💬 ${data.fromName}: ${data.body}`);
+    console.log('[DEBUG] ✅ Mensaje agregado al chat\n');
+  });
+
+  socket.on('ai_response', (data) => {
+    console.log('\n🤖 ═══ RESPUESTA DE MIIA RECIBIDA ═══');
+    console.log('[DEBUG] To:', data.to);
+    console.log('[DEBUG] ToName:', data.toName);
+    console.log('[DEBUG] Body:', data.body);
+    console.log('[DEBUG] Type:', data.type);
+    console.log('[DEBUG] Timestamp:', data.timestamp);
+    console.log('[DEBUG] Agregando respuesta al chat...');
+    
+    addMessage('miia', `🤖 MIIA respondió a ${data.toName}: ${data.body}`);
+    console.log('[DEBUG] ✅ Respuesta agregada al chat\n');
   });
 
   socket.on('whatsapp_disconnected', (data) => {
-    console.log('❌ WhatsApp desconectado:', data.reason);
+    console.log('\n❌ ═══ WHATSAPP DESCONECTADO ═══');
+    console.log('[DEBUG] Razón:', data.reason);
+    console.log('[DEBUG] Data completa:', JSON.stringify(data, null, 2));
     alert('WhatsApp desconectado. Recarga la página.');
   });
+
+  socket.on('error', (error) => {
+    console.error('\n❌ ═══ ERROR DEL SERVIDOR ═══');
+    console.error('[DEBUG] Error:', error);
+  });
+
+  console.log('[DEBUG] Todos los event listeners configurados');
+  console.log('═══════════════════════════════════\n');
 }
 
     function goToChat() {
