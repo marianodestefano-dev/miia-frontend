@@ -583,6 +583,103 @@
 
     .paywall-overlay.active { display: flex; }
 
+    /* ═══ CONSENT OVERLAY ═══ */
+    .consent-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(26, 26, 46, 0.95);
+      z-index: 600;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .consent-overlay.active { display: flex; }
+    .consent-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      max-width: 560px;
+      width: 100%;
+      padding: 44px 36px;
+      text-align: center;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .consent-card h2 {
+      color: var(--text-dark);
+      font-size: 1.6rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+    .consent-card > p {
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+    .consent-checks {
+      text-align: left;
+      margin-bottom: 24px;
+    }
+    .consent-check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 14px 16px;
+      background: var(--bg-light);
+      border-radius: var(--radius-sm);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .consent-check-item:hover { background: rgba(102,126,234,0.06); }
+    .consent-check-item input[type="checkbox"] {
+      margin-top: 3px;
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
+    }
+    .consent-check-item label {
+      font-size: 0.9rem;
+      color: var(--text-body);
+      cursor: pointer;
+      line-height: 1.5;
+    }
+    .consent-check-item label a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .consent-check-item label a:hover { text-decoration: underline; }
+    .consent-btn {
+      background: var(--gradient-main);
+      color: white;
+      border: none;
+      padding: 14px 40px;
+      border-radius: var(--radius-full);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      width: 100%;
+      opacity: 0.4;
+      pointer-events: none;
+      transition: all 0.3s;
+    }
+    .consent-btn.enabled {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .consent-btn.enabled:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102,126,234,0.35);
+    }
+    .consent-dna-note {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
     .paywall-card {
       background: var(--bg-white);
       border-radius: var(--radius-lg);
@@ -919,6 +1016,34 @@
     </div>
   </div>
 
+  <!-- Consent Overlay -->
+  <div class="consent-overlay" id="consentOverlay">
+    <div class="consent-card">
+      <div style="font-size: 3.5rem; margin-bottom: 16px;">📋</div>
+      <h2>Antes de comenzar</h2>
+      <p>Para usar MIIA necesitamos tu consentimiento en los siguientes puntos:</p>
+
+      <div class="consent-checks">
+        <div class="consent-check-item" onclick="document.getElementById('checkTerms').click()">
+          <input type="checkbox" id="checkTerms" onclick="event.stopPropagation(); updateConsentBtn()">
+          <label for="checkTerms" onclick="event.stopPropagation()">
+            He leído y acepto los <a href="terms.html" target="_blank">Términos y Condiciones</a> y la <a href="terms.html" target="_blank">Política de Privacidad</a> de MIIA.
+          </label>
+        </div>
+
+        <div class="consent-check-item" onclick="document.getElementById('checkDna').click()">
+          <input type="checkbox" id="checkDna" onclick="event.stopPropagation(); updateConsentBtn()">
+          <label for="checkDna" onclick="event.stopPropagation()">
+            Autorizo la <a href="terms.html#dna" target="_blank">Extracción de ADN Comercial</a>: MIIA analizará mis conversaciones de WhatsApp para aprender mi estilo de venta y mejorar las respuestas de IA.
+          </label>
+        </div>
+      </div>
+
+      <button class="consent-btn" id="consentBtn" onclick="acceptConsent()">Aceptar y continuar</button>
+      <p class="consent-dna-note">El consentimiento de ADN es opcional pero recomendado para un mejor rendimiento de MIIA.</p>
+    </div>
+  </div>
+
   <script>
     // Firebase Config
     const firebaseConfig = {
@@ -1008,6 +1133,12 @@
         return;
       }
 
+      // Check consent
+      if (!currentUserData.terms_accepted) {
+        showConsentOverlay();
+        return; // Block until consent given
+      }
+
       // Check trial status
       checkTrialStatus(currentUserData);
 
@@ -1023,6 +1154,44 @@
       // Setup UI
       setupScrollAndAnimations();
     });
+
+    // ═══ CONSENT ═══
+    function showConsentOverlay() {
+      document.getElementById('consentOverlay').classList.add('active');
+    }
+
+    function updateConsentBtn() {
+      const termsOk = document.getElementById('checkTerms').checked;
+      const btn = document.getElementById('consentBtn');
+      btn.classList.toggle('enabled', termsOk);
+    }
+
+    async function acceptConsent() {
+      const termsOk = document.getElementById('checkTerms').checked;
+      if (!termsOk) return;
+
+      const dnaOk = document.getElementById('checkDna').checked;
+      const user = auth.currentUser;
+      if (!user) return;
+
+      await db.collection('users').doc(user.uid).update({
+        terms_accepted: true,
+        terms_accepted_at: new Date(),
+        dna_consent: dnaOk,
+        dna_consent_at: dnaOk ? new Date() : null
+      });
+
+      document.getElementById('consentOverlay').classList.remove('active');
+
+      // Reload the full dashboard flow
+      const doc = await db.collection('users').doc(user.uid).get();
+      currentUserData = doc.data();
+      checkTrialStatus(currentUserData);
+      renderDashboard(currentUserData);
+      loadAgents();
+      loadDeals();
+      setupScrollAndAnimations();
+    }
 
     // ═══ TRIAL CHECK ═══
     function checkTrialStatus(userData) {
