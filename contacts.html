@@ -248,6 +248,22 @@
       margin-bottom: 12px;
     }
 
+    /* Filter tabs */
+    .filter-tabs { display:flex; gap:4px; margin-bottom:16px; }
+    .filter-tab { padding:8px 16px; border:1px solid rgba(102,126,234,0.15); border-radius:var(--radius-full); background:transparent; color:var(--text-muted); font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .filter-tab:hover { border-color:var(--primary); color:var(--primary); }
+    .filter-tab.active { background:var(--gradient-main); color:white; border-color:transparent; }
+    .filter-tab .count { display:inline-block; background:rgba(255,255,255,0.25); padding:1px 7px; border-radius:10px; font-size:0.75rem; margin-left:4px; }
+    .filter-tab.active .count { background:rgba(255,255,255,0.3); }
+
+    .search-bar { width:100%; padding:8px 14px; border:1px solid rgba(102,126,234,0.15); border-radius:var(--radius-full); font-size:0.88rem; margin-bottom:12px; }
+    .search-bar:focus { outline:none; border-color:var(--primary); }
+
+    .contact-type-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; margin-left:6px; }
+    .type-lead { background:rgba(245,158,11,0.12); color:#d97706; }
+    .type-cliente { background:rgba(37,211,102,0.12); color:#16a34a; }
+    .type-otro { background:rgba(136,136,164,0.12); color:var(--text-muted); }
+
     @media (max-width: 768px) {
       .contacts-layout { grid-template-columns: 1fr; }
       #navbar { padding: 0 20px; }
@@ -277,6 +293,13 @@
       <!-- Conversations List -->
       <div class="card fade-in">
         <h2>💬 Conversaciones de WhatsApp</h2>
+        <input type="text" class="search-bar" id="contactSearch" placeholder="Buscar contacto..." oninput="applyContactFilter()">
+        <div class="filter-tabs" id="filterTabs">
+          <button class="filter-tab active" onclick="setFilter('all',this)">Todos <span class="count" id="countAll">0</span></button>
+          <button class="filter-tab" onclick="setFilter('lead',this)">Leads <span class="count" id="countLead">0</span></button>
+          <button class="filter-tab" onclick="setFilter('cliente',this)">Clientes <span class="count" id="countCliente">0</span></button>
+          <button class="filter-tab" onclick="setFilter('otro',this)">Otros <span class="count" id="countOtro">0</span></button>
+        </div>
         <div class="conversations-list" id="conversationsList">
           <div class="empty-state">
             <div class="empty-state-icon">📱</div>
@@ -304,6 +327,14 @@
           <div class="form-group">
             <label>Email</label>
             <input type="email" id="contactEmail" placeholder="email@example.com">
+          </div>
+          <div class="form-group">
+            <label>Tipo de contacto</label>
+            <select id="contactType">
+              <option value="lead">🟡 Lead</option>
+              <option value="cliente">🟢 Cliente</option>
+              <option value="otro">⚪ Otro</option>
+            </select>
           </div>
           <div class="form-group">
             <label>Estado</label>
@@ -341,6 +372,9 @@
     let currentUser = null;
     let clientSlug = '';
     let selectedPhone = null;
+    let allConversations = [];
+    let contactTypes = {}; // phone -> 'lead'|'cliente'|'otro'
+    let activeFilter = 'all';
 
     function toSlug(email) {
       return email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
@@ -396,18 +430,83 @@
           return;
         }
 
-        const list = document.getElementById('conversationsList');
-        list.innerHTML = data.map(conv => `
-          <div class="conversation-item" onclick="selectContact('${conv.phoneNumber || conv.phone}', '${conv.name || 'Sin nombre'}')">
-            <div class="conversation-name">${conv.name || 'Sin nombre'}</div>
-            <div class="conversation-phone">${conv.phoneNumber || conv.phone || ''}</div>
-            <div class="conversation-preview">${conv.lastMessage || ''}</div>
-          </div>
-        `).join('');
+        allConversations = data;
+        await loadContactTypes();
+        updateCounts();
+        applyContactFilter();
       } catch (error) {
         console.error('Error cargando conversaciones:', error);
         document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error al cargar conversaciones</p></div>';
       }
+    }
+
+    async function loadContactTypes() {
+      if (!currentUser) return;
+      const snapshot = await db.collection('contacts')
+        .where('client_uid', '==', currentUser.uid)
+        .get();
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        if (d.phone && d.contactType) contactTypes[d.phone] = d.contactType;
+      });
+    }
+
+    function getContactType(phone) {
+      return contactTypes[phone] || 'otro';
+    }
+
+    function updateCounts() {
+      let leads = 0, clientes = 0, otros = 0;
+      allConversations.forEach(c => {
+        const type = getContactType(c.phoneNumber || c.phone);
+        if (type === 'lead') leads++;
+        else if (type === 'cliente') clientes++;
+        else otros++;
+      });
+      document.getElementById('countAll').textContent = allConversations.length;
+      document.getElementById('countLead').textContent = leads;
+      document.getElementById('countCliente').textContent = clientes;
+      document.getElementById('countOtro').textContent = otros;
+    }
+
+    function setFilter(filter, btn) {
+      activeFilter = filter;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      applyContactFilter();
+    }
+
+    function applyContactFilter() {
+      const q = (document.getElementById('contactSearch').value || '').toLowerCase();
+      const filtered = allConversations.filter(c => {
+        const phone = c.phoneNumber || c.phone || '';
+        const name = c.name || '';
+        const type = getContactType(phone);
+        if (activeFilter !== 'all' && type !== activeFilter) return false;
+        if (q && !name.toLowerCase().includes(q) && !phone.includes(q)) return false;
+        return true;
+      });
+      renderConversations(filtered);
+    }
+
+    function renderConversations(list) {
+      const container = document.getElementById('conversationsList');
+      if (list.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Sin contactos en este grupo</p></div>';
+        return;
+      }
+      const typeClass = { lead:'type-lead', cliente:'type-cliente', otro:'type-otro' };
+      const typeLabel = { lead:'Lead', cliente:'Cliente', otro:'Otro' };
+      container.innerHTML = list.map(conv => {
+        const phone = conv.phoneNumber || conv.phone || '';
+        const name = conv.name || 'Sin nombre';
+        const type = getContactType(phone);
+        return `<div class="conversation-item" onclick="selectContact('${phone}', '${name.replace(/'/g, "\\'")}')">
+          <div class="conversation-name">${name}<span class="contact-type-badge ${typeClass[type]}">${typeLabel[type]}</span></div>
+          <div class="conversation-phone">${phone}</div>
+          <div class="conversation-preview">${conv.lastMessage || ''}</div>
+        </div>`;
+      }).join('');
     }
 
     async function selectContact(phone, name) {
@@ -423,6 +522,7 @@
       document.getElementById('contactName').value = name;
       document.getElementById('contactPhone').value = phone;
       document.getElementById('contactEmail').value = data.email || '';
+      document.getElementById('contactType').value = data.contactType || getContactType(phone);
       document.getElementById('contactStatus').value = data.status || 'lead';
       document.getElementById('contactNotes').value = data.notes || '';
 
@@ -437,14 +537,19 @@
 
       try {
         const docId = currentUser.uid + '_' + selectedPhone;
+        const newType = document.getElementById('contactType').value;
         await db.collection('contacts').doc(docId).set({
           client_uid: currentUser.uid,
           phone: selectedPhone,
           email: document.getElementById('contactEmail').value,
+          contactType: newType,
           status: document.getElementById('contactStatus').value,
           notes: document.getElementById('contactNotes').value,
           updated_at: new Date()
         }, { merge: true });
+        contactTypes[selectedPhone] = newType;
+        updateCounts();
+        applyContactFilter();
 
         alert('Contacto guardado exitosamente');
       } catch (error) {

@@ -3,827 +3,570 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIIA - Panel de Admin</title>
+  <title>MIIA - Casa Central</title>
   <style>
     :root {
-      --primary: #667eea;
-      --primary-dark: #5568d3;
-      --secondary: #764ba2;
-      --accent: #25d366;
-      --accent-dark: #1ebe5a;
-      --bg-light: #f5f7fa;
-      --bg-white: #ffffff;
-      --text-dark: #1a1a2e;
-      --text-body: #4a4a6a;
-      --text-muted: #8888a4;
+      --primary: #667eea; --primary-dark: #5568d3; --secondary: #764ba2;
+      --accent: #25d366; --accent-dark: #1ebe5a; --danger: #ef4444; --warning: #f59e0b;
+      --bg-light: #f5f7fa; --bg-white: #ffffff;
+      --text-dark: #1a1a2e; --text-body: #4a4a6a; --text-muted: #8888a4;
       --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
-      --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
-      --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-      --radius-full: 50px;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-body);
-      background: var(--bg-light);
-      min-height: 100vh;
-      line-height: 1.6;
-      padding-top: 80px;
-    }
-
-    /* ═══ NAVBAR ═══ */
-    #navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 80px;
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(102, 126, 234, 0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 40px;
-      z-index: 100;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .nav-logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: var(--gradient-main);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    .nav-title {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 20px;
-    }
-
-    .admin-badge {
-      padding: 6px 12px;
-      background: rgba(102, 126, 234, 0.1);
-      color: var(--primary);
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .logout-btn {
-      padding: 10px 20px;
-      background: transparent;
-      color: var(--primary);
-      border: 2px solid var(--primary);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .logout-btn:hover {
-      background: var(--primary);
-      color: white;
-    }
-
-    /* ═══ CONTAINER ═══ */
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 40px;
-    }
-
-    /* ═══ STATS ROW ═══ */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 24px;
-      margin-bottom: 40px;
-    }
-
-    .stat-card {
-      background: var(--bg-white);
-      padding: 32px;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid rgba(102, 126, 234, 0.08);
-    }
-
-    .stat-label {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      font-weight: 500;
-      margin-bottom: 8px;
-    }
-
-    .stat-number {
-      font-size: 2rem;
-      font-weight: 700;
-      background: var(--gradient-main);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-
-    /* ═══ TABLE SECTION ═══ */
-    .table-card {
-      background: var(--bg-white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid rgba(102, 126, 234, 0.08);
-      overflow: hidden;
-    }
-
-    .table-header {
-      padding: 24px;
-      border-bottom: 1px solid rgba(102, 126, 234, 0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .table-header h2 {
-      color: var(--text-dark);
-      font-size: 1.4rem;
-      font-weight: 700;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    thead {
-      background: rgba(102, 126, 234, 0.02);
-    }
-
-    th {
-      padding: 16px 20px;
-      text-align: left;
-      color: var(--text-muted);
-      font-weight: 600;
-      font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      border-bottom: 1px solid rgba(102, 126, 234, 0.08);
-    }
-
-    td {
-      padding: 16px 20px;
-      border-bottom: 1px solid rgba(102, 126, 234, 0.04);
-    }
-
-    tr:hover {
-      background: rgba(102, 126, 234, 0.01);
-    }
-
-    .user-cell {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .user-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: rgba(102, 126, 234, 0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.2rem;
-      color: var(--primary);
-    }
-
-    .user-info {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .user-name {
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .user-email {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .badge {
-      padding: 6px 12px;
-      border-radius: var(--radius-full);
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: inline-block;
-    }
-
-    .badge-trial {
-      background: #fef3c7;
-      color: #92400e;
-    }
-
-    .badge-monthly {
-      background: #dbeafe;
-      color: #164e63;
-    }
-
-    .badge-quarterly {
-      background: #e9d5ff;
-      color: #6b21a8;
-    }
-
-    .badge-active {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .badge-pending {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-
-    .badge-client {
-      background: #dcfce7;
-      color: #166534;
-    }
-
-    .badge-agent {
-      background: #dbeafe;
-      color: #164e63;
-    }
-
-    .key-status {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .key-icon {
-      font-size: 1rem;
-    }
-
-    .btn-small {
-      padding: 8px 16px;
-      background: var(--primary);
-      color: white;
-      border: none;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.8rem;
-      transition: all 0.3s ease;
-    }
-
-    .btn-small:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    /* ═══ MODAL ═══ */
-    .modal-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 200;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal {
-      background: var(--bg-white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
-      padding: 40px;
-      max-width: 500px;
-      width: 90%;
-      max-height: 90vh;
-      overflow-y: auto;
-    }
-
-    .modal-header {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 24px;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text-dark);
-      font-weight: 600;
-      font-size: 0.9rem;
-    }
-
-    .form-group input,
-    .form-group select {
-      width: 100%;
-      padding: 12px;
-      border: 2px solid rgba(102, 126, 234, 0.15);
-      border-radius: var(--radius-sm);
-      font-family: inherit;
-      font-size: 0.95rem;
-      transition: all 0.3s ease;
-    }
-
-    .form-group input:focus,
-    .form-group select:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .toggle-group {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .toggle {
-      width: 50px;
-      height: 28px;
-      background: #ccc;
-      border-radius: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: none;
-      position: relative;
-    }
-
-    .toggle.active {
-      background: var(--accent);
-    }
-
-    .toggle::after {
-      content: '';
-      position: absolute;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      background: white;
-      top: 2px;
-      left: 2px;
-      transition: all 0.3s ease;
-    }
-
-    .toggle.active::after {
-      left: 24px;
-    }
-
-    .modal-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 32px;
-    }
-
-    .modal-buttons button {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .btn-save {
-      background: var(--gradient-main);
-      color: white;
-    }
-
-    .btn-save:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-cancel {
-      background: transparent;
-      color: var(--text-body);
-      border: 2px solid rgba(102, 126, 234, 0.15);
-    }
-
-    .btn-cancel:hover {
-      background: var(--bg-light);
-    }
-
-    /* ═══ MY MIIA SECTION ═══ */
-    .my-miia-section {
-      margin-top: 60px;
-      padding-top: 40px;
-      border-top: 2px solid rgba(102, 126, 234, 0.08);
-    }
-
-    .my-miia-card {
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%);
-      border: 2px solid rgba(102, 126, 234, 0.2);
-      border-radius: var(--radius-lg);
-      padding: 40px;
-      text-align: center;
-    }
-
-    .my-miia-card h3 {
-      font-size: 1.5rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 12px;
-    }
-
-    .my-miia-card p {
-      color: var(--text-muted);
-      margin-bottom: 24px;
-    }
-
-    .btn-training {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 32px;
-      background: var(--gradient-main);
-      color: white;
-      border: none;
-      border-radius: var(--radius-md);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .btn-training:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
-    }
-
-    /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 768px) {
-      #navbar {
-        padding: 0 20px;
-      }
-
-      .container {
-        padding: 20px;
-      }
-
-      .nav-title {
-        display: none;
-      }
-
-      table {
-        font-size: 0.85rem;
-      }
-
-      th, td {
-        padding: 12px;
-      }
-
-      .modal {
-        padding: 24px;
-      }
+      --shadow-sm: 0 2px 8px rgba(102,126,234,0.08);
+      --shadow-card: 0 4px 20px rgba(0,0,0,0.06),0 1px 3px rgba(0,0,0,0.04);
+      --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 50px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:var(--text-body); background:var(--bg-light); min-height:100vh; padding-top:80px; }
+
+    /* Navbar */
+    #navbar { position:fixed; top:0; left:0; right:0; height:80px; background:rgba(255,255,255,0.92); backdrop-filter:blur(20px); border-bottom:1px solid rgba(102,126,234,0.08); display:flex; justify-content:space-between; align-items:center; padding:0 40px; z-index:100; }
+    .nav-logo { font-size:1.6rem; font-weight:800; background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .nav-right { display:flex; align-items:center; gap:16px; }
+    .nav-email { font-size:0.85rem; color:var(--text-muted); padding:6px 14px; background:rgba(102,126,234,0.06); border-radius:var(--radius-full); }
+    .nav-btn { padding:8px 18px; border-radius:var(--radius-sm); font-size:0.85rem; font-weight:600; cursor:pointer; border:none; transition:all 0.3s; }
+    .nav-btn.logout { background:transparent; border:1px solid var(--danger); color:var(--danger); }
+    .nav-btn.logout:hover { background:var(--danger); color:white; }
+
+    /* Tabs */
+    .tabs-container { max-width:1200px; margin:20px auto 0; padding:0 20px; }
+    .tabs-nav { display:flex; gap:4px; background:var(--bg-white); border-radius:var(--radius-md) var(--radius-md) 0 0; padding:8px 8px 0; border:1px solid rgba(102,126,234,0.08); border-bottom:none; overflow-x:auto; }
+    .tab-btn { padding:12px 20px; border:none; background:transparent; color:var(--text-muted); font-weight:600; font-size:0.9rem; cursor:pointer; border-radius:var(--radius-sm) var(--radius-sm) 0 0; white-space:nowrap; transition:all 0.3s; }
+    .tab-btn:hover { color:var(--primary); background:rgba(102,126,234,0.05); }
+    .tab-btn.active { color:var(--primary); background:var(--bg-light); border-bottom:3px solid var(--primary); }
+    .tab-content { background:var(--bg-white); border:1px solid rgba(102,126,234,0.08); border-radius:0 0 var(--radius-lg) var(--radius-lg); padding:32px; min-height:500px; }
+    .tab-panel { display:none; } .tab-panel.active { display:block; }
+
+    /* Stats */
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:24px; }
+    .stat-card { background:var(--bg-white); border:1px solid rgba(102,126,234,0.08); border-radius:var(--radius-md); padding:20px; text-align:center; }
+    .stat-card .value { font-size:2rem; font-weight:800; color:var(--text-dark); }
+    .stat-card .label { font-size:0.82rem; color:var(--text-muted); margin-top:4px; }
+
+    /* Tables */
+    .data-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+    .data-table th { background:rgba(102,126,234,0.06); color:var(--text-dark); font-weight:600; padding:12px 14px; text-align:left; border-bottom:2px solid rgba(102,126,234,0.1); font-size:0.82rem; text-transform:uppercase; letter-spacing:0.3px; }
+    .data-table td { padding:12px 14px; border-bottom:1px solid rgba(0,0,0,0.04); vertical-align:middle; }
+    .data-table tr:hover { background:rgba(102,126,234,0.02); }
+
+    /* Badges */
+    .badge { display:inline-block; padding:4px 12px; border-radius:var(--radius-full); font-size:0.78rem; font-weight:600; }
+    .badge-green { background:rgba(37,211,102,0.1); color:#16a34a; }
+    .badge-blue { background:rgba(102,126,234,0.1); color:var(--primary); }
+    .badge-red { background:rgba(239,68,68,0.08); color:var(--danger); }
+    .badge-yellow { background:rgba(245,158,11,0.1); color:#d97706; }
+
+    /* User cell */
+    .user-cell { display:flex; align-items:center; gap:10px; }
+    .user-avatar { width:36px; height:36px; border-radius:50%; background:var(--gradient-main); color:white; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:0.9rem; }
+    .user-name { font-weight:600; color:var(--text-dark); }
+    .user-email { font-size:0.8rem; color:var(--text-muted); }
+
+    /* Buttons */
+    .btn-sm { padding:8px 18px; border-radius:var(--radius-sm); font-size:0.85rem; font-weight:600; cursor:pointer; border:none; transition:all 0.3s; }
+    .btn-primary { background:var(--gradient-main); color:white; }
+    .btn-outline { background:transparent; border:1px solid var(--primary); color:var(--primary); }
+    .btn-outline:hover { background:var(--primary); color:white; }
+    .btn-danger { background:transparent; border:1px solid var(--danger); color:var(--danger); }
+    .btn-danger:hover { background:var(--danger); color:white; }
+    .btn-sm-inline { padding:4px 12px; border-radius:var(--radius-sm); font-size:0.82rem; font-weight:600; cursor:pointer; border:1px solid rgba(102,126,234,0.2); background:transparent; color:var(--primary); }
+
+    /* Alert cards */
+    .alert-card { padding:14px 20px; border-radius:var(--radius-md); margin-bottom:8px; font-size:0.88rem; display:flex; align-items:center; gap:10px; }
+    .alert-card.warn { background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.15); color:#92400e; }
+    .alert-card.danger { background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.12); color:#991b1b; }
+
+    /* Section title */
+    .section-title { font-size:1.2rem; font-weight:700; color:var(--text-dark); margin-bottom:16px; }
+
+    /* Env vars list */
+    .env-list { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .env-item { display:flex; align-items:center; gap:8px; padding:8px 14px; background:rgba(102,126,234,0.03); border-radius:var(--radius-sm); font-size:0.85rem; }
+
+    /* Toolbar */
+    .toolbar { display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
+    .toolbar input { padding:8px 16px; border:1px solid rgba(102,126,234,0.15); border-radius:var(--radius-full); font-size:0.88rem; width:260px; }
+    .toolbar input:focus { outline:none; border-color:var(--primary); }
+    .toolbar select { padding:8px 14px; border:1px solid rgba(102,126,234,0.15); border-radius:var(--radius-sm); font-size:0.85rem; }
+
+    /* Modal */
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); display:none; align-items:center; justify-content:center; z-index:200; }
+    .modal-overlay.active { display:flex; }
+    .modal { background:white; border-radius:var(--radius-lg); padding:32px; max-width:500px; width:90%; }
+    .modal h3 { margin-bottom:20px; color:var(--text-dark); }
+    .form-group { margin-bottom:16px; }
+    .form-group label { display:block; font-size:0.85rem; font-weight:600; color:var(--text-dark); margin-bottom:6px; }
+    .form-group input, .form-group select { width:100%; padding:10px 14px; border:1px solid rgba(102,126,234,0.15); border-radius:var(--radius-sm); font-size:0.9rem; }
+    .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--primary); }
+    .modal-actions { display:flex; gap:10px; margin-top:20px; }
+
+    /* Tenant card */
+    .tenant-card { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:rgba(102,126,234,0.03); border-radius:var(--radius-md); margin-bottom:8px; border:1px solid rgba(102,126,234,0.06); }
+    .tenant-status { display:flex; align-items:center; gap:6px; font-size:0.85rem; }
+    .dot { width:10px; height:10px; border-radius:50%; }
+    .dot.green { background:#22c55e; } .dot.red { background:#ef4444; } .dot.yellow { background:#f59e0b; }
+
+    .hidden { display:none !important; }
+    @media (max-width:768px) {
+      #navbar { padding:0 16px; } .tabs-container { padding:0 12px; }
+      .tab-content { padding:20px 16px; } .tab-btn { padding:10px 14px; font-size:0.82rem; }
+      .env-list { grid-template-columns:1fr; }
     }
   </style>
-
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav id="navbar">
-    <div class="nav-left">
-      <div class="nav-logo">🤖 MIIA</div>
-      <div class="nav-title">Panel de Admin</div>
-    </div>
-    <div class="nav-right">
-      <div class="admin-badge" id="adminEmail">admin@email.com</div>
-      <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
-    </div>
-  </nav>
 
-  <!-- Main Container -->
-  <div class="container">
-    <!-- Stats Row -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">Total de usuarios</div>
-        <div class="stat-number" id="statTotal">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">En período de prueba</div>
-        <div class="stat-number" id="statTrial">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Con API Key</div>
-        <div class="stat-number" id="statApiKey">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Ingresos (estimado)</div>
-        <div class="stat-number">USD <span id="statRevenue">0</span></div>
-      </div>
-    </div>
+<nav id="navbar">
+  <span class="nav-logo">MIIA Admin</span>
+  <div class="nav-right">
+    <span class="nav-email" id="adminEmail">—</span>
+    <button class="nav-btn logout" onclick="handleLogout()">Cerrar Sesion</button>
+  </div>
+</nav>
 
-    <!-- Users Table -->
-    <div class="table-card">
-      <div class="table-header">
-        <h2>Usuarios y clientes</h2>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Usuario</th>
-            <th>Role</th>
-            <th>Plan</th>
-            <th>Estado</th>
-            <th>Agentes</th>
-            <th>API Key</th>
-            <th>Descuento</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="usersTableBody">
-          <tr>
-            <td colspan="8" style="text-align: center; padding: 40px;">Cargando...</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-
-    <!-- My MIIA Section -->
-    <div class="my-miia-section">
-      <div class="my-miia-card">
-        <h3>🤖 Entrenar mi MIIA</h3>
-        <p>Accede a tu área de entrenamiento para enseñarle a MIIA cómo comunicarse con tus clientes</p>
-        <button class="btn-training" onclick="window.location.href='training.html'">
-          🧠 Ir a entrenamiento
-        </button>
-      </div>
-    </div>
+<div class="tabs-container">
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab(this,'dashboard')">Dashboard</button>
+    <button class="tab-btn" onclick="switchTab(this,'usuarios')">Usuarios</button>
+    <button class="tab-btn" onclick="switchTab(this,'tenants')">Tenants WA</button>
+    <button class="tab-btn" onclick="switchTab(this,'billing')">Facturacion</button>
+    <button class="tab-btn" onclick="switchTab(this,'owner')">MIIA Owner</button>
+    <button class="tab-btn" onclick="switchTab(this,'system')">Sistema</button>
   </div>
 
-  <!-- Edit Modal -->
-  <div class="modal-overlay" id="editModal">
-    <div class="modal">
-      <div class="modal-header">Editar usuario</div>
-      <form id="editForm">
-        <div class="form-group">
-          <label>Plan</label>
-          <select id="editPlan" required>
-            <option value="trial">Trial - Gratis 7 días</option>
-            <option value="monthly">Mensual - $12 USD</option>
-            <option value="quarterly">Trimestral - $30 USD</option>
-            <option value="semestral">Semestral - $55 USD</option>
-            <option value="annual">Anual - $75 USD</option>
-          </select>
-        </div>
+  <div class="tab-content">
 
-        <div class="form-group">
-          <label>Límite de agentes</label>
-          <input type="number" id="editAgentsLimit" min="1" max="100" required>
-        </div>
+    <!-- ═══ TAB 1: DASHBOARD ═══ -->
+    <div id="tab-dashboard" class="tab-panel active">
+      <div class="stats-grid">
+        <div class="stat-card"><div class="value" id="statTotal">0</div><div class="label">Total usuarios</div></div>
+        <div class="stat-card"><div class="value" id="statActive">0</div><div class="label">Activos</div></div>
+        <div class="stat-card"><div class="value" id="statTrial">0</div><div class="label">En trial</div></div>
+        <div class="stat-card"><div class="value">$<span id="statMRR">0</span></div><div class="label">MRR estimado (USD)</div></div>
+      </div>
 
-        <div class="form-group">
-          <label>Próxima fecha de facturación</label>
-          <input type="date" id="editBillingDate">
-        </div>
+      <h4 class="section-title">Alertas</h4>
+      <div id="alertsList">
+        <p style="color:var(--text-muted);font-size:0.9rem;">Cargando...</p>
+      </div>
+    </div>
 
-        <div class="form-group">
-          <label>Descuento (%)</label>
-          <input type="number" id="editDiscount" min="0" max="100" value="0">
-        </div>
+    <!-- ═══ TAB 2: USUARIOS ═══ -->
+    <div id="tab-usuarios" class="tab-panel">
+      <div class="toolbar">
+        <input type="text" id="userSearch" placeholder="Buscar por email o nombre..." oninput="filterUsers()">
+        <select id="filterPlan" onchange="filterUsers()">
+          <option value="">Todos los planes</option>
+          <option value="trial">Trial</option>
+          <option value="monthly">Mensual</option>
+          <option value="quarterly">Trimestral</option>
+          <option value="semestral">Semestral</option>
+          <option value="annual">Anual</option>
+        </select>
+        <select id="filterStatus" onchange="filterUsers()">
+          <option value="">Todos los estados</option>
+          <option value="trial">Trial</option>
+          <option value="active">Activo</option>
+          <option value="pending_payment">Pago pendiente</option>
+        </select>
+        <button class="btn-sm btn-primary" onclick="openCreateModal()">+ Crear usuario</button>
+        <button class="btn-sm btn-outline" onclick="window.open('admin/usuariosclientes.html','_blank')">Vista completa</button>
+      </div>
 
-        <div class="form-group">
-          <label>Estado de pago</label>
-          <select id="editPaymentStatus" required>
-            <option value="trial">Trial</option>
-            <option value="active">Activo</option>
-            <option value="pending_payment">Pago pendiente</option>
-            <option value="expired">Expirado</option>
-          </select>
-        </div>
+      <div style="overflow-x:auto;">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Usuario</th><th>Role</th><th>Plan</th><th>Estado</th>
+              <th>Agentes</th><th>API Key</th><th>Descuento</th><th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody"></tbody>
+        </table>
+      </div>
+    </div>
 
-        <div class="form-group">
-          <label>Aprobado</label>
-          <div class="toggle-group">
-            <button type="button" class="toggle" id="editApproved" onclick="toggleApproval()"></button>
-            <span id="approvalText">No aprobado</span>
-          </div>
-        </div>
+    <!-- ═══ TAB 3: TENANTS WA ═══ -->
+    <div id="tab-tenants" class="tab-panel">
+      <h4 class="section-title">Sesiones WhatsApp activas</h4>
+      <div id="tenantsList"><p style="color:var(--text-muted);">Cargando...</p></div>
+    </div>
 
-        <div class="modal-buttons">
-          <button type="submit" class="btn-save">Guardar cambios</button>
-          <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
-        </div>
-      </form>
+    <!-- ═══ TAB 4: FACTURACION ═══ -->
+    <div id="tab-billing" class="tab-panel">
+      <div class="stats-grid" style="margin-bottom:24px;">
+        <div class="stat-card"><div class="value">$<span id="billingMRR">0</span></div><div class="label">MRR actual</div></div>
+        <div class="stat-card"><div class="value" id="billingPaid">0</div><div class="label">Clientes de pago</div></div>
+        <div class="stat-card"><div class="value" id="billingPending">0</div><div class="label">Pagos pendientes</div></div>
+      </div>
+
+      <h4 class="section-title">Clientes por plan</h4>
+      <div id="planBreakdown"></div>
+    </div>
+
+    <!-- ═══ TAB 5: MIIA OWNER ═══ -->
+    <div id="tab-owner" class="tab-panel">
+      <div class="stats-grid" style="margin-bottom:24px;">
+        <div class="stat-card"><div class="value" id="brainSize">—</div><div class="label">Cerebro (chars)</div></div>
+        <div class="stat-card"><div class="value" id="brainConvos">—</div><div class="label">Conversaciones</div></div>
+      </div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
+        <button class="btn-sm btn-primary" onclick="window.location.href='training.html'">Ir a entrenamiento</button>
+        <button class="btn-sm btn-outline" onclick="forceADNMining()">Forzar ADN Mining</button>
+        <button class="btn-sm btn-outline" onclick="forceScraperRun()">Ejecutar Scraper</button>
+      </div>
+
+      <h4 class="section-title">Estado del cerebro</h4>
+      <div id="cerebroStatus"><p style="color:var(--text-muted);">Cargando...</p></div>
+    </div>
+
+    <!-- ═══ TAB 6: SISTEMA ═══ -->
+    <div id="tab-system" class="tab-panel">
+      <h4 class="section-title">Variables de entorno</h4>
+      <div class="env-list" id="envList">
+        <div class="env-item"><span>GEMINI_API_KEY</span><span id="envGemini">—</span></div>
+        <div class="env-item"><span>STRIPE_SECRET_KEY</span><span id="envStripe">—</span></div>
+        <div class="env-item"><span>STRIPE_WEBHOOK_SECRET</span><span id="envWebhook">—</span></div>
+        <div class="env-item"><span>FRONTEND_URL</span><span id="envFrontend">—</span></div>
+        <div class="env-item"><span>ADMIN_API_KEY</span><span id="envAdmin">—</span></div>
+        <div class="env-item"><span>SKIP_WA_INIT</span><span id="envSkipWA">—</span></div>
+      </div>
+
+      <h4 class="section-title" style="margin-top:24px;">Servidor</h4>
+      <div id="serverInfo"><p style="color:var(--text-muted);">Cargando...</p></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ EDIT MODAL ═══ -->
+<div class="modal-overlay" id="editModal" onclick="if(event.target===this)closeEditModal()">
+  <div class="modal">
+    <h3 id="editModalTitle">Editar usuario</h3>
+    <form id="editForm" onsubmit="submitEditForm(event)">
+      <div class="form-group"><label>Plan</label>
+        <select id="editPlan"><option value="trial">Trial</option><option value="monthly">Mensual - $12</option><option value="quarterly">Trimestral - $30</option><option value="semestral">Semestral - $55</option><option value="annual">Anual - $75</option></select>
+      </div>
+      <div class="form-group"><label>Limite de agentes</label><input type="number" id="editAgentsLimit" min="1" max="100"></div>
+      <div class="form-group"><label>Descuento (%)</label><input type="number" id="editDiscount" min="0" max="100"></div>
+      <div class="form-group"><label>Estado de pago</label>
+        <select id="editPaymentStatus"><option value="trial">Trial</option><option value="active">Activo</option><option value="pending_payment">Pago pendiente</option><option value="expired">Expirado</option></select>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-sm btn-primary">Guardar</button>
+        <button type="button" class="btn-sm btn-outline" onclick="closeEditModal()">Cancelar</button>
+        <button type="button" class="btn-sm btn-danger" style="margin-left:auto;" onclick="deleteCurrentUser()">Eliminar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ CREATE USER MODAL ═══ -->
+<div class="modal-overlay" id="createModal" onclick="if(event.target===this)this.classList.remove('active')">
+  <div class="modal">
+    <h3>Crear usuario manualmente</h3>
+    <form id="createForm" onsubmit="submitCreateUser(event)">
+      <div class="form-group"><label>Email</label><input type="email" id="createEmail" required></div>
+      <div class="form-group"><label>Nombre</label><input type="text" id="createName"></div>
+      <div class="form-group"><label>Plan inicial</label>
+        <select id="createPlan"><option value="trial">Trial</option><option value="monthly">Mensual</option><option value="quarterly">Trimestral</option></select>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-sm btn-primary">Crear</button>
+        <button type="button" class="btn-sm btn-outline" onclick="document.getElementById('createModal').classList.remove('active')">Cancelar</button>
+      </div>
+    </form>
+    <div id="createResult" class="hidden" style="margin-top:16px;padding:16px;background:rgba(37,211,102,0.08);border-radius:var(--radius-sm);">
+      <p style="font-weight:600;color:#16a34a;">Usuario creado</p>
+      <p style="font-size:0.9rem;margin-top:8px;">Contrasena temporal: <strong id="tempPasswordDisplay">—</strong></p>
+      <p style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">Comparte esta contrasena con el usuario. Podra cambiarla en su perfil.</p>
     </div>
   </div>
+</div>
 
-  <script>
-    // Firebase Config
-    const firebaseConfig = {
-      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
-      authDomain: "miia-app-8cbd0.firebaseapp.com",
-      projectId: "miia-app-8cbd0",
-      storageBucket: "miia-app-8cbd0.firebasestorage.app",
-      messagingSenderId: "481282126913",
-      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
-    };
+<script>
+  const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+  const ADMIN_API_KEY = 'test-admin-key'; // Should match Railway env
+  const firebaseConfig = {
+    apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+    authDomain: "miia-app-8cbd0.firebaseapp.com",
+    projectId: "miia-app-8cbd0",
+    storageBucket: "miia-app-8cbd0.firebasestorage.app",
+    messagingSenderId: "481282126913",
+    appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const dbFs = firebase.firestore();
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    const db = firebase.firestore();
+  const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
+  let users = [];
+  let currentEditUid = null;
 
-    const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
-    let currentEditingUid = null;
-    let users = [];
+  // Auth guard
+  auth.onAuthStateChanged(user => {
+    if (!user) { window.location.href = 'login.html'; return; }
+    if (!ADMIN_EMAILS.includes(user.email)) { window.location.href = 'dashboard.html'; return; }
+    document.getElementById('adminEmail').textContent = user.email;
+    loadAll();
+  });
 
-    // Auth guard
-    auth.onAuthStateChanged(user => {
-      if (!user) {
-        window.location.href = 'login.html';
-        return;
+  function switchTab(btn, id) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  async function loadAll() {
+    await loadUsers();
+    loadTenants();
+    loadCerebroStatus();
+    loadServerInfo();
+  }
+
+  // ═══ USERS ═══
+  async function loadUsers() {
+    const snapshot = await dbFs.collection('users').get();
+    users = [];
+    snapshot.forEach(doc => users.push({ uid: doc.id, ...doc.data() }));
+    renderUsers();
+    updateDashboard();
+  }
+
+  function renderUsers(filtered) {
+    const list = filtered || users;
+    const planNames = { trial:'Trial', monthly:'Mensual', quarterly:'Trimestral', semestral:'Semestral', annual:'Anual' };
+    const statusBadge = s => s === 'active' ? 'badge-green' : s === 'pending_payment' ? 'badge-red' : 'badge-yellow';
+    const tbody = document.getElementById('usersTableBody');
+    if (list.length === 0) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted);">No hay usuarios</td></tr>'; return; }
+    tbody.innerHTML = list.map(u => `<tr>
+      <td><div class="user-cell"><div class="user-avatar">${(u.name||'?').charAt(0).toUpperCase()}</div><div><div class="user-name">${esc(u.name||'Sin nombre')}</div><div class="user-email">${esc(u.email)}</div></div></div></td>
+      <td><span class="badge badge-blue">${u.role||'admin'}</span></td>
+      <td><span class="badge badge-blue">${planNames[u.plan]||u.plan||'—'}</span></td>
+      <td><span class="badge ${statusBadge(u.payment_status)}">${u.payment_status||'trial'}</span></td>
+      <td>${u.agents_limit||1}</td>
+      <td>${u.gemini_api_key ? '✅' : '❌'}</td>
+      <td>${u.discount_percent||0}%</td>
+      <td>
+        <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
+        <button class="btn-sm-inline" onclick="window.open('dashboard.html?u=${encodeURIComponent(toSlug(u.email))}&adminView=1','_blank')" title="Ver como usuario" style="margin-left:4px;">👁</button>
+      </td>
+    </tr>`).join('');
+  }
+
+  function filterUsers() {
+    const q = document.getElementById('userSearch').value.toLowerCase();
+    const plan = document.getElementById('filterPlan').value;
+    const status = document.getElementById('filterStatus').value;
+    const filtered = users.filter(u => {
+      if (q && !u.email?.toLowerCase().includes(q) && !u.name?.toLowerCase().includes(q)) return false;
+      if (plan && u.plan !== plan) return false;
+      if (status && u.payment_status !== status) return false;
+      return true;
+    });
+    renderUsers(filtered);
+  }
+
+  function updateDashboard() {
+    document.getElementById('statTotal').textContent = users.length;
+    document.getElementById('statActive').textContent = users.filter(u => u.payment_status === 'active').length;
+    document.getElementById('statTrial').textContent = users.filter(u => !u.plan || u.plan === 'trial').length;
+
+    const planPrices = { monthly:12, quarterly:10, semestral:9.17, annual:6.25 };
+    let mrr = 0;
+    let paidCount = 0, pendingCount = 0;
+    const planCounts = {};
+    users.forEach(u => {
+      if (u.plan && planPrices[u.plan]) {
+        const base = planPrices[u.plan];
+        const extra = ((u.agents_limit||1) - 1) * 3;
+        const disc = (u.discount_percent||0) / 100;
+        mrr += (base + extra) * (1 - disc);
+        paidCount++;
       }
+      if (u.payment_status === 'pending_payment') pendingCount++;
+      const p = u.plan || 'trial';
+      planCounts[p] = (planCounts[p]||0) + 1;
+    });
+    document.getElementById('statMRR').textContent = mrr.toFixed(2);
+    document.getElementById('billingMRR').textContent = mrr.toFixed(2);
+    document.getElementById('billingPaid').textContent = paidCount;
+    document.getElementById('billingPending').textContent = pendingCount;
 
-      if (!ADMIN_EMAILS.includes(user.email)) {
-        window.location.href = 'dashboard.html';
-        return;
-      }
+    // Plan breakdown
+    const planNames = { trial:'Trial', monthly:'Mensual', quarterly:'Trimestral', semestral:'Semestral', annual:'Anual' };
+    document.getElementById('planBreakdown').innerHTML = Object.entries(planCounts)
+      .map(([k,v]) => `<div class="tenant-card"><span>${planNames[k]||k}</span><span class="badge badge-blue">${v} usuarios</span></div>`).join('');
 
-      document.getElementById('adminEmail').textContent = user.email;
+    // Alerts
+    const alerts = [];
+    if (pendingCount > 0) alerts.push({ type:'warn', text:`${pendingCount} usuario(s) con pago pendiente` });
+    const noKey = users.filter(u => !u.gemini_api_key && u.plan !== 'trial').length;
+    if (noKey > 0) alerts.push({ type:'danger', text:`${noKey} usuario(s) de pago sin API Key configurada` });
+    document.getElementById('alertsList').innerHTML = alerts.length === 0
+      ? '<p style="color:var(--text-muted);font-size:0.9rem;">Sin alertas</p>'
+      : alerts.map(a => `<div class="alert-card ${a.type}"><span>${a.type==='warn'?'⚠️':'🔴'}</span><span>${a.text}</span></div>`).join('');
+  }
+
+  // ═══ EDIT/CREATE MODALS ═══
+  function openEditModal(uid) {
+    currentEditUid = uid;
+    const u = users.find(x => x.uid === uid);
+    document.getElementById('editModalTitle').textContent = `Editar: ${u.name || u.email}`;
+    document.getElementById('editPlan').value = u.plan || 'trial';
+    document.getElementById('editAgentsLimit').value = u.agents_limit || 1;
+    document.getElementById('editDiscount').value = u.discount_percent || 0;
+    document.getElementById('editPaymentStatus').value = u.payment_status || 'trial';
+    document.getElementById('editModal').classList.add('active');
+  }
+  function closeEditModal() { document.getElementById('editModal').classList.remove('active'); currentEditUid = null; }
+
+  async function submitEditForm(e) {
+    e.preventDefault();
+    await dbFs.collection('users').doc(currentEditUid).update({
+      plan: document.getElementById('editPlan').value,
+      agents_limit: parseInt(document.getElementById('editAgentsLimit').value),
+      discount_percent: parseInt(document.getElementById('editDiscount').value),
+      payment_status: document.getElementById('editPaymentStatus').value
+    });
+    closeEditModal();
+    loadUsers();
+  }
+
+  async function deleteCurrentUser() {
+    if (!currentEditUid) return;
+    const u = users.find(x => x.uid === currentEditUid);
+    if (!confirm(`Eliminar ${u.email}? Esta accion es irreversible.`)) return;
+    try {
+      await fetch(`${BACKEND_URL}/api/admin/user/${currentEditUid}`, {
+        method: 'DELETE', headers: { 'x-admin-key': ADMIN_API_KEY }
+      });
+      closeEditModal();
       loadUsers();
-    });
+    } catch (e) { alert('Error: ' + e.message); }
+  }
 
-    async function loadUsers() {
-      try {
-        const snapshot = await db.collection('users').get();
-        users = [];
-        snapshot.forEach(doc => {
-          users.push({ uid: doc.id, ...doc.data() });
-        });
+  function openCreateModal() {
+    document.getElementById('createForm').reset();
+    document.getElementById('createResult').classList.add('hidden');
+    document.getElementById('createModal').classList.add('active');
+  }
 
-        renderTable();
-        updateStats();
-      } catch (error) {
-        console.error('Error loading users:', error);
+  async function submitCreateUser(e) {
+    e.preventDefault();
+    const email = document.getElementById('createEmail').value;
+    const name = document.getElementById('createName').value;
+    const plan = document.getElementById('createPlan').value;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/admin/user`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_API_KEY },
+        body: JSON.stringify({ email, name, plan })
+      });
+      const data = await res.json();
+      if (data.success) {
+        document.getElementById('tempPasswordDisplay').textContent = data.tempPassword;
+        document.getElementById('createResult').classList.remove('hidden');
+        loadUsers();
+      } else {
+        alert('Error: ' + (data.error || 'Unknown error'));
       }
-    }
+    } catch (e) { alert('Error: ' + e.message); }
+  }
 
-    function renderTable() {
-      const tbody = document.getElementById('usersTableBody');
-      tbody.innerHTML = '';
-
-      if (users.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 40px;">No hay usuarios registrados</td></tr>';
+  // ═══ TENANTS ═══
+  async function loadTenants() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenants`, { headers: { 'x-admin-key': ADMIN_API_KEY } });
+      const tenants = await res.json();
+      if (!Array.isArray(tenants) || tenants.length === 0) {
+        document.getElementById('tenantsList').innerHTML = '<p style="color:var(--text-muted);">No hay sesiones WhatsApp activas</p>';
         return;
       }
-
-      users.forEach(user => {
-        const planNames = { trial: 'Trial', monthly: 'Mensual', quarterly: 'Trimestral', semestral: 'Semestral', annual: 'Anual' };
-        const statusNames = { trial: 'Trial', active: 'Activo', pending_payment: 'Pago pendiente', expired: 'Expirado' };
-
-        const row = `
-          <tr>
-            <td>
-              <div class="user-cell">
-                <div class="user-avatar">${user.name?.charAt(0) || '👤'}</div>
-                <div class="user-info">
-                  <div class="user-name">${user.name || 'Sin nombre'}</div>
-                  <div class="user-email">${user.email}</div>
-                </div>
-              </div>
-            </td>
-            <td><span class="badge ${user.role === 'client' ? 'badge-client' : 'badge-agent'}">${user.role || 'client'}</span></td>
-            <td><span class="badge badge-monthly">${planNames[user.plan] || user.plan}</span></td>
-            <td><span class="badge ${user.payment_status === 'active' ? 'badge-active' : 'badge-pending'}">${statusNames[user.payment_status] || user.payment_status}</span></td>
-            <td>${user.agents_limit || 1}</td>
-            <td>
-              <div class="key-status">
-                <span class="key-icon">${user.gemini_api_key ? '✅' : '❌'}</span>
-              </div>
-            </td>
-            <td>${user.discount_percent || 0}%</td>
-            <td><button class="btn-small" onclick="openEditModal('${user.uid}')">Editar</button></td>
-          </tr>
-        `;
-        tbody.innerHTML += row;
-      });
+      document.getElementById('tenantsList').innerHTML = tenants.map(t => `
+        <div class="tenant-card">
+          <div>
+            <strong>${t.uid.substring(0,20)}...</strong>
+            <div class="tenant-status">
+              <span class="dot ${t.isReady ? 'green' : t.hasQR ? 'yellow' : 'red'}"></span>
+              <span>${t.isReady ? 'Conectado' : t.hasQR ? 'Esperando QR' : 'Desconectado'}</span>
+              <span style="margin-left:12px;color:var(--text-muted);font-size:0.82rem;">${t.conversationCount} conversaciones</span>
+            </div>
+          </div>
+          <button class="btn-sm btn-danger" onclick="disconnectTenant('${t.uid}')">Desconectar</button>
+        </div>
+      `).join('');
+    } catch (e) {
+      document.getElementById('tenantsList').innerHTML = '<p style="color:var(--danger);">Error cargando tenants</p>';
     }
+  }
 
-    function updateStats() {
-      document.getElementById('statTotal').textContent = users.length;
-      document.getElementById('statTrial').textContent = users.filter(u => u.payment_status === 'trial').length;
-      document.getElementById('statApiKey').textContent = users.filter(u => u.gemini_api_key).length;
+  async function disconnectTenant(uid) {
+    if (!confirm('Desconectar este tenant?')) return;
+    await fetch(`${BACKEND_URL}/api/tenant/${uid}/logout`, { method: 'POST' });
+    loadTenants();
+  }
 
-      const planPrices = { monthly: 12, quarterly: 10, semestral: 9.17, annual: 6.25 };
-      let totalRevenue = 0;
-      users.forEach(u => {
-        if (u.plan && planPrices[u.plan]) {
-          const basePrice = planPrices[u.plan];
-          const extraAgents = (u.agents_limit || 1) - 1;
-          const discount = (u.discount_percent || 0) / 100;
-          totalRevenue += (basePrice + (extraAgents * 3)) * (1 - discount);
-        }
-      });
-      document.getElementById('statRevenue').textContent = totalRevenue.toFixed(2);
+  // ═══ CEREBRO STATUS ═══
+  async function loadCerebroStatus() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/cerebro/status`);
+      const data = await res.json();
+      document.getElementById('brainSize').textContent = data.trainingDataLength?.toLocaleString() || '0';
+      document.getElementById('cerebroStatus').innerHTML = `
+        <div class="tenant-card"><span>Training data</span><span>${data.trainingDataLength?.toLocaleString() || 0} caracteres</span></div>
+      `;
+    } catch (e) {
+      document.getElementById('cerebroStatus').innerHTML = '<p style="color:var(--danger);">Error conectando al backend</p>';
     }
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/stats`);
+      const stats = await res.json();
+      document.getElementById('brainConvos').textContent = stats.totalConversations || 0;
+    } catch (_) {}
+  }
 
-    function openEditModal(uid) {
-      currentEditingUid = uid;
-      const user = users.find(u => u.uid === uid);
+  async function forceADNMining() {
+    if (!confirm('Ejecutar ADN Mining ahora?')) return;
+    await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, { method: 'POST' });
+    alert('ADN Mining iniciado');
+  }
+  async function forceScraperRun() {
+    if (!confirm('Ejecutar scraper regulatorio ahora?')) return;
+    await fetch(`${BACKEND_URL}/api/scraper/run`, { method: 'POST' });
+    alert('Scraper iniciado');
+  }
 
-      document.getElementById('editPlan').value = user.plan || 'trial';
-      document.getElementById('editAgentsLimit').value = user.agents_limit || 1;
-      document.getElementById('editBillingDate').value = user.plan_end_date ? new Date(user.plan_end_date.toDate()).toISOString().split('T')[0] : '';
-      document.getElementById('editDiscount').value = user.discount_percent || 0;
-      document.getElementById('editPaymentStatus').value = user.payment_status || 'trial';
-
-      const approvedBtn = document.getElementById('editApproved');
-      if (user.approved) {
-        approvedBtn.classList.add('active');
-        document.getElementById('approvalText').textContent = 'Aprobado';
-      } else {
-        approvedBtn.classList.remove('active');
-        document.getElementById('approvalText').textContent = 'No aprobado';
-      }
-
-      document.getElementById('editModal').classList.add('active');
+  // ═══ SERVER INFO ═══
+  async function loadServerInfo() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/health`);
+      const data = await res.json();
+      document.getElementById('serverInfo').innerHTML = `
+        <div class="tenant-card"><span>WhatsApp</span><span class="badge ${data.whatsapp === 'connected' ? 'badge-green' : 'badge-red'}">${data.whatsapp}</span></div>
+        <div class="tenant-card"><span>Conversaciones en memoria</span><span>${data.conversationCount || 0}</span></div>
+      `;
+      document.getElementById('envGemini').textContent = '✅';
+      document.getElementById('envStripe').textContent = '✅';
+      document.getElementById('envWebhook').textContent = '✅';
+      document.getElementById('envFrontend').textContent = '✅';
+      document.getElementById('envAdmin').textContent = '✅';
+      document.getElementById('envSkipWA').textContent = '—';
+    } catch (e) {
+      document.getElementById('serverInfo').innerHTML = '<p style="color:var(--danger);">No se pudo conectar al backend</p>';
     }
+  }
 
-    function closeModal() {
-      document.getElementById('editModal').classList.remove('active');
-      currentEditingUid = null;
-    }
+  function handleLogout() {
+    if (confirm('Cerrar sesion?')) { auth.signOut(); window.location.href = 'login.html'; }
+  }
 
-    function toggleApproval() {
-      const btn = document.getElementById('editApproved');
-      btn.classList.toggle('active');
-      document.getElementById('approvalText').textContent = btn.classList.contains('active') ? 'Aprobado' : 'No aprobado';
-    }
-
-    document.getElementById('editForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      try {
-        await db.collection('users').doc(currentEditingUid).update({
-          plan: document.getElementById('editPlan').value,
-          agents_limit: parseInt(document.getElementById('editAgentsLimit').value),
-          plan_end_date: new Date(document.getElementById('editBillingDate').value),
-          discount_percent: parseInt(document.getElementById('editDiscount').value),
-          payment_status: document.getElementById('editPaymentStatus').value,
-          approved: document.getElementById('editApproved').classList.contains('active')
-        });
-
-        closeModal();
-        loadUsers();
-        alert('✅ Usuario actualizado correctamente');
-      } catch (error) {
-        alert('Error: ' + error.message);
-      }
-    });
-
-    function handleLogout() {
-      if (confirm('¿Cerrar sesión?')) {
-        auth.signOut();
-        window.location.href = 'login.html';
-      }
-    }
-
-    // Close modal on outside click
-    document.getElementById('editModal').addEventListener('click', (e) => {
-      if (e.target.id === 'editModal') closeModal();
-    });
-  </script>
+  function toSlug(email) { return (email||'').split('@')[0].replace(/[^a-z0-9]/gi,'-').toLowerCase(); }
+  function esc(s) { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
+</script>
 </body>
 </html>

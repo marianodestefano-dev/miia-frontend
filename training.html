@@ -18,19 +18,17 @@
       --text-muted: #8888a4;
       --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       --gradient-accent: linear-gradient(135deg, #25d366 0%, #1ebe5a 100%);
+      --danger: #ef4444;
+      --warning: #f59e0b;
       --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
       --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
-      --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
       --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
       --radius-full: 50px;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       color: var(--text-body);
@@ -40,557 +38,837 @@
       padding-top: 80px;
     }
 
-    /* ═══ ANIMATIONS ═══ */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes blink {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.3; }
-    }
-
-    .online-indicator {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: #22c55e;
-      animation: blink 2s ease-in-out infinite;
-    }
-
-    .hidden { display: none !important; }
-
     /* ═══ NAVBAR ═══ */
     #navbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
+      position: fixed; top: 0; left: 0; right: 0;
       height: 80px;
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(102, 126, 234, 0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 40px;
-      z-index: 100;
-      transition: all 0.3s ease;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0 40px; z-index: 100;
     }
+    .nav-logo { font-size: 1.6rem; font-weight: 800; background: var(--gradient-main); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; cursor: pointer; }
+    .nav-back { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: transparent; border: 2px solid var(--primary); color: var(--primary); border-radius: var(--radius-md); cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s; }
+    .nav-back:hover { background: var(--primary); color: white; }
 
-    #navbar.scrolled {
-      height: 70px;
-      box-shadow: var(--shadow-sm);
+    /* ═══ WA STATUS BANNER ═══ */
+    .wa-banner {
+      max-width: 1100px; margin: 20px auto 0; padding: 12px 24px;
+      border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.9rem; font-weight: 600;
     }
+    .wa-banner.connected { background: rgba(37, 211, 102, 0.1); color: #16a34a; border: 1px solid rgba(37, 211, 102, 0.2); }
+    .wa-banner.disconnected { background: rgba(239, 68, 68, 0.08); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.15); }
+    .wa-banner button { padding: 6px 16px; border-radius: var(--radius-sm); font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; }
+    .wa-btn-connect { background: var(--gradient-accent); color: white; }
+    .wa-btn-disconnect { background: transparent; border: 1px solid var(--danger) !important; color: var(--danger); }
+    .wa-btn-disconnect:hover { background: var(--danger); color: white; }
 
-    .nav-logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: var(--gradient-main);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-decoration: none;
-      cursor: pointer;
+    /* ═══ TABS ═══ */
+    .tabs-container { max-width: 1100px; margin: 20px auto 0; padding: 0 20px; }
+    .tabs-nav {
+      display: flex; gap: 4px; background: var(--bg-white); border-radius: var(--radius-md) var(--radius-md) 0 0;
+      padding: 8px 8px 0; border: 1px solid rgba(102, 126, 234, 0.08); border-bottom: none;
+      overflow-x: auto;
     }
-
-    .nav-back {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 16px;
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-      border-radius: var(--radius-md);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
+    .tab-btn {
+      padding: 12px 20px; border: none; background: transparent; color: var(--text-muted);
+      font-weight: 600; font-size: 0.9rem; cursor: pointer; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      white-space: nowrap; transition: all 0.3s;
     }
-
-    .nav-back:hover {
-      background: var(--primary);
-      color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    .tab-btn:hover { color: var(--primary); background: rgba(102, 126, 234, 0.05); }
+    .tab-btn.active { color: var(--primary); background: var(--bg-light); border-bottom: 3px solid var(--primary); }
+    .tab-content {
+      background: var(--bg-white); border: 1px solid rgba(102, 126, 234, 0.08);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      padding: 32px; min-height: 500px;
     }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
 
-    /* ═══ CONTAINER ═══ */
-    .container {
-      max-width: 900px;
-      margin: 40px auto;
-      padding: 0 40px;
+    /* ═══ SECTION TITLES ═══ */
+    .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+    .section-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+
+    /* ═══ GRILLA (Products + Keywords) ═══ */
+    .grid-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .grid-table th {
+      background: rgba(102, 126, 234, 0.06); color: var(--text-dark); font-weight: 600;
+      padding: 10px 12px; text-align: left; border-bottom: 2px solid rgba(102, 126, 234, 0.1);
+      font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.3px;
     }
-
-    /* ═══ CARD ═══ */
-    .card {
-      background: var(--bg-white);
-      padding: 44px;
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid rgba(102, 126, 234, 0.08);
-      margin-bottom: 32px;
+    .grid-table td { padding: 6px 4px; border-bottom: 1px solid rgba(0,0,0,0.04); vertical-align: middle; }
+    .grid-table input[type="text"], .grid-table input[type="number"] {
+      width: 100%; padding: 8px 10px; border: 1px solid rgba(102, 126, 234, 0.15);
+      border-radius: var(--radius-sm); font-size: 0.88rem; color: var(--text-dark);
+      background: var(--bg-white); transition: border-color 0.3s;
     }
-
-    .card h2 {
-      font-size: 2rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      text-align: center;
-      margin-bottom: 12px;
+    .grid-table input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1); }
+    .grid-table input::placeholder { color: #c0c0d0; font-style: italic; }
+    .row-actions { display: flex; gap: 4px; }
+    .row-btn {
+      width: 32px; height: 32px; border: none; border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
     }
-
-    .card > p {
-      color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 32px;
-      font-size: 0.95rem;
+    .row-btn.save { background: rgba(37, 211, 102, 0.1); color: #16a34a; }
+    .row-btn.save:hover { background: #25d366; color: white; }
+    .row-btn.add { background: rgba(102, 126, 234, 0.1); color: var(--primary); }
+    .row-btn.add:hover { background: var(--primary); color: white; }
+    .row-btn.delete { background: rgba(239, 68, 68, 0.08); color: var(--danger); }
+    .row-btn.delete:hover { background: var(--danger); color: white; }
+    .grid-toolbar { display: flex; gap: 10px; margin-top: 16px; }
+    .btn-sm {
+      padding: 8px 18px; border-radius: var(--radius-sm); font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; border: none; transition: all 0.3s;
     }
+    .btn-primary { background: var(--gradient-main); color: white; }
+    .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: white; }
 
-    /* ═══ SETUP ICON ═══ */
-    .setup-icon {
-      width: 100px;
-      height: 100px;
-      border-radius: var(--radius-lg);
-      background: rgba(102, 126, 234, 0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 3.5rem;
-      margin: 0 auto 24px;
+    /* ═══ CHAT (Expert + Test) ═══ */
+    .chat-layout { display: flex; gap: 0; height: 560px; border: 1px solid rgba(102, 126, 234, 0.1); border-radius: var(--radius-md); overflow: hidden; }
+    .sessions-panel {
+      width: 280px; min-width: 280px; background: #fafbff; border-right: 1px solid rgba(102, 126, 234, 0.1);
+      display: flex; flex-direction: column;
     }
-
-    /* ═══ BUTTON ═══ */
-    .btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--gradient-main);
-      color: white;
-      border: none;
-      border-radius: var(--radius-md);
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
+    .sessions-header { padding: 16px; border-bottom: 1px solid rgba(102, 126, 234, 0.1); }
+    .sessions-header h3 { font-size: 0.95rem; color: var(--text-dark); margin-bottom: 8px; }
+    .sessions-list { flex: 1; overflow-y: auto; padding: 8px; }
+    .session-tag {
+      display: flex; align-items: center; justify-content: space-between; padding: 10px 12px;
+      margin-bottom: 4px; border-radius: var(--radius-sm); cursor: pointer;
+      font-size: 0.82rem; color: var(--text-body); transition: all 0.2s;
+      border: 1px solid transparent;
     }
+    .session-tag:hover { background: rgba(102, 126, 234, 0.06); }
+    .session-tag.active { background: rgba(102, 126, 234, 0.1); border-color: rgba(102, 126, 234, 0.2); color: var(--primary); font-weight: 600; }
+    .session-tag.fixed { color: var(--primary); font-weight: 600; }
+    .session-tag .tag-date { font-size: 0.75rem; color: var(--text-muted); }
+    .session-tag .tag-actions { display: flex; gap: 2px; }
+    .session-tag .tag-actions button { background: none; border: none; cursor: pointer; font-size: 0.8rem; padding: 2px 4px; border-radius: 4px; transition: background 0.2s; }
+    .session-tag .tag-actions button:hover { background: rgba(0,0,0,0.08); }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn:active { transform: translateY(0); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
-
-    /* ═══ QR SECTION ═══ */
-    .qr-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 20px;
-      padding: 36px;
-      border: 2px dashed rgba(102, 126, 234, 0.3);
-      border-radius: var(--radius-lg);
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
-      margin-bottom: 24px;
-    }
-
-    #qrStatus {
-      color: var(--text-muted);
-      font-size: 0.95rem;
-      font-weight: 500;
-      text-align: center;
-    }
-
-    #qrCode img {
-      max-width: 280px;
-      border-radius: var(--radius-md);
-      border: 3px solid var(--primary);
-      padding: 12px;
-      background: white;
-      box-shadow: var(--shadow-md);
-    }
-
-    .success-message {
-      text-align: center;
-      color: var(--accent);
-      font-size: 1.1rem;
-      font-weight: 600;
-    }
-
-    /* ═══ CHAT CONTAINER ═══ */
-    .chat-container {
-      display: flex;
-      flex-direction: column;
-      height: 620px;
-      background: var(--bg-white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-sm);
-      border: 1px solid rgba(102, 126, 234, 0.08);
-      overflow: hidden;
-    }
-
-    .chat-header {
-      background: var(--gradient-main);
-      color: white;
-      padding: 20px 24px;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .chat-avatar {
-      width: 48px;
-      height: 48px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.2);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.6rem;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-    }
-
-    .chat-header-info h3 {
-      font-weight: 700;
-      font-size: 0.95rem;
-      margin-bottom: 2px;
-    }
-
-    .chat-header-info p {
-      font-size: 0.8rem;
-      opacity: 0.85;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .chat-messages {
-      flex: 1;
-      padding: 24px;
-      overflow-y: auto;
-      background: var(--bg-light);
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
-
-    .message {
-      display: flex;
-      animation: fadeInUp 0.3s ease;
-    }
-
+    .chat-panel { flex: 1; display: flex; flex-direction: column; }
+    .chat-header { padding: 16px 20px; background: var(--gradient-main); color: white; display: flex; align-items: center; gap: 12px; }
+    .chat-header .avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .chat-header h3 { font-size: 1rem; font-weight: 600; }
+    .chat-header p { font-size: 0.8rem; opacity: 0.85; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; background: #f0f2f5; }
+    .message { margin-bottom: 12px; display: flex; }
     .message.user { justify-content: flex-end; }
-    .message.miia { justify-content: flex-start; }
-
     .message-bubble {
-      max-width: 65%;
-      padding: 12px 16px;
-      border-radius: var(--radius-md);
-      word-wrap: break-word;
-      font-size: 0.95rem;
-      line-height: 1.5;
+      max-width: 75%; padding: 10px 14px; border-radius: 12px;
+      font-size: 0.9rem; line-height: 1.5; animation: fadeInUp 0.3s ease;
+    }
+    .message.miia .message-bubble { background: white; color: var(--text-dark); border-bottom-left-radius: 4px; }
+    .message.user .message-bubble { background: var(--gradient-main); color: white; border-bottom-right-radius: 4px; }
+    .chat-input { display: flex; gap: 8px; padding: 12px 16px; background: white; border-top: 1px solid rgba(0,0,0,0.06); }
+    .chat-input input { flex: 1; padding: 10px 16px; border: 1px solid rgba(102,126,234,0.15); border-radius: var(--radius-full); font-size: 0.9rem; }
+    .chat-input input:focus { outline: none; border-color: var(--primary); }
+    .chat-input button { padding: 10px 24px; background: var(--gradient-main); color: white; border: none; border-radius: var(--radius-full); font-weight: 600; cursor: pointer; }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ═══ TEST CHAT (simpler, no sessions) ═══ */
+    .test-chat { height: 500px; border: 1px solid rgba(102, 126, 234, 0.1); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; }
+    .test-header { padding: 14px 20px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; display: flex; align-items: center; gap: 12px; }
+    .test-header .avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; }
+    .test-reset { margin-left: auto; padding: 6px 14px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.82rem; font-weight: 600; }
+
+    /* ═══ DOCS TAB ═══ */
+    .docs-link-card {
+      text-align: center; padding: 60px 40px; border: 2px dashed rgba(102, 126, 234, 0.2);
+      border-radius: var(--radius-lg);
+    }
+    .docs-link-card .icon { font-size: 3rem; margin-bottom: 16px; }
+    .docs-link-card h3 { color: var(--text-dark); margin-bottom: 8px; }
+    .docs-link-card p { color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem; }
+    .docs-link-card a {
+      display: inline-block; padding: 12px 32px; background: var(--gradient-main);
+      color: white; border-radius: var(--radius-full); text-decoration: none; font-weight: 600;
     }
 
-    .message.user .message-bubble {
-      background: var(--gradient-main);
-      color: white;
-      border-radius: 18px 18px 4px 18px;
-    }
-
-    .message.miia .message-bubble {
-      background: var(--bg-white);
-      color: var(--text-dark);
-      border-radius: 18px 18px 18px 4px;
-      box-shadow: var(--shadow-card);
-    }
-
-    .chat-input-area {
-      padding: 16px 20px;
-      background: var(--bg-white);
-      border-top: 1px solid rgba(102, 126, 234, 0.08);
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .chat-input-area input {
-      flex: 1;
-      padding: 12px 18px;
-      border: 2px solid rgba(102, 126, 234, 0.15);
-      border-radius: var(--radius-full);
-      font-family: inherit;
-      font-size: 0.95rem;
-      color: var(--text-dark);
-      transition: all 0.3s ease;
-    }
-
-    .chat-input-area input:focus {
-      outline: none;
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    .chat-input-area input::placeholder { color: var(--text-muted); }
-    .chat-input-area input:disabled { background: var(--bg-light); }
-
-    .chat-input-area button {
-      padding: 12px 24px;
-      background: var(--gradient-main);
-      color: white;
-      border: none;
-      border-radius: var(--radius-full);
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
-      transition: all 0.3s ease;
-      white-space: nowrap;
-    }
-
-    .chat-input-area button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-    }
-
-    .chat-input-area button:active { transform: translateY(0); }
-    .chat-input-area button:disabled { opacity: 0.6; cursor: not-allowed; transform: none; box-shadow: none; }
+    /* ═══ QR MODAL ═══ */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; }
+    .modal-card { background: white; border-radius: var(--radius-lg); padding: 40px; max-width: 420px; width: 90%; text-align: center; }
+    .modal-card h3 { margin-bottom: 16px; color: var(--text-dark); }
+    .modal-card #qrCode img { max-width: 260px; margin: 16px auto; }
+    .hidden { display: none !important; }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
-      #navbar { padding: 0 20px; }
-      .container { padding: 0 20px; }
-      .card { padding: 32px 24px; }
-      .chat-container { height: 500px; }
-      .message-bubble { max-width: 82%; }
-    }
-
-    @media (max-width: 480px) {
-      body { padding-top: 70px; }
-      #navbar { height: 70px; padding: 0 16px; }
-      .nav-logo { font-size: 1.4rem; }
-      .nav-back { padding: 8px 12px; font-size: 0.8rem; }
-      .container { padding: 0 14px; margin: 24px auto; }
-      .card { padding: 24px 16px; }
-      .card h2 { font-size: 1.5rem; }
-      .setup-icon { width: 80px; height: 80px; font-size: 2.5rem; }
-      .chat-container { height: 420px; }
-      .message-bubble { max-width: 88%; }
-      .chat-header { padding: 14px 16px; }
-      .chat-messages { padding: 14px; }
-      .chat-input-area { padding: 12px 14px; gap: 8px; }
-      .chat-input-area button { padding: 10px 16px; font-size: 0.85rem; }
+      #navbar { padding: 0 16px; }
+      .tabs-container { padding: 0 12px; }
+      .tab-content { padding: 20px 16px; }
+      .tab-btn { padding: 10px 14px; font-size: 0.82rem; }
+      .chat-layout { flex-direction: column; height: auto; }
+      .sessions-panel { width: 100%; min-width: 100%; max-height: 200px; border-right: none; border-bottom: 1px solid rgba(102,126,234,0.1); }
+      .chat-panel { height: 400px; }
+      .grid-table { font-size: 0.8rem; }
     }
   </style>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav id="navbar">
-    <a href="index.html" class="nav-logo">🤖 MIIA</a>
-    <button class="nav-back" onclick="goToDashboard()">← Dashboard</button>
-  </nav>
 
-  <!-- Main Container -->
-  <div class="container">
+<!-- ═══ NAVBAR ═══ -->
+<nav id="navbar">
+  <span class="nav-logo">MIIA</span>
+  <button class="nav-back" onclick="goToDashboard()">← Dashboard</button>
+</nav>
 
-    <!-- PASO 1: Inicio -->
-    <div id="setupCard" class="card fade-in">
-      <div class="setup-icon">📱</div>
-      <h2>Conectar WhatsApp</h2>
-      <p>Vincula tu WhatsApp con MIIA para que tu asistente IA empiece a trabajar automáticamente.</p>
-      <button class="btn" onclick="showWhatsAppSetup()">Conectar WhatsApp</button>
+<!-- ═══ WHATSAPP STATUS BANNER ═══ -->
+<div id="waBanner" class="wa-banner disconnected" style="max-width:1100px;margin:20px auto 0;padding:0 20px;">
+  <span id="waStatusText">Verificando WhatsApp...</span>
+  <button id="waActionBtn" class="wa-btn-connect hidden" onclick="toggleWhatsApp()">Conectar</button>
+</div>
+
+<!-- ═══ TABS ═══ -->
+<div class="tabs-container">
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchTab('products')">Productos</button>
+    <button class="tab-btn" onclick="switchTab('recognize')">Como Reconocer</button>
+    <button class="tab-btn" onclick="switchTab('expert')">Chat Experto</button>
+    <button class="tab-btn" onclick="switchTab('docs')">Documentos</button>
+    <button class="tab-btn" onclick="switchTab('test')">Testear MIIA</button>
+  </div>
+
+  <div class="tab-content">
+
+    <!-- ════ TAB 1: PRODUCTOS ════ -->
+    <div id="tab-products" class="tab-panel active">
+      <h3 class="section-title">Productos y Servicios</h3>
+      <p class="section-desc">Carga tus productos para que MIIA sepa que ofrecer a tus clientes. Cada linea guardada se incorpora inmediatamente al cerebro de tu MIIA.</p>
+
+      <div style="overflow-x:auto;">
+        <table class="grid-table" id="productsTable">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripcion</th>
+              <th>Precio base</th>
+              <th>Precio promo</th>
+              <th>Stock</th>
+              <th style="width:100px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="productsBody"></tbody>
+        </table>
+      </div>
+      <div class="grid-toolbar">
+        <button class="btn-sm btn-outline" onclick="addProductRow()">+ Agregar linea</button>
+        <span id="productStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+      </div>
     </div>
 
-    <!-- PASO 2: QR -->
-    <div id="whatsappSetup" class="card fade-in hidden">
-      <h2>Escanea el código QR</h2>
-      <p>Abre WhatsApp → Dispositivos vinculados → Vincular un dispositivo</p>
+    <!-- ════ TAB 2: COMO RECONOCER ════ -->
+    <div id="tab-recognize" class="tab-panel">
+      <h3 class="section-title">Como MIIA reconoce a tus contactos</h3>
+      <p class="section-desc">Define palabras clave para que MIIA clasifique automaticamente a cada contacto como Lead, Cliente o descartado.</p>
 
-      <div id="qrContainer">
-        <div class="qr-section">
-          <p id="qrStatus">Generando QR...</p>
-          <div id="qrCode"></div>
-        </div>
+      <!-- Leads -->
+      <div style="margin-bottom:32px;">
+        <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Leads (Potenciales Clientes)</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">Palabras que indican interes de compra</p>
+        <table class="grid-table">
+          <thead><tr><th>Palabra o frase clave</th><th>Ejemplo de contexto</th><th style="width:60px;"></th></tr></thead>
+          <tbody id="leadKeywordsBody"></tbody>
+        </table>
+        <button class="btn-sm btn-outline" style="margin-top:8px;" onclick="addKeywordRow('lead')">+ Agregar</button>
       </div>
 
-      <div id="whatsappConnected" class="hidden">
-        <p class="success-message">✅ WhatsApp conectado correctamente</p>
-        <br>
-        <button id="startChatBtn" class="btn hidden" onclick="goToChat()">Empezar a entrenar a MIIA</button>
+      <!-- Clientes -->
+      <div style="margin-bottom:32px;">
+        <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Clientes (Ya compraron)</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">Palabras que indican que ya son clientes</p>
+        <table class="grid-table">
+          <thead><tr><th>Palabra o frase clave</th><th>Ejemplo de contexto</th><th style="width:60px;"></th></tr></thead>
+          <tbody id="clientKeywordsBody"></tbody>
+        </table>
+        <button class="btn-sm btn-outline" style="margin-top:8px;" onclick="addKeywordRow('client')">+ Agregar</button>
+      </div>
+
+      <!-- Otros -->
+      <div style="background:rgba(102,126,234,0.04);padding:20px;border-radius:var(--radius-md);">
+        <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Otros (Familia, amigos, desconocidos)</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);">Todos los contactos que NO activen palabras clave de Lead ni de Cliente en sus primeros 10 mensajes seran clasificados como "Otros". MIIA no los atendera comercialmente.</p>
+      </div>
+
+      <div class="grid-toolbar" style="margin-top:20px;">
+        <button class="btn-sm btn-primary" onclick="saveContactRules()">Guardar reglas</button>
+        <span id="rulesStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
       </div>
     </div>
 
-    <!-- PASO 3: Chat -->
-    <div id="chatCard" class="hidden">
-      <div class="chat-container">
-        <div class="chat-header">
-          <div class="chat-avatar">🤖</div>
-          <div class="chat-header-info">
-            <h3>MIIA Assistant</h3>
-            <p><span class="online-indicator"></span> WhatsApp conectado</p>
+    <!-- ════ TAB 3: CHAT EXPERTO ════ -->
+    <div id="tab-expert" class="tab-panel">
+      <h3 class="section-title">Entrenamiento Experto</h3>
+      <p class="section-desc">Conversa con MIIA para ensenarle la logica de tu negocio. Cada sesion se guarda por dia con un resumen.</p>
+
+      <div class="chat-layout">
+        <!-- Sessions sidebar -->
+        <div class="sessions-panel">
+          <div class="sessions-header">
+            <h3>Sesiones</h3>
+            <button class="btn-sm btn-primary" style="width:100%;" onclick="startNewSession()">+ Nueva sesion</button>
+          </div>
+          <div class="sessions-list" id="sessionsList">
+            <!-- Fixed tags -->
+            <div class="session-tag fixed" onclick="switchTab('docs')">
+              <span>📄 Documentos</span>
+            </div>
           </div>
         </div>
-        <div id="chatMessages" class="chat-messages"></div>
-        <div class="chat-input-area">
-          <input type="text" id="messageInput" placeholder="Escribe un mensaje para entrenar a MIIA..." onkeypress="handleKeyPress(event)">
-          <button id="sendBtn" onclick="sendMessage()">Enviar</button>
+
+        <!-- Chat area -->
+        <div class="chat-panel">
+          <div class="chat-header">
+            <div class="avatar">🧠</div>
+            <div>
+              <h3>MIIA — Modo Entrenamiento</h3>
+              <p>Explicale todo sobre tu negocio</p>
+            </div>
+          </div>
+          <div class="chat-messages" id="expertMessages">
+            <div class="message miia">
+              <div class="message-bubble">Hola! Soy MIIA. Estoy lista para aprender sobre tu negocio.<br><br>Puedes explicarme como ofrecer tus productos, como cerrar ventas, como manejar objeciones... todo lo que necesite saber para atender a tus clientes.</div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input type="text" id="expertInput" placeholder="Explicale algo a MIIA..." onkeypress="if(event.key==='Enter')sendExpertMessage()">
+            <button onclick="sendExpertMessage()">Enviar</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:10px;">
+        <button class="btn-sm btn-primary" onclick="saveCurrentSession()">Guardar sesion de hoy</button>
+        <span id="sessionSaveStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+      </div>
+    </div>
+
+    <!-- ════ TAB 4: DOCUMENTOS ════ -->
+    <div id="tab-docs" class="tab-panel">
+      <div class="docs-link-card">
+        <div class="icon">📄</div>
+        <h3>Documentos y Archivos de Conocimiento</h3>
+        <p>Los archivos que subas aqui seran estudiados por MIIA y formaran parte de su cerebro. Incluye cotizaciones, templates y archivos de referencia.</p>
+        <a href="#" id="docsLink" onclick="goToDocs()">Gestionar Documentos</a>
+      </div>
+    </div>
+
+    <!-- ════ TAB 5: TESTEAR MIIA ════ -->
+    <div id="tab-test" class="tab-panel">
+      <h3 class="section-title">Testear MIIA</h3>
+      <p class="section-desc">Habla con tu MIIA como si fueras un cliente. La conversacion de prueba NO se guarda como lead real.</p>
+
+      <div class="test-chat">
+        <div class="test-header">
+          <div class="avatar">🧪</div>
+          <div>
+            <h3 style="font-size:1rem;font-weight:600;">Modo Prueba</h3>
+            <p style="font-size:0.8rem;opacity:0.85;">Hablas con MIIA como si fueras un cliente</p>
+          </div>
+          <button class="test-reset" onclick="resetTest()">Reiniciar prueba</button>
+        </div>
+        <div class="chat-messages" id="testMessages">
+          <div class="message miia">
+            <div class="message-bubble">Hola! Bienvenido. En que puedo ayudarte hoy?</div>
+          </div>
+        </div>
+        <div class="chat-input">
+          <input type="text" id="testInput" placeholder="Escribe como si fueras un cliente..." onkeypress="if(event.key==='Enter')sendTestMessage()">
+          <button onclick="sendTestMessage()">Enviar</button>
         </div>
       </div>
     </div>
 
   </div>
+</div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  <!-- Socket.io -->
-  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+<!-- ═══ QR MODAL ═══ -->
+<div id="qrModal" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal-card">
+    <h3>Conectar WhatsApp</h3>
+    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;">Escanea el codigo QR con tu WhatsApp (Dispositivos vinculados)</p>
+    <div id="qrCode"><p style="color:var(--text-muted);">Generando QR...</p></div>
+    <button class="btn-sm btn-outline" style="margin-top:16px;" onclick="document.getElementById('qrModal').classList.add('hidden')">Cerrar</button>
+  </div>
+</div>
 
-  <script>
-    function goToDashboard() {
-      const params = new URLSearchParams(window.location.search);
-      const slug = params.get('u') || '';
-      window.location.href = 'dashboard.html' + (slug ? '?u=' + slug : '');
-    }
+<script>
+  // ═══ CONFIG ═══
+  const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+  const firebaseConfig = {
+    apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+    authDomain: "miia-app-8cbd0.firebaseapp.com",
+    projectId: "miia-app-8cbd0",
+    storageBucket: "miia-app-8cbd0.firebasestorage.app",
+    messagingSenderId: "481282126913",
+    appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
 
-    const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
-    let socket = null;
+  let currentUser = null;
+  let clientSlug = '';
+  let socket = null;
+  let waConnected = false;
+  let expertSessionMessages = [];
+  let currentSessionDate = null;
 
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
-      authDomain: "miia-app-8cbd0.firebaseapp.com",
-      projectId: "miia-app-8cbd0",
-      storageBucket: "miia-app-8cbd0.firebasestorage.app",
-      messagingSenderId: "481282126913",
-      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
-    };
+  // ═══ AUTH + INIT ═══
+  window.onload = function() {
+    const params = new URLSearchParams(window.location.search);
+    clientSlug = params.get('u') || '';
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    // Verificar login
-    window.onload = function() {
-      const user = localStorage.getItem('miia_user');
+    auth.onAuthStateChanged(user => {
       if (!user) { window.location.href = 'login.html'; return; }
-      const userData = JSON.parse(user);
-      if (!userData.logged_in) { window.location.href = 'login.html'; return; }
+      currentUser = user;
+      if (!clientSlug) clientSlug = user.email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+      checkWhatsAppStatus();
+      loadProducts();
+      loadContactRules();
+      loadSessions();
+    });
+  };
 
-      // Navbar scroll effect
-      window.addEventListener('scroll', () => {
-        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-      });
+  function goToDashboard() {
+    window.location.href = 'dashboard.html' + (clientSlug ? '?u=' + clientSlug : '');
+  }
+  function goToDocs() {
+    window.location.href = 'documents.html' + (clientSlug ? '?u=' + clientSlug : '');
+  }
 
-      // Intersection Observer fade-in
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, i) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => entry.target.classList.add('visible'), i * 100);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  // ═══ TABS ═══
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabId).classList.add('active');
+    event.target.classList.add('active');
+  }
 
-      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-    };
+  // ═══ WHATSAPP STATUS ═══
+  async function checkWhatsAppStatus() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/status?uid=${currentUser.uid}`);
+      const data = await res.json();
+      waConnected = data.connected;
+      updateWaBanner();
+    } catch (e) {
+      console.error('Error checking WA status:', e);
+    }
+  }
 
-    function showWhatsAppSetup() {
-      document.getElementById('setupCard').classList.add('hidden');
-      document.getElementById('whatsappSetup').classList.remove('hidden');
+  function updateWaBanner() {
+    const banner = document.getElementById('waBanner');
+    const text = document.getElementById('waStatusText');
+    const btn = document.getElementById('waActionBtn');
+    btn.classList.remove('hidden');
+    if (waConnected) {
+      banner.className = 'wa-banner connected';
+      text.textContent = 'WhatsApp conectado';
+      btn.textContent = 'Desvincular';
+      btn.className = 'wa-btn-disconnect';
+    } else {
+      banner.className = 'wa-banner disconnected';
+      text.textContent = 'WhatsApp no conectado';
+      btn.textContent = 'Conectar';
+      btn.className = 'wa-btn-connect';
+    }
+  }
+
+  function toggleWhatsApp() {
+    if (waConnected) {
+      if (!confirm('Desvincular WhatsApp?')) return;
+      fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/logout`, { method: 'POST' })
+        .then(() => { waConnected = false; updateWaBanner(); });
+    } else {
+      document.getElementById('qrModal').classList.remove('hidden');
       connectWhatsApp();
     }
+  }
 
-    function connectWhatsApp() {
-      if (socket) return;
+  function connectWhatsApp() {
+    if (socket) return;
+    socket = io(BACKEND_URL);
+    socket.on('qr', (qrDataUrl) => {
+      document.getElementById('qrCode').innerHTML = `<img src="${qrDataUrl}" alt="QR" style="max-width:260px;">`;
+    });
+    socket.on('whatsapp_ready', () => {
+      waConnected = true;
+      updateWaBanner();
+      document.getElementById('qrModal').classList.add('hidden');
+    });
+    // Trigger tenant init
+    fetch(`${BACKEND_URL}/api/tenant/init`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ uid: currentUser.uid, geminiApiKey: '' })
+    });
+  }
 
-      socket = io(BACKEND_URL);
+  // ═══ TAB 1: PRODUCTS ═══
+  const PRODUCT_EXAMPLES = [
+    { name: 'Consulta medica inicial', description: 'Primera consulta con medico general', price: '50000', pricePromo: '45000', stock: 'Disponible' },
+    { name: 'Plan premium mensual', description: 'Acceso completo a todas las funciones', price: '29.99', pricePromo: '24.99', stock: 'Ilimitado' },
+    { name: 'Curso de marketing digital', description: 'Curso de 8 semanas online', price: '199', pricePromo: '149', stock: '20 cupos' },
+    { name: 'Servicio de diseno web', description: 'Landing page profesional', price: '500', pricePromo: '400', stock: '5 proyectos/mes' },
+    { name: 'Asesoria legal empresarial', description: 'Consultoria por hora', price: '80', pricePromo: '', stock: 'Agenda abierta' }
+  ];
 
-      socket.on('connect', () => {
-        console.log('✅ Conectado al backend, socket:', socket.id);
-        socket.emit('check_status');
-      });
+  let products = [];
 
-      socket.on('qr', (qrDataUrl) => {
-        console.log('📱 QR recibido');
-        document.getElementById('qrCode').innerHTML = `<img src="${qrDataUrl}" alt="QR WhatsApp">`;
-        document.getElementById('qrStatus').textContent = 'Escanea este código con WhatsApp';
-      });
+  function renderProductRow(product, index) {
+    const ex = PRODUCT_EXAMPLES[index] || PRODUCT_EXAMPLES[0];
+    const isNew = !product.id;
+    return `<tr data-idx="${index}">
+      <td><input type="text" value="${esc(product.name || '')}" placeholder="${ex.name}" data-field="name"></td>
+      <td><input type="text" value="${esc(product.description || '')}" placeholder="${ex.description}" data-field="description"></td>
+      <td><input type="text" value="${esc(product.price || '')}" placeholder="${ex.price}" data-field="price" style="width:90px;"></td>
+      <td><input type="text" value="${esc(product.pricePromo || '')}" placeholder="${ex.pricePromo}" data-field="pricePromo" style="width:90px;"></td>
+      <td><input type="text" value="${esc(product.stock || '')}" placeholder="${ex.stock}" data-field="stock" style="width:100px;"></td>
+      <td><div class="row-actions">
+        <button class="row-btn save" title="Guardar" onclick="saveProduct(${index})">💾</button>
+        <button class="row-btn add" title="Agregar linea" onclick="addProductRow(${index})">+</button>
+        <button class="row-btn delete" title="Eliminar" onclick="deleteProduct(${index})">🗑</button>
+      </div></td>
+    </tr>`;
+  }
 
-      socket.on('whatsapp_ready', () => {
-        console.log('✅ WhatsApp listo');
-        document.getElementById('qrContainer').classList.add('hidden');
-        document.getElementById('whatsappConnected').classList.remove('hidden');
-        document.getElementById('startChatBtn').classList.remove('hidden');
-      });
+  function renderProducts() {
+    const body = document.getElementById('productsBody');
+    body.innerHTML = products.map((p, i) => renderProductRow(p, i)).join('');
+  }
 
-      socket.on('new_message', (data) => {
-        addMessage('user', `💬 ${data.fromName}: ${data.body}`);
-      });
-
-      socket.on('ai_response', (data) => {
-        addMessage('miia', `🤖 MIIA: ${data.body}`);
-      });
-
-      socket.on('disconnect', () => {
-        console.log('⚠️ Desconectado del backend');
-      });
+  async function loadProducts() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/products`);
+      const data = await res.json();
+      products = data.length > 0 ? data : PRODUCT_EXAMPLES.map(e => ({ ...e, id: null }));
+      renderProducts();
+    } catch (e) {
+      products = PRODUCT_EXAMPLES.map(e => ({ ...e, id: null }));
+      renderProducts();
     }
+  }
 
-    function goToChat() {
-      document.getElementById('whatsappSetup').classList.add('hidden');
-      document.getElementById('chatCard').classList.remove('hidden');
-      addMessage('miia', '¡Hola! Soy MIIA 🤖\n\n📱 WhatsApp conectado correctamente.\n\nPuedes hablarme para entrenarme o ver las conversaciones en tiempo real.\n\n¿En qué puedo ayudarte?');
-    }
+  function getRowData(index) {
+    const row = document.querySelector(`tr[data-idx="${index}"]`);
+    if (!row) return null;
+    const data = {};
+    row.querySelectorAll('input').forEach(inp => { data[inp.dataset.field] = inp.value; });
+    return data;
+  }
 
-    function addMessage(sender, text) {
-      const messagesDiv = document.getElementById('chatMessages');
-      const div = document.createElement('div');
-      div.className = `message ${sender}`;
-      div.innerHTML = `<div class="message-bubble">${text.replace(/\n/g, '<br>')}</div>`;
-      messagesDiv.appendChild(div);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-
-    async function sendMessage() {
-      const input = document.getElementById('messageInput');
-      const message = input.value.trim();
-      if (!message) return;
-
-      addMessage('user', message);
-      input.value = '';
-
-      const sendBtn = document.getElementById('sendBtn');
-      sendBtn.disabled = true;
-
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/train`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message })
-        });
-
-        if (!response.ok) throw new Error('Error al procesar mensaje');
-
-        const data = await response.json();
-        addMessage('miia', data.response);
-      } catch (error) {
-        addMessage('miia', `❌ Error: ${error.message}`);
+  async function saveProduct(index) {
+    const data = getRowData(index);
+    if (!data || !data.name.trim()) { alert('El nombre del producto es obligatorio'); return; }
+    const statusEl = document.getElementById('productStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/product`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      if (result.success) {
+        products[index] = { ...data, id: result.id };
+        statusEl.textContent = 'MIIA aprendio este producto';
+        setTimeout(() => statusEl.textContent = '', 3000);
       }
-
-      sendBtn.disabled = false;
-      input.focus();
+    } catch (e) {
+      statusEl.textContent = 'Error al guardar';
     }
+  }
 
-    function handleKeyPress(event) {
-      if (event.key === 'Enter') sendMessage();
+  function addProductRow(afterIndex) {
+    const idx = afterIndex !== undefined ? afterIndex + 1 : products.length;
+    products.splice(idx, 0, { name: '', description: '', price: '', pricePromo: '', stock: '', id: null });
+    renderProducts();
+  }
+
+  async function deleteProduct(index) {
+    const p = products[index];
+    if (p.id) {
+      if (!confirm('Eliminar este producto? MIIA olvidara esta informacion permanentemente.')) return;
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/product/${p.id}`, { method: 'DELETE' });
     }
-  </script>
+    products.splice(index, 1);
+    if (products.length === 0) products.push({ name: '', description: '', price: '', pricePromo: '', stock: '', id: null });
+    renderProducts();
+    document.getElementById('productStatus').textContent = 'Producto eliminado del cerebro de MIIA';
+    setTimeout(() => document.getElementById('productStatus').textContent = '', 3000);
+  }
+
+  // ═══ TAB 2: CONTACT RULES ═══
+  const LEAD_EXAMPLES = [
+    { keyword: 'precio', context: 'Cuando preguntan cuanto cuesta algo' },
+    { keyword: 'cuanto cuesta', context: 'Consulta directa de precio' },
+    { keyword: 'tienen disponible', context: 'Pregunta por disponibilidad' },
+    { keyword: 'me pueden cotizar', context: 'Solicitud de cotizacion' },
+    { keyword: 'quisiera informacion', context: 'Interes general en productos' }
+  ];
+  const CLIENT_EXAMPLES = [
+    { keyword: 'mi cuenta', context: 'Ya tiene una cuenta activa' },
+    { keyword: 'ya soy cliente', context: 'Se identifica como cliente existente' },
+    { keyword: 'numero de factura', context: 'Tiene transacciones previas' },
+    { keyword: 'renovar', context: 'Quiere renovar su plan' },
+    { keyword: 'soporte', context: 'Necesita ayuda con servicio existente' }
+  ];
+
+  let leadKeywords = [];
+  let clientKeywords = [];
+
+  function renderKeywordRow(type, item, index, examples) {
+    const ex = examples[index] || examples[0];
+    return `<tr>
+      <td><input type="text" value="${esc(item.keyword || '')}" placeholder="${ex.keyword}" data-type="${type}" data-idx="${index}" data-field="keyword"></td>
+      <td><input type="text" value="${esc(item.context || '')}" placeholder="${ex.context}" data-type="${type}" data-idx="${index}" data-field="context"></td>
+      <td><button class="row-btn delete" onclick="deleteKeyword('${type}',${index})">🗑</button></td>
+    </tr>`;
+  }
+
+  function renderKeywords() {
+    document.getElementById('leadKeywordsBody').innerHTML =
+      leadKeywords.map((k, i) => renderKeywordRow('lead', k, i, LEAD_EXAMPLES)).join('');
+    document.getElementById('clientKeywordsBody').innerHTML =
+      clientKeywords.map((k, i) => renderKeywordRow('client', k, i, CLIENT_EXAMPLES)).join('');
+  }
+
+  async function loadContactRules() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/contact-rules`);
+      const data = await res.json();
+      leadKeywords = (data.lead_keywords || []).map(k => ({ keyword: k, context: '' }));
+      clientKeywords = (data.client_keywords || []).map(k => ({ keyword: k, context: '' }));
+      if (leadKeywords.length === 0) leadKeywords = LEAD_EXAMPLES.map(e => ({ ...e }));
+      if (clientKeywords.length === 0) clientKeywords = CLIENT_EXAMPLES.map(e => ({ ...e }));
+      renderKeywords();
+    } catch (e) {
+      leadKeywords = LEAD_EXAMPLES.map(e => ({ ...e }));
+      clientKeywords = CLIENT_EXAMPLES.map(e => ({ ...e }));
+      renderKeywords();
+    }
+  }
+
+  function addKeywordRow(type) {
+    const arr = type === 'lead' ? leadKeywords : clientKeywords;
+    arr.push({ keyword: '', context: '' });
+    renderKeywords();
+  }
+
+  function deleteKeyword(type, index) {
+    const arr = type === 'lead' ? leadKeywords : clientKeywords;
+    arr.splice(index, 1);
+    if (arr.length === 0) arr.push({ keyword: '', context: '' });
+    renderKeywords();
+  }
+
+  async function saveContactRules() {
+    // Read values from DOM
+    document.querySelectorAll('input[data-type="lead"]').forEach(inp => {
+      const idx = parseInt(inp.dataset.idx);
+      if (leadKeywords[idx]) leadKeywords[idx][inp.dataset.field] = inp.value;
+    });
+    document.querySelectorAll('input[data-type="client"]').forEach(inp => {
+      const idx = parseInt(inp.dataset.idx);
+      if (clientKeywords[idx]) clientKeywords[idx][inp.dataset.field] = inp.value;
+    });
+
+    const statusEl = document.getElementById('rulesStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/contact-rules`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lead_keywords: leadKeywords.filter(k => k.keyword.trim()).map(k => k.keyword.trim()),
+          client_keywords: clientKeywords.filter(k => k.keyword.trim()).map(k => k.keyword.trim())
+        })
+      });
+      statusEl.textContent = 'Reglas guardadas - MIIA clasificara contactos automaticamente';
+      setTimeout(() => statusEl.textContent = '', 4000);
+    } catch (e) {
+      statusEl.textContent = 'Error al guardar';
+    }
+  }
+
+  // ═══ TAB 3: EXPERT CHAT + SESSIONS ═══
+  let sessions = [];
+
+  async function loadSessions() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/sessions`);
+      sessions = await res.json();
+      renderSessions();
+    } catch (e) {
+      console.error('Error loading sessions:', e);
+    }
+  }
+
+  function renderSessions() {
+    const list = document.getElementById('sessionsList');
+    const fixedTag = '<div class="session-tag fixed" onclick="switchTab(\'docs\')"><span>📄 Documentos</span></div>';
+    const sessionTags = sessions.map(s => `
+      <div class="session-tag ${s.date === currentSessionDate ? 'active' : ''}" onclick="viewSession('${s.date}')">
+        <div>
+          <div class="tag-date">${s.date}</div>
+          <div>${esc(s.summary || s.date)}</div>
+        </div>
+        <div class="tag-actions">
+          <button title="Actualizar" onclick="event.stopPropagation();updateSession('${s.date}')">✏️</button>
+          <button title="Eliminar" onclick="event.stopPropagation();deleteSession('${s.date}')">🗑️</button>
+        </div>
+      </div>
+    `).join('');
+    list.innerHTML = fixedTag + sessionTags;
+  }
+
+  function startNewSession() {
+    currentSessionDate = new Date().toISOString().split('T')[0];
+    expertSessionMessages = [];
+    document.getElementById('expertMessages').innerHTML =
+      '<div class="message miia"><div class="message-bubble">Nueva sesion iniciada! Explicame lo que necesites sobre tu negocio.</div></div>';
+  }
+
+  function viewSession(date) {
+    const s = sessions.find(x => x.date === date);
+    if (!s) return;
+    currentSessionDate = date;
+    renderSessions();
+    const msgs = document.getElementById('expertMessages');
+    msgs.innerHTML = (s.messages || []).map(m =>
+      `<div class="message ${m.role === 'user' ? 'user' : 'miia'}"><div class="message-bubble">${esc(m.content).replace(/\n/g, '<br>')}</div></div>`
+    ).join('');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  async function sendExpertMessage() {
+    const input = document.getElementById('expertInput');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+
+    addChatMessage('expertMessages', 'user', message);
+    expertSessionMessages.push({ role: 'user', content: message });
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/train`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      const data = await res.json();
+      const reply = data.response || 'Entendido, lo he guardado.';
+      addChatMessage('expertMessages', 'miia', reply);
+      expertSessionMessages.push({ role: 'assistant', content: reply });
+    } catch (e) {
+      addChatMessage('expertMessages', 'miia', 'Error al procesar. Intenta de nuevo.');
+    }
+  }
+
+  async function saveCurrentSession() {
+    if (expertSessionMessages.length === 0) { alert('No hay mensajes en la sesion actual'); return; }
+    const statusEl = document.getElementById('sessionSaveStatus');
+    statusEl.textContent = 'Guardando sesion...';
+
+    const trainingBlock = expertSessionMessages
+      .filter(m => m.role === 'user')
+      .map(m => m.content)
+      .join('\n');
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/session`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: expertSessionMessages, trainingBlock })
+      });
+      const data = await res.json();
+      statusEl.textContent = `Sesion guardada: "${data.summary || 'OK'}"`;
+      setTimeout(() => statusEl.textContent = '', 4000);
+      loadSessions();
+    } catch (e) {
+      statusEl.textContent = 'Error al guardar sesion';
+    }
+  }
+
+  async function updateSession(date) {
+    const text = prompt('Agrega informacion adicional para esta sesion:');
+    if (!text || !text.trim()) return;
+    try {
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/session/${date}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ additionalText: text.trim() })
+      });
+      alert('Sesion actualizada. MIIA aprendio la nueva informacion.');
+      loadSessions();
+    } catch (e) {
+      alert('Error al actualizar');
+    }
+  }
+
+  async function deleteSession(date) {
+    if (!confirm(`Eliminar sesion del ${date}? MIIA olvidara permanentemente todo lo aprendido en esa sesion.`)) return;
+    try {
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/session/${date}`, { method: 'DELETE' });
+      sessions = sessions.filter(s => s.date !== date);
+      renderSessions();
+    } catch (e) {
+      alert('Error al eliminar');
+    }
+  }
+
+  // ═══ TAB 5: TEST MIIA ═══
+  async function sendTestMessage() {
+    const input = document.getElementById('testInput');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+
+    addChatMessage('testMessages', 'user', message);
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/test`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message })
+      });
+      const data = await res.json();
+      addChatMessage('testMessages', 'miia', data.response || 'No pude responder. Entrena a MIIA primero.');
+    } catch (e) {
+      addChatMessage('testMessages', 'miia', 'Error de conexion. Intenta de nuevo.');
+    }
+  }
+
+  function resetTest() {
+    document.getElementById('testMessages').innerHTML =
+      '<div class="message miia"><div class="message-bubble">Hola! Bienvenido. En que puedo ayudarte hoy?</div></div>';
+  }
+
+  // ═══ HELPERS ═══
+  function addChatMessage(containerId, sender, text) {
+    const container = document.getElementById(containerId);
+    const div = document.createElement('div');
+    div.className = `message ${sender}`;
+    div.innerHTML = `<div class="message-bubble">${esc(text).replace(/\n/g, '<br>')}</div>`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  function esc(str) {
+    const div = document.createElement('div');
+    div.textContent = str || '';
+    return div.innerHTML;
+  }
+</script>
 </body>
 </html>
