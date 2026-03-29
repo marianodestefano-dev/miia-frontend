@@ -5,26 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIIA - Dashboard</title>
   <style>
-    /* ═══════════════════════════════════════
-       MIIA SaaS Design System
-       ═══════════════════════════════════════ */
     :root {
       --primary: #667eea;
       --primary-dark: #5568d3;
       --secondary: #764ba2;
       --accent: #25d366;
-      --accent-dark: #1ebe5a;
       --bg-light: #f5f7fa;
       --bg-white: #ffffff;
       --text-dark: #1a1a2e;
       --text-body: #4a4a6a;
       --text-muted: #8888a4;
       --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --gradient-accent: linear-gradient(135deg, #25d366 0%, #1ebe5a 100%);
       --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
       --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
       --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
-      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-card: 0 4px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
@@ -43,24 +38,20 @@
       padding-top: 80px;
     }
 
+    .hidden { display: none !important; }
+
     /* ═══ ANIMATIONS ═══ */
     .fade-in {
       opacity: 0;
       transform: translateY(30px);
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
 
     /* ═══ NAVBAR ═══ */
     #navbar {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       height: 80px;
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(20px);
@@ -73,10 +64,7 @@
       transition: all 0.3s ease;
     }
 
-    #navbar.scrolled {
-      height: 70px;
-      box-shadow: var(--shadow-sm);
-    }
+    #navbar.scrolled { height: 70px; box-shadow: var(--shadow-sm); }
 
     .nav-logo {
       font-size: 1.6rem;
@@ -86,60 +74,64 @@
       -webkit-text-fill-color: transparent;
       background-clip: text;
       text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
 
     .nav-actions {
       display: flex;
       align-items: center;
-      gap: 24px;
+      gap: 16px;
     }
 
-    .user-email {
-      font-size: 0.9rem;
-      color: var(--text-body);
+    .nav-email {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .nav-plan-badge {
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: rgba(102, 126, 234, 0.1);
+      color: var(--primary);
     }
 
     .logout-btn {
-      padding: 10px 22px;
+      padding: 10px 20px;
       background: transparent;
       color: var(--primary);
       border: 2px solid var(--primary);
       border-radius: var(--radius-md);
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       transition: all 0.3s ease;
     }
 
     .logout-btn:hover {
       background: var(--primary);
       color: white;
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
     }
 
     /* ═══ HERO BAND ═══ */
     .hero-band {
       background: var(--gradient-main);
       color: white;
-      padding: 60px 40px;
+      padding: 50px 40px;
       text-align: center;
       margin-bottom: 40px;
-      animation: fadeIn 0.8s ease forwards;
     }
 
-    .hero-band h1 {
-      font-size: 2.2rem;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
+    .hero-band h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    .hero-band p { font-size: 1rem; opacity: 0.9; }
 
-    .hero-band p {
-      font-size: 1.05rem;
-      opacity: 0.95;
+    .trial-countdown {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 16px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
     }
 
     /* ═══ CONTAINER ═══ */
@@ -149,17 +141,17 @@
       padding: 0 40px 40px;
     }
 
-    /* ═══ STATS CARDS ═══ */
+    /* ═══ STATS ═══ */
     .stats {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
       gap: 24px;
       margin-bottom: 40px;
     }
 
     .stat-card {
       background: var(--bg-white);
-      padding: 32px;
+      padding: 28px;
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
       border: 1px solid rgba(102, 126, 234, 0.08);
@@ -171,65 +163,38 @@
     .stat-card::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 4px;
+      top: 0; left: 0;
+      width: 100%; height: 4px;
       background: var(--gradient-main);
       opacity: 0;
       transition: opacity 0.4s ease;
     }
 
-    .stat-card:hover {
-      transform: translateY(-6px);
-      box-shadow: var(--shadow-md);
-    }
-
-    .stat-card:hover::before {
-      opacity: 1;
-    }
+    .stat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+    .stat-card:hover::before { opacity: 1; }
 
     .stat-icon-box {
-      width: 56px;
-      height: 56px;
-      border-radius: var(--radius-md);
+      width: 56px; height: 56px;
+      border-radius: 14px;
       background: rgba(102, 126, 234, 0.08);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.8rem;
-      margin-bottom: 16px;
+      font-size: 1.6rem;
+      margin-bottom: 14px;
     }
 
     .stat-number {
-      font-size: 2.2rem;
+      font-size: 2rem;
       font-weight: 700;
       background: var(--gradient-main);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
-    .stat-label {
-      color: var(--text-muted);
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-
-    /* ═══ SECTION TAG ═══ */
-    .section-tag {
-      display: inline-block;
-      padding: 6px 16px;
-      background: rgba(102, 126, 234, 0.1);
-      color: var(--primary);
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 16px;
-    }
+    .stat-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
 
     /* ═══ CARDS ═══ */
     .card {
@@ -238,37 +203,44 @@
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
       border: 1px solid rgba(102, 126, 234, 0.08);
+      margin-bottom: 32px;
     }
 
     .card h2 {
       color: var(--text-dark);
-      margin-bottom: 24px;
-      font-size: 1.4rem;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
       font-weight: 700;
+    }
+
+    /* ═══ MAIN GRID ═══ */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 32px;
     }
 
     /* ═══ QUICK ACTIONS ═══ */
     .quick-actions {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 18px;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
     }
 
     .action-btn {
-      padding: 28px 20px;
+      padding: 24px 16px;
       background: var(--bg-white);
       color: var(--text-dark);
-      border: 2px solid rgba(102, 126, 234, 0.15);
+      border: 2px solid rgba(102, 126, 234, 0.12);
       border-radius: var(--radius-lg);
       cursor: pointer;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       transition: all 0.4s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      gap: 12px;
+      gap: 10px;
       position: relative;
       overflow: hidden;
     }
@@ -276,206 +248,287 @@
     .action-btn::before {
       content: '';
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
       background: var(--gradient-main);
       opacity: 0;
       transition: opacity 0.4s ease;
     }
 
     .action-btn:hover {
-      border-color: rgba(102, 126, 234, 0.3);
-      transform: translateY(-6px);
+      border-color: rgba(102, 126, 234, 0.25);
+      transform: translateY(-4px);
       box-shadow: var(--shadow-md);
-      background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
     }
 
-    .action-btn:hover::before {
-      opacity: 1;
+    .action-btn:hover::before { opacity: 1; }
+    .action-icon { font-size: 1.8rem; }
+
+    /* ═══ AGENTS TABLE ═══ */
+    .agents-table {
+      width: 100%;
+      border-collapse: collapse;
     }
 
-    .action-icon {
-      font-size: 2rem;
+    .agents-table th {
+      padding: 12px 16px;
+      text-align: left;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(102, 126, 234, 0.08);
     }
 
-    /* ═══ MAIN CONTENT ═══ */
-    .main-content {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 32px;
-      margin-bottom: 40px;
+    .agents-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(102, 126, 234, 0.04);
     }
 
-    /* ═══ ACTIVITY ═══ */
-    .activity-item {
-      padding: 16px;
-      border-left: 4px solid var(--primary);
-      background: var(--bg-light);
-      margin-bottom: 16px;
+    .agents-table tr:hover { background: rgba(102, 126, 234, 0.015); }
+
+    .agent-cell {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .agent-avatar {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: rgba(102, 126, 234, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      color: var(--primary);
+    }
+
+    .badge {
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      font-size: 0.7rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge-active { background: #dcfce7; color: #166534; }
+    .badge-pending { background: #fef3c7; color: #92400e; }
+    .badge-trial { background: #dbeafe; color: #164e63; }
+
+    .btn-small {
+      padding: 6px 14px;
+      border: none;
       border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.8rem;
+      cursor: pointer;
       transition: all 0.3s ease;
     }
 
-    .activity-item:hover {
-      transform: translateX(4px);
-      background: rgba(102, 126, 234, 0.08);
+    .btn-danger {
+      background: #fee2e2;
+      color: #991b1b;
     }
 
-    .activity-time {
-      font-size: 0.8rem;
+    .btn-danger:hover { background: #fecaca; }
+
+    /* ═══ ADD AGENT FORM ═══ */
+    .add-agent-form {
+      display: flex;
+      gap: 12px;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(102, 126, 234, 0.08);
+    }
+
+    .add-agent-form input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 2px solid rgba(102, 126, 234, 0.15);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .add-agent-form input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn-add {
+      padding: 10px 20px;
+      background: var(--gradient-main);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(102, 126, 234, 0.3); }
+    .btn-add:disabled { opacity: 0.5; cursor: not-allowed; transform: none; box-shadow: none; }
+
+    .agents-counter {
+      font-size: 0.85rem;
       color: var(--text-muted);
-      margin-bottom: 6px;
-      font-weight: 500;
+      margin-bottom: 16px;
     }
 
-    .activity-text {
+    .agents-counter strong {
+      color: var(--primary);
+    }
+
+    /* ═══ ACCOUNT CARD ═══ */
+    .account-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid rgba(102, 126, 234, 0.05);
+    }
+
+    .account-item:last-child { border: none; }
+
+    .account-label {
+      font-weight: 600;
       color: var(--text-dark);
-      font-weight: 500;
+      font-size: 0.9rem;
+    }
+
+    .account-value {
+      color: var(--text-body);
+      font-size: 0.9rem;
     }
 
     /* ═══ EMPTY STATE ═══ */
     .empty-state {
       text-align: center;
-      padding: 50px 20px;
+      padding: 40px 20px;
       color: var(--text-muted);
     }
 
-    .empty-state-icon {
-      font-size: 3.5rem;
-      margin-bottom: 16px;
-      opacity: 0.6;
+    .empty-state-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* ═══ PAYWALL ═══ */
+    .paywall-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(26, 26, 46, 0.95);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
     }
 
-    .empty-state p {
-      font-size: 0.95rem;
+    .paywall-overlay.active { display: flex; }
+
+    .paywall-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      max-width: 600px;
+      width: 100%;
+      padding: 50px 40px;
+      text-align: center;
+      max-height: 90vh;
+      overflow-y: auto;
     }
 
-    .empty-state p:last-child {
+    .paywall-icon { font-size: 4rem; margin-bottom: 20px; }
+
+    .paywall-card h2 {
+      color: var(--text-dark);
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .paywall-card > p {
+      color: var(--text-muted);
+      margin-bottom: 32px;
+    }
+
+    .plans-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 32px;
+    }
+
+    .plans-table th {
+      padding: 12px;
+      background: rgba(102, 126, 234, 0.05);
+      color: var(--text-dark);
       font-size: 0.85rem;
-      margin-top: 12px;
-      opacity: 0.8;
     }
 
-    /* ═══ BADGES ═══ */
-    .badge {
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      display: inline-block;
+    .plans-table td {
+      padding: 12px;
+      border-bottom: 1px solid #f0f0f0;
+      font-size: 0.9rem;
     }
 
-    .badge-lead {
-      background: #fef3c7;
-      color: #92400e;
+    .plans-table tr:hover { background: rgba(102, 126, 234, 0.02); }
+
+    .paywall-contact {
+      background: rgba(102, 126, 234, 0.05);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-top: 20px;
     }
 
-    .badge-client {
-      background: #dcfce7;
-      color: #166534;
+    .paywall-contact p {
+      color: var(--text-body);
+      font-size: 0.9rem;
+      margin-bottom: 8px;
     }
 
-    .badge-pending {
-      background: #fecaca;
-      color: #991b1b;
-    }
+    .paywall-contact strong { color: var(--primary); }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 968px) {
-      .main-content {
-        grid-template-columns: 1fr;
-      }
-
-      .quick-actions {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .container {
-        padding: 0 24px 40px;
-      }
-
-      #navbar {
-        padding: 0 24px;
-      }
-
-      .stats {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      body {
-        padding-top: 70px;
-      }
-
-      .hero-band {
-        padding: 40px 24px;
-      }
-
-      .hero-band h1 {
-        font-size: 1.8rem;
-      }
+      .main-grid { grid-template-columns: 1fr; }
+      .quick-actions { grid-template-columns: repeat(2, 1fr); }
+      .container { padding: 0 20px 40px; }
+      #navbar { padding: 0 20px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .add-agent-form { flex-direction: column; }
     }
 
     @media (max-width: 600px) {
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .quick-actions {
-        grid-template-columns: 1fr;
-      }
-
-      #navbar {
-        padding: 0 16px;
-        height: 70px;
-      }
-
-      #navbar.scrolled {
-        height: 70px;
-      }
-
-      .nav-logo {
-        font-size: 1.4rem;
-      }
-
-      .nav-actions {
-        gap: 12px;
-      }
-
-      .user-email {
-        display: none;
-      }
-
-      .logout-btn {
-        padding: 8px 16px;
-        font-size: 0.8rem;
-      }
-
-      body {
-        padding-top: 70px;
-      }
-
-      .hero-band {
-        padding: 30px 16px;
-      }
-
-      .hero-band h1 {
-        font-size: 1.5rem;
-      }
-
-      .container {
-        padding: 0 16px 40px;
-      }
+      body { padding-top: 70px; }
+      #navbar { height: 70px; padding: 0 16px; }
+      .nav-logo { font-size: 1.3rem; }
+      .nav-email { display: none; }
+      .nav-plan-badge { display: none; }
+      .stats { grid-template-columns: 1fr; }
+      .quick-actions { grid-template-columns: 1fr; }
+      .hero-band { padding: 30px 16px; }
+      .hero-band h1 { font-size: 1.5rem; }
+      .container { padding: 0 16px 40px; }
+      .card { padding: 24px 16px; }
+      .paywall-card { padding: 30px 20px; }
     }
   </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <!-- Navbar -->
   <nav id="navbar">
     <a href="index.html" class="nav-logo">🤖 MIIA</a>
     <div class="nav-actions">
-      <span class="user-email" id="userEmail">usuario@email.com</span>
+      <span class="nav-email" id="userEmail"></span>
+      <span class="nav-plan-badge" id="navPlan">Trial</span>
       <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
     </div>
   </nav>
@@ -483,40 +536,38 @@
   <!-- Hero Band -->
   <div class="hero-band">
     <h1>Bienvenido, <span id="userName">Usuario</span></h1>
-    <p>Tu asistente de IA está listo para trabajar 🚀</p>
+    <p id="heroSubtitle">Tu asistente de IA está listo para trabajar</p>
+    <div class="trial-countdown hidden" id="trialCountdown"></div>
   </div>
 
   <!-- Main Container -->
-  <div class="container">
-    <!-- Stats Cards -->
+  <div class="container" id="mainContent">
+    <!-- Stats -->
     <div class="stats">
       <div class="stat-card fade-in">
         <div class="stat-icon-box">💬</div>
-        <div class="stat-number">0</div>
+        <div class="stat-number" id="statConversations">0</div>
         <div class="stat-label">Conversaciones hoy</div>
       </div>
-
       <div class="stat-card fade-in">
         <div class="stat-icon-box">👥</div>
-        <div class="stat-number">0</div>
+        <div class="stat-number" id="statLeads">0</div>
         <div class="stat-label">Leads activos</div>
       </div>
-
+      <div class="stat-card fade-in">
+        <div class="stat-icon-box">💰</div>
+        <div class="stat-number" id="statPresales">0</div>
+        <div class="stat-label">Pre-ventas</div>
+      </div>
       <div class="stat-card fade-in">
         <div class="stat-icon-box">✅</div>
-        <div class="stat-number">0</div>
-        <div class="stat-label">Clientes</div>
-      </div>
-
-      <div class="stat-card fade-in">
-        <div class="stat-icon-box">📄</div>
-        <div class="stat-number">0</div>
-        <div class="stat-label">PDFs generados</div>
+        <div class="stat-number" id="statSales">0</div>
+        <div class="stat-label">Ventas cerradas</div>
       </div>
     </div>
 
-    <!-- Main Content Grid -->
-    <div class="main-content">
+    <!-- Main Grid -->
+    <div class="main-grid">
       <!-- Left Column -->
       <div>
         <!-- Quick Actions -->
@@ -530,16 +581,48 @@
               <span class="action-icon">🧠</span> Entrenar MIIA
             </button>
             <button class="action-btn" onclick="showFeature('contacts')">
-              <span class="action-icon">👥</span> Gestionar Contactos
+              <span class="action-icon">👥</span> Contactos
             </button>
             <button class="action-btn" onclick="showFeature('documents')">
-              <span class="action-icon">📄</span> Crear Documento
+              <span class="action-icon">📄</span> Documentos
             </button>
           </div>
         </div>
 
-        <!-- Recent Activity -->
-        <div class="card fade-in" style="margin-top: 30px;">
+        <!-- Agents Section -->
+        <div class="card fade-in" id="agentsSection">
+          <h2>🏢 Tu Equipo de Agentes</h2>
+          <div class="agents-counter">
+            Agentes: <strong><span id="agentsUsed">0</span> / <span id="agentsLimit">1</span></strong>
+          </div>
+
+          <table class="agents-table" id="agentsTable">
+            <thead>
+              <tr>
+                <th>Agente</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="agentsBody">
+              <tr id="noAgentsRow">
+                <td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                  No hay agentes en tu equipo aún
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="add-agent-form" id="addAgentForm">
+            <input type="text" id="agentName" placeholder="Nombre del agente">
+            <input type="email" id="agentEmail" placeholder="Email del agente">
+            <button class="btn-add" id="addAgentBtn" onclick="addAgent()">+ Agregar</button>
+          </div>
+          <p id="agentLimitMsg" class="hidden" style="color: #f39c12; font-size: 0.85rem; margin-top: 12px; text-align: center;"></p>
+        </div>
+
+        <!-- Activity -->
+        <div class="card fade-in">
           <h2>📊 Actividad Reciente</h2>
           <div class="empty-state">
             <div class="empty-state-icon">📭</div>
@@ -551,86 +634,403 @@
 
       <!-- Right Column -->
       <div>
-        <!-- User Info Card -->
+        <!-- Account Card -->
         <div class="card fade-in">
           <h2>👤 Tu Cuenta</h2>
-          <div style="margin-top: 20px;">
-            <div style="margin-bottom: 15px;">
-              <strong>Plan:</strong>
-              <span id="userPlan" style="color: #667eea; margin-left: 8px;">Pro</span>
-            </div>
-            <div style="margin-bottom: 15px;">
-              <strong>WhatsApp:</strong>
-              <span id="userWhatsapp" style="color: #666; margin-left: 8px;">No conectado</span>
-            </div>
-            <div style="margin-bottom: 15px;">
-              <strong>Mensajes restantes:</strong>
-              <span style="color: #667eea; margin-left: 8px;">2,000 / 2,000</span>
-            </div>
-            <div style="margin-bottom: 20px;">
-              <strong>Estado MIIA:</strong>
-              <span style="color: #f39c12; margin-left: 8px;">⚠️ Pendiente configuración</span>
-            </div>
-            <button class="action-btn" style="width: 100%; border: 2px solid var(--gradient-main); background: var(--gradient-main); color: white; margin-top: 10px;" onclick="showFeature('settings')">
-              <span class="action-icon">⚙️</span> Configuración
-            </button>
+          <div class="account-item">
+            <span class="account-label">Plan</span>
+            <span class="account-value" id="accountPlan">Trial</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">Estado</span>
+            <span class="account-value" id="accountStatus">Activo</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">Vence</span>
+            <span class="account-value" id="accountExpiry">-</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">WhatsApp</span>
+            <span class="account-value" id="accountWhatsapp">No conectado</span>
+          </div>
+          <div class="account-item">
+            <span class="account-label">API Key</span>
+            <span class="account-value" id="accountApiKey">❌ No configurada</span>
           </div>
         </div>
 
         <!-- Contacts Preview -->
-        <div class="card fade-in" style="margin-top: 30px;">
+        <div class="card fade-in">
           <h2>💬 Contactos Clasificados</h2>
           <div class="empty-state">
             <div class="empty-state-icon">👥</div>
             <p>Sin contactos aún</p>
-            <p>MIIA clasificará automáticamente tus contactos</p>
+            <p>MIIA clasificará tus contactos automáticamente</p>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <script>
-    // Verificar si el usuario está logueado
-    window.onload = function() {
-      const user = localStorage.getItem('miia_user');
+  <!-- Paywall Overlay -->
+  <div class="paywall-overlay" id="paywallOverlay">
+    <div class="paywall-card">
+      <div class="paywall-icon">⏰</div>
+      <h2>Tu período de prueba ha terminado</h2>
+      <p>Elige un plan para seguir usando MIIA y potenciar tus ventas.</p>
 
+      <table class="plans-table">
+        <thead>
+          <tr>
+            <th>Plan</th>
+            <th>Precio</th>
+            <th>Agente extra</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Mensual</td><td><strong>$12 USD</strong>/mes</td><td>+$3 USD</td></tr>
+          <tr><td>Trimestral</td><td><strong>$30 USD</strong>/3 meses</td><td>+$3 USD</td></tr>
+          <tr><td>Semestral</td><td><strong>$55 USD</strong>/6 meses</td><td>+$3 USD</td></tr>
+          <tr><td>Anual</td><td><strong>$75 USD</strong>/año</td><td>+$3 USD</td></tr>
+        </tbody>
+      </table>
+
+      <div class="paywall-contact">
+        <p>Para activar tu plan, contacta al equipo:</p>
+        <p><strong>lobsterscrm@gmail.com</strong></p>
+        <p style="font-size: 0.8rem; margin-top: 8px; color: var(--text-muted);">
+          Envía tu comprobante de pago y te activaremos en minutos.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+      authDomain: "miia-app-8cbd0.firebaseapp.com",
+      projectId: "miia-app-8cbd0",
+      storageBucket: "miia-app-8cbd0.firebasestorage.app",
+      messagingSenderId: "481282126913",
+      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
+    const PLAN_NAMES = {
+      trial: 'Trial 7 días',
+      monthly: 'Mensual',
+      quarterly: 'Trimestral',
+      semestral: 'Semestral',
+      annual: 'Anual'
+    };
+
+    const STATUS_NAMES = {
+      trial: '🟡 Período de prueba',
+      active: '🟢 Activo',
+      pending_payment: '🟠 Pago pendiente',
+      expired: '🔴 Expirado'
+    };
+
+    let currentUser = null;
+    let currentUserData = null;
+
+    // ═══ AUTH GUARD ═══
+    auth.onAuthStateChanged(async user => {
       if (!user) {
         window.location.href = 'login.html';
         return;
       }
 
-      const userData = JSON.parse(user);
-
-      if (!userData.logged_in) {
-        window.location.href = 'login.html';
+      // Superadmin → admin panel
+      if (ADMIN_EMAILS.includes(user.email)) {
+        window.location.href = 'admin.html';
         return;
       }
 
-      // Mostrar datos del usuario
-      const userName = userData.name || userData.email;
-      document.getElementById('userName').textContent = userName.split(' ')[0];
-      document.getElementById('userEmail').textContent = userData.email || 'usuario@email.com';
+      currentUser = user;
 
-      if (userData.plan) {
-        const planNames = {
-          'basic': 'Básico',
-          'pro': 'Pro',
-          'enterprise': 'Enterprise'
-        };
-        document.getElementById('userPlan').textContent = planNames[userData.plan] || 'Pro';
+      // Leer perfil de Firestore
+      let doc = await db.collection('users').doc(user.uid).get();
+
+      // Si no existe el doc, crearlo con defaults (nuevo usuario)
+      if (!doc.exists) {
+        const now = new Date();
+        const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+        await db.collection('users').doc(user.uid).set({
+          uid: user.uid,
+          name: user.displayName || '',
+          email: user.email,
+          photo: user.photoURL || '',
+          role: 'client',
+          plan: 'trial',
+          plan_start_date: now,
+          plan_end_date: trialEnd,
+          payment_status: 'trial',
+          approved: false,
+          gemini_api_key: '',
+          agents_limit: 1,
+          discount_percent: 0,
+          parent_client_uid: '',
+          whatsapp: '',
+          registered_at: now,
+          last_login: now
+        });
+        doc = await db.collection('users').doc(user.uid).get();
+      } else {
+        // Actualizar last_login
+        await db.collection('users').doc(user.uid).update({ last_login: new Date() });
+      }
+
+      currentUserData = doc.data();
+
+      // Agent → redirect
+      if (currentUserData.role === 'agent') {
+        window.location.href = 'agent-dashboard.html';
+        return;
+      }
+
+      // Check trial status
+      checkTrialStatus(currentUserData);
+
+      // Render dashboard
+      renderDashboard(currentUserData);
+
+      // Load agents
+      loadAgents();
+
+      // Setup UI
+      setupScrollAndAnimations();
+    });
+
+    // ═══ TRIAL CHECK ═══
+    function checkTrialStatus(userData) {
+      if (userData.payment_status === 'trial') {
+        const trialEnd = userData.plan_end_date?.toDate
+          ? userData.plan_end_date.toDate()
+          : new Date((userData.registered_at?.toDate?.() || new Date()).getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        const now = new Date();
+        const daysLeft = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
+
+        if (daysLeft <= 0) {
+          showPaywall();
+        } else {
+          const countdown = document.getElementById('trialCountdown');
+          countdown.textContent = `🕐 Te quedan ${daysLeft} día${daysLeft !== 1 ? 's' : ''} de prueba`;
+          countdown.classList.remove('hidden');
+        }
+      } else if (userData.payment_status === 'expired' || userData.payment_status === 'pending_payment') {
+        showPaywall();
+      }
+    }
+
+    function showPaywall() {
+      document.getElementById('paywallOverlay').classList.add('active');
+    }
+
+    // ═══ RENDER DASHBOARD ═══
+    function renderDashboard(userData) {
+      // Navbar
+      document.getElementById('userEmail').textContent = userData.email;
+      document.getElementById('navPlan').textContent = PLAN_NAMES[userData.plan] || userData.plan;
+
+      // Hero
+      const name = userData.name || userData.email;
+      document.getElementById('userName').textContent = name.split(' ')[0];
+
+      // Account card
+      document.getElementById('accountPlan').textContent = PLAN_NAMES[userData.plan] || userData.plan;
+      document.getElementById('accountStatus').textContent = STATUS_NAMES[userData.payment_status] || userData.payment_status;
+
+      if (userData.plan_end_date) {
+        const endDate = userData.plan_end_date.toDate ? userData.plan_end_date.toDate() : new Date(userData.plan_end_date);
+        document.getElementById('accountExpiry').textContent = endDate.toLocaleDateString('es-ES');
       }
 
       if (userData.whatsapp) {
-        document.getElementById('userWhatsapp').textContent = userData.whatsapp;
+        document.getElementById('accountWhatsapp').textContent = userData.whatsapp;
       }
 
-      // Navbar scroll effect
+      if (userData.gemini_api_key) {
+        document.getElementById('accountApiKey').textContent = '✅ Configurada';
+      }
+
+      // Agents counter
+      document.getElementById('agentsLimit').textContent = userData.agents_limit || 1;
+
+      // Also update localStorage for backward compatibility with training.html
+      localStorage.setItem('miia_user', JSON.stringify({
+        uid: userData.uid,
+        name: userData.name,
+        email: userData.email,
+        plan: userData.plan,
+        logged_in: true
+      }));
+    }
+
+    // ═══ AGENTS ═══
+    async function loadAgents() {
+      try {
+        const snapshot = await db.collection('users')
+          .where('parent_client_uid', '==', currentUser.uid)
+          .get();
+
+        const agents = [];
+        snapshot.forEach(doc => agents.push({ id: doc.id, ...doc.data() }));
+
+        document.getElementById('agentsUsed').textContent = agents.length;
+
+        const tbody = document.getElementById('agentsBody');
+        const noRow = document.getElementById('noAgentsRow');
+
+        if (agents.length === 0) {
+          noRow.classList.remove('hidden');
+          return;
+        }
+
+        noRow.classList.add('hidden');
+        tbody.innerHTML = '';
+
+        agents.forEach(agent => {
+          const statusBadge = agent.invite_pending
+            ? '<span class="badge badge-pending">Invitado</span>'
+            : '<span class="badge badge-active">Activo</span>';
+
+          tbody.innerHTML += `
+            <tr>
+              <td>
+                <div class="agent-cell">
+                  <div class="agent-avatar">${agent.name?.charAt(0) || '👤'}</div>
+                  <div>
+                    <div style="font-weight: 600; color: var(--text-dark);">${agent.name || 'Sin nombre'}</div>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">${agent.email}</div>
+                  </div>
+                </div>
+              </td>
+              <td>${statusBadge}</td>
+              <td><button class="btn-small btn-danger" onclick="removeAgent('${agent.id}')">Eliminar</button></td>
+            </tr>
+          `;
+        });
+
+        // Check limit
+        checkAgentLimit(agents.length);
+
+      } catch (error) {
+        console.error('Error loading agents:', error);
+      }
+    }
+
+    function checkAgentLimit(count) {
+      const limit = currentUserData.agents_limit || 1;
+      if (count >= limit) {
+        document.getElementById('addAgentBtn').disabled = true;
+        document.getElementById('agentLimitMsg').textContent = `Has alcanzado el límite de ${limit} agente${limit > 1 ? 's' : ''}. Contacta a lobsterscrm@gmail.com para ampliar tu plan.`;
+        document.getElementById('agentLimitMsg').classList.remove('hidden');
+      }
+    }
+
+    async function addAgent() {
+      const nameInput = document.getElementById('agentName');
+      const emailInput = document.getElementById('agentEmail');
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+
+      if (!name || !email) {
+        alert('Ingresa nombre y email del agente');
+        return;
+      }
+
+      // Check limit
+      const snapshot = await db.collection('users')
+        .where('parent_client_uid', '==', currentUser.uid)
+        .get();
+
+      if (snapshot.size >= (currentUserData.agents_limit || 1)) {
+        alert('Has alcanzado el límite de agentes de tu plan.');
+        return;
+      }
+
+      // Check if email already exists
+      const existing = await db.collection('users').where('email', '==', email).get();
+      if (!existing.empty) {
+        alert('Ya existe un usuario con ese email.');
+        return;
+      }
+
+      try {
+        await db.collection('users').add({
+          name: name,
+          email: email,
+          role: 'agent',
+          parent_client_uid: currentUser.uid,
+          plan: currentUserData.plan,
+          payment_status: 'active',
+          approved: true,
+          invite_pending: true,
+          gemini_api_key: '',
+          agents_limit: 1,
+          discount_percent: 0,
+          whatsapp: '',
+          registered_at: new Date(),
+          last_login: null
+        });
+
+        nameInput.value = '';
+        emailInput.value = '';
+        loadAgents();
+      } catch (error) {
+        alert('Error al agregar agente: ' + error.message);
+      }
+    }
+
+    async function removeAgent(agentId) {
+      if (!confirm('¿Eliminar este agente? Esta acción no se puede deshacer.')) return;
+
+      try {
+        await db.collection('users').doc(agentId).delete();
+        loadAgents();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // ═══ FEATURES ═══
+    function showFeature(feature) {
+      if (feature === 'train') {
+        window.location.href = 'training.html';
+        return;
+      }
+
+      const features = {
+        'whatsapp': 'Conectar WhatsApp',
+        'contacts': 'Gestionar Contactos',
+        'documents': 'Crear Documentos'
+      };
+
+      alert(`📱 ${features[feature]}\n\nEsta función estará disponible próximamente.`);
+    }
+
+    // ═══ LOGOUT ═══
+    function handleLogout() {
+      if (confirm('¿Cerrar sesión?')) {
+        localStorage.removeItem('miia_user');
+        auth.signOut();
+        window.location.href = 'login.html';
+      }
+    }
+
+    // ═══ UI ═══
+    function setupScrollAndAnimations() {
       window.addEventListener('scroll', () => {
         document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
       });
 
-      // Intersection Observer para fade-in
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, i) => {
           if (entry.isIntersecting) {
@@ -641,31 +1041,6 @@
       }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
       document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-    };
-
-    // Cerrar sesión
-    function handleLogout() {
-      if (confirm('¿Estás seguro que quieres cerrar sesión?')) {
-        localStorage.removeItem('miia_user');
-        window.location.href = 'login.html';
-      }
-    }
-
-    // Mostrar features
-    function showFeature(feature) {
-      if (feature === 'train') {
-        window.location.href = 'training.html';
-        return;
-      }
-
-      const features = {
-        'whatsapp': 'Conectar WhatsApp',
-        'contacts': 'Gestionar Contactos',
-        'documents': 'Crear Documentos',
-        'settings': 'Configuración'
-      };
-
-      alert(`📱 ${features[feature]}\n\nEsta función estará disponible próximamente.\n\nPor ahora estamos preparando la infraestructura base de MIIA.`);
     }
   </script>
 </body>

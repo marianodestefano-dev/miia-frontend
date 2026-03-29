@@ -509,24 +509,57 @@
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
-        // Guardar perfil en Firestore
-        await db.collection('users').doc(user.uid).set({
-          uid: user.uid,
-          name: name,
-          email: email,
-          whatsapp: whatsapp,
-          plan: plan,
-          logged_in: true,
-          registered_at: new Date()
-        });
+        // Check for pending agent invite
+        const inviteSnap = await db.collection('users')
+          .where('email', '==', email)
+          .where('invite_pending', '==', true)
+          .limit(1)
+          .get();
 
-        // Guardar en localStorage para compatibilidad
+        const now = new Date();
+        const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+        if (!inviteSnap.empty) {
+          // Link agent invite
+          const inviteDoc = inviteSnap.docs[0];
+          const inviteData = inviteDoc.data();
+          await db.collection('users').doc(user.uid).set({
+            ...inviteData,
+            uid: user.uid,
+            name: name,
+            whatsapp: whatsapp,
+            invite_pending: false,
+            last_login: now
+          });
+          await inviteDoc.ref.delete();
+        } else {
+          // New client
+          await db.collection('users').doc(user.uid).set({
+            uid: user.uid,
+            name: name,
+            email: email,
+            photo: '',
+            role: 'client',
+            plan: 'trial',
+            plan_start_date: now,
+            plan_end_date: trialEnd,
+            payment_status: 'trial',
+            approved: false,
+            gemini_api_key: '',
+            agents_limit: 1,
+            discount_percent: 0,
+            parent_client_uid: '',
+            whatsapp: whatsapp,
+            registered_at: now,
+            last_login: now
+          });
+        }
+
+        // localStorage for compat
         localStorage.setItem('miia_user', JSON.stringify({
           uid: user.uid,
           name: name,
           email: email,
-          whatsapp: whatsapp,
-          plan: plan,
           logged_in: true
         }));
 
@@ -542,25 +575,65 @@
         const result = await auth.signInWithPopup(provider);
         const user = result.user;
 
-        // Guardar/actualizar perfil en Firestore
-        await db.collection('users').doc(user.uid).set({
-          uid: user.uid,
-          name: user.displayName,
-          email: user.email,
-          photo: user.photoURL,
-          plan: 'pro',
-          logged_in: true,
-          last_login: new Date()
-        }, { merge: true });
+        // Check if user doc already exists
+        const existingDoc = await db.collection('users').doc(user.uid).get();
 
-        // Guardar en localStorage para compatibilidad
+        if (existingDoc.exists) {
+          // Returning user — just update last_login
+          await db.collection('users').doc(user.uid).update({ last_login: new Date() });
+        } else {
+          // New user — check if there's a pending agent invite for this email
+          const inviteSnap = await db.collection('users')
+            .where('email', '==', user.email)
+            .where('invite_pending', '==', true)
+            .limit(1)
+            .get();
+
+          if (!inviteSnap.empty) {
+            // Link invite: copy data to real uid doc, delete temp doc
+            const inviteDoc = inviteSnap.docs[0];
+            const inviteData = inviteDoc.data();
+            await db.collection('users').doc(user.uid).set({
+              ...inviteData,
+              uid: user.uid,
+              name: user.displayName || inviteData.name,
+              photo: user.photoURL || '',
+              invite_pending: false,
+              last_login: new Date()
+            });
+            await inviteDoc.ref.delete();
+          } else {
+            // Brand new client — create with trial
+            const now = new Date();
+            const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            await db.collection('users').doc(user.uid).set({
+              uid: user.uid,
+              name: user.displayName,
+              email: user.email,
+              photo: user.photoURL,
+              role: 'client',
+              plan: 'trial',
+              plan_start_date: now,
+              plan_end_date: trialEnd,
+              payment_status: 'trial',
+              approved: false,
+              gemini_api_key: '',
+              agents_limit: 1,
+              discount_percent: 0,
+              parent_client_uid: '',
+              whatsapp: '',
+              registered_at: now,
+              last_login: now
+            });
+          }
+        }
+
+        // localStorage for backward compat
         localStorage.setItem('miia_user', JSON.stringify({
           uid: user.uid,
           name: user.displayName,
           email: user.email,
-          photo: user.photoURL,
-          logged_in: true,
-          plan: 'pro'
+          logged_in: true
         }));
 
         showSuccess('¡Bienvenido ' + user.displayName + '! Redirigiendo...');

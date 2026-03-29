@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA - Mi Dashboard</title>
+  <style>
+    :root {
+      --primary: #667eea;
+      --primary-dark: #5568d3;
+      --secondary: #764ba2;
+      --accent: #25d366;
+      --bg-light: #f5f7fa;
+      --bg-white: #ffffff;
+      --text-dark: #1a1a2e;
+      --text-body: #4a4a6a;
+      --text-muted: #8888a4;
+      --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
+      --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
+      --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 50px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-body);
+      background: var(--bg-light);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding-top: 80px;
+    }
+
+    /* ═══ ANIMATIONS ═══ */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══ NAVBAR ═══ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(102, 126, 234, 0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 40px;
+      z-index: 100;
+      transition: all 0.3s ease;
+    }
+
+    #navbar.scrolled { height: 70px; box-shadow: var(--shadow-sm); }
+
+    .nav-logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .nav-email {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .nav-role-badge {
+      padding: 5px 12px;
+      border-radius: var(--radius-full);
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #dbeafe;
+      color: #164e63;
+    }
+
+    .logout-btn {
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover { background: var(--primary); color: white; }
+
+    /* ═══ HERO BAND ═══ */
+    .hero-band {
+      background: var(--gradient-main);
+      color: white;
+      padding: 50px 40px;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .hero-band h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    .hero-band p { font-size: 1rem; opacity: 0.9; }
+
+    .company-badge {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 6px 16px;
+      background: rgba(255,255,255,0.15);
+      border-radius: var(--radius-full);
+      font-size: 0.85rem;
+    }
+
+    /* ═══ CONTAINER ═══ */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px 40px;
+    }
+
+    /* ═══ STATS ═══ */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+
+    .stat-card {
+      background: var(--bg-white);
+      padding: 28px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(102, 126, 234, 0.08);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 4px;
+      background: var(--gradient-main);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .stat-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+    .stat-card:hover::before { opacity: 1; }
+
+    .stat-icon-box {
+      width: 56px; height: 56px;
+      border-radius: 14px;
+      background: rgba(102, 126, 234, 0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 14px;
+    }
+
+    .stat-number {
+      font-size: 2rem; font-weight: 700;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    .stat-label { color: var(--text-muted); font-size: 0.85rem; font-weight: 500; }
+
+    /* ═══ CARD ═══ */
+    .card {
+      background: var(--bg-white);
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(102, 126, 234, 0.08);
+      margin-bottom: 32px;
+    }
+
+    .card h2 {
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .card p { color: var(--text-muted); margin-bottom: 24px; }
+
+    /* ═══ CTA BUTTONS ═══ */
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .cta-btn {
+      padding: 28px 20px;
+      background: var(--bg-white);
+      border: 2px solid rgba(102, 126, 234, 0.12);
+      border-radius: var(--radius-lg);
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: var(--gradient-main);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .cta-btn:hover {
+      border-color: rgba(102, 126, 234, 0.25);
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .cta-btn:hover::before { opacity: 1; }
+    .cta-icon { font-size: 2rem; }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 768px) {
+      .container { padding: 0 20px 40px; }
+      #navbar { padding: 0 20px; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .cta-grid { grid-template-columns: 1fr; }
+      .card { padding: 28px 20px; }
+    }
+
+    @media (max-width: 480px) {
+      body { padding-top: 70px; }
+      #navbar { height: 70px; padding: 0 16px; }
+      .nav-logo { font-size: 1.3rem; }
+      .nav-email { display: none; }
+      .stats { grid-template-columns: 1fr; }
+      .hero-band { padding: 30px 16px; }
+      .hero-band h1 { font-size: 1.5rem; }
+      .container { padding: 0 16px 40px; }
+    }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">🤖 MIIA</a>
+    <div class="nav-actions">
+      <span class="nav-email" id="agentEmail"></span>
+      <span class="nav-role-badge">Agente</span>
+      <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
+    </div>
+  </nav>
+
+  <!-- Hero Band -->
+  <div class="hero-band">
+    <h1>Bienvenido, <span id="agentName">Agente</span></h1>
+    <p>Tu panel de agente de ventas con MIIA</p>
+    <div class="company-badge" id="companyBadge">🏢 Empresa</div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Stats -->
+    <div class="stats">
+      <div class="stat-card fade-in">
+        <div class="stat-icon-box">💬</div>
+        <div class="stat-number">0</div>
+        <div class="stat-label">Conversaciones hoy</div>
+      </div>
+      <div class="stat-card fade-in">
+        <div class="stat-icon-box">👥</div>
+        <div class="stat-number">0</div>
+        <div class="stat-label">Leads atendidos</div>
+      </div>
+      <div class="stat-card fade-in">
+        <div class="stat-icon-box">💰</div>
+        <div class="stat-number">0</div>
+        <div class="stat-label">Pre-ventas</div>
+      </div>
+      <div class="stat-card fade-in">
+        <div class="stat-icon-box">✅</div>
+        <div class="stat-number">0</div>
+        <div class="stat-label">Ventas cerradas</div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card fade-in">
+      <h2>🚀 Tus herramientas</h2>
+      <p>Entrena a tu MIIA personal para que aprenda tu estilo de comunicación.</p>
+
+      <div class="cta-grid">
+        <button class="cta-btn" onclick="window.location.href='training.html'">
+          <span class="cta-icon">🧠</span>
+          Entrenar mi MIIA
+        </button>
+        <button class="cta-btn" onclick="alert('🔬 Extracción de ADN\n\nEsta función estará disponible próximamente.\nMIIA analizará tu historial de WhatsApp para aprender tu estilo de venta.')">
+          <span class="cta-icon">🧬</span>
+          Extracción de ADN
+        </button>
+      </div>
+    </div>
+
+    <!-- Activity -->
+    <div class="card fade-in">
+      <h2>📊 Mi actividad reciente</h2>
+      <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
+        <div style="font-size: 3rem; margin-bottom: 12px; opacity: 0.5;">📭</div>
+        <p>No hay actividad aún</p>
+        <p style="margin-top: 8px; font-size: 0.85rem;">Entrena a tu MIIA para empezar a gestionar leads automáticamente</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+      authDomain: "miia-app-8cbd0.firebaseapp.com",
+      projectId: "miia-app-8cbd0",
+      storageBucket: "miia-app-8cbd0.firebasestorage.app",
+      messagingSenderId: "481282126913",
+      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
+
+    auth.onAuthStateChanged(async user => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (ADMIN_EMAILS.includes(user.email)) {
+        window.location.href = 'admin.html';
+        return;
+      }
+
+      // Load user doc
+      const doc = await db.collection('users').doc(user.uid).get();
+
+      if (!doc.exists) {
+        // Could be an invited agent — find by email
+        const inviteSnap = await db.collection('users')
+          .where('email', '==', user.email)
+          .where('invite_pending', '==', true)
+          .limit(1)
+          .get();
+
+        if (!inviteSnap.empty) {
+          // Link this uid to the invited agent doc
+          const inviteDoc = inviteSnap.docs[0];
+          const inviteData = inviteDoc.data();
+
+          // Create proper doc with real uid
+          await db.collection('users').doc(user.uid).set({
+            ...inviteData,
+            uid: user.uid,
+            name: user.displayName || inviteData.name,
+            photo: user.photoURL || '',
+            invite_pending: false,
+            last_login: new Date()
+          });
+
+          // Delete the temporary invite doc
+          await inviteDoc.ref.delete();
+        } else {
+          // Not an agent — redirect to regular dashboard (will create client doc there)
+          window.location.href = 'dashboard.html';
+          return;
+        }
+      }
+
+      // Re-read after potential update
+      const freshDoc = await db.collection('users').doc(user.uid).get();
+      const userData = freshDoc.data();
+
+      // Must be agent role
+      if (userData.role !== 'agent') {
+        window.location.href = 'dashboard.html';
+        return;
+      }
+
+      // Render
+      document.getElementById('agentEmail').textContent = userData.email;
+      document.getElementById('agentName').textContent = (userData.name || userData.email).split(' ')[0];
+
+      // Load parent company name
+      if (userData.parent_client_uid) {
+        try {
+          const parentDoc = await db.collection('users').doc(userData.parent_client_uid).get();
+          if (parentDoc.exists) {
+            document.getElementById('companyBadge').textContent = '🏢 ' + (parentDoc.data().name || parentDoc.data().email);
+          }
+        } catch (e) {
+          console.log('Could not load parent:', e);
+        }
+      }
+
+      // Update localStorage for training.html compat
+      localStorage.setItem('miia_user', JSON.stringify({
+        uid: userData.uid,
+        name: userData.name,
+        email: userData.email,
+        plan: userData.plan,
+        logged_in: true
+      }));
+
+      // Update last login
+      await db.collection('users').doc(user.uid).update({ last_login: new Date() });
+
+      // Setup UI
+      window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visible'), i * 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    });
+
+    function handleLogout() {
+      if (confirm('¿Cerrar sesión?')) {
+        localStorage.removeItem('miia_user');
+        auth.signOut();
+        window.location.href = 'login.html';
+      }
+    }
+  </script>
+</body>
+</html>
