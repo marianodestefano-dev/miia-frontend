@@ -3,145 +3,360 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIIA - Entrenar v1</title>
+  <title>MIIA - Entrenar</title>
   <style>
+    /* ═══════════════════════════════════════
+       MIIA SaaS Design System
+       ═══════════════════════════════════════ */
+    :root {
+      --primary: #667eea;
+      --primary-dark: #5568d3;
+      --secondary: #764ba2;
+      --accent: #25d366;
+      --accent-dark: #1ebe5a;
+      --bg-light: #f5f7fa;
+      --bg-white: #ffffff;
+      --text-dark: #1a1a2e;
+      --text-body: #4a4a6a;
+      --text-muted: #8888a4;
+      --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-accent: linear-gradient(135deg, #25d366 0%, #1ebe5a 100%);
+      --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
+      --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
+      --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      background: #f5f7fa;
+      color: var(--text-body);
+      background: var(--bg-light);
       min-height: 100vh;
+      line-height: 1.6;
     }
+
+    /* ═══ ANIMATIONS ═══ */
+    .fade-in { animation: fadeIn 0.6s ease forwards; }
+    .fade-in-up { animation: fadeInUp 0.6s ease forwards; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══ HEADER ═══ */
     .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: var(--gradient-main);
       color: white;
-      padding: 20px 40px;
+      padding: 24px 40px;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
     }
-    .header h1 { font-size: 1.8rem; display: flex; align-items: center; gap: 10px; }
-    .back-btn {
-      padding: 10px 20px;
-      background: rgba(255,255,255,0.2);
-      color: white;
-      border: 2px solid white;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s;
-    }
-    .back-btn:hover { background: white; color: #667eea; }
-    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
-    .setup-card {
-      background: white;
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      margin-bottom: 30px;
-    }
-    .setup-card h2 { color: #333; margin-bottom: 25px; font-size: 1.8rem; text-align: center; }
-    .btn {
-      width: 100%;
-      padding: 15px;
-      background: #667eea;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-    .btn:hover {
-      background: #5568d3;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
-    }
-    .hidden { display: none !important; }
-    #qrCode img { max-width: 300px; border-radius: 10px; border: 2px solid #667eea; }
-    .chat-container {
-      background: white;
-      border-radius: 15px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      display: flex;
-      flex-direction: column;
-      height: 600px;
-    }
-    .chat-header {
-      padding: 15px 20px;
-      background: #075e54;
-      color: white;
-      border-radius: 15px 15px 0 0;
+
+    .header h1 {
+      font-size: 1.8rem;
       display: flex;
       align-items: center;
       gap: 12px;
+      font-weight: 700;
     }
-    .chat-messages {
-      flex: 1;
-      padding: 20px;
-      overflow-y: auto;
-      background: #e5ddd5;
+
+    .back-btn {
+      padding: 10px 22px;
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: var(--radius-md);
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      font-size: 0.9rem;
     }
-    .message { margin-bottom: 12px; display: flex; gap: 8px; }
-    .message.user { justify-content: flex-end; }
-    .message.miia { justify-content: flex-start; }
-    .message-bubble {
-      max-width: 70%;
-      padding: 10px 14px;
-      border-radius: 10px;
-      word-wrap: break-word;
+
+    .back-btn:hover {
+      background: white;
+      color: var(--primary);
+      border-color: white;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
     }
-    .message.user .message-bubble { background: #dcf8c6; }
-    .message.miia .message-bubble { background: white; }
-    .chat-input {
-      display: flex;
-      padding: 15px;
-      background: #f0f0f0;
-      border-radius: 0 0 15px 15px;
-      gap: 10px;
+
+    /* ═══ CONTAINER ═══ */
+    .container {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 0 24px;
     }
-    .chat-input input {
-      flex: 1;
-      padding: 12px;
-      border: none;
-      border-radius: 25px;
-      font-size: 1rem;
+
+    /* ═══ SETUP CARD ═══ */
+    .setup-card {
+      background: var(--bg-white);
+      padding: 44px;
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 32px;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+      animation: fadeInUp 0.6s ease;
     }
-    .chat-input button {
-      padding: 12px 25px;
-      background: #075e54;
+
+    .setup-card h2 {
+      color: var(--text-dark);
+      margin-bottom: 20px;
+      font-size: 2rem;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .setup-card p {
+      color: var(--text-muted);
+      text-align: center;
+      margin-bottom: 28px;
+      font-size: 0.95rem;
+    }
+
+    /* ═══ BUTTONS ═══ */
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--gradient-main);
       color: white;
       border: none;
-      border-radius: 25px;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn:active { transform: translateY(0); }
+    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ═══ QR CODE ═══ */
+    #qrCode {
+      display: flex;
+      justify-content: center;
+      margin: 30px 0;
+      animation: fadeInUp 0.6s ease;
+    }
+
+    #qrCode img {
+      max-width: 300px;
+      border-radius: var(--radius-lg);
+      border: 3px solid var(--primary);
+      padding: 15px;
+      background: var(--bg-light);
+    }
+
+    #qrStatus {
+      text-align: center;
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    .success-message {
+      text-align: center;
+      color: var(--accent);
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      font-weight: 600;
+    }
+
+    /* ═══ CHAT CONTAINER ═══ */
+    .chat-container {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      flex-direction: column;
+      height: 650px;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+      animation: fadeInUp 0.6s ease;
+      overflow: hidden;
+    }
+
+    .chat-header {
+      padding: 20px 24px;
+      background: var(--gradient-main);
+      color: white;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .chat-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .chat-header-info h3 {
+      margin-bottom: 4px;
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .chat-header-info p {
+      font-size: 0.8rem;
+      opacity: 0.85;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 24px;
+      overflow-y: auto;
+      background: var(--bg-light);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .message {
+      display: flex;
+      gap: 8px;
+      animation: fadeInUp 0.3s ease;
+    }
+
+    .message.user {
+      justify-content: flex-end;
+    }
+
+    .message.miia {
+      justify-content: flex-start;
+    }
+
+    .message-bubble {
+      max-width: 65%;
+      padding: 12px 16px;
+      border-radius: var(--radius-md);
+      word-wrap: break-word;
+      line-height: 1.4;
+      font-size: 0.95rem;
+    }
+
+    .message.user .message-bubble {
+      background: var(--gradient-main);
+      color: white;
+      border-radius: 18px 18px 4px 18px;
+    }
+
+    .message.miia .message-bubble {
+      background: var(--bg-white);
+      color: var(--text-dark);
+      border-radius: 18px 18px 18px 4px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .chat-input {
+      display: flex;
+      padding: 16px;
+      background: var(--bg-white);
+      border-top: 1px solid rgba(102, 126, 234, 0.1);
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 2px solid rgba(102, 126, 234, 0.15);
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .chat-input input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .chat-input input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .chat-input button {
+      padding: 12px 24px;
+      background: var(--gradient-main);
+      color: white;
+      border: none;
+      border-radius: var(--radius-full);
       cursor: pointer;
       font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .chat-input button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .chat-input button:active { transform: translateY(0); }
+    .chat-input button:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .hidden { display: none !important; }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 600px) {
+      .header { padding: 16px 20px; }
+      .container { padding: 0 16px; }
+      .setup-card { padding: 32px 24px; }
+      .chat-container { height: 500px; }
+      .message-bubble { max-width: 85%; }
     }
   </style>
 </head>
 <body>
   <div class="header">
-    <h1>🤖 Entrenar a MIIA</h1>
+    <h1>🧠 Entrenar a MIIA</h1>
     <a href="dashboard.html" class="back-btn">← Volver al Dashboard</a>
   </div>
 
   <div class="container">
     <!-- PASO 1: Inicio simple -->
-    <div id="setupCard" class="setup-card">
+    <div id="setupCard" class="setup-card fade-in">
       <h2>Conectar WhatsApp</h2>
-      <p style="text-align: center; margin-bottom: 20px;">MIIA usará la API Key configurada en el servidor</p>
+      <p>MIIA usará la API Key configurada en el servidor para conectarse</p>
       <button class="btn" onclick="showWhatsAppSetup()">Conectar WhatsApp</button>
     </div>
 
     <!-- PASO 2: QR de WhatsApp -->
     <div id="whatsappSetup" class="setup-card hidden">
       <h2>Escanea el código QR</h2>
-      <div id="qrContainer" style="text-align: center;">
-        <p id="qrStatus" style="margin-bottom: 20px;">Generando QR...</p>
+      <div id="qrContainer">
+        <p id="qrStatus">Generando QR...</p>
         <div id="qrCode"></div>
       </div>
-      <div id="whatsappConnected" class="hidden" style="text-align: center;">
-        <p style="color: #3c3; font-size: 1.2rem; margin-bottom: 20px;">✅ WhatsApp conectado correctamente</p>
+      <div id="whatsappConnected" class="hidden">
+        <p class="success-message">✅ WhatsApp conectado correctamente</p>
         <button id="startChatBtn" class="btn hidden" onclick="goToChat()">Empezar a entrenar</button>
       </div>
     </div>
@@ -150,10 +365,10 @@
     <div id="chatContainer" class="hidden">
       <div class="chat-container">
         <div class="chat-header">
-          <div style="width: 45px; height: 45px; border-radius: 50%; background: #25d366; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">🤖</div>
-          <div>
+          <div class="chat-avatar">🤖</div>
+          <div class="chat-header-info">
             <h3>MIIA</h3>
-            <p style="font-size: 0.85rem; opacity: 0.8;">Tu asistente con WhatsApp conectado</p>
+            <p>Tu asistente IA con WhatsApp conectado</p>
           </div>
         </div>
         <div id="chatMessages" class="chat-messages"></div>

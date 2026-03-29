@@ -5,135 +5,189 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIIA - Iniciar Sesión</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
+    /* ═══════════════════════════════════════
+       MIIA SaaS Design System
+       ═══════════════════════════════════════ */
+    :root {
+      --primary: #667eea;
+      --primary-dark: #5568d3;
+      --secondary: #764ba2;
+      --accent: #25d366;
+      --accent-dark: #1ebe5a;
+      --bg-light: #f5f7fa;
+      --bg-white: #ffffff;
+      --text-dark: #1a1a2e;
+      --text-body: #4a4a6a;
+      --text-muted: #8888a4;
+      --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-accent: linear-gradient(135deg, #25d366 0%, #1ebe5a 100%);
+      --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
+      --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
+      --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
     }
-    
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-body);
+      background: var(--gradient-main);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
+      line-height: 1.6;
     }
-    
+
+    /* ═══ ANIMATIONS ═══ */
+    .fade-in { opacity: 0; transform: translateY(20px); animation: fadeIn 0.6s ease forwards; }
+    @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+
     .login-container {
-      background: white;
+      background: var(--bg-white);
       padding: 50px 40px;
-      border-radius: 20px;
-      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
       max-width: 450px;
       width: 100%;
+      animation: slideUp 0.6s ease;
     }
-    
+
+    @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
     .logo {
       text-align: center;
       font-size: 4rem;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
     }
-    
+
     h2 {
       text-align: center;
-      color: #333;
-      margin-bottom: 30px;
+      color: var(--text-dark);
+      margin-bottom: 10px;
       font-size: 1.8rem;
+      font-weight: 700;
     }
-    
+
+    .subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 30px;
+    }
+
     .tabs {
       display: flex;
       margin-bottom: 30px;
-      border-bottom: 2px solid #eee;
+      border-bottom: 2px solid #f0f0f0;
+      gap: 0;
     }
-    
+
     .tab {
       flex: 1;
       padding: 15px;
       text-align: center;
       cursor: pointer;
-      color: #666;
+      color: var(--text-muted);
       font-weight: 600;
+      font-size: 0.95rem;
       border-bottom: 3px solid transparent;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
+      position: relative;
     }
-    
+
+    .tab:hover { color: var(--primary); }
+
     .tab.active {
-      color: #667eea;
-      border-bottom-color: #667eea;
+      color: var(--primary);
+      border-bottom-color: var(--primary);
     }
-    
+
     .form-group {
-      margin-bottom: 20px;
+      margin-bottom: 22px;
     }
-    
+
     label {
       display: block;
-      margin-bottom: 8px;
-      color: #333;
+      margin-bottom: 10px;
+      color: var(--text-dark);
       font-weight: 500;
+      font-size: 0.95rem;
     }
-    
+
     input, select {
       width: 100%;
-      padding: 12px 15px;
-      border: 2px solid #eee;
-      border-radius: 8px;
+      padding: 13px 16px;
+      border: 2px solid #f0f0f0;
+      border-radius: var(--radius-sm);
       font-size: 1rem;
-      transition: border-color 0.3s;
+      transition: all 0.3s ease;
+      background: var(--bg-white);
+      color: var(--text-dark);
     }
-    
+
+    input::placeholder { color: var(--text-muted); }
+
     input:focus, select:focus {
       outline: none;
-      border-color: #667eea;
+      border-color: var(--primary);
+      background: linear-gradient(white, white) padding-box, var(--gradient-main) border-box;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
-    
+
     .btn {
       width: 100%;
-      padding: 15px;
-      background: #667eea;
+      padding: 14px;
+      background: var(--gradient-main);
       color: white;
       border: none;
-      border-radius: 8px;
-      font-size: 1.1rem;
+      border-radius: var(--radius-md);
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.3s ease;
+      margin-top: 10px;
     }
-    
+
     .btn:hover {
-      background: #5568d3;
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
     }
-    
+
+    .btn:active { transform: translateY(0); }
+
     .divider {
       text-align: center;
       margin: 30px 0;
-      color: #999;
+      color: var(--text-muted);
       position: relative;
+      font-size: 0.9rem;
     }
-    
-    .divider::before,
-    .divider::after {
+
+    .divider::before, .divider::after {
       content: "";
       position: absolute;
       top: 50%;
-      width: 40%;
+      width: 35%;
       height: 1px;
-      background: #eee;
+      background: #f0f0f0;
     }
-    
+
     .divider::before { left: 0; }
     .divider::after { right: 0; }
-    
+
     .google-btn {
       width: 100%;
-      padding: 15px;
-      background: white;
-      color: #333;
-      border: 2px solid #eee;
-      border-radius: 8px;
+      padding: 14px;
+      background: var(--bg-white);
+      color: var(--text-dark);
+      border: 2px solid #f0f0f0;
+      border-radius: var(--radius-md);
       font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
@@ -141,59 +195,74 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: all 0.3s;
+      transition: all 0.3s ease;
     }
-    
+
     .google-btn:hover {
-      border-color: #667eea;
-      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.2);
+      border-color: var(--primary);
+      background: linear-gradient(white, white) padding-box, var(--gradient-main) border-box;
+      box-shadow: var(--shadow-md);
     }
-    
+
     .message {
-      padding: 12px;
-      border-radius: 8px;
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
       margin-bottom: 20px;
       display: none;
+      animation: slideDown 0.3s ease;
     }
-    
-    .error { 
-      background: #fee; 
-      color: #c33; 
+
+    @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    .error {
+      background: #fee;
+      color: #c33;
       border-left: 4px solid #c33;
     }
-    
-    .success { 
-      background: #efe; 
-      color: #3c3; 
+
+    .success {
+      background: #efe;
+      color: #3c3;
       border-left: 4px solid #3c3;
     }
-    
+
     .hidden { display: none; }
-    
+
     .back-link {
       text-align: center;
-      margin-top: 20px;
+      margin-top: 25px;
     }
-    
+
     .back-link a {
-      color: #667eea;
+      color: var(--primary);
       text-decoration: none;
       font-weight: 500;
+      transition: all 0.3s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
     }
-    
+
     .back-link a:hover {
-      text-decoration: underline;
+      gap: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      .login-container { padding: 40px 25px; }
+      h2 { font-size: 1.5rem; }
     }
   </style>
 </head>
 <body>
-  <div class="login-container">
+  <div class="login-container fade-in">
     <div class="logo">🤖</div>
     <h2>Bienvenido a MIIA</h2>
-    
+    <p class="subtitle">Tu asistente IA que vende por WhatsApp 24/7</p>
+
     <div class="message error" id="errorMessage"></div>
     <div class="message success" id="successMessage"></div>
-    
+
     <div class="tabs">
       <div class="tab active" onclick="switchTab('login')">Iniciar Sesión</div>
       <div class="tab" onclick="switchTab('register')">Registrarse</div>
@@ -254,7 +323,7 @@
     </button>
     
     <div class="back-link">
-      <a href="index.html">← Volver a inicio</a>
+      <a href="index.html">← Volver al inicio</a>
     </div>
   </div>
 
