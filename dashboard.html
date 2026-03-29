@@ -24,9 +24,11 @@
       --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
       --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
       --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
+      --radius-full: 50px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,81 +40,113 @@
       background: var(--bg-light);
       min-height: 100vh;
       line-height: 1.6;
+      padding-top: 80px;
     }
 
     /* ═══ ANIMATIONS ═══ */
-    .fade-in { animation: fadeIn 0.6s ease forwards; }
-    .fade-in-up { animation: fadeInUp 0.6s ease forwards; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* ═══ HEADER ═══ */
-    .header {
-      background: var(--gradient-main);
-      color: white;
-      padding: 24px 40px;
+    /* ═══ NAVBAR ═══ */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(102, 126, 234, 0.08);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: var(--shadow-sm);
-      position: sticky;
-      top: 0;
+      padding: 0 40px;
       z-index: 100;
+      transition: all 0.3s ease;
     }
 
-    .header h1 {
-      font-size: 1.8rem;
+    #navbar.scrolled {
+      height: 70px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 700;
+      gap: 8px;
     }
 
-    .user-info {
+    .nav-actions {
       display: flex;
       align-items: center;
       gap: 24px;
     }
 
-    .user-name {
-      font-size: 0.95rem;
-      opacity: 0.95;
-      font-weight: 500;
+    .user-email {
+      font-size: 0.9rem;
+      color: var(--text-body);
     }
 
     .logout-btn {
       padding: 10px 22px;
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
       border-radius: var(--radius-md);
       cursor: pointer;
       font-weight: 600;
-      transition: all 0.3s ease;
       font-size: 0.9rem;
+      transition: all 0.3s ease;
     }
 
     .logout-btn:hover {
-      background: white;
-      color: var(--primary);
-      border-color: white;
+      background: var(--primary);
+      color: white;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
+    }
+
+    /* ═══ HERO BAND ═══ */
+    .hero-band {
+      background: var(--gradient-main);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    .hero-band h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .hero-band p {
+      font-size: 1.05rem;
+      opacity: 0.95;
     }
 
     /* ═══ CONTAINER ═══ */
     .container {
       max-width: 1400px;
-      margin: 40px auto;
-      padding: 0 40px;
+      margin: 0 auto;
+      padding: 0 40px 40px;
     }
 
     /* ═══ STATS CARDS ═══ */
@@ -128,17 +162,42 @@
       padding: 32px;
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
-      transition: all 0.3s ease;
-      border: 1px solid rgba(102, 126, 234, 0.1);
+      border: 1px solid rgba(102, 126, 234, 0.08);
+      transition: all 0.4s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: var(--gradient-main);
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
 
     .stat-card:hover {
-      transform: translateY(-8px);
+      transform: translateY(-6px);
       box-shadow: var(--shadow-md);
     }
 
-    .stat-icon {
-      font-size: 2.5rem;
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+
+    .stat-icon-box {
+      width: 56px;
+      height: 56px;
+      border-radius: var(--radius-md);
+      background: rgba(102, 126, 234, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
       margin-bottom: 16px;
     }
 
@@ -158,63 +217,96 @@
       font-weight: 500;
     }
 
-    /* ═══ MAIN CONTENT ═══ */
-    .main-content {
-      display: grid;
-      grid-template-columns: 2fr 1fr;
-      gap: 32px;
+    /* ═══ SECTION TAG ═══ */
+    .section-tag {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(102, 126, 234, 0.1);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
     }
 
+    /* ═══ CARDS ═══ */
     .card {
       background: var(--bg-white);
       padding: 32px;
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
       border: 1px solid rgba(102, 126, 234, 0.08);
-      animation: fadeInUp 0.6s ease forwards;
     }
 
     .card h2 {
       color: var(--text-dark);
       margin-bottom: 24px;
       font-size: 1.4rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
       font-weight: 700;
     }
 
     /* ═══ QUICK ACTIONS ═══ */
     .quick-actions {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 18px;
-      margin-top: 24px;
     }
 
     .action-btn {
-      padding: 20px;
-      background: var(--gradient-main);
-      color: white;
-      border: none;
-      border-radius: var(--radius-md);
+      padding: 28px 20px;
+      background: var(--bg-white);
+      color: var(--text-dark);
+      border: 2px solid rgba(102, 126, 234, 0.15);
+      border-radius: var(--radius-lg);
       cursor: pointer;
       font-weight: 600;
       font-size: 0.95rem;
-      transition: all 0.3s ease;
+      transition: all 0.4s ease;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      flex-direction: column;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .action-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: var(--gradient-main);
+      opacity: 0;
+      transition: opacity 0.4s ease;
     }
 
     .action-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+      border-color: rgba(102, 126, 234, 0.3);
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.03) 0%, rgba(118, 75, 162, 0.03) 100%);
     }
 
-    .action-btn:active { transform: translateY(-1px); }
+    .action-btn:hover::before {
+      opacity: 1;
+    }
+
+    .action-icon {
+      font-size: 2rem;
+    }
+
+    /* ═══ MAIN CONTENT ═══ */
+    .main-content {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 32px;
+      margin-bottom: 40px;
+    }
 
     /* ═══ ACTIVITY ═══ */
     .activity-item {
@@ -226,7 +318,10 @@
       transition: all 0.3s ease;
     }
 
-    .activity-item:hover { transform: translateX(4px); }
+    .activity-item:hover {
+      transform: translateX(4px);
+      background: rgba(102, 126, 234, 0.08);
+    }
 
     .activity-time {
       font-size: 0.8rem;
@@ -240,42 +335,6 @@
       font-weight: 500;
     }
 
-    /* ═══ CONTACT LIST ═══ */
-    .contact-item {
-      padding: 16px;
-      border-bottom: 1px solid #f0f0f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      transition: all 0.3s ease;
-    }
-
-    .contact-item:last-child { border-bottom: none; }
-    .contact-item:hover { background: var(--bg-light); border-radius: var(--radius-sm); padding-left: 20px; }
-
-    .contact-name {
-      font-weight: 600;
-      color: var(--text-dark);
-    }
-
-    .contact-type {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    /* ═══ BADGES ═══ */
-    .badge {
-      padding: 6px 14px;
-      border-radius: 20px;
-      font-size: 0.75rem;
-      font-weight: 600;
-    }
-
-    .badge-lead { background: #fef3c7; color: #92400e; }
-    .badge-client { background: #dcfce7; color: #166534; }
-    .badge-dile-a { background: #cffafe; color: #164e63; }
-
     /* ═══ EMPTY STATE ═══ */
     .empty-state {
       text-align: center;
@@ -284,64 +343,173 @@
     }
 
     .empty-state-icon {
-      font-size: 4rem;
+      font-size: 3.5rem;
       margin-bottom: 16px;
-      opacity: 0.5;
+      opacity: 0.6;
     }
 
-    .empty-state p { font-size: 0.95rem; }
-    .empty-state p:last-child { font-size: 0.85rem; margin-top: 12px; opacity: 0.8; }
+    .empty-state p {
+      font-size: 0.95rem;
+    }
+
+    .empty-state p:last-child {
+      font-size: 0.85rem;
+      margin-top: 12px;
+      opacity: 0.8;
+    }
+
+    /* ═══ BADGES ═══ */
+    .badge {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .badge-lead {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-client {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .badge-pending {
+      background: #fecaca;
+      color: #991b1b;
+    }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 968px) {
-      .main-content { grid-template-columns: 1fr; }
-      .quick-actions { grid-template-columns: 1fr; }
-      .container { padding: 0 24px; }
-      .header { padding: 16px 24px; }
-      .stats { grid-template-columns: repeat(2, 1fr); }
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .container {
+        padding: 0 24px 40px;
+      }
+
+      #navbar {
+        padding: 0 24px;
+      }
+
+      .stats {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      body {
+        padding-top: 70px;
+      }
+
+      .hero-band {
+        padding: 40px 24px;
+      }
+
+      .hero-band h1 {
+        font-size: 1.8rem;
+      }
     }
 
     @media (max-width: 600px) {
-      .stats { grid-template-columns: 1fr; }
-      .header { flex-direction: column; gap: 16px; }
-      .user-info { width: 100%; justify-content: space-between; }
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+
+      #navbar {
+        padding: 0 16px;
+        height: 70px;
+      }
+
+      #navbar.scrolled {
+        height: 70px;
+      }
+
+      .nav-logo {
+        font-size: 1.4rem;
+      }
+
+      .nav-actions {
+        gap: 12px;
+      }
+
+      .user-email {
+        display: none;
+      }
+
+      .logout-btn {
+        padding: 8px 16px;
+        font-size: 0.8rem;
+      }
+
+      body {
+        padding-top: 70px;
+      }
+
+      .hero-band {
+        padding: 30px 16px;
+      }
+
+      .hero-band h1 {
+        font-size: 1.5rem;
+      }
+
+      .container {
+        padding: 0 16px 40px;
+      }
     }
   </style>
 </head>
 <body>
-  <!-- Header -->
-  <div class="header">
-    <h1>🤖 MIIA Dashboard</h1>
-    <div class="user-info">
-      <span class="user-name" id="userName">Cargando...</span>
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">🤖 MIIA</a>
+    <div class="nav-actions">
+      <span class="user-email" id="userEmail">usuario@email.com</span>
       <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
     </div>
+  </nav>
+
+  <!-- Hero Band -->
+  <div class="hero-band">
+    <h1>Bienvenido, <span id="userName">Usuario</span></h1>
+    <p>Tu asistente de IA está listo para trabajar 🚀</p>
   </div>
 
   <!-- Main Container -->
   <div class="container">
     <!-- Stats Cards -->
     <div class="stats">
-      <div class="stat-card">
-        <div class="stat-icon">💬</div>
+      <div class="stat-card fade-in">
+        <div class="stat-icon-box">💬</div>
         <div class="stat-number">0</div>
         <div class="stat-label">Conversaciones hoy</div>
       </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">👥</div>
+
+      <div class="stat-card fade-in">
+        <div class="stat-icon-box">👥</div>
         <div class="stat-number">0</div>
         <div class="stat-label">Leads activos</div>
       </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">✅</div>
+
+      <div class="stat-card fade-in">
+        <div class="stat-icon-box">✅</div>
         <div class="stat-number">0</div>
         <div class="stat-label">Clientes</div>
       </div>
-      
-      <div class="stat-card">
-        <div class="stat-icon">📄</div>
+
+      <div class="stat-card fade-in">
+        <div class="stat-icon-box">📄</div>
         <div class="stat-number">0</div>
         <div class="stat-label">PDFs generados</div>
       </div>
@@ -352,33 +520,31 @@
       <!-- Left Column -->
       <div>
         <!-- Quick Actions -->
-        <div class="card">
+        <div class="card fade-in">
           <h2>⚡ Acciones Rápidas</h2>
           <div class="quick-actions">
             <button class="action-btn" onclick="showFeature('whatsapp')">
-              <span>📱</span> Conectar WhatsApp
+              <span class="action-icon">📱</span> Conectar WhatsApp
             </button>
             <button class="action-btn" onclick="showFeature('train')">
-              <span>🧠</span> Entrenar MIIA
+              <span class="action-icon">🧠</span> Entrenar MIIA
             </button>
             <button class="action-btn" onclick="showFeature('contacts')">
-              <span>👥</span> Gestionar Contactos
+              <span class="action-icon">👥</span> Gestionar Contactos
             </button>
             <button class="action-btn" onclick="showFeature('documents')">
-              <span>📄</span> Crear Documento
+              <span class="action-icon">📄</span> Crear Documento
             </button>
           </div>
         </div>
 
         <!-- Recent Activity -->
-        <div class="card" style="margin-top: 30px;">
+        <div class="card fade-in" style="margin-top: 30px;">
           <h2>📊 Actividad Reciente</h2>
           <div class="empty-state">
             <div class="empty-state-icon">📭</div>
             <p>No hay actividad aún</p>
-            <p style="font-size: 0.9rem; margin-top: 10px;">
-              Conecta tu WhatsApp para que MIIA empiece a trabajar
-            </p>
+            <p>Conecta tu WhatsApp para que MIIA empiece a trabajar</p>
           </div>
         </div>
       </div>
@@ -386,37 +552,38 @@
       <!-- Right Column -->
       <div>
         <!-- User Info Card -->
-        <div class="card">
+        <div class="card fade-in">
           <h2>👤 Tu Cuenta</h2>
           <div style="margin-top: 20px;">
             <div style="margin-bottom: 15px;">
-              <strong>Plan:</strong> <span id="userPlan" style="color: #667eea;">Pro</span>
+              <strong>Plan:</strong>
+              <span id="userPlan" style="color: #667eea; margin-left: 8px;">Pro</span>
             </div>
             <div style="margin-bottom: 15px;">
-              <strong>WhatsApp:</strong> <span id="userWhatsapp" style="color: #666;">No conectado</span>
+              <strong>WhatsApp:</strong>
+              <span id="userWhatsapp" style="color: #666; margin-left: 8px;">No conectado</span>
             </div>
             <div style="margin-bottom: 15px;">
-              <strong>Mensajes restantes:</strong> <span style="color: #667eea;">2,000 / 2,000</span>
+              <strong>Mensajes restantes:</strong>
+              <span style="color: #667eea; margin-left: 8px;">2,000 / 2,000</span>
             </div>
             <div style="margin-bottom: 20px;">
-              <strong>Estado MIIA:</strong> 
-              <span style="color: #f39c12;">⚠️ Pendiente configuración</span>
+              <strong>Estado MIIA:</strong>
+              <span style="color: #f39c12; margin-left: 8px;">⚠️ Pendiente configuración</span>
             </div>
-            <button class="action-btn" style="width: 100%;" onclick="showFeature('settings')">
-              ⚙️ Configuración
+            <button class="action-btn" style="width: 100%; border: 2px solid var(--gradient-main); background: var(--gradient-main); color: white; margin-top: 10px;" onclick="showFeature('settings')">
+              <span class="action-icon">⚙️</span> Configuración
             </button>
           </div>
         </div>
 
         <!-- Contacts Preview -->
-        <div class="card" style="margin-top: 30px;">
+        <div class="card fade-in" style="margin-top: 30px;">
           <h2>💬 Contactos Clasificados</h2>
           <div class="empty-state">
             <div class="empty-state-icon">👥</div>
             <p>Sin contactos aún</p>
-            <p style="font-size: 0.9rem; margin-top: 10px;">
-              MIIA clasificará automáticamente tus contactos
-            </p>
+            <p>MIIA clasificará automáticamente tus contactos</p>
           </div>
         </div>
       </div>
@@ -427,22 +594,24 @@
     // Verificar si el usuario está logueado
     window.onload = function() {
       const user = localStorage.getItem('miia_user');
-      
+
       if (!user) {
         window.location.href = 'login.html';
         return;
       }
-      
+
       const userData = JSON.parse(user);
-      
+
       if (!userData.logged_in) {
         window.location.href = 'login.html';
         return;
       }
-      
+
       // Mostrar datos del usuario
-      document.getElementById('userName').textContent = userData.name || userData.email;
-      
+      const userName = userData.name || userData.email;
+      document.getElementById('userName').textContent = userName.split(' ')[0];
+      document.getElementById('userEmail').textContent = userData.email || 'usuario@email.com';
+
       if (userData.plan) {
         const planNames = {
           'basic': 'Básico',
@@ -451,12 +620,29 @@
         };
         document.getElementById('userPlan').textContent = planNames[userData.plan] || 'Pro';
       }
-      
+
       if (userData.whatsapp) {
         document.getElementById('userWhatsapp').textContent = userData.whatsapp;
       }
+
+      // Navbar scroll effect
+      window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+      });
+
+      // Intersection Observer para fade-in
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visible'), i * 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     };
-    
+
     // Cerrar sesión
     function handleLogout() {
       if (confirm('¿Estás seguro que quieres cerrar sesión?')) {
@@ -464,23 +650,21 @@
         window.location.href = 'login.html';
       }
     }
-    
+
     // Mostrar features
     function showFeature(feature) {
-      // Si es entrenar, ir a la página de training
       if (feature === 'train') {
         window.location.href = 'training.html';
         return;
       }
-      
-      // Para las demás funciones, mostrar próximamente
+
       const features = {
         'whatsapp': 'Conectar WhatsApp',
         'contacts': 'Gestionar Contactos',
         'documents': 'Crear Documentos',
         'settings': 'Configuración'
       };
-      
+
       alert(`📱 ${features[feature]}\n\nEsta función estará disponible próximamente.\n\nPor ahora estamos preparando la infraestructura base de MIIA.`);
     }
   </script>

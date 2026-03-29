@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIIA - Entrenar</title>
+  <title>Entrenar MIIA</title>
   <style>
     /* ═══════════════════════════════════════
        MIIA SaaS Design System
@@ -24,9 +24,11 @@
       --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
       --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
       --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
+      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
+      --radius-full: 50px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -38,170 +40,226 @@
       background: var(--bg-light);
       min-height: 100vh;
       line-height: 1.6;
+      padding-top: 80px;
     }
 
     /* ═══ ANIMATIONS ═══ */
-    .fade-in { animation: fadeIn 0.6s ease forwards; }
-    .fade-in-up { animation: fadeInUp 0.6s ease forwards; }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
     }
 
-    @keyframes fadeInUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
-    /* ═══ HEADER ═══ */
-    .header {
-      background: var(--gradient-main);
-      color: white;
-      padding: 24px 40px;
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .online-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #22c55e;
+      animation: blink 2s ease-in-out infinite;
+    }
+
+    /* ═══ NAVBAR ═══ */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(102, 126, 234, 0.08);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      box-shadow: var(--shadow-sm);
-      position: sticky;
-      top: 0;
+      padding: 0 40px;
       z-index: 100;
+      transition: all 0.3s ease;
     }
 
-    .header h1 {
-      font-size: 1.8rem;
+    #navbar.scrolled {
+      height: 70px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
       display: flex;
       align-items: center;
-      gap: 12px;
-      font-weight: 700;
+      gap: 8px;
+      cursor: pointer;
     }
 
-    .back-btn {
-      padding: 10px 22px;
-      background: rgba(255, 255, 255, 0.15);
-      color: white;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: var(--radius-md);
-      text-decoration: none;
-      font-weight: 600;
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
-    }
-
-    .back-btn:hover {
-      background: white;
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: transparent;
+      border: 2px solid var(--primary);
       color: var(--primary);
-      border-color: white;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+    }
+
+    .nav-back:hover {
+      background: var(--primary);
+      color: white;
       transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
     }
 
     /* ═══ CONTAINER ═══ */
     .container {
-      max-width: 900px;
+      max-width: 1200px;
       margin: 40px auto;
-      padding: 0 24px;
+      padding: 0 40px;
     }
 
-    /* ═══ SETUP CARD ═══ */
-    .setup-card {
+    /* ═══ CARDS ═══ */
+    .card {
       background: var(--bg-white);
-      padding: 44px;
+      padding: 40px;
       border-radius: var(--radius-lg);
       box-shadow: var(--shadow-sm);
-      margin-bottom: 32px;
-      border: 1px solid rgba(102, 126, 234, 0.1);
-      animation: fadeInUp 0.6s ease forwards;
+      border: 1px solid rgba(102, 126, 234, 0.08);
     }
 
-    .setup-card h2 {
+    .card h2 {
       color: var(--text-dark);
-      margin-bottom: 20px;
-      font-size: 2rem;
-      text-align: center;
+      margin-bottom: 12px;
+      font-size: 1.8rem;
       font-weight: 700;
     }
 
-    .setup-card p {
+    .card-subtitle {
       color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 28px;
-      font-size: 0.95rem;
-    }
-
-    /* ═══ BUTTONS ═══ */
-    .btn {
-      width: 100%;
-      padding: 14px;
-      background: var(--gradient-main);
-      color: white;
-      border: none;
-      border-radius: var(--radius-md);
+      margin-bottom: 24px;
       font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+    /* ═══ SETUP SECTION ═══ */
+    .setup-section {
+      text-align: center;
+      margin-bottom: 40px;
     }
 
-    .btn:active { transform: translateY(0); }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-
-    /* ═══ QR CODE ═══ */
-    #qrCode {
+    .setup-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: var(--radius-lg);
+      background: rgba(102, 126, 234, 0.08);
       display: flex;
+      align-items: center;
       justify-content: center;
-      margin: 30px 0;
-      animation: fadeInUp 0.6s ease;
+      font-size: 4rem;
+      margin: 0 auto 24px;
     }
 
-    #qrCode img {
-      max-width: 300px;
-      border-radius: var(--radius-lg);
-      border: 3px solid var(--primary);
-      padding: 15px;
-      background: var(--bg-light);
+    .setup-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 12px;
     }
 
-    #qrStatus {
-      text-align: center;
+    .setup-description {
       color: var(--text-muted);
-      font-weight: 500;
-      font-size: 0.95rem;
+      margin-bottom: 24px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    .success-message {
-      text-align: center;
-      color: var(--accent);
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-      font-weight: 600;
-    }
-
-    /* ═══ CHAT CONTAINER ═══ */
-    .chat-container {
-      background: var(--bg-white);
-      border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-md);
+    /* ═══ QR SECTION ═══ */
+    .qr-section {
       display: flex;
       flex-direction: column;
-      height: 650px;
-      border: 1px solid rgba(102, 126, 234, 0.1);
-      animation: fadeInUp 0.6s ease forwards;
+      align-items: center;
+      gap: 24px;
+      padding: 40px;
+      border: 2px dashed rgba(102, 126, 234, 0.3);
+      border-radius: var(--radius-lg);
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.02) 0%, rgba(118, 75, 162, 0.02) 100%);
+    }
+
+    .qr-code {
+      width: 300px;
+      height: 300px;
+      background: white;
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      color: var(--primary);
+    }
+
+    .qr-status {
+      text-align: center;
+    }
+
+    .qr-status-text {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+    }
+
+    .qr-status-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 600;
+      color: #f39c12;
+    }
+
+    /* ═══ CHAT INTERFACE ═══ */
+    .chat-container {
+      display: flex;
+      flex-direction: column;
+      height: 500px;
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
       overflow: hidden;
+      margin-top: 32px;
+      border: 1px solid rgba(102, 126, 234, 0.08);
     }
 
     .chat-header {
-      padding: 20px 24px;
       background: var(--gradient-main);
       color: white;
+      padding: 24px;
       display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: space-between;
+    }
+
+    .chat-header-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .chat-avatar {
@@ -212,26 +270,32 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      font-size: 1.8rem;
     }
 
-    .chat-header-info h3 {
-      margin-bottom: 4px;
+    .chat-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .chat-name {
       font-weight: 700;
       font-size: 0.95rem;
     }
 
-    .chat-header-info p {
+    .chat-status {
       font-size: 0.8rem;
-      opacity: 0.85;
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
 
     .chat-messages {
       flex: 1;
-      padding: 24px;
       overflow-y: auto;
-      background: var(--bg-light);
+      padding: 24px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -239,285 +303,407 @@
 
     .message {
       display: flex;
-      gap: 8px;
-      animation: fadeInUp 0.3s ease;
+      margin-bottom: 12px;
+      animation: fadeIn 0.4s ease forwards;
     }
 
-    .message.user {
+    .message.sent {
       justify-content: flex-end;
     }
 
-    .message.miia {
-      justify-content: flex-start;
-    }
-
     .message-bubble {
-      max-width: 65%;
       padding: 12px 16px;
-      border-radius: var(--radius-md);
+      border-radius: 16px;
+      font-size: 0.9rem;
+      max-width: 60%;
       word-wrap: break-word;
-      line-height: 1.4;
-      font-size: 0.95rem;
     }
 
-    .message.user .message-bubble {
+    .message.sent .message-bubble {
       background: var(--gradient-main);
       color: white;
-      border-radius: 18px 18px 4px 18px;
+      border-bottom-right-radius: 4px;
     }
 
-    .message.miia .message-bubble {
-      background: var(--bg-white);
+    .message.received .message-bubble {
+      background: var(--bg-light);
       color: var(--text-dark);
-      border-radius: 18px 18px 18px 4px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(102, 126, 234, 0.1);
+      border-bottom-left-radius: 4px;
     }
 
-    .chat-input {
+    .chat-input-area {
+      padding: 20px;
+      border-top: 1px solid rgba(102, 126, 234, 0.08);
       display: flex;
-      padding: 16px;
-      background: var(--bg-white);
-      border-top: 1px solid rgba(102, 126, 234, 0.1);
       gap: 12px;
       align-items: flex-end;
     }
 
-    .chat-input input {
+    .chat-input {
       flex: 1;
       padding: 12px 16px;
       border: 2px solid rgba(102, 126, 234, 0.15);
-      border-radius: var(--radius-full);
-      font-size: 0.95rem;
+      border-radius: var(--radius-md);
       font-family: inherit;
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      resize: none;
+      min-height: 40px;
+      max-height: 100px;
       transition: all 0.3s ease;
     }
 
-    .chat-input input:focus {
+    .chat-input:focus {
       outline: none;
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
     }
 
-    .chat-input input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .chat-input button {
-      padding: 12px 24px;
+    .chat-send-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
       background: var(--gradient-main);
       color: white;
       border: none;
-      border-radius: var(--radius-full);
       cursor: pointer;
-      font-weight: 600;
-      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
       transition: all 0.3s ease;
+      flex-shrink: 0;
     }
 
-    .chat-input button:hover {
+    .chat-send-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
     }
 
-    .chat-input button:active { transform: translateY(0); }
-    .chat-input button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .chat-send-btn:active {
+      transform: translateY(0);
+    }
 
-    .hidden { display: none !important; }
+    /* ═══ BUTTON ═══ */
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 28px;
+      background: var(--gradient-main);
+      color: white;
+      border: none;
+      border-radius: var(--radius-md);
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .primary-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(102, 126, 234, 0.3);
+    }
+
+    .primary-btn:active {
+      transform: translateY(0);
+    }
 
     /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 968px) {
+      .container {
+        padding: 0 24px;
+      }
+
+      #navbar {
+        padding: 0 24px;
+      }
+
+      .card {
+        padding: 32px 24px;
+      }
+
+      .qr-code {
+        width: 250px;
+        height: 250px;
+      }
+
+      .message-bubble {
+        max-width: 80%;
+      }
+
+      .chat-container {
+        height: 400px;
+      }
+    }
+
     @media (max-width: 600px) {
-      .header { padding: 16px 20px; }
-      .container { padding: 0 16px; }
-      .setup-card { padding: 32px 24px; }
-      .chat-container { height: 500px; }
-      .message-bubble { max-width: 85%; }
+      #navbar {
+        padding: 0 16px;
+        height: 70px;
+      }
+
+      #navbar.scrolled {
+        height: 70px;
+      }
+
+      .nav-logo {
+        font-size: 1.4rem;
+      }
+
+      .nav-back {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+      }
+
+      body {
+        padding-top: 70px;
+      }
+
+      .container {
+        padding: 0 16px;
+        margin: 24px auto;
+      }
+
+      .card {
+        padding: 24px 16px;
+      }
+
+      .setup-icon {
+        width: 80px;
+        height: 80px;
+        font-size: 2.5rem;
+      }
+
+      .setup-title {
+        font-size: 1.3rem;
+      }
+
+      .qr-section {
+        padding: 24px 16px;
+      }
+
+      .qr-code {
+        width: 200px;
+        height: 200px;
+        font-size: 2rem;
+      }
+
+      .chat-container {
+        height: 350px;
+      }
+
+      .chat-header {
+        padding: 16px;
+      }
+
+      .chat-messages {
+        padding: 16px;
+      }
+
+      .chat-input-area {
+        padding: 12px;
+        gap: 8px;
+      }
+
+      .message-bubble {
+        max-width: 85%;
+      }
+
+      .chat-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 1.4rem;
+      }
+
+      .chat-name {
+        font-size: 0.9rem;
+      }
+
+      .primary-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>🧠 Entrenar a MIIA</h1>
-    <a href="dashboard.html" class="back-btn">← Volver al Dashboard</a>
-  </div>
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">🤖 MIIA</a>
+    <button class="nav-back" onclick="window.location.href='dashboard.html'">
+      ← Dashboard
+    </button>
+  </nav>
 
+  <!-- Main Container -->
   <div class="container">
-    <!-- PASO 1: Inicio simple -->
-    <div id="setupCard" class="setup-card">
-      <h2>Conectar WhatsApp</h2>
-      <p>MIIA usará la API Key configurada en el servidor para conectarse</p>
-      <button class="btn" onclick="showWhatsAppSetup()">Conectar WhatsApp</button>
-    </div>
-
-    <!-- PASO 2: QR de WhatsApp -->
-    <div id="whatsappSetup" class="setup-card hidden">
-      <h2>Escanea el código QR</h2>
-      <div id="qrContainer">
-        <p id="qrStatus">Generando QR...</p>
-        <div id="qrCode"></div>
+    <!-- Setup Instructions Card -->
+    <div class="card fade-in">
+      <div class="setup-section">
+        <div class="setup-icon">📱</div>
+        <div class="setup-title">Conecta tu WhatsApp</div>
+        <div class="setup-description">
+          Escanea el código QR con tu teléfono para vincularlo con MIIA. Esto permite que tu asistente de IA acceda a tus chats.
+        </div>
       </div>
-      <div id="whatsappConnected" class="hidden">
-        <p class="success-message">✅ WhatsApp conectado correctamente</p>
-        <button id="startChatBtn" class="btn hidden" onclick="goToChat()">Empezar a entrenar</button>
-      </div>
-    </div>
 
-    <!-- PASO 3: Chat con MIIA -->
-    <div id="chatContainer" class="hidden">
-      <div class="chat-container">
-        <div class="chat-header">
-          <div class="chat-avatar">🤖</div>
-          <div class="chat-header-info">
-            <h3>MIIA</h3>
-            <p>Tu asistente IA con WhatsApp conectado</p>
+      <!-- QR Section -->
+      <div class="qr-section fade-in">
+        <div class="qr-code">
+          📲
+        </div>
+        <div class="qr-status">
+          <div class="qr-status-text">Estado de conexión</div>
+          <div class="qr-status-indicator">
+            <span class="online-indicator"></span>
+            Esperando código QR...
           </div>
         </div>
-        <div id="chatMessages" class="chat-messages"></div>
-        <div class="chat-input">
-          <input type="text" id="messageInput" placeholder="Escribe un mensaje..." onkeypress="handleKeyPress(event)">
-          <button id="sendBtn" onclick="sendMessage()">Enviar</button>
+      </div>
+
+      <!-- Chat Demo Section -->
+      <div style="margin-top: 40px;">
+        <h3 style="color: var(--text-dark); font-size: 1.2rem; margin-bottom: 20px; font-weight: 700;">
+          Vista previa de chat
+        </h3>
+
+        <div class="chat-container fade-in">
+          <!-- Chat Header -->
+          <div class="chat-header">
+            <div class="chat-header-left">
+              <div class="chat-avatar">🤖</div>
+              <div class="chat-info">
+                <div class="chat-name">MIIA Assistant</div>
+                <div class="chat-status">
+                  <span class="online-indicator"></span>
+                  En línea
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Messages Area -->
+          <div class="chat-messages">
+            <div class="message received">
+              <div class="message-bubble">
+                ¡Hola! Soy MIIA, tu asistente de IA 👋
+              </div>
+            </div>
+
+            <div class="message received">
+              <div class="message-bubble">
+                Estoy aquí para ayudarte a clasificar leads y gestionar contactos automáticamente.
+              </div>
+            </div>
+
+            <div class="message sent">
+              <div class="message-bubble">
+                ¿Qué puedes hacer exactamente?
+              </div>
+            </div>
+
+            <div class="message received">
+              <div class="message-bubble">
+                Puedo analizar mensajes, clasificar leads, generar documentos, y mucho más. ¿Por dónde empezamos? 🚀
+              </div>
+            </div>
+
+            <div class="message sent">
+              <div class="message-bubble">
+                Perfecto, necesito ayuda con mis contactos
+              </div>
+            </div>
+
+            <div class="message received">
+              <div class="message-bubble">
+                Excelente. Voy a organizar tus contactos por categoría. Esto tomará un momento... ⏳
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Area -->
+          <div class="chat-input-area">
+            <input type="text" class="chat-input" placeholder="Escribe un mensaje..." disabled>
+            <button class="chat-send-btn" disabled>
+              ➤
+            </button>
+          </div>
         </div>
+      </div>
+
+      <!-- Next Steps -->
+      <div style="margin-top: 40px; padding: 24px; background: rgba(102, 126, 234, 0.05); border-radius: var(--radius-lg); border: 1px solid rgba(102, 126, 234, 0.1);">
+        <h3 style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 12px; font-weight: 700;">
+          📋 Próximos pasos
+        </h3>
+        <ul style="list-style: none; padding: 0;">
+          <li style="padding: 8px 0; color: var(--text-body); display: flex; align-items: center; gap: 10px;">
+            <span style="color: var(--primary); font-weight: 700;">1</span>
+            Escanea el código QR con tu teléfono
+          </li>
+          <li style="padding: 8px 0; color: var(--text-body); display: flex; align-items: center; gap: 10px;">
+            <span style="color: var(--primary); font-weight: 700;">2</span>
+            Espera a que MIIA se conecte a tu WhatsApp
+          </li>
+          <li style="padding: 8px 0; color: var(--text-body); display: flex; align-items: center; gap: 10px;">
+            <span style="color: var(--primary); font-weight: 700;">3</span>
+            Comienza a entrenar a MIIA con tus primeros mensajes
+          </li>
+          <li style="padding: 8px 0; color: var(--text-body); display: flex; align-items: center; gap: 10px;">
+            <span style="color: var(--primary); font-weight: 700;">4</span>
+            ¡Tu asistente estará listo para trabajar! 🚀
+          </li>
+        </ul>
+      </div>
+
+      <!-- Action Button -->
+      <div style="margin-top: 32px; display: flex; justify-content: center;">
+        <button class="primary-btn" onclick="handleStartTraining()">
+          🎓 Comenzar Entrenamiento
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-  
-  <!-- Socket.io -->
-  <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
-
   <script>
-    const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
-    // const BACKEND_URL = 'http://localhost:3000';
-    let socket = null;
-    let userId = 'user_' + Date.now();
+    // Verificar si el usuario está logueado
+    window.onload = function() {
+      const user = localStorage.getItem('miia_user');
 
-    // Firebase config
-    const firebaseConfig = {
-      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
-      authDomain: "miia-app-8cbd0.firebaseapp.com",
-      projectId: "miia-app-8cbd0",
-      storageBucket: "miia-app-8cbd0.firebasestorage.app",
-      messagingSenderId: "481282126913",
-      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-
-    function showWhatsAppSetup() {
-      document.getElementById('setupCard').classList.add('hidden');
-      document.getElementById('whatsappSetup').classList.remove('hidden');
-      connectWhatsApp();
-    }
-
-    function connectWhatsApp() {
-      console.log('\n═══════════════════════════════════');
-      console.log('🚀 INICIANDO CONEXIÓN A WHATSAPP');
-      console.log('═══════════════════════════════════');
-      
-      if (socket) {
-        console.log('⚠️ Socket ya existe, abortando');
+      if (!user) {
+        window.location.href = 'login.html';
         return;
       }
 
-      console.log('[DEBUG] Backend URL:', BACKEND_URL);
-      socket = io(BACKEND_URL);
+      const userData = JSON.parse(user);
 
-      socket.on('connect', () => {
-        console.log('\n✅ ═══ CONECTADO AL BACKEND ═══');
-        console.log('[DEBUG] Socket ID:', socket.id);
-        socket.emit('check_status');
+      if (!userData.logged_in) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Navbar scroll effect
+      window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
       });
 
-      socket.on('qr', (qrDataUrl) => {
-        console.log('\n📱 ═══ QR CODE RECIBIDO ═══');
-        document.getElementById('qrCode').innerHTML = `<img src="${qrDataUrl}">`;
-        document.getElementById('qrStatus').textContent = 'Escanea este código con WhatsApp';
-      });
-
-      socket.on('whatsapp_ready', () => {
-        console.log('\n✅ ═══ WHATSAPP READY ═══');
-        document.getElementById('qrContainer').classList.add('hidden');
-        document.getElementById('whatsappConnected').classList.remove('hidden');
-        document.getElementById('startChatBtn').classList.remove('hidden');
-      });
-
-      socket.on('new_message', (data) => {
-        console.log('\n📨 ═══ NUEVO MENSAJE ═══', data);
-        addMessage('user', `💬 ${data.fromName}: ${data.body}`);
-      });
-
-      socket.on('ai_response', (data) => {
-        console.log('\n🤖 ═══ RESPUESTA DE MIIA ═══', data);
-        addMessage('miia', `🤖 MIIA: ${data.body}`);
-      });
-    }
-
-    function goToChat() {
-      document.getElementById('whatsappSetup').classList.add('hidden');
-      document.getElementById('chatContainer').classList.remove('hidden');
-      showWelcomeMessage();
-    }
-
-    async function showWelcomeMessage() {
-      addMessage('miia', '¡Hola! Soy MIIA 🤖\n\n📱 WhatsApp conectado!\n\nPuedes hablarme naturalmente.\n\n¿En qué puedo ayudarte?');
-    }
-
-    function addMessage(sender, text) {
-      const messagesDiv = document.getElementById('chatMessages');
-      const messageDiv = document.createElement('div');
-      messageDiv.className = `message ${sender}`;
-      messageDiv.innerHTML = `<div class="message-bubble">${text.replace(/\n/g, '<br>')}</div>`;
-      messagesDiv.appendChild(messageDiv);
-      messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    }
-
-    async function sendMessage() {
-      const input = document.getElementById('messageInput');
-      const message = input.value.trim();
-      
-      if (!message) return;
-      
-      addMessage('user', message);
-      input.value = '';
-      
-      const sendBtn = document.getElementById('sendBtn');
-      sendBtn.disabled = true;
-
-      console.log('\n[SEND] 📤 Enviando mensaje al backend...');
-      console.log('[SEND] Message:', message);
-
-      try {
-        const response = await fetch(`${BACKEND_URL}/api/train`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message })
+      // Intersection Observer para fade-in
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visible'), i * 100);
+            observer.unobserve(entry.target);
+          }
         });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-        console.log('[SEND] Response status:', response.status);
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    };
 
-        if (!response.ok) {
-          throw new Error('Error al procesar mensaje');
-        }
-
-        const data = await response.json();
-        console.log('[SEND] ✅ Respuesta recibida, guardado:', data.saved);
-
-        addMessage('miia', data.response);
-      } catch (error) {
-        console.error('[SEND] ❌ Error:', error);
-        addMessage('miia', `❌ Error: ${error.message}`);
-      }
-      
-      sendBtn.disabled = false;
-    }
-
-    function handleKeyPress(event) {
-      if (event.key === 'Enter') {
-        sendMessage();
-      }
+    function handleStartTraining() {
+      alert('🎓 Entrenamiento\n\nEsta función estará disponible próximamente.\n\nEstamos configurando la infraestructura para que puedas entrenar a MIIA con tus datos.');
     }
   </script>
 </body>
