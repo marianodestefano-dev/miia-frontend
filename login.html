@@ -336,6 +336,11 @@
       }
     }
   </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <div class="login-container fade-in">
@@ -411,6 +416,20 @@
   </div>
 
   <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+      authDomain: "miia-app-8cbd0.firebaseapp.com",
+      projectId: "miia-app-8cbd0",
+      storageBucket: "miia-app-8cbd0.firebasestorage.app",
+      messagingSenderId: "481282126913",
+      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
     // Intersection Observer
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
@@ -436,7 +455,7 @@
       }
     }
 
-    function handleLogin(event) {
+    async function handleLogin(event) {
       event.preventDefault();
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
@@ -448,17 +467,25 @@
 
       showSuccess('¡Bienvenido! Redirigiendo al dashboard...');
 
-      setTimeout(() => {
+      try {
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        // Guardar en localStorage para compatibilidad
         localStorage.setItem('miia_user', JSON.stringify({
-          email: email,
+          uid: user.uid,
+          email: user.email,
           logged_in: true,
           login_time: new Date().toISOString()
         }));
-        window.location.href = 'dashboard.html';
-      }, 1500);
+
+        setTimeout(() => window.location.href = 'dashboard.html', 800);
+      } catch (error) {
+        showError('Error: ' + error.message);
+      }
     }
 
-    function handleRegister(event) {
+    async function handleRegister(event) {
       event.preventDefault();
       const name = document.getElementById('registerName').value;
       const email = document.getElementById('registerEmail').value;
@@ -478,21 +505,69 @@
 
       showSuccess('¡Cuenta creada exitosamente! Bienvenido a MIIA 🎉');
 
-      setTimeout(() => {
-        localStorage.setItem('miia_user', JSON.stringify({
+      try {
+        const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        const user = userCredential.user;
+
+        // Guardar perfil en Firestore
+        await db.collection('users').doc(user.uid).set({
+          uid: user.uid,
           name: name,
           email: email,
           whatsapp: whatsapp,
           plan: plan,
           logged_in: true,
-          registered_at: new Date().toISOString()
+          registered_at: new Date()
+        });
+
+        // Guardar en localStorage para compatibilidad
+        localStorage.setItem('miia_user', JSON.stringify({
+          uid: user.uid,
+          name: name,
+          email: email,
+          whatsapp: whatsapp,
+          plan: plan,
+          logged_in: true
         }));
-        window.location.href = 'dashboard.html';
-      }, 1500);
+
+        setTimeout(() => window.location.href = 'dashboard.html', 800);
+      } catch (error) {
+        showError('Error: ' + error.message);
+      }
     }
 
-    function handleGoogleLogin() {
-      showError('Próximamente: Login con Google. Por ahora usa email y contraseña.');
+    async function handleGoogleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        const result = await auth.signInWithPopup(provider);
+        const user = result.user;
+
+        // Guardar/actualizar perfil en Firestore
+        await db.collection('users').doc(user.uid).set({
+          uid: user.uid,
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+          plan: 'pro',
+          logged_in: true,
+          last_login: new Date()
+        }, { merge: true });
+
+        // Guardar en localStorage para compatibilidad
+        localStorage.setItem('miia_user', JSON.stringify({
+          uid: user.uid,
+          name: user.displayName,
+          email: user.email,
+          photo: user.photoURL,
+          logged_in: true,
+          plan: 'pro'
+        }));
+
+        showSuccess('¡Bienvenido ' + user.displayName + '! Redirigiendo...');
+        setTimeout(() => window.location.href = 'dashboard.html', 800);
+      } catch (error) {
+        showError('Error al iniciar sesión con Google: ' + error.message);
+      }
     }
 
     function showError(message) {
@@ -517,15 +592,13 @@
       successDiv.style.display = 'block';
     }
 
-    window.onload = function() {
-      const user = localStorage.getItem('miia_user');
+    // Auth state listener
+    auth.onAuthStateChanged(user => {
       if (user) {
-        const userData = JSON.parse(user);
-        if (userData.logged_in) {
-          window.location.href = 'dashboard.html';
-        }
+        console.log('Usuario autenticado:', user.email);
+        window.location.href = 'dashboard.html';
       }
-    };
+    });
   </script>
 </body>
 </html>
