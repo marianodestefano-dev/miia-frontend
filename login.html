@@ -485,7 +485,7 @@
           login_time: new Date().toISOString()
         }));
 
-        setTimeout(() => window.location.href = 'dashboard.html', 800);
+        setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
       } catch (error) {
         showError('Error: ' + error.message);
       }
@@ -569,7 +569,7 @@
           logged_in: true
         }));
 
-        setTimeout(() => window.location.href = 'dashboard.html', 800);
+        setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
       } catch (error) {
         showError('Error: ' + error.message);
       }
@@ -643,10 +643,14 @@
         }));
 
         showSuccess('¡Bienvenido ' + user.displayName + '! Redirigiendo...');
-        setTimeout(() => window.location.href = 'dashboard.html', 800);
+        setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
       } catch (error) {
         showError('Error al iniciar sesión con Google: ' + error.message);
       }
+    }
+
+    function toSlug(email) {
+      return email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
     }
 
     function showError(message) {
@@ -675,7 +679,7 @@
     auth.onAuthStateChanged(user => {
       if (user) {
         console.log('Usuario autenticado:', user.email);
-        window.location.href = 'dashboard.html';
+        window.location.href = 'dashboard.html?u=' + toSlug(user.email);
       }
     });
   </script>

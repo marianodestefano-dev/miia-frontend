@@ -1063,52 +1063,60 @@
     <div class="fade-in" style="text-align: center;">
       <div class="section-tag">Precios</div>
       <h2 class="section-title">Planes que se adaptan a tu negocio</h2>
-      <p class="section-subtitle" style="margin: 0 auto 60px;">Sin contratos. Cancela cuando quieras. Todos los planes incluyen 14 dias gratis.</p>
+      <p class="section-subtitle" style="margin: 0 auto 60px;">Sin contratos. Cancela cuando quieras. Comienza con 7 días gratis.</p>
     </div>
-    <div class="pricing-grid">
+    <div class="pricing-grid" style="grid-template-columns: repeat(4, 1fr);">
       <div class="pricing-card fade-in">
-        <div class="pricing-name">Basico</div>
-        <div class="pricing-desc">Ideal para profesionales independientes</div>
-        <div class="pricing-price">$29 <span>USD</span></div>
+        <div class="pricing-name">Mensual</div>
+        <div class="pricing-desc">Prueba con flexibilidad</div>
+        <div class="pricing-price">$12 <span>USD</span></div>
         <div class="pricing-period">por mes</div>
         <ul class="pricing-features">
-          <li>1 WhatsApp conectado</li>
-          <li>500 mensajes/mes</li>
-          <li>10 contactos "Dile a"</li>
-          <li>5 PDFs/mes</li>
+          <li>1 agente incluido</li>
+          <li>1 WhatsApp</li>
+          <li>Contactos ilimitados</li>
           <li>Soporte por email</li>
         </ul>
-        <a href="login.html?plan=basic" class="btn-pricing btn-pricing-outline">Empezar gratis</a>
-      </div>
-      <div class="pricing-card featured fade-in">
-        <div class="pricing-name">Pro</div>
-        <div class="pricing-desc">Para clinicas y equipos en crecimiento</div>
-        <div class="pricing-price">$79 <span>USD</span></div>
-        <div class="pricing-period">por mes</div>
-        <ul class="pricing-features">
-          <li>3 WhatsApp conectados</li>
-          <li>2,000 mensajes/mes</li>
-          <li>50 contactos "Dile a"</li>
-          <li>50 PDFs/mes</li>
-          <li>Branding personalizado</li>
-          <li>Analytics avanzado</li>
-        </ul>
-        <a href="login.html?plan=pro" class="btn-pricing btn-pricing-solid">Empezar gratis</a>
+        <button onclick="buyPlan('monthly')" class="btn-pricing btn-pricing-outline">Contratar</button>
       </div>
       <div class="pricing-card fade-in">
-        <div class="pricing-name">Enterprise</div>
-        <div class="pricing-desc">Para organizaciones con multiples sedes</div>
-        <div class="pricing-price">$199 <span>USD</span></div>
-        <div class="pricing-period">por mes</div>
+        <div class="pricing-name">Trimestral</div>
+        <div class="pricing-desc">Mejor relación precio</div>
+        <div class="pricing-price">$30 <span>USD</span></div>
+        <div class="pricing-period">por trimestre (17% OFF)</div>
         <ul class="pricing-features">
-          <li>10 WhatsApp conectados</li>
-          <li>10,000 mensajes/mes</li>
+          <li>1 agente incluido</li>
+          <li>1 WhatsApp</li>
           <li>Contactos ilimitados</li>
-          <li>PDFs ilimitados</li>
-          <li>API Access</li>
+          <li>Soporte por email</li>
+        </ul>
+        <button onclick="buyPlan('quarterly')" class="btn-pricing btn-pricing-outline">Contratar</button>
+      </div>
+      <div class="pricing-card featured fade-in">
+        <div class="pricing-name">Semestral</div>
+        <div class="pricing-desc">Mejor ahorro</div>
+        <div class="pricing-price">$55 <span>USD</span></div>
+        <div class="pricing-period">por semestre (24% OFF)</div>
+        <ul class="pricing-features">
+          <li>1 agente incluido</li>
+          <li>1 WhatsApp</li>
+          <li>Contactos ilimitados</li>
+          <li>Soporte prioritario</li>
+        </ul>
+        <button onclick="buyPlan('semestral')" class="btn-pricing btn-pricing-solid">Contratar</button>
+      </div>
+      <div class="pricing-card fade-in">
+        <div class="pricing-name">Anual</div>
+        <div class="pricing-desc" style="color: var(--accent); font-weight: 600;">🌟 MÁS POPULAR</div>
+        <div class="pricing-price">$75 <span>USD</span></div>
+        <div class="pricing-period">por año (48% OFF)</div>
+        <ul class="pricing-features">
+          <li>1 agente incluido</li>
+          <li>1 WhatsApp</li>
+          <li>Contactos ilimitados</li>
           <li>Soporte prioritario 24/7</li>
         </ul>
-        <a href="login.html?plan=enterprise" class="btn-pricing btn-pricing-outline">Contactar ventas</a>
+        <button onclick="buyPlan('annual')" class="btn-pricing btn-pricing-solid">Contratar</button>
       </div>
     </div>
   </section>
@@ -1243,8 +1251,54 @@
     </div>
   </footer>
 
+  <!-- Firebase Auth -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+
   <!-- ═══ SCRIPTS ═══ -->
   <script>
+    // Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+      authDomain: "miia-app-8cbd0.firebaseapp.com",
+      projectId: "miia-app-8cbd0",
+      storageBucket: "miia-app-8cbd0.firebasestorage.app",
+      messagingSenderId: "481282126913",
+      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+    };
+    firebase.initializeApp(firebaseConfig);
+
+    // Stripe checkout for pricing plans
+    async function buyPlan(plan) {
+      const user = firebase.auth().currentUser;
+
+      if (!user) {
+        // Redirect to login with plan parameter
+        window.location.href = 'login.html?plan=' + plan;
+        return;
+      }
+
+      try {
+        const res = await fetch('https://miia-backend-production.up.railway.app/api/stripe/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            uid: user.uid,
+            plan: plan
+          })
+        });
+
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert('Error al procesar: ' + (data.error || 'Desconocido'));
+        }
+      } catch (error) {
+        alert('Error de conexión: ' + error.message);
+      }
+    }
+
     // Navbar scroll effect
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {

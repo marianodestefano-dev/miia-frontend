@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA - Documentos</title>
+  <style>
+    :root {
+      --primary: #667eea;
+      --primary-dark: #5568d3;
+      --secondary: #764ba2;
+      --accent: #25d366;
+      --bg-light: #f5f7fa;
+      --bg-white: #ffffff;
+      --text-dark: #1a1a2e;
+      --text-body: #4a4a6a;
+      --text-muted: #8888a4;
+      --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
+      --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
+      --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 50px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-body);
+      background: var(--bg-light);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding-top: 80px;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══ NAVBAR ═══ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(102,126,234,0.08);
+      padding: 0 40px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+    #navbar.scrolled {
+      background: rgba(255,255,255,0.95);
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-back {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 0.7; }
+    .logout-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .logout-btn:hover { opacity: 0.85; }
+
+    /* ═══ CONTAINER ═══ */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .card {
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: 24px;
+    }
+
+    .card h2 {
+      color: var(--text-dark);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    /* ═══ TABS ═══ */
+    .tabs {
+      display: flex;
+      gap: 12px;
+      border-bottom: 2px solid rgba(102,126,234,0.1);
+      margin-bottom: 24px;
+    }
+
+    .tab {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .tab:hover {
+      color: var(--primary);
+    }
+
+    .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* ═══ FORMS ═══ */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(102,126,234,0.2);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      background: var(--gradient-main);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-light);
+      color: var(--primary);
+    }
+
+    /* ═══ LISTS ═══ */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .item {
+      padding: 16px;
+      border: 1px solid rgba(102,126,234,0.1);
+      border-radius: var(--radius-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .item-title {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    .item-desc {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      padding: 6px 12px;
+      background: var(--bg-light);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: rgba(102,126,234,0.2);
+    }
+
+    .btn-delete {
+      color: #e74c3c;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .file-input-label {
+      display: inline-block;
+      padding: 12px 20px;
+      background: var(--gradient-main);
+      color: white;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .file-input-label:hover {
+      transform: translateY(-2px);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* PDF Preview */
+    .pdf-preview {
+      border: 1px solid rgba(102,126,234,0.2);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      background: var(--bg-light);
+      margin-top: 16px;
+      max-height: 400px;
+      overflow: auto;
+    }
+
+    @media (max-width: 768px) {
+      .form-row { grid-template-columns: 1fr; }
+      #navbar { padding: 0 20px; }
+      .container { padding: 20px 16px 60px; }
+      .tabs { flex-wrap: wrap; }
+    }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">🤖 MIIA</a>
+    <div class="nav-actions">
+      <a href="javascript:goBack()" class="nav-back">← Volver</a>
+      <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
+    </div>
+  </nav>
+
+  <!-- Container -->
+  <div class="container">
+    <div class="card fade-in">
+      <h2>📄 Documentos y Recursos</h2>
+
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('quotes')">📋 Cotizaciones</button>
+        <button class="tab" onclick="switchTab('templates')">💬 Templates</button>
+        <button class="tab" onclick="switchTab('knowledge')">📚 Archivos</button>
+      </div>
+
+      <!-- Tab 1: Cotizaciones -->
+      <div id="quotes" class="tab-content active">
+        <h3 style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 16px;">Crear Cotización</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre del Cliente</label>
+            <input type="text" id="quoteClient" placeholder="Ej: Juan Pérez">
+          </div>
+          <div class="form-group">
+            <label>Producto/Servicio</label>
+            <input type="text" id="quoteProduct" placeholder="Ej: Desarrollo Web">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio (USD)</label>
+            <input type="number" id="quotePrice" placeholder="1000" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Fecha de Vencimiento</label>
+            <input type="date" id="quoteExpiry">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea id="quoteDesc" placeholder="Detalla lo que incluye la cotización..."></textarea>
+        </div>
+        <button class="btn" onclick="generateQuotePDF()">📥 Descargar PDF</button>
+
+        <div id="quotesList" style="margin-top: 24px;">
+          <h4 style="color: var(--text-dark); margin-bottom: 12px;">Cotizaciones Recientes</h4>
+          <div class="item-list" id="quotesListItems">
+            <div class="empty-state">
+              <div class="empty-state-icon">📋</div>
+              <p>Sin cotizaciones aún</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Templates -->
+      <div id="templates" class="tab-content">
+        <h3 style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 16px;">Crear Template</h3>
+        <div class="form-group">
+          <label>Nombre del Template</label>
+          <input type="text" id="templateName" placeholder="Ej: Saludo inicial">
+        </div>
+        <div class="form-group">
+          <label>Texto del Template</label>
+          <textarea id="templateText" placeholder="Escribe el mensaje que MIIA usará como respuesta..."></textarea>
+        </div>
+        <button class="btn" onclick="createTemplate()">✅ Guardar Template</button>
+
+        <div id="templatesList" style="margin-top: 24px;">
+          <h4 style="color: var(--text-dark); margin-bottom: 12px;">Mis Templates</h4>
+          <div class="item-list" id="templatesListItems">
+            <div class="empty-state">
+              <div class="empty-state-icon">💬</div>
+              <p>Sin templates aún</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Archivos -->
+      <div id="knowledge" class="tab-content">
+        <h3 style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 16px;">Subir Archivos de Conocimiento</h3>
+        <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 0.9rem;">Sube catálogos, PDFs o documentos con información sobre tu negocio. MIIA los usará para responder mejor a tus clientes.</p>
+        <label class="file-input-label">
+          📤 Seleccionar Archivo
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" onchange="uploadFile(event)">
+        </label>
+
+        <div id="knowledgeList" style="margin-top: 24px;">
+          <h4 style="color: var(--text-dark); margin-bottom: 12px;">Archivos Subidos</h4>
+          <div class="item-list" id="knowledgeListItems">
+            <div class="empty-state">
+              <div class="empty-state-icon">📚</div>
+              <p>Sin archivos aún</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+      authDomain: "miia-app-8cbd0.firebaseapp.com",
+      projectId: "miia-app-8cbd0",
+      storageBucket: "miia-app-8cbd0.firebasestorage.app",
+      messagingSenderId: "481282126913",
+      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
+    let currentUser = null;
+    let clientSlug = '';
+
+    function toSlug(email) {
+      return email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+    }
+
+    function readUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      clientSlug = params.get('u') || '';
+    }
+
+    function goBack() {
+      window.location.href = 'dashboard.html' + (clientSlug ? '?u=' + clientSlug : '');
+    }
+
+    // Auth guard
+    auth.onAuthStateChanged(async user => {
+      readUrlParams();
+
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (ADMIN_EMAILS.includes(user.email)) {
+        window.location.href = 'admin.html';
+        return;
+      }
+
+      const doc = await db.collection('users').doc(user.uid).get();
+      if (!doc.exists) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const userData = doc.data();
+      if (userData.role === 'agent') {
+        window.location.href = 'agent-dashboard.html';
+        return;
+      }
+
+      currentUser = user;
+      loadTemplates();
+      loadKnowledgeFiles();
+      setupUI();
+    });
+
+    function switchTab(tab) {
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+      event.target.classList.add('active');
+      document.getElementById(tab).classList.add('active');
+    }
+
+    // ═══ COTIZACIONES ═══
+    function generateQuotePDF() {
+      const client = document.getElementById('quoteClient').value;
+      const product = document.getElementById('quoteProduct').value;
+      const price = document.getElementById('quotePrice').value;
+      const expiry = document.getElementById('quoteExpiry').value;
+      const desc = document.getElementById('quoteDesc').value;
+
+      if (!client || !product || !price) {
+        alert('Completa los datos requeridos');
+        return;
+      }
+
+      // Generate HTML and print
+      const html = `
+        <html>
+        <head><title>Cotización</title></head>
+        <body style="font-family: Arial; padding: 40px; max-width: 800px;">
+          <h1 style="color: #667eea;">COTIZACIÓN</h1>
+          <p><strong>Cliente:</strong> ${client}</p>
+          <p><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-ES')}</p>
+          <hr style="border: 1px solid #ddd; margin: 20px 0;">
+          <h3>Detalles</h3>
+          <p><strong>Producto/Servicio:</strong> ${product}</p>
+          <p><strong>Descripción:</strong></p>
+          <p>${desc}</p>
+          <hr style="border: 1px solid #ddd; margin: 20px 0;">
+          <p style="font-size: 18px;"><strong>Total: USD $${parseFloat(price).toFixed(2)}</strong></p>
+          ${expiry ? `<p><strong>Válida hasta:</strong> ${expiry}</p>` : ''}
+          <p style="margin-top: 40px; color: #888; font-size: 12px;">Esta cotización fue generada por MIIA el ${new Date().toLocaleDateString('es-ES')}</p>
+        </body>
+        </html>
+      `;
+
+      const win = window.open('', '', 'height=600,width=800');
+      win.document.write(html);
+      win.document.close();
+      win.print();
+    }
+
+    // ═══ TEMPLATES ═══
+    async function createTemplate() {
+      const name = document.getElementById('templateName').value.trim();
+      const text = document.getElementById('templateText').value.trim();
+
+      if (!name || !text) {
+        alert('Completa el nombre y texto');
+        return;
+      }
+
+      try {
+        await db.collection('templates').doc(currentUser.uid).collection('items').add({
+          name: name,
+          text: text,
+          created_at: new Date()
+        });
+
+        document.getElementById('templateName').value = '';
+        document.getElementById('templateText').value = '';
+        loadTemplates();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    async function loadTemplates() {
+      try {
+        const snapshot = await db.collection('templates').doc(currentUser.uid).collection('items').get();
+        const list = document.getElementById('templatesListItems');
+
+        if (snapshot.empty) {
+          list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💬</div><p>Sin templates aún</p></div>';
+          return;
+        }
+
+        list.innerHTML = snapshot.docs.map(doc => `
+          <div class="item">
+            <div>
+              <div class="item-title">${doc.data().name}</div>
+              <div class="item-desc">${doc.data().text.substring(0, 80)}...</div>
+            </div>
+            <div class="item-actions">
+              <button class="btn-icon btn-delete" onclick="deleteTemplate('${doc.id}')">Eliminar</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error cargando templates:', error);
+      }
+    }
+
+    async function deleteTemplate(id) {
+      if (!confirm('¿Eliminar este template?')) return;
+      try {
+        await db.collection('templates').doc(currentUser.uid).collection('items').doc(id).delete();
+        loadTemplates();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // ═══ ARCHIVOS ═══
+    async function uploadFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      try {
+        // TODO: upload to backend /api/train/upload
+        // For now, just save metadata to Firestore
+        await db.collection('knowledge_files').doc(currentUser.uid).collection('items').add({
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          uploaded_at: new Date()
+        });
+
+        alert('Archivo guardado (la carga completa se implementará próximamente)');
+        loadKnowledgeFiles();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    async function loadKnowledgeFiles() {
+      try {
+        const snapshot = await db.collection('knowledge_files').doc(currentUser.uid).collection('items').get();
+        const list = document.getElementById('knowledgeListItems');
+
+        if (snapshot.empty) {
+          list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📚</div><p>Sin archivos aún</p></div>';
+          return;
+        }
+
+        list.innerHTML = snapshot.docs.map(doc => `
+          <div class="item">
+            <div>
+              <div class="item-title">📄 ${doc.data().name}</div>
+              <div class="item-desc">${(doc.data().size / 1024).toFixed(1)} KB</div>
+            </div>
+            <div class="item-actions">
+              <button class="btn-icon btn-delete" onclick="deleteFile('${doc.id}')">Eliminar</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error cargando archivos:', error);
+      }
+    }
+
+    async function deleteFile(id) {
+      if (!confirm('¿Eliminar este archivo?')) return;
+      try {
+        await db.collection('knowledge_files').doc(currentUser.uid).collection('items').doc(id).delete();
+        loadKnowledgeFiles();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    function setupUI() {
+      window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visible'), i * 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    }
+
+    function handleLogout() {
+      if (confirm('¿Cerrar sesión?')) {
+        localStorage.removeItem('miia_user');
+        auth.signOut();
+        window.location.href = 'login.html';
+      }
+    }
+  </script>
+</body>
+</html>

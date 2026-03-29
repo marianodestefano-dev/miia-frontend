@@ -921,12 +921,7 @@
           <!-- Add Deal Form -->
           <div class="add-deal-form">
             <input type="text" id="dealLeadName" placeholder="Nombre del lead">
-            <select id="dealPlan">
-              <option value="monthly">Mensual $12</option>
-              <option value="quarterly">Trimestral $30</option>
-              <option value="semestral">Semestral $55</option>
-              <option value="annual">Anual $75</option>
-            </select>
+            <input type="text" id="dealProduct" placeholder="Producto/servicio vendido">
             <input type="number" id="dealAmount" placeholder="Monto USD" min="0" step="0.01">
             <button class="btn-add" onclick="addDeal()">+ Deal</button>
           </div>
@@ -1060,6 +1055,19 @@
     const db = firebase.firestore();
 
     const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
+    let clientSlug = ''; // URL param ?u=slug
+
+    // Helper: convert email to slug
+    function toSlug(email) {
+      return email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+    }
+
+    // Read URL params
+    function readUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      clientSlug = params.get('u') || '';
+    }
+
     const PLAN_NAMES = {
       trial: 'Trial 7 días',
       monthly: 'Mensual',
@@ -1080,6 +1088,8 @@
 
     // ═══ AUTH GUARD ═══
     auth.onAuthStateChanged(async user => {
+      readUrlParams();
+
       if (!user) {
         window.location.href = 'login.html';
         return;
@@ -1316,8 +1326,26 @@
       const limit = currentUserData.agents_limit || 1;
       if (count >= limit) {
         document.getElementById('addAgentBtn').disabled = true;
-        document.getElementById('agentLimitMsg').textContent = `Has alcanzado el límite de ${limit} agente${limit > 1 ? 's' : ''}. Contacta a lobsterscrm@gmail.com para ampliar tu plan.`;
-        document.getElementById('agentLimitMsg').classList.remove('hidden');
+        const msgEl = document.getElementById('agentLimitMsg');
+        msgEl.classList.remove('hidden');
+
+        // Calculate dynamic price with 10% discount per agent
+        const priceInCents = Math.round(300 * Math.pow(0.9, count));
+        const priceInDollars = (priceInCents / 100).toFixed(2);
+
+        msgEl.innerHTML = `
+          <div style="margin-top: 12px; padding: 12px; background: rgba(102,126,234,0.08); border-radius: 8px;">
+            <p style="margin: 0 0 10px 0; color: #4a4a6a; font-size: 0.9rem;">
+              🔒 Has alcanzado el límite de ${limit} agente${limit > 1 ? 's' : ''}
+            </p>
+            <button onclick="buyAgentStripe(${count})" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+              + Agregar agente extra — $${priceInDollars} (10% dto por agente)
+            </button>
+          </div>
+        `;
+      } else {
+        document.getElementById('addAgentBtn').disabled = false;
+        document.getElementById('agentLimitMsg').classList.add('hidden');
       }
     }
 
@@ -1482,10 +1510,11 @@
 
     async function addDeal() {
       const leadName = document.getElementById('dealLeadName').value.trim();
-      const plan = document.getElementById('dealPlan').value;
+      const product = document.getElementById('dealProduct').value.trim();
       const amount = parseFloat(document.getElementById('dealAmount').value) || 0;
 
       if (!leadName) { alert('Ingresa el nombre del lead'); return; }
+      if (!product) { alert('Ingresa el producto/servicio'); return; }
       if (amount <= 0) { alert('Ingresa un monto válido'); return; }
 
       try {
@@ -1493,7 +1522,7 @@
           client_uid: currentUser.uid,
           agent_uid: '',
           lead_name: leadName,
-          plan: plan,
+          product: product,
           amount: amount,
           status: 'pending',
           created_at: new Date(),
@@ -1501,6 +1530,7 @@
         });
 
         document.getElementById('dealLeadName').value = '';
+        document.getElementById('dealProduct').value = '';
         document.getElementById('dealAmount').value = '';
       } catch (error) {
         alert('Error: ' + error.message);
@@ -1524,17 +1554,101 @@
     // ═══ FEATURES ═══
     function showFeature(feature) {
       if (feature === 'train') {
-        window.location.href = 'training.html';
+        window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
         return;
       }
 
-      const features = {
-        'whatsapp': 'Conectar WhatsApp',
-        'contacts': 'Gestionar Contactos',
-        'documents': 'Crear Documentos'
-      };
+      if (feature === 'contacts') {
+        window.location.href = 'contacts.html' + (clientSlug ? '?u=' + clientSlug : '');
+        return;
+      }
 
-      alert(`📱 ${features[feature]}\n\nEsta función estará disponible próximamente.`);
+      if (feature === 'documents') {
+        window.location.href = 'documents.html' + (clientSlug ? '?u=' + clientSlug : '');
+        return;
+      }
+
+      if (feature === 'whatsapp') {
+        checkWhatsAppStatus();
+        return;
+      }
+    }
+
+    async function checkWhatsAppStatus() {
+      try {
+        const res = await fetch('https://miia-backend-production.up.railway.app/api/status');
+        const data = await res.json();
+
+        if (data.connected) {
+          showWhatsAppModal();
+        } else {
+          window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
+        }
+      } catch (error) {
+        // En caso de error, redirigir a training
+        window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
+      }
+    }
+
+    function showWhatsAppModal() {
+      const modal = document.createElement('div');
+      modal.style.cssText = `
+        position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(26,26,46,0.95); z-index: 700;
+        display: flex; align-items: center; justify-content: center;
+      `;
+      modal.innerHTML = `
+        <div style="background: white; border-radius: 16px; padding: 40px; text-align: center; max-width: 400px; box-shadow: 0 20px 60px rgba(102,126,234,0.18);">
+          <div style="font-size: 3rem; margin-bottom: 16px;">✅</div>
+          <h2 style="color: #1a1a2e; font-size: 1.4rem; margin-bottom: 8px;">WhatsApp Conectado</h2>
+          <p style="color: #4a4a6a; margin-bottom: 24px;">Tu sesión está activa y lista para usar.</p>
+          <div style="display: flex; gap: 12px;">
+            <button onclick="this.closest('div').parentElement.remove()" style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: white; cursor: pointer;">Cerrar</button>
+            <button onclick="desvinculateWhatsApp()" style="flex: 1; padding: 12px; border: none; border-radius: 8px; background: #e74c3c; color: white; cursor: pointer; font-weight: 600;">Desvincular</button>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(modal);
+    }
+
+    async function desvinculateWhatsApp() {
+      if (!confirm('¿Desvincular WhatsApp? Tendrás que escanear el código QR nuevamente.')) return;
+
+      try {
+        const res = await fetch('https://miia-backend-production.up.railway.app/api/logout', { method: 'POST' });
+        const data = await res.json();
+
+        if (data.success) {
+          alert('WhatsApp desvinculado correctamente');
+          window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
+        }
+      } catch (error) {
+        alert('Error al desvincular: ' + error.message);
+      }
+    }
+
+    // ═══ STRIPE CHECKOUT ═══
+    async function buyAgentStripe(agentCount) {
+      try {
+        const res = await fetch('https://miia-backend-production.up.railway.app/api/stripe/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            uid: currentUser.uid,
+            type: 'agent',
+            agentCount: agentCount
+          })
+        });
+
+        const data = await res.json();
+        if (data.url) {
+          window.location.href = data.url;
+        } else {
+          alert('Error al procesar el pago: ' + (data.error || 'Desconocido'));
+        }
+      } catch (error) {
+        alert('Error de conexión: ' + error.message);
+      }
     }
 
     // ═══ LOGOUT ═══

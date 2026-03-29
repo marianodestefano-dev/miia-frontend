@@ -394,7 +394,7 @@
   <!-- Navbar -->
   <nav id="navbar">
     <a href="index.html" class="nav-logo">🤖 MIIA</a>
-    <button class="nav-back" onclick="window.location.href='dashboard.html'">← Dashboard</button>
+    <button class="nav-back" onclick="goToDashboard()">← Dashboard</button>
   </nav>
 
   <!-- Main Container -->
@@ -454,6 +454,12 @@
   <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
 
   <script>
+    function goToDashboard() {
+      const params = new URLSearchParams(window.location.search);
+      const slug = params.get('u') || '';
+      window.location.href = 'dashboard.html' + (slug ? '?u=' + slug : '');
+    }
+
     const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
     let socket = null;
 

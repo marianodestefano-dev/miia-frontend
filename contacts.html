@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA - Gestionar Contactos</title>
+  <style>
+    :root {
+      --primary: #667eea;
+      --primary-dark: #5568d3;
+      --secondary: #764ba2;
+      --accent: #25d366;
+      --bg-light: #f5f7fa;
+      --bg-white: #ffffff;
+      --text-dark: #1a1a2e;
+      --text-body: #4a4a6a;
+      --text-muted: #8888a4;
+      --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
+      --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
+      --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --radius-full: 50px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text-body);
+      background: var(--bg-light);
+      min-height: 100vh;
+      line-height: 1.6;
+      padding-top: 80px;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══ NAVBAR ═══ */
+    #navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(102,126,234,0.08);
+      padding: 0 40px;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s ease;
+    }
+    #navbar.scrolled {
+      background: rgba(255,255,255,0.95);
+      box-shadow: var(--shadow-sm);
+    }
+    .nav-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      text-decoration: none;
+    }
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .nav-back {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.2s;
+    }
+    .nav-back:hover { opacity: 0.7; }
+    .logout-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-full);
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .logout-btn:hover { opacity: 0.85; }
+
+    /* ═══ CONTAINER ═══ */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .contacts-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: 24px;
+    }
+
+    .card h2 {
+      color: var(--text-dark);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(102,126,234,0.1);
+    }
+
+    /* Conversations List */
+    .conversations-list {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .conversation-item {
+      padding: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      margin-bottom: 8px;
+    }
+
+    .conversation-item:hover {
+      background: var(--bg-light);
+      border-color: rgba(102,126,234,0.2);
+    }
+
+    .conversation-item.active {
+      background: rgba(102,126,234,0.1);
+      border-color: var(--primary);
+    }
+
+    .conversation-name {
+      font-weight: 600;
+      color: var(--text-dark);
+      font-size: 0.95rem;
+    }
+
+    .conversation-phone {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .conversation-preview {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* CRM Form */
+    .crm-form {
+      display: none;
+    }
+
+    .crm-form.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(102,126,234,0.2);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .btn-save {
+      width: 100%;
+      padding: 12px;
+      background: var(--gradient-main);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    @media (max-width: 768px) {
+      .contacts-layout { grid-template-columns: 1fr; }
+      #navbar { padding: 0 20px; }
+      .container { padding: 20px 16px 60px; }
+    }
+  </style>
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">🤖 MIIA</a>
+    <div class="nav-actions">
+      <a href="javascript:goBack()" class="nav-back">← Volver</a>
+      <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
+    </div>
+  </nav>
+
+  <!-- Container -->
+  <div class="container">
+    <div class="contacts-layout">
+      <!-- Conversations List -->
+      <div class="card fade-in">
+        <h2>💬 Conversaciones de WhatsApp</h2>
+        <div class="conversations-list" id="conversationsList">
+          <div class="empty-state">
+            <div class="empty-state-icon">📱</div>
+            <p>Cargando conversaciones...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CRM Panel -->
+      <div class="card fade-in">
+        <h2>👤 Información del Contacto</h2>
+        <div class="empty-state" id="emptyState">
+          <div class="empty-state-icon">👉</div>
+          <p>Selecciona un contacto para editar su información</p>
+        </div>
+        <form class="crm-form" id="crmForm" onsubmit="saveContact(event)">
+          <div class="form-group">
+            <label>Nombre</label>
+            <input type="text" id="contactName" disabled style="background: var(--bg-light); color: var(--text-muted);">
+          </div>
+          <div class="form-group">
+            <label>Teléfono</label>
+            <input type="tel" id="contactPhone" disabled style="background: var(--bg-light); color: var(--text-muted);">
+          </div>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="contactEmail" placeholder="email@example.com">
+          </div>
+          <div class="form-group">
+            <label>Estado</label>
+            <select id="contactStatus">
+              <option value="lead">🟡 Lead</option>
+              <option value="client">🟢 Cliente</option>
+              <option value="lost">🔴 Perdido</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Notas</label>
+            <textarea id="contactNotes" placeholder="Agrega notas sobre este contacto..."></textarea>
+          </div>
+          <button type="submit" class="btn-save">Guardar cambios</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+      authDomain: "miia-app-8cbd0.firebaseapp.com",
+      projectId: "miia-app-8cbd0",
+      storageBucket: "miia-app-8cbd0.firebasestorage.app",
+      messagingSenderId: "481282126913",
+      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
+    let currentUser = null;
+    let clientSlug = '';
+    let selectedPhone = null;
+
+    function toSlug(email) {
+      return email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
+    }
+
+    function readUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      clientSlug = params.get('u') || '';
+    }
+
+    function goBack() {
+      window.location.href = 'dashboard.html' + (clientSlug ? '?u=' + clientSlug : '');
+    }
+
+    // Auth guard
+    auth.onAuthStateChanged(async user => {
+      readUrlParams();
+
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      if (ADMIN_EMAILS.includes(user.email)) {
+        window.location.href = 'admin.html';
+        return;
+      }
+
+      const doc = await db.collection('users').doc(user.uid).get();
+      if (!doc.exists) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      const userData = doc.data();
+      if (userData.role === 'agent') {
+        window.location.href = 'agent-dashboard.html';
+        return;
+      }
+
+      currentUser = user;
+      loadConversations();
+      setupUI();
+    });
+
+    async function loadConversations() {
+      try {
+        const res = await fetch('https://miia-backend-production.up.railway.app/api/conversations');
+        const data = await res.json();
+
+        if (!data || !Array.isArray(data)) {
+          document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Sin conversaciones aún</p></div>';
+          return;
+        }
+
+        const list = document.getElementById('conversationsList');
+        list.innerHTML = data.map(conv => `
+          <div class="conversation-item" onclick="selectContact('${conv.phoneNumber || conv.phone}', '${conv.name || 'Sin nombre'}')">
+            <div class="conversation-name">${conv.name || 'Sin nombre'}</div>
+            <div class="conversation-phone">${conv.phoneNumber || conv.phone || ''}</div>
+            <div class="conversation-preview">${conv.lastMessage || ''}</div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error cargando conversaciones:', error);
+        document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error al cargar conversaciones</p></div>';
+      }
+    }
+
+    async function selectContact(phone, name) {
+      selectedPhone = phone;
+      document.querySelectorAll('.conversation-item').forEach(el => el.classList.remove('active'));
+      event.target.closest('.conversation-item').classList.add('active');
+
+      // Load CRM data from Firestore
+      const docId = currentUser.uid + '_' + phone;
+      const doc = await db.collection('contacts').doc(docId).get();
+      const data = doc.exists ? doc.data() : {};
+
+      document.getElementById('contactName').value = name;
+      document.getElementById('contactPhone').value = phone;
+      document.getElementById('contactEmail').value = data.email || '';
+      document.getElementById('contactStatus').value = data.status || 'lead';
+      document.getElementById('contactNotes').value = data.notes || '';
+
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('crmForm').classList.add('active');
+    }
+
+    async function saveContact(event) {
+      event.preventDefault();
+
+      if (!selectedPhone) return;
+
+      try {
+        const docId = currentUser.uid + '_' + selectedPhone;
+        await db.collection('contacts').doc(docId).set({
+          client_uid: currentUser.uid,
+          phone: selectedPhone,
+          email: document.getElementById('contactEmail').value,
+          status: document.getElementById('contactStatus').value,
+          notes: document.getElementById('contactNotes').value,
+          updated_at: new Date()
+        }, { merge: true });
+
+        alert('Contacto guardado exitosamente');
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    function setupUI() {
+      window.addEventListener('scroll', () => {
+        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+      });
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+          if (entry.isIntersecting) {
+            setTimeout(() => entry.target.classList.add('visible'), i * 100);
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    }
+
+    function handleLogout() {
+      if (confirm('¿Cerrar sesión?')) {
+        localStorage.removeItem('miia_user');
+        auth.signOut();
+        window.location.href = 'login.html';
+      }
+    }
+  </script>
+</body>
+</html>
