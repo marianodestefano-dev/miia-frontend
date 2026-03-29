@@ -6,22 +6,22 @@
   <title>Entrenar MIIA</title>
   <style>
     :root {
-      --primary: #667eea;
-      --primary-dark: #5568d3;
-      --secondary: #764ba2;
+      --primary: #00e5ff;
+      --primary-dark: #00b8cc;
+      --secondary: #bf00ff;
       --accent: #25d366;
       --accent-dark: #1ebe5a;
-      --bg-light: #f5f7fa;
-      --bg-white: #ffffff;
-      --text-dark: #1a1a2e;
-      --text-body: #4a4a6a;
-      --text-muted: #8888a4;
-      --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --bg-light: #0a0a12;
+      --bg-white: #050508;
+      --text-dark: #f8fafc;
+      --text-body: #cbd5e1;
+      --text-muted: #64748b;
+      --gradient-main: linear-gradient(135deg, #00e5ff 0%, #bf00ff 100%);
       --gradient-accent: linear-gradient(135deg, #25d366 0%, #1ebe5a 100%);
       --danger: #ef4444;
       --warning: #f59e0b;
-      --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
-      --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
+      --shadow-sm: 0 2px 8px rgba(0,229,255,0.08);
+      --shadow-md: 0 8px 30px rgba(0,229,255,0.12);
       --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
       --radius-sm: 8px;
       --radius-md: 16px;
@@ -30,7 +30,7 @@
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       color: var(--text-body);
       background: var(--bg-light);
       min-height: 100vh;
@@ -42,9 +42,9 @@
     #navbar {
       position: fixed; top: 0; left: 0; right: 0;
       height: 80px;
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(5,5,8,0.92);
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(102, 126, 234, 0.08);
+      border-bottom: 1px solid rgba(0,229,255,0.08);
       display: flex; justify-content: space-between; align-items: center;
       padding: 0 40px; z-index: 100;
     }
@@ -143,7 +143,7 @@
       border: 1px solid transparent;
     }
     .session-tag:hover { background: rgba(102, 126, 234, 0.06); }
-    .session-tag.active { background: rgba(102, 126, 234, 0.1); border-color: rgba(102, 126, 234, 0.2); color: var(--primary); font-weight: 600; }
+    .session-tag.active { background: rgba(102, 126, 234, 0.1); border-color: rgba(0,229,255, 0.2); color: var(--primary); font-weight: 600; }
     .session-tag.fixed { color: var(--primary); font-weight: 600; }
     .session-tag .tag-date { font-size: 0.75rem; color: var(--text-muted); }
     .session-tag .tag-actions { display: flex; gap: 2px; }
@@ -162,9 +162,9 @@
       max-width: 75%; padding: 10px 14px; border-radius: 12px;
       font-size: 0.9rem; line-height: 1.5; animation: fadeInUp 0.3s ease;
     }
-    .message.miia .message-bubble { background: white; color: var(--text-dark); border-bottom-left-radius: 4px; }
+    .message.miia .message-bubble { background: rgba(9,9,15,0.85); color: var(--text-dark); border-bottom-left-radius: 4px; }
     .message.user .message-bubble { background: var(--gradient-main); color: white; border-bottom-right-radius: 4px; }
-    .chat-input { display: flex; gap: 8px; padding: 12px 16px; background: white; border-top: 1px solid rgba(0,0,0,0.06); }
+    .chat-input { display: flex; gap: 8px; padding: 12px 16px; background: rgba(9,9,15,0.85); border-top: 1px solid rgba(0,0,0,0.06); }
     .chat-input input { flex: 1; padding: 10px 16px; border: 1px solid rgba(102,126,234,0.15); border-radius: var(--radius-full); font-size: 0.9rem; }
     .chat-input input:focus { outline: none; border-color: var(--primary); }
     .chat-input button { padding: 10px 24px; background: var(--gradient-main); color: white; border: none; border-radius: var(--radius-full); font-weight: 600; cursor: pointer; }
@@ -192,7 +192,7 @@
 
     /* ═══ QR MODAL ═══ */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; z-index: 200; }
-    .modal-card { background: white; border-radius: var(--radius-lg); padding: 40px; max-width: 420px; width: 90%; text-align: center; }
+    .modal-card { background: rgba(9,9,15,0.85); border-radius: var(--radius-lg); padding: 40px; max-width: 420px; width: 90%; text-align: center; }
     .modal-card h3 { margin-bottom: 16px; color: var(--text-dark); }
     .modal-card #qrCode img { max-width: 260px; margin: 16px auto; }
     .hidden { display: none !important; }

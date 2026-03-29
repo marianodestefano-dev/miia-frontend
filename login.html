@@ -4,27 +4,28 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIIA - Iniciar Sesión</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     /* ═══════════════════════════════════════
-       MIIA SaaS Premium — Sistema de Diseño
+       MIIA SaaS Premium — Dark Neon Design
        ═══════════════════════════════════════ */
     :root {
-      --primary: #667eea;
-      --primary-dark: #5568d3;
-      --secondary: #764ba2;
+      --primary: #00e5ff;
+      --primary-dark: #00b8cc;
+      --secondary: #bf00ff;
       --accent: #25d366;
       --accent-dark: #1ebe5a;
-      --bg-light: #f5f7fa;
-      --bg-white: #ffffff;
-      --text-dark: #1a1a2e;
-      --text-body: #4a4a6a;
-      --text-muted: #8888a4;
-      --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --bg-light: #0a0a12;
+      --bg-white: #050508;
+      --text-dark: #f8fafc;
+      --text-body: #cbd5e1;
+      --text-muted: #64748b;
+      --gradient-main: linear-gradient(135deg, #00e5ff 0%, #bf00ff 100%);
       --gradient-accent: linear-gradient(135deg, #25d366 0%, #1ebe5a 100%);
-      --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
-      --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
-      --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+      --shadow-sm: 0 2px 8px rgba(0,229,255,0.08);
+      --shadow-md: 0 8px 30px rgba(0,229,255,0.12);
+      --shadow-lg: 0 20px 60px rgba(0,229,255,0.15);
+      --shadow-card: 0 4px 20px rgba(0,0,0,0.4);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
@@ -35,9 +36,12 @@
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       color: var(--text-body);
-      background: var(--gradient-main);
+      background: #050508;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(191,0,255,0.06) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(0,229,255,0.06) 0%, transparent 50%);
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -48,16 +52,16 @@
       position: relative;
     }
 
-    /* Decorative circles */
+    /* Decorative glow circles */
     body::before {
       content: '';
       position: fixed;
-      top: -50%;
-      right: -20%;
-      width: 800px;
-      height: 800px;
+      top: -30%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(0, 229, 255, 0.03);
       pointer-events: none;
       z-index: 0;
     }
@@ -65,12 +69,12 @@
     body::after {
       content: '';
       position: fixed;
-      bottom: -30%;
+      bottom: -20%;
       left: -10%;
-      width: 600px;
-      height: 600px;
+      width: 500px;
+      height: 500px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(191, 0, 255, 0.03);
       pointer-events: none;
       z-index: 0;
     }
@@ -94,10 +98,12 @@
 
     /* ═══ LOGIN CONTAINER ═══ */
     .login-container {
-      background: var(--bg-white);
+      background: rgba(9,9,15,0.92);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(0,229,255,0.15);
       padding: 60px 50px;
       border-radius: var(--radius-lg);
-      box-shadow: var(--shadow-lg);
+      box-shadow: 0 0 60px rgba(0,229,255,0.08), 0 20px 60px rgba(0,0,0,0.6);
       max-width: 460px;
       width: 100%;
       position: relative;
@@ -136,7 +142,7 @@
     .tabs {
       display: flex;
       margin-bottom: 32px;
-      border-bottom: 2px solid #f0f0f0;
+      border-bottom: 2px solid rgba(0,229,255,0.12);
       gap: 0;
     }
 
@@ -177,13 +183,18 @@
     input, select {
       width: 100%;
       padding: 13px 16px;
-      border: 2px solid #f0f0f0;
+      border: 1px solid rgba(0,229,255,0.18);
       border-radius: var(--radius-sm);
       font-size: 1rem;
       transition: all 0.3s ease;
-      background: var(--bg-white);
+      background: rgba(255,255,255,0.04);
       color: var(--text-dark);
       font-family: inherit;
+    }
+
+    select option {
+      background: #0a0a12;
+      color: #f8fafc;
     }
 
     input::placeholder {
@@ -193,7 +204,7 @@
     input:focus, select:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
     }
 
     .btn {
@@ -212,7 +223,7 @@
 
     .btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 10px 30px rgba(0,229,255,0.25);
     }
 
     .btn:active {
@@ -234,7 +245,7 @@
       top: 50%;
       width: 35%;
       height: 1px;
-      background: #f0f0f0;
+      background: rgba(0,229,255,0.12);
     }
 
     .divider::before {
