@@ -173,7 +173,8 @@
   <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
 
   <script>
-    const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+    // const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+    const BACKEND_URL = 'http://localhost:3000';
     let socket = null;
     let userId = 'user_' + Date.now();
 
@@ -274,13 +275,10 @@
       console.log('[SEND] Message:', message);
 
       try {
-        const response = await fetch(`${BACKEND_URL}/api/chat`, {
+        const response = await fetch(`${BACKEND_URL}/api/train`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            message: message,
-            userId: userId
-          })
+          body: JSON.stringify({ message })
         });
 
         console.log('[SEND] Response status:', response.status);
@@ -290,8 +288,8 @@
         }
 
         const data = await response.json();
-        console.log('[SEND] ✅ Respuesta recibida');
-        
+        console.log('[SEND] ✅ Respuesta recibida, guardado:', data.saved);
+
         addMessage('miia', data.response);
       } catch (error) {
         console.error('[SEND] ❌ Error:', error);
