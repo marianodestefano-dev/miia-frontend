@@ -377,7 +377,7 @@
           <span class="cta-icon">🧠</span>
           Entrenar mi MIIA
         </button>
-        <button class="cta-btn" onclick="alert('🔬 Extracción de ADN\n\nEsta función estará disponible próximamente.\nMIIA analizará tu historial de WhatsApp para aprender tu estilo de venta.')">
+        <button class="cta-btn" onclick="triggerADNMining()">
           <span class="cta-icon">🧬</span>
           Extracción de ADN
         </button>
@@ -440,6 +440,26 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
+
+    const BACKEND_URL = window.location.hostname === 'localhost'
+      ? 'http://localhost:3000'
+      : 'https://miia-production.up.railway.app';
+
+    async function triggerADNMining() {
+      const confirmed = confirm('🧬 Extracción de ADN\n\n¿Querés que MIIA analice tu historial de WhatsApp para aprender tu estilo de venta?\n\nEste proceso puede tardar varios minutos.');
+      if (!confirmed) return;
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, { method: 'POST' });
+        const data = await res.json();
+        if (res.ok) {
+          alert('✅ ' + data.message + '\n\nMIIA está procesando tu historial en segundo plano. Podés cerrar esta ventana.');
+        } else {
+          alert('⚠️ ' + (data.error || 'Error al iniciar la extracción'));
+        }
+      } catch (e) {
+        alert('❌ No se pudo conectar con el servidor. Verificá tu conexión.');
+      }
+    }
 
     const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
 
