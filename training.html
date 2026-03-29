@@ -630,7 +630,7 @@
   function renderKeywordRow(type, item, index, examples) {
     const ex = examples[index] || examples[0];
     return `<tr>
-      <td><input type="text" value="${esc(item.keyword || '')}" placeholder="${ex.keyword}" data-type="${type}" data-idx="${index}" data-field="keyword"></td>
+      <td><input type="text" value="${esc(item.keyword || '')}" placeholder="${ex.keyword} (separar multiples por comas)" data-type="${type}" data-idx="${index}" data-field="keyword"></td>
       <td><input type="text" value="${esc(item.context || '')}" placeholder="${ex.context}" data-type="${type}" data-idx="${index}" data-field="context"></td>
       <td><button class="row-btn delete" onclick="deleteKeyword('${type}',${index})">🗑</button></td>
     </tr>`;
@@ -686,12 +686,18 @@
     const statusEl = document.getElementById('rulesStatus');
     statusEl.textContent = 'Guardando...';
     try {
+      // Parse comma-separated keywords
+      const parseKeywords = (keywords) => {
+        return keywords
+          .filter(k => k.keyword.trim())
+          .flatMap(k => k.keyword.split(',').map(kw => kw.trim()).filter(kw => kw));
+      };
       await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/contact-rules`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          lead_keywords: leadKeywords.filter(k => k.keyword.trim()).map(k => k.keyword.trim()),
-          client_keywords: clientKeywords.filter(k => k.keyword.trim()).map(k => k.keyword.trim())
+          lead_keywords: parseKeywords(leadKeywords),
+          client_keywords: parseKeywords(clientKeywords)
         })
       });
       statusEl.textContent = 'Reglas guardadas - MIIA clasificara contactos automaticamente';

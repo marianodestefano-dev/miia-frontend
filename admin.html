@@ -305,12 +305,21 @@
   const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
   let users = [];
   let currentEditUid = null;
+  let currentIdToken = null;
+
+  // Helper: obtener token de Firebase
+  async function getIdToken() {
+    const user = auth.currentUser;
+    if (!user) throw new Error('No user logged in');
+    return await user.getIdToken();
+  }
 
   // Auth guard
-  auth.onAuthStateChanged(user => {
+  auth.onAuthStateChanged(async user => {
     if (!user) { window.location.href = 'login.html'; return; }
     if (!ADMIN_EMAILS.includes(user.email)) { window.location.href = 'dashboard.html'; return; }
     document.getElementById('adminEmail').textContent = user.email;
+    currentIdToken = await getIdToken();
     loadAll();
   });
 
@@ -442,9 +451,11 @@
     const u = users.find(x => x.uid === currentEditUid);
     if (!confirm(`Eliminar ${u.email}? Esta accion es irreversible.`)) return;
     try {
-      await fetch(`${BACKEND_URL}/api/admin/user/${currentEditUid}`, {
-        method: 'DELETE', headers: { 'x-admin-key': ADMIN_API_KEY }
+      const res = await fetch(`${BACKEND_URL}/api/admin/user/${currentEditUid}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${currentIdToken}` }
       });
+      if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
       closeEditModal();
       loadUsers();
     } catch (e) { alert('Error: ' + e.message); }
@@ -464,7 +475,7 @@
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/user`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_API_KEY },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentIdToken}` },
         body: JSON.stringify({ email, name, plan })
       });
       const data = await res.json();
@@ -481,7 +492,7 @@
   // ═══ TENANTS ═══
   async function loadTenants() {
     try {
-      const res = await fetch(`${BACKEND_URL}/api/tenants`, { headers: { 'x-admin-key': ADMIN_API_KEY } });
+      const res = await fetch(`${BACKEND_URL}/api/tenants`, { headers: { 'Authorization': `Bearer ${currentIdToken}` } });
       const tenants = await res.json();
       if (!Array.isArray(tenants) || tenants.length === 0) {
         document.getElementById('tenantsList').innerHTML = '<p style="color:var(--text-muted);">No hay sesiones WhatsApp activas</p>';
@@ -532,13 +543,32 @@
 
   async function forceADNMining() {
     if (!confirm('Ejecutar ADN Mining ahora?')) return;
-    await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, { method: 'POST' });
-    alert('ADN Mining iniciado');
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, { method: 'POST' });
+      const data = await res.json();
+      if (res.ok) {
+        alert('✅ ADN Mining iniciado. MIIA analizara las conversaciones en segundo plano.');
+      } else if (res.status === 503) {
+        alert('❌ WhatsApp no esta conectado. Vincula WhatsApp en Training antes de ejecutar ADN Mining.');
+      } else {
+        alert('❌ Error: ' + (data.error || 'Error desconocido'));
+      }
+    } catch (e) {
+      alert('❌ Error de red: ' + e.message);
+    }
   }
   async function forceScraperRun() {
     if (!confirm('Ejecutar scraper regulatorio ahora?')) return;
-    await fetch(`${BACKEND_URL}/api/scraper/run`, { method: 'POST' });
-    alert('Scraper iniciado');
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/scraper/run`, { method: 'POST' });
+      if (res.ok) {
+        alert('✅ Scraper iniciado. Buscara noticias regulatorias en segundo plano.');
+      } else {
+        alert('❌ Error: HTTP ' + res.status);
+      }
+    } catch (e) {
+      alert('❌ Error de red: ' + e.message);
+    }
   }
 
   // ═══ SERVER INFO ═══

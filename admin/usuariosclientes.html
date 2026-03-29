@@ -236,12 +236,21 @@
 
   let allUsers = [];
   let currentEditUid = null;
+  let currentIdToken = null;
+
+  // Helper: obtener token de Firebase
+  async function getIdToken() {
+    const user = auth.currentUser;
+    if (!user) throw new Error('No user logged in');
+    return await user.getIdToken();
+  }
 
   // Auth guard
-  auth.onAuthStateChanged(user => {
+  auth.onAuthStateChanged(async user => {
     if (!user) { window.location.href = '../login.html'; return; }
     if (!ADMIN_EMAILS.includes(user.email)) { window.location.href = '../dashboard.html'; return; }
     document.getElementById('adminEmail').textContent = user.email;
+    currentIdToken = await getIdToken();
     loadUsers();
   });
 
@@ -327,7 +336,7 @@
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/user`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-key': ADMIN_API_KEY },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentIdToken}` },
         body: JSON.stringify({ email, name, plan })
       });
       const data = await res.json();
@@ -388,7 +397,7 @@
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/user/${currentEditUid}`, {
         method: 'DELETE',
-        headers: { 'x-admin-key': ADMIN_API_KEY }
+        headers: { 'Authorization': `Bearer ${currentIdToken}` }
       });
       const data = await res.json();
       if (data.success) {
