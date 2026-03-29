@@ -1095,19 +1095,33 @@
         return;
       }
 
-      // Superadmin → admin panel
-      if (ADMIN_EMAILS.includes(user.email)) {
+      // Superadmin → admin panel (excepto si viene en modo adminView)
+      const params = new URLSearchParams(window.location.search);
+      const adminView = params.get('adminView') === '1';
+      const impersonateUid = params.get('impersonateUid');
+
+      if (ADMIN_EMAILS.includes(user.email) && !adminView) {
         window.location.href = 'admin.html';
         return;
       }
 
       currentUser = user;
 
-      // Leer perfil de Firestore
-      let doc = await db.collection('users').doc(user.uid).get();
+      // Leer perfil de Firestore (si adminView, carga el usuario target)
+      const targetUid = (adminView && impersonateUid) ? impersonateUid : user.uid;
+      let doc = await db.collection('users').doc(targetUid).get();
 
-      // Si no existe el doc, crearlo con defaults (nuevo usuario)
-      if (!doc.exists) {
+      // Barra de aviso para modo admin view
+      if (adminView && impersonateUid) {
+        const bar = document.createElement('div');
+        bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:white;text-align:center;padding:10px;font-size:0.85rem;z-index:9999;';
+        bar.innerHTML = `👁 <strong>Modo Admin:</strong> Viendo dashboard de ${doc.exists ? doc.data().email : impersonateUid} &nbsp;|&nbsp; <a href="admin.html" style="color:#667eea;">Volver a Admin</a>`;
+        document.body.appendChild(bar);
+        document.body.style.paddingBottom = '45px';
+      }
+
+      // Si no existe el doc, crearlo con defaults (solo para el propio usuario, no en adminView)
+      if (!doc.exists && !adminView) {
         const now = new Date();
         const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
         await db.collection('users').doc(user.uid).set({
@@ -1130,21 +1144,21 @@
           last_login: now
         });
         doc = await db.collection('users').doc(user.uid).get();
-      } else {
-        // Actualizar last_login
+      } else if (!adminView) {
+        // Actualizar last_login (no actualizar si es admin viendo otro usuario)
         await db.collection('users').doc(user.uid).update({ last_login: new Date() });
       }
 
       currentUserData = doc.data();
 
-      // Agent → redirect
-      if (currentUserData.role === 'agent') {
+      // Agent → redirect (no redirigir en adminView)
+      if (currentUserData.role === 'agent' && !adminView) {
         window.location.href = 'agent-dashboard.html';
         return;
       }
 
-      // Check consent
-      if (!currentUserData.terms_accepted) {
+      // Check consent (saltar si admin está viendo)
+      if (!currentUserData.terms_accepted && !adminView) {
         showConsentOverlay();
         return; // Block until consent given
       }

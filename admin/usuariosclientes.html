@@ -306,15 +306,14 @@
         <td style="font-size:0.82rem;color:var(--text-muted);">${created}</td>
         <td><div class="actions-cell">
           <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
-          <button class="btn-icon" onclick="viewAsUser('${esc(u.email)}')" title="Ver como usuario">👁</button>
+          <button class="btn-icon" onclick="viewAsUser('${esc(u.uid)}')" title="Ver como usuario">👁</button>
         </div></td>
       </tr>`;
     }).join('');
   }
 
-  function viewAsUser(email) {
-    const slug = toSlug(email);
-    window.open('../dashboard.html?u=' + encodeURIComponent(slug) + '&adminView=1', '_blank');
+  function viewAsUser(uid) {
+    window.open('../dashboard.html?adminView=1&impersonateUid=' + encodeURIComponent(uid), '_blank');
   }
 
   // ═══ CREATE ═══

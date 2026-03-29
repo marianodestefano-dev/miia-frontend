@@ -362,7 +362,7 @@
       <td>${u.discount_percent||0}%</td>
       <td>
         <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
-        <button class="btn-sm-inline" onclick="window.open('dashboard.html?u=${encodeURIComponent(toSlug(u.email))}&adminView=1','_blank')" title="Ver como usuario" style="margin-left:4px;">👁</button>
+        <button class="btn-sm-inline" onclick="window.open('dashboard.html?adminView=1&impersonateUid=${u.uid}','_blank')" title="Ver como usuario" style="margin-left:4px;">👁</button>
       </td>
     </tr>`).join('');
   }
