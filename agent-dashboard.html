@@ -300,22 +300,22 @@
     <div class="stats">
       <div class="stat-card fade-in">
         <div class="stat-icon-box">💬</div>
-        <div class="stat-number">0</div>
-        <div class="stat-label">Conversaciones hoy</div>
+        <div class="stat-number" id="statConvos">0</div>
+        <div class="stat-label">Deals hoy</div>
       </div>
       <div class="stat-card fade-in">
         <div class="stat-icon-box">👥</div>
-        <div class="stat-number">0</div>
-        <div class="stat-label">Leads atendidos</div>
+        <div class="stat-number" id="statLeads">0</div>
+        <div class="stat-label">Leads totales</div>
       </div>
       <div class="stat-card fade-in">
         <div class="stat-icon-box">💰</div>
-        <div class="stat-number">0</div>
+        <div class="stat-number" id="statPresales">0</div>
         <div class="stat-label">Pre-ventas</div>
       </div>
       <div class="stat-card fade-in">
         <div class="stat-icon-box">✅</div>
-        <div class="stat-number">0</div>
+        <div class="stat-number" id="statSales">0</div>
         <div class="stat-label">Ventas cerradas</div>
       </div>
     </div>
@@ -337,14 +337,21 @@
       </div>
     </div>
 
-    <!-- Activity -->
+    <!-- My Deals -->
     <div class="card fade-in">
-      <h2>📊 Mi actividad reciente</h2>
-      <div style="text-align: center; padding: 40px 20px; color: var(--text-muted);">
-        <div style="font-size: 3rem; margin-bottom: 12px; opacity: 0.5;">📭</div>
-        <p>No hay actividad aún</p>
-        <p style="margin-top: 8px; font-size: 0.85rem;">Entrena a tu MIIA para empezar a gestionar leads automáticamente</p>
-      </div>
+      <h2>💰 Mis Deals</h2>
+      <table style="width: 100%; border-collapse: collapse;" id="myDealsTable">
+        <thead>
+          <tr>
+            <th style="padding: 10px 14px; text-align: left; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; border-bottom: 1px solid rgba(102,126,234,0.08);">Lead</th>
+            <th style="padding: 10px 14px; text-align: left; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; border-bottom: 1px solid rgba(102,126,234,0.08);">Monto</th>
+            <th style="padding: 10px 14px; text-align: left; color: var(--text-muted); font-size: 0.78rem; text-transform: uppercase; border-bottom: 1px solid rgba(102,126,234,0.08);">Estado</th>
+          </tr>
+        </thead>
+        <tbody id="myDealsBody">
+          <tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">Sin deals aún</td></tr>
+        </tbody>
+      </table>
     </div>
   </div>
 
@@ -463,7 +470,55 @@
       }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
       document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+      // Load agent deals in real-time
+      loadAgentDeals(user.uid);
     });
+
+    function loadAgentDeals(agentUid) {
+      db.collection('deals').where('agent_uid', '==', agentUid)
+        .onSnapshot(snapshot => {
+          const deals = [];
+          snapshot.forEach(doc => deals.push({ id: doc.id, ...doc.data() }));
+
+          // Update stat cards
+          const today = new Date().toDateString();
+          const dealsToday = deals.filter(d => {
+            const created = d.created_at?.toDate ? d.created_at.toDate() : new Date(d.created_at);
+            return created.toDateString() === today;
+          });
+          const leads = deals.filter(d => d.status === 'pending' || d.status === 'negotiation');
+          const presales = deals.filter(d => d.status === 'negotiation');
+          const won = deals.filter(d => d.status === 'won');
+
+          document.getElementById('statConvos').textContent = dealsToday.length;
+          document.getElementById('statLeads').textContent = leads.length;
+          document.getElementById('statPresales').textContent = presales.length;
+          document.getElementById('statSales').textContent = won.length;
+
+          // Render deals table
+          const tbody = document.getElementById('myDealsBody');
+          if (deals.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">Sin deals aún</td></tr>';
+            return;
+          }
+
+          const statusLabels = { pending: '🟡 Pendiente', negotiation: '🔵 Negociación', won: '🟢 Ganado', lost: '🔴 Perdido' };
+          const statusColors = { pending: '#f59e0b', negotiation: '#667eea', won: '#25d366', lost: '#e74c3c' };
+
+          tbody.innerHTML = deals.sort((a, b) => {
+            const da = a.created_at?.toDate ? a.created_at.toDate() : new Date(a.created_at);
+            const db2 = b.created_at?.toDate ? b.created_at.toDate() : new Date(b.created_at);
+            return db2 - da;
+          }).map(d => `
+            <tr style="border-bottom: 1px solid rgba(102,126,234,0.06);">
+              <td style="padding: 12px 14px; font-weight: 500; color: var(--text-dark);">${d.lead_name || 'Sin nombre'}</td>
+              <td style="padding: 12px 14px; font-weight: 600; color: var(--primary);">$${(d.amount || 0).toLocaleString()}</td>
+              <td style="padding: 12px 14px;"><span style="background: ${statusColors[d.status] || '#888'}22; color: ${statusColors[d.status] || '#888'}; padding: 4px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;">${statusLabels[d.status] || d.status}</span></td>
+            </tr>
+          `).join('');
+        });
+    }
 
     function handleLogout() {
       if (confirm('¿Cerrar sesión?')) {

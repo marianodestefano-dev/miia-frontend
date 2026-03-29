@@ -416,6 +416,159 @@
     .empty-state-icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
     .empty-state p { font-size: 0.9rem; }
 
+    /* ═══ DEALS TABLE ═══ */
+    .deals-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 20px;
+      border-bottom: 2px solid rgba(102, 126, 234, 0.08);
+    }
+
+    .deal-tab {
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .deal-tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .deal-tab:hover { color: var(--primary); }
+
+    .deal-tab .tab-count {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 0.7rem;
+      margin-left: 6px;
+      background: rgba(102, 126, 234, 0.1);
+      color: var(--primary);
+    }
+
+    .deals-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .deals-table th {
+      padding: 10px 14px;
+      text-align: left;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid rgba(102, 126, 234, 0.08);
+    }
+
+    .deals-table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid rgba(102, 126, 234, 0.04);
+      font-size: 0.9rem;
+    }
+
+    .deals-table tr:hover { background: rgba(102, 126, 234, 0.015); }
+
+    .deal-amount {
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .badge-won { background: #dcfce7; color: #166534; }
+    .badge-lost { background: #fee2e2; color: #991b1b; }
+
+    .deal-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-won {
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 10px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .btn-lost {
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 4px 10px;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-weight: 600;
+      font-size: 0.75rem;
+      cursor: pointer;
+    }
+
+    .add-deal-form {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 10px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(102, 126, 234, 0.08);
+    }
+
+    .add-deal-form input,
+    .add-deal-form select {
+      padding: 10px 12px;
+      border: 2px solid rgba(102, 126, 234, 0.15);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.85rem;
+      transition: all 0.3s ease;
+    }
+
+    .add-deal-form input:focus,
+    .add-deal-form select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .stats-summary {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 20px;
+      background: rgba(102, 126, 234, 0.03);
+      border-radius: var(--radius-md);
+    }
+
+    .summary-item {
+      text-align: center;
+    }
+
+    .summary-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+
+    .summary-value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .summary-value.green { color: #166534; }
+    .summary-value.orange { color: #92400e; }
+    .summary-value.red { color: #991b1b; }
+
+    @media (max-width: 768px) {
+      .add-deal-form { grid-template-columns: 1fr 1fr; }
+      .stats-summary { grid-template-columns: 1fr; }
+    }
+
     /* ═══ PAYWALL ═══ */
     .paywall-overlay {
       display: none;
@@ -621,6 +774,67 @@
           <p id="agentLimitMsg" class="hidden" style="color: #f39c12; font-size: 0.85rem; margin-top: 12px; text-align: center;"></p>
         </div>
 
+        <!-- Deals / Pre-sales Section -->
+        <div class="card fade-in" id="dealsSection">
+          <h2>💰 Pipeline de Ventas</h2>
+
+          <!-- Stats Summary -->
+          <div class="stats-summary">
+            <div class="summary-item">
+              <div class="summary-label">Ventas cerradas</div>
+              <div class="summary-value green" id="summaryWon">$0</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Pre-ventas pendientes</div>
+              <div class="summary-value orange" id="summaryPending">$0</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">Perdidas</div>
+              <div class="summary-value red" id="summaryLost">$0</div>
+            </div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="deals-tabs">
+            <div class="deal-tab active" onclick="switchDealTab('pending')">Pendientes <span class="tab-count" id="countPending">0</span></div>
+            <div class="deal-tab" onclick="switchDealTab('won')">Ganadas <span class="tab-count" id="countWon">0</span></div>
+            <div class="deal-tab" onclick="switchDealTab('lost')">Perdidas <span class="tab-count" id="countLost">0</span></div>
+          </div>
+
+          <!-- Deals Table -->
+          <table class="deals-table">
+            <thead>
+              <tr>
+                <th>Lead</th>
+                <th>Plan</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="dealsBody">
+              <tr>
+                <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                  No hay deals registrados
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Add Deal Form -->
+          <div class="add-deal-form">
+            <input type="text" id="dealLeadName" placeholder="Nombre del lead">
+            <select id="dealPlan">
+              <option value="monthly">Mensual $12</option>
+              <option value="quarterly">Trimestral $30</option>
+              <option value="semestral">Semestral $55</option>
+              <option value="annual">Anual $75</option>
+            </select>
+            <input type="number" id="dealAmount" placeholder="Monto USD" min="0" step="0.01">
+            <button class="btn-add" onclick="addDeal()">+ Deal</button>
+          </div>
+        </div>
+
         <!-- Activity -->
         <div class="card fade-in">
           <h2>📊 Actividad Reciente</h2>
@@ -802,6 +1016,9 @@
 
       // Load agents
       loadAgents();
+
+      // Load deals (real-time)
+      loadDeals();
 
       // Setup UI
       setupScrollAndAnimations();
@@ -995,6 +1212,141 @@
       try {
         await db.collection('users').doc(agentId).delete();
         loadAgents();
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    // ═══ DEALS / PIPELINE ═══
+    let allDeals = [];
+    let currentDealTab = 'pending';
+
+    function loadDeals() {
+      // Real-time listener
+      db.collection('deals')
+        .where('client_uid', '==', currentUser.uid)
+        .onSnapshot(snapshot => {
+          allDeals = [];
+          snapshot.forEach(doc => allDeals.push({ id: doc.id, ...doc.data() }));
+          renderDeals();
+          updateDealStats();
+          updateStatCards();
+        });
+    }
+
+    function renderDeals() {
+      const filtered = allDeals.filter(d => d.status === currentDealTab);
+      const tbody = document.getElementById('dealsBody');
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">No hay deals en esta categoría</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = '';
+      filtered.forEach(deal => {
+        const planNames = { monthly: 'Mensual', quarterly: 'Trimestral', semestral: 'Semestral', annual: 'Anual' };
+        const date = deal.created_at?.toDate ? deal.created_at.toDate().toLocaleDateString('es-ES') : '-';
+
+        let actions = '';
+        if (deal.status === 'pending') {
+          actions = `
+            <div class="deal-actions">
+              <button class="btn-won" onclick="updateDealStatus('${deal.id}', 'won')">✅ Ganada</button>
+              <button class="btn-lost" onclick="updateDealStatus('${deal.id}', 'lost')">❌ Perdida</button>
+            </div>`;
+        } else if (deal.status === 'won') {
+          actions = '<span class="badge badge-won">Cerrada</span>';
+        } else {
+          actions = '<span class="badge badge-lost">Perdida</span>';
+        }
+
+        tbody.innerHTML += `
+          <tr>
+            <td><strong>${deal.lead_name || 'Sin nombre'}</strong></td>
+            <td><span class="badge badge-trial">${planNames[deal.plan] || deal.plan}</span></td>
+            <td class="deal-amount">$${(deal.amount || 0).toFixed(2)}</td>
+            <td style="color: var(--text-muted); font-size: 0.85rem;">${date}</td>
+            <td>${actions}</td>
+          </tr>`;
+      });
+    }
+
+    function updateDealStats() {
+      const won = allDeals.filter(d => d.status === 'won');
+      const pending = allDeals.filter(d => d.status === 'pending');
+      const lost = allDeals.filter(d => d.status === 'lost');
+
+      const sumWon = won.reduce((s, d) => s + (d.amount || 0), 0);
+      const sumPending = pending.reduce((s, d) => s + (d.amount || 0), 0);
+      const sumLost = lost.reduce((s, d) => s + (d.amount || 0), 0);
+
+      document.getElementById('summaryWon').textContent = '$' + sumWon.toFixed(2);
+      document.getElementById('summaryPending').textContent = '$' + sumPending.toFixed(2);
+      document.getElementById('summaryLost').textContent = '$' + sumLost.toFixed(2);
+
+      document.getElementById('countPending').textContent = pending.length;
+      document.getElementById('countWon').textContent = won.length;
+      document.getElementById('countLost').textContent = lost.length;
+    }
+
+    function updateStatCards() {
+      const won = allDeals.filter(d => d.status === 'won');
+      const pending = allDeals.filter(d => d.status === 'pending');
+
+      document.getElementById('statLeads').textContent = allDeals.length;
+      document.getElementById('statPresales').textContent = pending.length;
+      document.getElementById('statSales').textContent = won.length;
+      document.getElementById('statConversations').textContent = allDeals.filter(d => {
+        const today = new Date().toDateString();
+        const dealDate = d.created_at?.toDate ? d.created_at.toDate().toDateString() : '';
+        return dealDate === today;
+      }).length;
+    }
+
+    function switchDealTab(tab) {
+      currentDealTab = tab;
+      document.querySelectorAll('.deal-tab').forEach(t => t.classList.remove('active'));
+      event.target.closest('.deal-tab').classList.add('active');
+      renderDeals();
+    }
+
+    async function addDeal() {
+      const leadName = document.getElementById('dealLeadName').value.trim();
+      const plan = document.getElementById('dealPlan').value;
+      const amount = parseFloat(document.getElementById('dealAmount').value) || 0;
+
+      if (!leadName) { alert('Ingresa el nombre del lead'); return; }
+      if (amount <= 0) { alert('Ingresa un monto válido'); return; }
+
+      try {
+        await db.collection('deals').add({
+          client_uid: currentUser.uid,
+          agent_uid: '',
+          lead_name: leadName,
+          plan: plan,
+          amount: amount,
+          status: 'pending',
+          created_at: new Date(),
+          updated_at: new Date()
+        });
+
+        document.getElementById('dealLeadName').value = '';
+        document.getElementById('dealAmount').value = '';
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    async function updateDealStatus(dealId, newStatus) {
+      const label = newStatus === 'won' ? 'ganada' : 'perdida';
+      if (!confirm(`¿Marcar esta deal como ${label}?`)) return;
+
+      try {
+        await db.collection('deals').doc(dealId).update({
+          status: newStatus,
+          updated_at: new Date()
+        });
       } catch (error) {
         alert('Error: ' + error.message);
       }
