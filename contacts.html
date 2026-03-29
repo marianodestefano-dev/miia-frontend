@@ -386,7 +386,16 @@
     }
 
     function goBack() {
-      window.location.href = 'dashboard.html' + (clientSlug ? '?u=' + clientSlug : '');
+      const urlParams = new URLSearchParams(window.location.search);
+      const adminView = urlParams.get('adminView') === '1';
+      const impersonateUid = urlParams.get('impersonateUid');
+      const parts = [];
+      if (clientSlug) parts.push('u=' + clientSlug);
+      if (adminView && impersonateUid) {
+        parts.push('adminView=1');
+        parts.push('impersonateUid=' + impersonateUid);
+      }
+      window.location.href = 'dashboard.html' + (parts.length ? '?' + parts.join('&') : '');
     }
 
     // Auth guard
@@ -398,12 +407,18 @@
         return;
       }
 
-      if (ADMIN_EMAILS.includes(user.email)) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const adminView = urlParams.get('adminView') === '1';
+      const impersonateUid = urlParams.get('impersonateUid');
+
+      if (ADMIN_EMAILS.includes(user.email) && !adminView) {
         window.location.href = 'admin.html';
         return;
       }
 
-      const doc = await db.collection('users').doc(user.uid).get();
+      const targetUid = (adminView && impersonateUid) ? impersonateUid : user.uid;
+
+      const doc = await db.collection('users').doc(targetUid).get();
       if (!doc.exists) {
         window.location.href = 'login.html';
         return;
@@ -415,7 +430,17 @@
         return;
       }
 
-      currentUser = user;
+      currentUser = { ...user, uid: targetUid };
+
+      // Barra de admin view
+      if (adminView && impersonateUid) {
+        const bar = document.createElement('div');
+        bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:white;text-align:center;padding:10px;font-size:0.85rem;z-index:9999;';
+        bar.innerHTML = `👁 <strong>Modo Admin:</strong> Viendo contactos de ${doc.exists ? doc.data().email : impersonateUid} &nbsp;|&nbsp; <a href="dashboard.html?adminView=1&impersonateUid=${impersonateUid}" style="color:#667eea;">← Dashboard</a> &nbsp;|&nbsp; <a href="admin.html" style="color:#667eea;">Volver a Admin</a>`;
+        document.body.appendChild(bar);
+        document.body.style.paddingBottom = '45px';
+      }
+
       loadConversations();
       setupUI();
     });

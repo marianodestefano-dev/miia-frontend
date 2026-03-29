@@ -1566,19 +1566,32 @@
     }
 
     // ═══ FEATURES ═══
+    function getSubpageUrl(page) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const adminView = urlParams.get('adminView') === '1';
+      const impersonateUid = urlParams.get('impersonateUid');
+      const parts = [];
+      if (clientSlug) parts.push('u=' + clientSlug);
+      if (adminView && impersonateUid) {
+        parts.push('adminView=1');
+        parts.push('impersonateUid=' + impersonateUid);
+      }
+      return page + (parts.length ? '?' + parts.join('&') : '');
+    }
+
     function showFeature(feature) {
       if (feature === 'train') {
-        window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
+        window.location.href = getSubpageUrl('training.html');
         return;
       }
 
       if (feature === 'contacts') {
-        window.location.href = 'contacts.html' + (clientSlug ? '?u=' + clientSlug : '');
+        window.location.href = getSubpageUrl('contacts.html');
         return;
       }
 
       if (feature === 'documents') {
-        window.location.href = 'documents.html' + (clientSlug ? '?u=' + clientSlug : '');
+        window.location.href = getSubpageUrl('documents.html');
         return;
       }
 

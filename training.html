@@ -439,11 +439,23 @@
     });
   };
 
+  function buildNavUrl(page) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const adminView = urlParams.get('adminView') === '1';
+    const impersonateUid = urlParams.get('impersonateUid');
+    const parts = [];
+    if (clientSlug) parts.push('u=' + clientSlug);
+    if (adminView && impersonateUid) {
+      parts.push('adminView=1');
+      parts.push('impersonateUid=' + impersonateUid);
+    }
+    return page + (parts.length ? '?' + parts.join('&') : '');
+  }
   function goToDashboard() {
-    window.location.href = 'dashboard.html' + (clientSlug ? '?u=' + clientSlug : '');
+    window.location.href = buildNavUrl('dashboard.html');
   }
   function goToDocs() {
-    window.location.href = 'documents.html' + (clientSlug ? '?u=' + clientSlug : '');
+    window.location.href = buildNavUrl('documents.html');
   }
 
   // ═══ TABS ═══

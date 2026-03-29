@@ -421,6 +421,20 @@
     </div>
   </div>
 
+  <!-- Pantalla de verificación de email -->
+  <div id="verifyScreen" style="display:none; position:fixed; inset:0; background:var(--gradient-main); align-items:center; justify-content:center; padding:20px; z-index:9999;">
+    <div style="background:white; border-radius:24px; padding:50px 40px; max-width:440px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+      <div style="font-size:3.5rem; margin-bottom:16px;">📧</div>
+      <h2 style="font-size:1.6rem; font-weight:800; color:#1a1a2e; margin-bottom:12px;">Verificá tu email</h2>
+      <p style="color:#4a4a6a; margin-bottom:8px;">Te enviamos un link de activación a:</p>
+      <p id="verifyEmail" style="font-weight:700; color:#667eea; margin-bottom:24px;"></p>
+      <p style="color:#4a4a6a; font-size:0.9rem; margin-bottom:32px;">Hacé clic en el link del email para activar tu cuenta. Revisá también la carpeta de spam.</p>
+      <button onclick="checkVerified()" style="width:100%; padding:14px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; margin-bottom:12px;">✅ Ya verifiqué mi email</button>
+      <button onclick="resendVerification()" style="width:100%; padding:14px; background:transparent; color:#667eea; border:2px solid #667eea; border-radius:12px; font-size:0.9rem; font-weight:600; cursor:pointer; margin-bottom:12px;">🔄 Reenviar email</button>
+      <div id="verifyMsg" style="font-size:0.85rem; color:#4a4a6a; margin-top:8px;"></div>
+    </div>
+  </div>
+
   <script>
     // Firebase Config
     const firebaseConfig = {
@@ -477,7 +491,11 @@
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
 
-        // Guardar en localStorage para compatibilidad
+        if (!user.emailVerified) {
+          showVerifyScreen(user);
+          return;
+        }
+
         localStorage.setItem('miia_user', JSON.stringify({
           uid: user.uid,
           email: user.email,
@@ -487,7 +505,13 @@
 
         setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
       } catch (error) {
-        showError('Error: ' + error.message);
+        if (error.code === 'auth/account-exists-with-different-credential' ||
+            error.code === 'auth/invalid-login-credentials' ||
+            error.code === 'auth/wrong-password') {
+          showError('Email o contraseña incorrectos. Si creaste tu cuenta con Google, usá el botón "Google" para ingresar.');
+        } else {
+          showError('Error: ' + error.message);
+        }
       }
     }
 
@@ -508,8 +532,6 @@
         showError('El WhatsApp debe incluir código país (ejemplo: +57)');
         return;
       }
-
-      showSuccess('¡Cuenta creada exitosamente! Bienvenido a MIIA 🎉');
 
       try {
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
@@ -561,7 +583,9 @@
           });
         }
 
-        // localStorage for compat
+        // Enviar email de verificación
+        await user.sendEmailVerification();
+
         localStorage.setItem('miia_user', JSON.stringify({
           uid: user.uid,
           name: name,
@@ -569,7 +593,7 @@
           logged_in: true
         }));
 
-        setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
+        showVerifyScreen(user);
       } catch (error) {
         showError('Error: ' + error.message);
       }
@@ -675,10 +699,43 @@
       successDiv.style.display = 'block';
     }
 
+    let pendingVerifyUser = null;
+
+    function showVerifyScreen(user) {
+      pendingVerifyUser = user;
+      document.getElementById('verifyEmail').textContent = user.email;
+      const vs = document.getElementById('verifyScreen');
+      vs.style.display = 'flex';
+    }
+
+    async function checkVerified() {
+      if (!pendingVerifyUser) return;
+      await pendingVerifyUser.reload();
+      if (pendingVerifyUser.emailVerified) {
+        window.location.href = 'dashboard.html?u=' + toSlug(pendingVerifyUser.email);
+      } else {
+        document.getElementById('verifyMsg').textContent = '⚠️ Aún no verificaste el email. Revisá tu bandeja de entrada.';
+      }
+    }
+
+    async function resendVerification() {
+      if (!pendingVerifyUser) return;
+      try {
+        await pendingVerifyUser.sendEmailVerification();
+        document.getElementById('verifyMsg').textContent = '✅ Email reenviado. Revisá tu bandeja.';
+      } catch (e) {
+        document.getElementById('verifyMsg').textContent = 'Error al reenviar: ' + e.message;
+      }
+    }
+
     // Auth state listener
     auth.onAuthStateChanged(user => {
       if (user) {
-        console.log('Usuario autenticado:', user.email);
+        // Google users are always verified; email/password users need to verify
+        if (!user.emailVerified && user.providerData[0]?.providerId === 'password') {
+          showVerifyScreen(user);
+          return;
+        }
         window.location.href = 'dashboard.html?u=' + toSlug(user.email);
       }
     });
