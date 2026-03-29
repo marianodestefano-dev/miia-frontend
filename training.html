@@ -111,7 +111,7 @@
       box-shadow: var(--shadow-sm);
       margin-bottom: 32px;
       border: 1px solid rgba(102, 126, 234, 0.1);
-      animation: fadeInUp 0.6s ease;
+      animation: fadeInUp 0.6s ease forwards;
     }
 
     .setup-card h2 {
@@ -191,7 +191,7 @@
       flex-direction: column;
       height: 650px;
       border: 1px solid rgba(102, 126, 234, 0.1);
-      animation: fadeInUp 0.6s ease;
+      animation: fadeInUp 0.6s ease forwards;
       overflow: hidden;
     }
 
@@ -342,7 +342,7 @@
 
   <div class="container">
     <!-- PASO 1: Inicio simple -->
-    <div id="setupCard" class="setup-card fade-in">
+    <div id="setupCard" class="setup-card">
       <h2>Conectar WhatsApp</h2>
       <p>MIIA usará la API Key configurada en el servidor para conectarse</p>
       <button class="btn" onclick="showWhatsAppSetup()">Conectar WhatsApp</button>

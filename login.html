@@ -55,7 +55,7 @@
       box-shadow: var(--shadow-lg);
       max-width: 450px;
       width: 100%;
-      animation: slideUp 0.6s ease;
+      animation: slideUp 0.6s ease forwards;
     }
 
     @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
@@ -255,7 +255,7 @@
   </style>
 </head>
 <body>
-  <div class="login-container fade-in">
+  <div class="login-container">
     <div class="logo">🤖</div>
     <h2>Bienvenido a MIIA</h2>
     <p class="subtitle">Tu asistente IA que vende por WhatsApp 24/7</p>
