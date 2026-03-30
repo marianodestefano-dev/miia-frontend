@@ -1229,6 +1229,7 @@
   <!-- Firebase Auth -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="toast.js"></script>
 
   <script>
     // Firebase Config
@@ -1259,10 +1260,10 @@
         if (data.url) {
           window.location.href = data.url;
         } else {
-          alert('Error al procesar: ' + (data.error || 'Desconocido'));
+          showToast('Error al procesar: ' + (data.error || 'Desconocido'), 'error');
         }
       } catch (error) {
-        alert('Error de conexión: ' + error.message);
+        showToast('Error de conexión: ' + error.message, 'error');
       }
     }
 

@@ -101,6 +101,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="../toast.js"></script>
 </head>
 <body>
 
@@ -189,7 +190,7 @@
 <!-- CONSENT RECORD MODAL -->
 <div class="modal-overlay" id="consentModal" onclick="if(event.target===this)closeModal('consentModal')">
   <div class="modal" style="max-width:540px;">
-    <h3>📋 Registro de Consentimiento ADN</h3>
+    <h3><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Registro de Consentimiento ADN</h3>
     <div id="consentModalBody" style="margin-top:16px;"></div>
     <div style="margin-top:24px; text-align:right;">
       <button class="btn-sm btn-outline" onclick="closeModal('consentModal')">Cerrar</button>
@@ -301,7 +302,7 @@
   function renderTable(list) {
     const tbody = document.getElementById('tableBody');
     if (list.length === 0) {
-      tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon">🔍</div>No se encontraron usuarios</div></td></tr>';
+      tbody.innerHTML = '<tr><td colspan="10"><div class="empty-state"><div class="icon"><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></div>No se encontraron usuarios</div></td></tr>';
       return;
     }
     const statusBadge = s => s === 'active' ? 'badge-green' : s === 'pending_payment' ? 'badge-red' : s === 'expired' ? 'badge-gray' : 'badge-yellow';
@@ -320,8 +321,8 @@
         <td style="font-size:0.82rem;color:var(--text-muted);">${created}</td>
         <td><div class="actions-cell">
           <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
-          <button class="btn-icon" onclick="viewAsUser('${esc(u.uid)}')" title="Ver como usuario">👁</button>
-          <button class="btn-icon" onclick="viewConsentRecord('${esc(u.uid)}')" title="${u.consent_adn ? 'Ver firma de consentimiento ADN' : 'Sin consentimiento ADN registrado'}" style="opacity:${u.consent_adn ? '1' : '0.35'}; cursor:${u.consent_adn ? 'pointer' : 'not-allowed'}">📋</button>
+          <button class="btn-icon" onclick="viewAsUser('${esc(u.uid)}')" title="Ver como usuario"><svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          <button class="btn-icon" onclick="viewConsentRecord('${esc(u.uid)}')" title="${u.consent_adn ? 'Ver firma de consentimiento ADN' : 'Sin consentimiento ADN registrado'}" style="opacity:${u.consent_adn ? '1' : '0.35'}; cursor:${u.consent_adn ? 'pointer' : 'not-allowed'}"><svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></button>
         </div></td>
       </tr>`;
     }).join('');
@@ -335,7 +336,7 @@
     try {
       const snap = await db.collection('consent_records').doc(uid + '_adn').get();
       if (!snap.exists) {
-        alert('Este usuario no tiene registro de consentimiento ADN.');
+        showToast('Este usuario no tiene registro de consentimiento ADN.', 'warning');
         return;
       }
       const c = snap.data();
@@ -347,9 +348,9 @@
             <div><strong>UID:</strong> <span style="color:var(--text-muted);font-size:0.78rem;">${c.uid || uid}</span></div>
           </div>
           <div><strong>Fecha (Bogotá):</strong> ${fecha}</div>
-          <div><strong>📱 WhatsApp:</strong> ${c.whatsapp_number ? '+' + c.whatsapp_number : '<span style="color:var(--text-muted)">No conectado al momento</span>'}</div>
-          <div><strong>🌐 IP navegador:</strong> ${c.ip_browser || c.ip || 'desconocida'}</div>
-          <div><strong>🛡️ IP servidor:</strong> ${c.ip_server ? `${c.ip_server} <span style="color:#22c55e;font-size:0.75rem;">(verificada)</span>` : '<span style="color:var(--text-muted)">no disponible</span>'}</div>
+          <div><strong><svg style="width:13px;height:13px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg> WhatsApp:</strong> ${c.whatsapp_number ? '+' + c.whatsapp_number : '<span style="color:var(--text-muted)">No conectado al momento</span>'}</div>
+          <div><strong><svg style="width:13px;height:13px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> IP navegador:</strong> ${c.ip_browser || c.ip || 'desconocida'}</div>
+          <div><strong><svg style="width:13px;height:13px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> IP servidor:</strong> ${c.ip_server ? `${c.ip_server} <span style="color:#22c55e;font-size:0.75rem;">(verificada)</span>` : '<span style="color:var(--text-muted)">no disponible</span>'}</div>
           <div><strong>Dispositivo:</strong> <span style="word-break:break-all;font-size:0.78rem;">${c.user_agent || '—'}</span></div>
           <div><strong>Resolución:</strong> ${c.screen || '—'}</div>
           <div><strong>Idioma:</strong> ${c.language || '—'}</div>
@@ -361,7 +362,7 @@
         </div>`;
       document.getElementById('consentModal').classList.add('active');
     } catch (e) {
-      alert('Error al cargar el registro: ' + e.message);
+      showToast('Error al cargar el registro: ' + e.message, 'error');
     }
   }
 
@@ -394,11 +395,11 @@
         document.getElementById('createResult').classList.remove('hidden');
         loadUsers();
       } else {
-        alert('Error: ' + (data.error || 'Error desconocido'));
+        showToast('Error: ' + (data.error || 'Error desconocido'), 'error');
         btn.disabled = false;
       }
     } catch (err) {
-      alert('Error de red: ' + err.message);
+      showToast('Error de red: ' + err.message, 'error');
       btn.disabled = false;
     }
     btn.textContent = 'Crear usuario';
@@ -453,10 +454,10 @@
         currentEditUid = null;
         loadUsers();
       } else {
-        alert('Error del backend: ' + (data.error || 'Error desconocido'));
+        showToast('Error del backend: ' + (data.error || 'Error desconocido'), 'error');
       }
     } catch (err) {
-      alert('Error de red: ' + err.message);
+      showToast('Error de red: ' + err.message, 'error');
     }
   }
 

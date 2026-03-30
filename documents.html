@@ -336,7 +336,7 @@
 
   <!-- Navbar -->
   <nav id="navbar">
-    <a href="index.html" class="nav-logo">🤖 MIIA</a>
+    <a href="index.html" class="nav-logo"><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="9" cy="16" r="1"/><circle cx="15" cy="16" r="1"/><path d="M12 2v4M8 11V7a4 4 0 0 1 8 0v4"/></svg> MIIA</a>
     <div class="nav-actions">
       <a href="javascript:goBack()" class="nav-back">← Volver</a>
       <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
@@ -346,12 +346,12 @@
   <!-- Container -->
   <div class="container">
     <div class="card fade-in">
-      <h2>📄 Documentos y Recursos</h2>
+      <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> Documentos y Recursos</h2>
 
       <div class="tabs">
-        <button class="tab active" onclick="switchTab('quotes')">📋 Cotizaciones</button>
-        <button class="tab" onclick="switchTab('templates')">💬 Templates</button>
-        <button class="tab" onclick="switchTab('knowledge')">📚 Archivos</button>
+        <button class="tab active" onclick="switchTab('quotes')"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Cotizaciones</button>
+        <button class="tab" onclick="switchTab('templates')"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Templates</button>
+        <button class="tab" onclick="switchTab('knowledge')"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Archivos</button>
       </div>
 
       <!-- Tab 1: Cotizaciones -->
@@ -387,7 +387,7 @@
           <h4 style="color: var(--text-dark); margin-bottom: 12px;">Cotizaciones Recientes</h4>
           <div class="item-list" id="quotesListItems">
             <div class="empty-state">
-              <div class="empty-state-icon">📋</div>
+              <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></div>
               <p>Sin cotizaciones aún</p>
             </div>
           </div>
@@ -411,7 +411,7 @@
           <h4 style="color: var(--text-dark); margin-bottom: 12px;">Mis Templates</h4>
           <div class="item-list" id="templatesListItems">
             <div class="empty-state">
-              <div class="empty-state-icon">💬</div>
+              <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
               <p>Sin templates aún</p>
             </div>
           </div>
@@ -423,7 +423,7 @@
         <h3 style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 16px;">Subir Archivos de Conocimiento</h3>
         <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 0.9rem;">Sube catálogos, PDFs o documentos con información sobre tu negocio. MIIA los usará para responder mejor a tus clientes.</p>
         <label class="file-input-label">
-          📤 Seleccionar Archivo
+          <svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Seleccionar Archivo
           <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" onchange="uploadFile(event)">
         </label>
 
@@ -431,7 +431,7 @@
           <h4 style="color: var(--text-dark); margin-bottom: 12px;">Archivos Subidos</h4>
           <div class="item-list" id="knowledgeListItems">
             <div class="empty-state">
-              <div class="empty-state-icon">📚</div>
+              <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
               <p>Sin archivos aún</p>
             </div>
           </div>
@@ -440,6 +440,7 @@
     </div>
   </div>
 
+  <script src="toast.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
@@ -543,7 +544,7 @@
       const desc = document.getElementById('quoteDesc').value;
 
       if (!client || !product || !price) {
-        alert('Completa los datos requeridos');
+        showToast('Completa los datos requeridos', 'warning');
         return;
       }
 
@@ -580,7 +581,7 @@
       const text = document.getElementById('templateText').value.trim();
 
       if (!name || !text) {
-        alert('Completa el nombre y texto');
+        showToast('Completa el nombre y texto', 'warning');
         return;
       }
 
@@ -595,7 +596,7 @@
         document.getElementById('templateText').value = '';
         loadTemplates();
       } catch (error) {
-        alert('Error: ' + error.message);
+        showToast('Error: ' + error.message, 'error');
       }
     }
 
@@ -605,7 +606,7 @@
         const list = document.getElementById('templatesListItems');
 
         if (snapshot.empty) {
-          list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💬</div><p>Sin templates aún</p></div>';
+          list.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><p>Sin templates aún</p></div>';
           return;
         }
 
@@ -631,7 +632,7 @@
         await db.collection('templates').doc(currentUser.uid).collection('items').doc(id).delete();
         loadTemplates();
       } catch (error) {
-        alert('Error: ' + error.message);
+        showToast('Error: ' + error.message, 'error');
       }
     }
 
@@ -650,10 +651,10 @@
           uploaded_at: new Date()
         });
 
-        alert('Archivo guardado (la carga completa se implementará próximamente)');
+        showToast('Archivo guardado (la carga completa se implementará próximamente)', 'success');
         loadKnowledgeFiles();
       } catch (error) {
-        alert('Error: ' + error.message);
+        showToast('Error: ' + error.message, 'error');
       }
     }
 
@@ -663,14 +664,14 @@
         const list = document.getElementById('knowledgeListItems');
 
         if (snapshot.empty) {
-          list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📚</div><p>Sin archivos aún</p></div>';
+          list.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div><p>Sin archivos aún</p></div>';
           return;
         }
 
         list.innerHTML = snapshot.docs.map(doc => `
           <div class="item">
             <div>
-              <div class="item-title">📄 ${doc.data().name}</div>
+              <div class="item-title"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> ${doc.data().name}</div>
               <div class="item-desc">${(doc.data().size / 1024).toFixed(1)} KB</div>
             </div>
             <div class="item-actions">
@@ -689,7 +690,7 @@
         await db.collection('knowledge_files').doc(currentUser.uid).collection('items').doc(id).delete();
         loadKnowledgeFiles();
       } catch (error) {
-        alert('Error: ' + error.message);
+        showToast('Error: ' + error.message, 'error');
       }
     }
 

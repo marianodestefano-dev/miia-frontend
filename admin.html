@@ -383,7 +383,7 @@
       <td>${u.discount_percent||0}%</td>
       <td>
         <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
-        <button class="btn-sm-inline" onclick="window.open('dashboard.html?adminView=1&impersonateUid=${u.uid}','_blank')" title="Ver como usuario" style="margin-left:4px;">👁</button>
+        <button class="btn-sm-inline" onclick="window.open('dashboard.html?adminView=1&impersonateUid=${u.uid}','_blank')" title="Ver como usuario" style="margin-left:4px;"><svg style="width:14px;height:14px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </td>
     </tr>`).join('');
   }
@@ -448,7 +448,7 @@
   function openEditModal(uid) {
     currentEditUid = uid;
     const u = users.find(x => x.uid === uid);
-    if (!u) { alert('Error: recarga la página e intenta de nuevo.'); return; }
+    if (!u) { showToast('Error: recarga la página e intenta de nuevo.', 'error'); return; }
     document.getElementById('editModalTitle').textContent = `Editar: ${u.name || u.email || uid}`;
     document.getElementById('editPlan').value = u.plan || 'trial';
     document.getElementById('editAgentsLimit').value = u.agents_limit || 1;
@@ -482,7 +482,7 @@
       if (!res.ok) throw new Error(`HTTP ${res.status}: ${await res.text()}`);
       closeEditModal();
       loadUsers();
-    } catch (e) { alert('Error: ' + e.message); }
+    } catch (e) { showToast('Error: ' + e.message, 'error'); }
   }
 
   function openCreateModal() {
@@ -510,7 +510,7 @@
       } else {
         showToast('Error: ' + (data.error || 'Unknown error'), 'error');
       }
-    } catch (e) { alert('Error: ' + e.message); }
+    } catch (e) { showToast('Error: ' + e.message, 'error'); }
   }
 
   // ═══ TENANTS ═══

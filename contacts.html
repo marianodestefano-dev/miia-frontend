@@ -285,7 +285,7 @@
 
   <!-- Navbar -->
   <nav id="navbar">
-    <a href="index.html" class="nav-logo">🤖 MIIA</a>
+    <a href="index.html" class="nav-logo"><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="9" cy="16" r="1"/><circle cx="15" cy="16" r="1"/><path d="M12 2v4M8 11V7a4 4 0 0 1 8 0v4"/></svg> MIIA</a>
     <div class="nav-actions">
       <a href="javascript:goBack()" class="nav-back">← Volver</a>
       <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
@@ -297,7 +297,7 @@
     <div class="contacts-layout">
       <!-- Conversations List -->
       <div class="card fade-in">
-        <h2>💬 Conversaciones de WhatsApp</h2>
+        <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Conversaciones de WhatsApp</h2>
         <input type="text" class="search-bar" id="contactSearch" placeholder="Buscar contacto..." oninput="applyContactFilter()">
         <div class="filter-tabs" id="filterTabs">
           <button class="filter-tab active" onclick="setFilter('all',this)">Todos <span class="count" id="countAll">0</span></button>
@@ -307,7 +307,7 @@
         </div>
         <div class="conversations-list" id="conversationsList">
           <div class="empty-state">
-            <div class="empty-state-icon">📱</div>
+            <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
             <p>Cargando conversaciones...</p>
           </div>
         </div>
@@ -315,9 +315,9 @@
 
       <!-- CRM Panel -->
       <div class="card fade-in">
-        <h2>👤 Información del Contacto</h2>
+        <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Información del Contacto</h2>
         <div class="empty-state" id="emptyState">
-          <div class="empty-state-icon">👉</div>
+          <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
           <p>Selecciona un contacto para editar su información</p>
         </div>
         <form class="crm-form" id="crmForm" onsubmit="saveContact(event)">
@@ -359,6 +359,7 @@
     </div>
   </div>
 
+  <script src="toast.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
@@ -454,7 +455,7 @@
         const data = await res.json();
 
         if (!data || !Array.isArray(data)) {
-          document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Sin conversaciones aún</p></div>';
+          document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><p>Sin conversaciones aún</p></div>';
           return;
         }
 
@@ -464,7 +465,7 @@
         applyContactFilter();
       } catch (error) {
         console.error('Error cargando conversaciones:', error);
-        document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon">⚠️</div><p>Error al cargar conversaciones</p></div>';
+        document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg></div><p>Error al cargar conversaciones</p></div>';
       }
     }
 
@@ -520,7 +521,7 @@
     function renderConversations(list) {
       const container = document.getElementById('conversationsList');
       if (list.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Sin contactos en este grupo</p></div>';
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><p>Sin contactos en este grupo</p></div>';
         return;
       }
       const typeClass = { lead:'type-lead', cliente:'type-cliente', otro:'type-otro' };
@@ -579,9 +580,9 @@
         updateCounts();
         applyContactFilter();
 
-        alert('Contacto guardado exitosamente');
+        showToast('Contacto guardado exitosamente', 'success');
       } catch (error) {
-        alert('Error: ' + error.message);
+        showToast('Error: ' + error.message, 'error');
       }
     }
 
