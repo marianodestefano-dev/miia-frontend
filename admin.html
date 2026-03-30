@@ -9,7 +9,7 @@
   <style>
     :root {
       --primary: #3B5BFF; --primary-dark: #2A45DB; --secondary: #FF1A8C;
-      --accent: #34D399; --accent-dark: #2BC48A; --danger: #ef4444; --warning: #f59e0b;
+      --accent: #A78BFA; --accent-dark: #9061F9; --danger: #ef4444; --warning: #f59e0b;
       --bg-deep: #0F0F0F; --bg-light: #0F0F0F; --bg-panel: #141414; --bg-white: #0F0F0F;
       --bg-surface: #1A1A1A; --bg-card: #141414;
       --text-dark: #F1F5F9; --text-body: #94A3B8; --text-muted: #64748B;
@@ -132,7 +132,7 @@
 <body>
 
 <nav id="navbar">
-  <span class="nav-logo">MIIA Admin</span>
+  <span class="nav-logo" style="display:flex;align-items:center;gap:10px;"><svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px;height:36px;flex-shrink:0"><defs><linearGradient id="miia_gA" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#miia_gA)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>MIIA Admin</span>
   <div class="nav-right">
     <span class="nav-email" id="adminEmail">—</span>
     <button class="nav-btn logout" onclick="handleLogout()">Cerrar Sesion</button>
