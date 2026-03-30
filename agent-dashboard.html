@@ -4,39 +4,42 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIIA - Mi Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
       --primary: #5B8DF8;
-      --primary-dark: #4070e0;
+      --primary-dark: #4A7AE5;
       --secondary: #7C5CF6;
-      --accent: #A78BFA;
-      --bg-light: #060C1A;
-      --bg-white: #060C1A;
-      --bg-card: #0D1628;
-      --bg-surface: #111D35;
-      --text-dark: #E8EDF8;
-      --text-body: #B0BEDD;
-      --text-muted: #8B9CC8;
+      --accent: #34D399;
+      --bg-light: #030508;
+      --bg-white: #030508;
+      --bg-card: #0A0F1A;
+      --bg-surface: #0F1520;
+      --text-dark: #F1F5F9;
+      --text-body: #94A3B8;
+      --text-muted: #64748B;
       --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
       --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
       --shadow-md: 0 8px 30px rgba(91,141,248,0.12);
       --shadow-lg: 0 20px 60px rgba(91,141,248,0.15);
+      --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
-      --radius-full: 50px;
+      --radius-full: 100px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       color: var(--text-body);
       background: var(--bg-light);
       min-height: 100vh;
       line-height: 1.6;
-      padding-top: 80px;
+      padding-top: 64px;
+      -webkit-font-smoothing: antialiased;
     }
 
     /* ═══ ANIMATIONS ═══ */
@@ -51,8 +54,8 @@
     #navbar {
       position: fixed;
       top: 0; left: 0; right: 0;
-      height: 80px;
-      background: rgba(6,12,26,0.92);
+      height: 64px;
+      background: rgba(3,5,8,0.8);
       backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(91,141,248,0.1);
       display: flex;
@@ -63,7 +66,7 @@
       transition: all 0.3s ease;
     }
 
-    #navbar.scrolled { height: 70px; box-shadow: var(--shadow-sm); }
+    #navbar.scrolled { height: 60px; box-shadow: var(--shadow-sm); }
 
     .nav-logo {
       font-size: 1.6rem;
@@ -254,7 +257,7 @@
     }
 
     .cta-btn:hover {
-      border-color: rgba(0,229,255, 0.25);
+      border-color: rgba(91,141,248,0.25);
       transform: translateY(-4px);
       box-shadow: var(--shadow-md);
     }
@@ -319,8 +322,8 @@
     .consent-dna-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; }
 
     @media (max-width: 480px) {
-      body { padding-top: 70px; }
-      #navbar { height: 70px; padding: 0 16px; }
+      body { padding-top: 64px; }
+      #navbar { height: 64px; padding: 0 16px; }
       .nav-logo { font-size: 1.3rem; }
       .nav-email { display: none; }
       .stats { grid-template-columns: 1fr; }

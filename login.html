@@ -3,241 +3,189 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIIA - Iniciar Sesión</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <title>MIIA - Iniciar Sesion</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    /* ═══════════════════════════════════════
-       MIIA SaaS Premium — Dark Neon Design
-       ═══════════════════════════════════════ */
     :root {
       --primary: #5B8DF8;
-      --primary-dark: #4070e0;
       --secondary: #7C5CF6;
-      --accent: #A78BFA;
-      --accent-dark: #8B6FF0;
-      --bg-light: #060C1A;
-      --bg-white: #060C1A;
-      --bg-card: #0D1628;
-      --bg-surface: #111D35;
-      --text-dark: #E8EDF8;
-      --text-body: #B0BEDD;
-      --text-muted: #8B9CC8;
+      --green: #34D399;
+      --bg-deep: #030508;
+      --bg-card: #0A0F1A;
+      --bg-surface: #0F1520;
+      --bg-elevated: #141C2B;
+      --border: rgba(91,141,248,0.08);
+      --border-hover: rgba(91,141,248,0.2);
+      --text-white: #F1F5F9;
+      --text-primary: #E2E8F0;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
       --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
-      --gradient-accent: linear-gradient(135deg, #7C5CF6 0%, #A78BFA 100%);
-      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
-      --shadow-md: 0 8px 30px rgba(91,141,248,0.12);
-      --shadow-lg: 0 20px 60px rgba(91,141,248,0.15);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.4);
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-      --radius-full: 50px;
+      --radius: 12px;
+      --radius-full: 100px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--text-body);
-      background: #060C1A;
-      background-image:
-        radial-gradient(circle at 20% 20%, rgba(191,0,255,0.06) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(0,229,255,0.06) 0%, transparent 50%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text-secondary);
+      background: var(--bg-deep);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 20px;
       line-height: 1.6;
-      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
       position: relative;
     }
 
-    /* Decorative glow circles */
     body::before {
       content: '';
       position: fixed;
-      top: -30%;
-      right: -10%;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
       width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: rgba(0, 229, 255, 0.03);
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(91,141,248,0.06) 0%, transparent 70%);
       pointer-events: none;
-      z-index: 0;
     }
 
-    body::after {
-      content: '';
-      position: fixed;
-      bottom: -20%;
-      left: -10%;
-      width: 500px;
-      height: 500px;
-      border-radius: 50%;
-      background: rgba(191, 0, 255, 0.03);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ═══ ANIMATIONS ═══ */
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
+      from { opacity: 0; transform: translateY(16px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ═══ LOGIN CONTAINER ═══ */
     .login-container {
-      background: rgba(9,9,15,0.92);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(0,229,255,0.15);
-      padding: 60px 50px;
-      border-radius: var(--radius-lg);
-      box-shadow: 0 0 60px rgba(0,229,255,0.08), 0 20px 60px rgba(0,0,0,0.6);
-      max-width: 460px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      padding: 48px 40px;
+      border-radius: 16px;
+      max-width: 420px;
       width: 100%;
       position: relative;
       z-index: 1;
-      animation: fadeIn 0.8s ease forwards;
+      animation: fadeIn 0.5s ease forwards;
     }
 
     .logo {
       text-align: center;
-      font-size: 2.4rem;
+      margin-bottom: 32px;
+    }
+    .logo a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 1.25rem;
       font-weight: 800;
-      background: var(--gradient-main);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 20px;
+      color: var(--text-white);
       letter-spacing: -0.5px;
     }
+    .logo svg { height: 24px; width: 24px; }
 
     h2 {
       text-align: center;
-      color: var(--text-dark);
+      color: var(--text-white);
+      font-size: 1.5rem;
+      font-weight: 700;
       margin-bottom: 8px;
-      font-size: 2rem;
-      font-weight: 800;
     }
 
     .subtitle {
       text-align: center;
       color: var(--text-muted);
-      font-size: 0.95rem;
-      margin-bottom: 36px;
-      line-height: 1.6;
+      font-size: 0.875rem;
+      margin-bottom: 32px;
     }
 
     .tabs {
       display: flex;
-      margin-bottom: 32px;
-      border-bottom: 2px solid rgba(0,229,255,0.12);
-      gap: 0;
+      margin-bottom: 28px;
+      border-bottom: 1px solid var(--border);
     }
 
     .tab {
       flex: 1;
-      padding: 16px;
+      padding: 12px;
       text-align: center;
       cursor: pointer;
       color: var(--text-muted);
       font-weight: 600;
-      font-size: 0.95rem;
-      border-bottom: 3px solid transparent;
-      transition: all 0.3s ease;
-      position: relative;
+      font-size: 0.875rem;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      background: none;
+      border-top: none;
+      border-left: none;
+      border-right: none;
+      font-family: inherit;
     }
 
-    .tab:hover {
-      color: var(--primary);
-    }
-
+    .tab:hover { color: var(--text-secondary); }
     .tab.active {
-      color: var(--primary);
+      color: var(--text-white);
       border-bottom-color: var(--primary);
     }
 
-    .form-group {
-      margin-bottom: 24px;
-    }
+    .form-group { margin-bottom: 20px; }
 
     label {
       display: block;
-      margin-bottom: 10px;
-      color: var(--text-dark);
+      margin-bottom: 6px;
+      color: var(--text-secondary);
       font-weight: 500;
-      font-size: 0.95rem;
+      font-size: 0.8rem;
     }
 
     input, select {
       width: 100%;
-      padding: 13px 16px;
-      border: 1px solid rgba(0,229,255,0.18);
-      border-radius: var(--radius-sm);
-      font-size: 1rem;
-      transition: all 0.3s ease;
-      background: rgba(255,255,255,0.04);
-      color: var(--text-dark);
+      padding: 11px 14px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
+      transition: border-color 0.2s;
+      background: var(--bg-surface);
+      color: var(--text-white);
       font-family: inherit;
     }
 
     select option {
-      background: #0a0a12;
-      color: #f8fafc;
+      background: var(--bg-card);
+      color: var(--text-white);
     }
 
-    input::placeholder {
-      color: var(--text-muted);
-    }
+    input::placeholder { color: var(--text-muted); }
 
     input:focus, select:focus {
       outline: none;
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(0,229,255,0.1);
     }
 
-    .btn {
+    .btn-submit {
       width: 100%;
-      padding: 14px;
-      background: var(--gradient-main);
-      color: white;
+      padding: 12px;
+      background: var(--text-white);
+      color: var(--bg-deep);
       border: none;
       border-radius: var(--radius-full);
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.3s ease;
-      margin-top: 8px;
+      transition: opacity 0.2s;
+      margin-top: 4px;
+      font-family: inherit;
     }
 
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 30px rgba(0,229,255,0.25);
-    }
-
-    .btn:active {
-      transform: translateY(0);
-    }
+    .btn-submit:hover { opacity: 0.9; }
 
     .divider {
       text-align: center;
-      margin: 32px 0;
+      margin: 28px 0;
       color: var(--text-muted);
       position: relative;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
 
     .divider::before,
@@ -247,117 +195,172 @@
       top: 50%;
       width: 35%;
       height: 1px;
-      background: rgba(0,229,255,0.12);
+      background: var(--border);
     }
-
-    .divider::before {
-      left: 0;
-    }
-
-    .divider::after {
-      right: 0;
-    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
 
     .google-btn {
       width: 100%;
-      padding: 14px;
-      background: var(--bg-white);
-      color: var(--text-dark);
-      border: 2px solid #f0f0f0;
-      border-radius: var(--radius-md);
-      font-size: 1rem;
+      padding: 12px;
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: all 0.3s ease;
+      transition: border-color 0.2s;
+      font-family: inherit;
     }
 
-    .google-btn:hover {
-      border-color: var(--primary);
-      box-shadow: var(--shadow-md);
-      transform: translateY(-2px);
-    }
+    .google-btn:hover { border-color: var(--border-hover); }
 
     .message {
-      padding: 14px 16px;
-      border-radius: var(--radius-md);
-      margin-bottom: 20px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      margin-bottom: 16px;
       display: none;
-      animation: slideDown 0.3s ease;
-    }
-
-    @keyframes slideDown {
-      from {
-        opacity: 0;
-        transform: translateY(-10px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      font-size: 0.85rem;
+      animation: fadeIn 0.3s ease;
     }
 
     .error {
-      background: #fee;
-      color: #c33;
-      border-left: 4px solid #c33;
+      background: rgba(239,68,68,0.1);
+      color: #F87171;
+      border: 1px solid rgba(239,68,68,0.15);
     }
 
     .success {
-      background: #efe;
-      color: #3c3;
-      border-left: 4px solid #3c3;
+      background: rgba(52,211,153,0.1);
+      color: var(--green);
+      border: 1px solid rgba(52,211,153,0.15);
     }
 
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
 
-    .back-link {
+    .terms-text {
       text-align: center;
-      margin-top: 28px;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 16px;
+      line-height: 1.5;
     }
-
-    .back-link a {
+    .terms-text a {
       color: var(--primary);
       text-decoration: none;
       font-weight: 500;
-      transition: all 0.3s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
     }
+    .terms-text a:hover { text-decoration: underline; }
 
-    .back-link a:hover {
-      gap: 10px;
+    .back-link {
+      text-align: center;
+      margin-top: 24px;
     }
+    .back-link a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .back-link a:hover { color: var(--text-white); }
+
+    /* Verify screen */
+    .verify-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--bg-deep);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+    .verify-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 48px 36px;
+      max-width: 420px;
+      width: 100%;
+      text-align: center;
+    }
+    .verify-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: rgba(91,141,248,0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .verify-icon svg { width: 24px; height: 24px; stroke: var(--primary); }
+    .verify-card h2 {
+      font-size: 1.3rem;
+      color: var(--text-white);
+      margin-bottom: 8px;
+    }
+    .verify-card p {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      margin-bottom: 8px;
+    }
+    .verify-email {
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 24px;
+    }
+    .verify-card .btn-verify {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: var(--radius-full);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      margin-bottom: 10px;
+      transition: opacity 0.2s;
+    }
+    .btn-verify-primary {
+      background: var(--text-white);
+      color: var(--bg-deep);
+    }
+    .btn-verify-ghost {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px solid var(--border) !important;
+    }
+    .btn-verify-ghost:hover { border-color: var(--border-hover) !important; }
 
     @media (max-width: 600px) {
-      .login-container {
-        padding: 40px 25px;
-      }
-
-      h2 {
-        font-size: 1.5rem;
-      }
-
-      .subtitle {
-        font-size: 0.9rem;
-      }
+      .login-container { padding: 36px 24px; }
+      h2 { font-size: 1.3rem; }
     }
   </style>
 
-  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <div class="login-container fade-in">
-    <div class="logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:32px;width:auto;vertical-align:middle;"><defs><linearGradient id="llg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8DF8"/><stop offset="100%" stop-color="#7C5CF6"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#llg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,Montserrat,sans-serif" font-weight="800" font-size="17" fill="url(#llg)">MIIA</text></svg></div>
+  <div class="login-container">
+    <div class="logo">
+      <a href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="18" height="18" rx="4" fill="url(#lg)"/>
+          <defs><linearGradient id="lg" x1="3" y1="3" x2="21" y2="21"><stop stop-color="#5B8DF8"/><stop offset="1" stop-color="#7C5CF6"/></linearGradient></defs>
+          <path d="M8 12l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        MIIA
+      </a>
+    </div>
     <h2>Bienvenido</h2>
     <p class="subtitle">Tu asistente IA que vende por WhatsApp 24/7</p>
 
@@ -365,7 +368,7 @@
     <div class="message success" id="successMessage"></div>
 
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('login')">Iniciar Sesión</div>
+      <div class="tab active" onclick="switchTab('login')">Iniciar Sesion</div>
       <div class="tab" onclick="switchTab('register')">Registrarse</div>
     </div>
 
@@ -376,10 +379,10 @@
         <input type="email" id="loginEmail" required placeholder="tu@email.com">
       </div>
       <div class="form-group">
-        <label>Contraseña</label>
+        <label>Contrasena</label>
         <input type="password" id="loginPassword" required placeholder="••••••••">
       </div>
-      <button type="submit" class="btn">Iniciar Sesión</button>
+      <button type="submit" class="btn-submit">Iniciar Sesion</button>
     </form>
 
     <!-- Register Form -->
@@ -393,13 +396,13 @@
         <input type="email" id="registerEmail" required placeholder="tu@email.com">
       </div>
       <div class="form-group">
-        <label>WhatsApp (con código país)</label>
+        <label>WhatsApp (con codigo pais)</label>
         <input type="tel" id="registerWhatsapp" required placeholder="+57 300 123 4567">
       </div>
       <div class="form-group">
         <label>Plan</label>
         <select id="registerPlan" required>
-          <option value="trial" selected>Trial gratuito — 7 días</option>
+          <option value="trial" selected>Trial gratuito — 7 dias</option>
           <option value="monthly">Mensual — $12 USD/mes</option>
           <option value="quarterly">Trimestral — $30 USD</option>
           <option value="semestral">Semestral — $55 USD</option>
@@ -407,16 +410,16 @@
         </select>
       </div>
       <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" id="registerPassword" required placeholder="Mínimo 6 caracteres">
+        <label>Contrasena</label>
+        <input type="password" id="registerPassword" required placeholder="Minimo 6 caracteres">
       </div>
-      <button type="submit" class="btn">Crear Cuenta</button>
+      <button type="submit" class="btn-submit">Crear Cuenta</button>
     </form>
 
-    <div class="divider">O continúa con</div>
+    <div class="divider">O continua con</div>
 
     <button class="google-btn" onclick="handleGoogleLogin()">
-      <svg width="20" height="20" viewBox="0 0 20 20">
+      <svg width="18" height="18" viewBox="0 0 20 20">
         <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
         <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
         <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
@@ -425,8 +428,8 @@
       Google
     </button>
 
-    <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin-top: 16px; line-height: 1.5;">
-      Al registrarte aceptas nuestros <a href="terms.html" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">Términos y Condiciones</a> y <a href="privacy.html" target="_blank" style="color: var(--primary); text-decoration: none; font-weight: 600;">Política de Privacidad</a>.
+    <p class="terms-text">
+      Al registrarte aceptas nuestros <a href="terms.html" target="_blank">Terminos y Condiciones</a> y <a href="privacy.html" target="_blank">Politica de Privacidad</a>.
     </p>
 
     <div class="back-link">
@@ -434,22 +437,23 @@
     </div>
   </div>
 
-  <!-- Pantalla de verificación de email -->
-  <div id="verifyScreen" style="display:none; position:fixed; inset:0; background:var(--gradient-main); align-items:center; justify-content:center; padding:20px; z-index:9999;">
-    <div style="background:white; border-radius:24px; padding:50px 40px; max-width:440px; width:100%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
-      <div style="font-size:3.5rem; margin-bottom:16px;">📧</div>
-      <h2 style="font-size:1.6rem; font-weight:800; color:#1a1a2e; margin-bottom:12px;">Verifica tu email</h2>
-      <p style="color:#4a4a6a; margin-bottom:8px;">Te enviamos un link de activación a:</p>
-      <p id="verifyEmail" style="font-weight:700; color:#667eea; margin-bottom:24px;"></p>
-      <p style="color:#4a4a6a; font-size:0.9rem; margin-bottom:32px;">Haz clic en el enlace del email para activar tu cuenta. Revisa también la carpeta de spam.</p>
-      <button onclick="checkVerified()" style="width:100%; padding:14px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; margin-bottom:12px;">✅ Ya verifiqué mi email</button>
-      <button onclick="resendVerification()" style="width:100%; padding:14px; background:transparent; color:#667eea; border:2px solid #667eea; border-radius:12px; font-size:0.9rem; font-weight:600; cursor:pointer; margin-bottom:12px;">🔄 Reenviar email</button>
-      <div id="verifyMsg" style="font-size:0.85rem; color:#4a4a6a; margin-top:8px;"></div>
+  <!-- Verify screen -->
+  <div id="verifyScreen" class="verify-overlay">
+    <div class="verify-card">
+      <div class="verify-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
+      </div>
+      <h2>Verifica tu email</h2>
+      <p>Te enviamos un link de activacion a:</p>
+      <p id="verifyEmail" class="verify-email"></p>
+      <p style="margin-bottom:28px;">Haz clic en el enlace del email para activar tu cuenta. Revisa tambien la carpeta de spam.</p>
+      <button onclick="checkVerified()" class="btn-verify btn-verify-primary">Ya verifique mi email</button>
+      <button onclick="resendVerification()" class="btn-verify btn-verify-ghost">Reenviar email</button>
+      <div id="verifyMsg" style="font-size:0.8rem; color:var(--text-secondary); margin-top:12px;"></div>
     </div>
   </div>
 
   <script>
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
       authDomain: "miia-app-8cbd0.firebaseapp.com",
@@ -463,22 +467,9 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // Intersection Observer
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => entry.target.classList.add('visible'), i * 100);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-
     function switchTab(tab) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       event.target.classList.add('active');
-
       if (tab === 'login') {
         document.getElementById('loginForm').classList.remove('hidden');
         document.getElementById('registerForm').classList.add('hidden');
@@ -492,36 +483,17 @@
       event.preventDefault();
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
-
-      if (!email || !password) {
-        showError('Por favor completa todos los campos');
-        return;
-      }
-
-      showSuccess('¡Bienvenido! Redirigiendo al dashboard...');
-
+      if (!email || !password) { showError('Por favor completa todos los campos'); return; }
+      showSuccess('Bienvenido! Redirigiendo...');
       try {
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
-
-        if (!user.emailVerified) {
-          showVerifyScreen(user);
-          return;
-        }
-
-        localStorage.setItem('miia_user', JSON.stringify({
-          uid: user.uid,
-          email: user.email,
-          logged_in: true,
-          login_time: new Date().toISOString()
-        }));
-
+        if (!user.emailVerified) { showVerifyScreen(user); return; }
+        localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, email: user.email, logged_in: true, login_time: new Date().toISOString() }));
         setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
       } catch (error) {
-        if (error.code === 'auth/account-exists-with-different-credential' ||
-            error.code === 'auth/invalid-login-credentials' ||
-            error.code === 'auth/wrong-password') {
-          showError('Email o contraseña incorrectos. Si creaste tu cuenta con Google, usá el botón "Google" para ingresar.');
+        if (error.code === 'auth/account-exists-with-different-credential' || error.code === 'auth/invalid-login-credentials' || error.code === 'auth/wrong-password') {
+          showError('Email o contrasena incorrectos. Si creaste tu cuenta con Google, usa el boton "Google" para ingresar.');
         } else {
           showError('Error: ' + error.message);
         }
@@ -535,78 +507,31 @@
       const whatsapp = document.getElementById('registerWhatsapp').value;
       const plan = document.getElementById('registerPlan').value;
       const password = document.getElementById('registerPassword').value;
-
-      if (password.length < 6) {
-        showError('La contraseña debe tener al menos 6 caracteres');
-        return;
-      }
-
-      if (!whatsapp.startsWith('+')) {
-        showError('El WhatsApp debe incluir código país (ejemplo: +57)');
-        return;
-      }
-
+      if (password.length < 6) { showError('La contrasena debe tener al menos 6 caracteres'); return; }
+      if (!whatsapp.startsWith('+')) { showError('El WhatsApp debe incluir codigo pais (ejemplo: +57)'); return; }
       try {
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
-
-        // Check for pending agent invite
-        const inviteSnap = await db.collection('users')
-          .where('email', '==', email)
-          .where('invite_pending', '==', true)
-          .limit(1)
-          .get();
-
+        const inviteSnap = await db.collection('users').where('email', '==', email).where('invite_pending', '==', true).limit(1).get();
         const now = new Date();
         const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-
         if (!inviteSnap.empty) {
-          // Link agent invite
           const inviteDoc = inviteSnap.docs[0];
           const inviteData = inviteDoc.data();
-          await db.collection('users').doc(user.uid).set({
-            ...inviteData,
-            uid: user.uid,
-            name: name,
-            whatsapp: whatsapp,
-            invite_pending: false,
-            last_login: now
-          });
+          await db.collection('users').doc(user.uid).set({ ...inviteData, uid: user.uid, name: name, whatsapp: whatsapp, invite_pending: false, last_login: now });
           await inviteDoc.ref.delete();
         } else {
-          // New client — @healthatom.com = equipo Medilink (owner_member)
           const isHealthAtom = email.endsWith('@healthatom.com');
           await db.collection('users').doc(user.uid).set({
-            uid: user.uid,
-            name: name,
-            email: email,
-            photo: '',
-            role: isHealthAtom ? 'owner_member' : 'client',
-            plan: isHealthAtom ? 'owner' : 'trial',
-            plan_start_date: now,
-            plan_end_date: isHealthAtom ? null : trialEnd,
-            payment_status: isHealthAtom ? 'active' : 'trial',
-            approved: isHealthAtom ? true : false,
-            gemini_api_key: '',
-            agents_limit: isHealthAtom ? 10 : 1,
-            discount_percent: 0,
-            parent_client_uid: '',
-            whatsapp: whatsapp,
-            registered_at: now,
-            last_login: now
+            uid: user.uid, name: name, email: email, photo: '', role: isHealthAtom ? 'owner_member' : 'client',
+            plan: isHealthAtom ? 'owner' : 'trial', plan_start_date: now, plan_end_date: isHealthAtom ? null : trialEnd,
+            payment_status: isHealthAtom ? 'active' : 'trial', approved: isHealthAtom ? true : false,
+            gemini_api_key: '', agents_limit: isHealthAtom ? 10 : 1, discount_percent: 0, parent_client_uid: '',
+            whatsapp: whatsapp, registered_at: now, last_login: now
           });
         }
-
-        // Enviar email de verificación
         await user.sendEmailVerification();
-
-        localStorage.setItem('miia_user', JSON.stringify({
-          uid: user.uid,
-          name: name,
-          email: email,
-          logged_in: true
-        }));
-
+        localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, name: name, email: email, logged_in: true }));
         showVerifyScreen(user);
       } catch (error) {
         showError('Error: ' + error.message);
@@ -618,100 +543,55 @@
       try {
         const result = await auth.signInWithPopup(provider);
         const user = result.user;
-
-        // Check if user doc already exists
         const existingDoc = await db.collection('users').doc(user.uid).get();
-
         if (existingDoc.exists) {
-          // Returning user — just update last_login
           await db.collection('users').doc(user.uid).update({ last_login: new Date() });
         } else {
-          // New user — check if there's a pending agent invite for this email
-          const inviteSnap = await db.collection('users')
-            .where('email', '==', user.email)
-            .where('invite_pending', '==', true)
-            .limit(1)
-            .get();
-
+          const inviteSnap = await db.collection('users').where('email', '==', user.email).where('invite_pending', '==', true).limit(1).get();
           if (!inviteSnap.empty) {
-            // Link invite: copy data to real uid doc, delete temp doc
             const inviteDoc = inviteSnap.docs[0];
             const inviteData = inviteDoc.data();
-            await db.collection('users').doc(user.uid).set({
-              ...inviteData,
-              uid: user.uid,
-              name: user.displayName || inviteData.name,
-              photo: user.photoURL || '',
-              invite_pending: false,
-              last_login: new Date()
-            });
+            await db.collection('users').doc(user.uid).set({ ...inviteData, uid: user.uid, name: user.displayName || inviteData.name, photo: user.photoURL || '', invite_pending: false, last_login: new Date() });
             await inviteDoc.ref.delete();
           } else {
-            // Brand new client — @healthatom.com = equipo Medilink (owner_member)
             const now = new Date();
             const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
             const isHealthAtomG = (user.email || '').endsWith('@healthatom.com');
             await db.collection('users').doc(user.uid).set({
-              uid: user.uid,
-              name: user.displayName,
-              email: user.email,
-              photo: user.photoURL,
-              role: isHealthAtomG ? 'owner_member' : 'client',
-              plan: isHealthAtomG ? 'owner' : 'trial',
-              plan_start_date: now,
-              plan_end_date: isHealthAtomG ? null : trialEnd,
-              payment_status: isHealthAtomG ? 'active' : 'trial',
-              approved: isHealthAtomG ? true : false,
-              gemini_api_key: '',
-              agents_limit: isHealthAtomG ? 10 : 1,
-              discount_percent: 0,
-              parent_client_uid: '',
-              whatsapp: '',
-              registered_at: now,
-              last_login: now
+              uid: user.uid, name: user.displayName, email: user.email, photo: user.photoURL,
+              role: isHealthAtomG ? 'owner_member' : 'client', plan: isHealthAtomG ? 'owner' : 'trial',
+              plan_start_date: now, plan_end_date: isHealthAtomG ? null : trialEnd,
+              payment_status: isHealthAtomG ? 'active' : 'trial', approved: isHealthAtomG ? true : false,
+              gemini_api_key: '', agents_limit: isHealthAtomG ? 10 : 1, discount_percent: 0, parent_client_uid: '',
+              whatsapp: '', registered_at: now, last_login: now
             });
           }
         }
-
-        // localStorage for backward compat
-        localStorage.setItem('miia_user', JSON.stringify({
-          uid: user.uid,
-          name: user.displayName,
-          email: user.email,
-          logged_in: true
-        }));
-
-        showSuccess('¡Bienvenido ' + user.displayName + '! Redirigiendo...');
+        localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, name: user.displayName, email: user.email, logged_in: true }));
+        showSuccess('Bienvenido ' + user.displayName + '! Redirigiendo...');
         setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
       } catch (error) {
-        showError('Error al iniciar sesión con Google: ' + error.message);
+        showError('Error al iniciar sesion con Google: ' + error.message);
       }
     }
 
-    function toSlug(email) {
-      return email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
-    }
+    function toSlug(email) { return email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
 
     function showError(message) {
-      const errorDiv = document.getElementById('errorMessage');
-      const successDiv = document.getElementById('successMessage');
-
-      successDiv.style.display = 'none';
-      errorDiv.textContent = message;
-      errorDiv.style.display = 'block';
-
-      setTimeout(() => {
-        errorDiv.style.display = 'none';
-      }, 5000);
+      const e = document.getElementById('errorMessage');
+      const s = document.getElementById('successMessage');
+      s.style.display = 'none';
+      e.textContent = message;
+      e.style.display = 'block';
+      setTimeout(() => { e.style.display = 'none'; }, 5000);
     }
 
     function showSuccess(message) {
-      const errorDiv = document.getElementById('errorMessage');
-      const successDiv = document.getElementById('successMessage');
-
-      errorDiv.style.display = 'none';
-      successDiv.textContent = message;
-      successDiv.style.display = 'block';
+      const e = document.getElementById('errorMessage');
+      const s = document.getElementById('successMessage');
+      e.style.display = 'none';
+      s.textContent = message;
+      s.style.display = 'block';
     }
 
     let pendingVerifyUser = null;
@@ -719,8 +599,7 @@
     function showVerifyScreen(user) {
       pendingVerifyUser = user;
       document.getElementById('verifyEmail').textContent = user.email;
-      const vs = document.getElementById('verifyScreen');
-      vs.style.display = 'flex';
+      document.getElementById('verifyScreen').style.display = 'flex';
     }
 
     async function checkVerified() {
@@ -729,7 +608,7 @@
       if (pendingVerifyUser.emailVerified) {
         window.location.href = 'dashboard.html?u=' + toSlug(pendingVerifyUser.email);
       } else {
-        document.getElementById('verifyMsg').textContent = '⚠️ Aún no verificaste el email. Revisá tu bandeja de entrada.';
+        document.getElementById('verifyMsg').textContent = 'Aun no verificaste el email. Revisa tu bandeja de entrada.';
       }
     }
 
@@ -737,20 +616,15 @@
       if (!pendingVerifyUser) return;
       try {
         await pendingVerifyUser.sendEmailVerification();
-        document.getElementById('verifyMsg').textContent = '✅ Email reenviado. Revisá tu bandeja.';
+        document.getElementById('verifyMsg').textContent = 'Email reenviado. Revisa tu bandeja.';
       } catch (e) {
         document.getElementById('verifyMsg').textContent = 'Error al reenviar: ' + e.message;
       }
     }
 
-    // Auth state listener
     auth.onAuthStateChanged(user => {
       if (user) {
-        // Google users are always verified; email/password users need to verify
-        if (!user.emailVerified && user.providerData[0]?.providerId === 'password') {
-          showVerifyScreen(user);
-          return;
-        }
+        if (!user.emailVerified && user.providerData[0]?.providerId === 'password') { showVerifyScreen(user); return; }
         window.location.href = 'dashboard.html?u=' + toSlug(user.email);
       }
     });

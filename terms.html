@@ -3,346 +3,349 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIIA - Términos y Condiciones</title>
+  <title>MIIA - Terminos y Condiciones</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #667eea;
-      --primary-dark: #5568d3;
-      --secondary: #764ba2;
-      --accent: #25d366;
-      --bg-light: #f5f7fa;
-      --bg-white: #ffffff;
-      --text-dark: #1a1a2e;
-      --text-body: #4a4a6a;
-      --text-muted: #8888a4;
-      --gradient-main: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      --shadow-sm: 0 2px 8px rgba(102, 126, 234, 0.08);
-      --shadow-md: 0 8px 30px rgba(102, 126, 234, 0.12);
-      --shadow-lg: 0 20px 60px rgba(102, 126, 234, 0.18);
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-      --radius-full: 50px;
+      --primary: #5B8DF8;
+      --secondary: #7C5CF6;
+      --bg-deep: #030508;
+      --bg-card: #0A0F1A;
+      --bg-surface: #0F1520;
+      --border: rgba(91,141,248,0.08);
+      --border-hover: rgba(91,141,248,0.2);
+      --text-white: #F1F5F9;
+      --text-primary: #E2E8F0;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
+      --radius: 12px;
     }
-
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      color: var(--text-body);
-      background: var(--bg-light);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-secondary);
       min-height: 100vh;
-      line-height: 1.8;
-      padding-top: 80px;
+      line-height: 1.7;
+      padding-top: 64px;
+      -webkit-font-smoothing: antialiased;
     }
-
-    /* ═══ NAVBAR ═══ */
-    #navbar {
+    .navbar {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
-      background: rgba(255,255,255,0.85);
+      background: rgba(3,5,8,0.8);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(102,126,234,0.08);
-      padding: 0 40px;
-      height: 70px;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all 0.3s ease;
-    }
-    #navbar.scrolled {
-      background: rgba(255,255,255,0.95);
-      box-shadow: var(--shadow-sm);
     }
     .nav-logo {
-      font-size: 1.5rem;
-      font-weight: 800;
-      background: var(--gradient-main);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+      display: flex;
+      align-items: center;
+      gap: 8px;
       text-decoration: none;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.5px;
     }
+    .nav-logo svg { height: 24px; width: 24px; }
     .nav-back {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--text-white); }
+    .legal-container {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 56px 24px 100px;
+    }
+    .legal-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .legal-badge {
+      display: inline-block;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 14px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .legal-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .legal-header p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .legal-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      margin-bottom: 16px;
+    }
+    .legal-section h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 14px;
+    }
+    .legal-section h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 20px 0 8px;
+    }
+    .legal-section p, .legal-section li {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.8;
+      margin-bottom: 8px;
+    }
+    .legal-section ul, .legal-section ol {
+      padding-left: 20px;
+      margin-top: 6px;
+    }
+    .legal-section ul li { margin-bottom: 4px; }
+    .highlight-box {
+      background: rgba(91,141,248,0.04);
+      border-left: 2px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 14px 0;
+    }
+    .highlight-box p { margin-bottom: 0; }
+    .contact-link {
       color: var(--primary);
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: opacity 0.2s;
     }
-    .nav-back:hover { opacity: 0.7; }
-
-    /* ═══ HERO ═══ */
-    .hero {
-      background: var(--gradient-main);
-      padding: 60px 40px;
+    .contact-link:hover { text-decoration: underline; }
+    .legal-footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 24px 32px;
       text-align: center;
-      color: white;
-    }
-    .hero h1 {
-      font-size: 2.2rem;
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-    .hero p {
-      font-size: 1.05rem;
-      opacity: 0.85;
-    }
-
-    /* ═══ CONTENT ═══ */
-    .container {
-      max-width: 820px;
-      margin: 0 auto;
-      padding: 40px 24px 80px;
-    }
-
-    .legal-card {
-      background: var(--bg-white);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-md);
-      padding: 48px;
-      margin-bottom: 32px;
-    }
-
-    .legal-card h2 {
-      color: var(--text-dark);
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 20px;
-      padding-bottom: 12px;
-      border-bottom: 2px solid rgba(102,126,234,0.1);
-    }
-
-    .legal-card h3 {
-      color: var(--primary);
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin: 24px 0 10px;
-    }
-
-    .legal-card p, .legal-card li {
-      color: var(--text-body);
-      font-size: 0.95rem;
-      line-height: 1.8;
-      margin-bottom: 12px;
-    }
-
-    .legal-card ul, .legal-card ol {
-      padding-left: 24px;
-      margin-bottom: 16px;
-    }
-
-    .legal-card li { margin-bottom: 6px; }
-
-    .highlight-box {
-      background: linear-gradient(135deg, rgba(102,126,234,0.06), rgba(118,75,162,0.06));
-      border-left: 4px solid var(--primary);
-      padding: 16px 20px;
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      margin: 16px 0;
-    }
-
-    .highlight-box p { margin-bottom: 0; }
-
-    .updated-date {
-      text-align: center;
+      font-size: 0.8rem;
       color: var(--text-muted);
-      font-size: 0.85rem;
-      margin-top: 40px;
     }
-
+    .legal-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin: 0 8px;
+      transition: color 0.2s;
+    }
+    .legal-footer a:hover { color: var(--text-white); }
     @media (max-width: 768px) {
-      .hero { padding: 40px 20px; }
-      .hero h1 { font-size: 1.6rem; }
-      .legal-card { padding: 28px 20px; }
-      #navbar { padding: 0 20px; }
+      .navbar { padding: 0 16px; }
+      .legal-container { padding: 40px 16px 80px; }
+      .legal-header h1 { font-size: 1.6rem; }
+      .legal-section { padding: 24px 20px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Navbar -->
-  <nav id="navbar">
-    <a href="index.html" class="nav-logo">MIIA</a>
-    <a href="index.html" class="nav-back">&#8592; Volver</a>
-  </nav>
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="4" fill="url(#tg)"/><defs><linearGradient id="tg" x1="3" y1="3" x2="21" y2="21"><stop stop-color="#5B8DF8"/><stop offset="1" stop-color="#7C5CF6"/></linearGradient></defs><path d="M8 12l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    MIIA
+  </a>
+  <a href="index.html" class="nav-back">← Volver</a>
+</nav>
 
-  <!-- Hero -->
-  <div class="hero">
-    <h1>Términos y Condiciones</h1>
-    <p>Condiciones de uso del servicio MIIA y Política de Privacidad</p>
+<div class="legal-container">
+
+  <div class="legal-header">
+    <div class="legal-badge">Legal</div>
+    <h1>Terminos y Condiciones</h1>
+    <p>Condiciones de uso del servicio MIIA y Politica de Privacidad</p>
+    <p style="margin-top:4px;">Ultima actualizacion: 29 de marzo de 2026</p>
   </div>
 
-  <!-- Content -->
-  <div class="container">
+  <!-- T&C -->
+  <div class="legal-section">
+    <h2>1. Terminos y Condiciones de Uso</h2>
 
-    <!-- T&C -->
-    <div class="legal-card">
-      <h2>1. Términos y Condiciones de Uso</h2>
+    <h3>1.1 Descripcion del Servicio</h3>
+    <p>MIIA es una plataforma de asistente de ventas con inteligencia artificial que opera a traves de WhatsApp. El servicio utiliza modelos de IA (Google Gemini) para generar respuestas automatizadas en conversaciones comerciales en nombre del usuario contratante ("Cliente").</p>
 
-      <h3>1.1 Descripción del Servicio</h3>
-      <p>MIIA es una plataforma de asistente de ventas con inteligencia artificial que opera a través de WhatsApp. El servicio utiliza modelos de IA (Google Gemini) para generar respuestas automatizadas en conversaciones comerciales en nombre del usuario contratante ("Cliente").</p>
+    <h3>1.2 Aceptacion de Terminos</h3>
+    <p>Al registrarse y utilizar MIIA, el Cliente acepta estos Terminos y Condiciones en su totalidad. Si no esta de acuerdo con alguna de las condiciones, debe abstenerse de utilizar el servicio.</p>
 
-      <h3>1.2 Aceptación de Términos</h3>
-      <p>Al registrarse y utilizar MIIA, el Cliente acepta estos Términos y Condiciones en su totalidad. Si no está de acuerdo con alguna de las condiciones, debe abstenerse de utilizar el servicio.</p>
+    <h3>1.3 Registro y Cuenta</h3>
+    <ul>
+      <li>El Cliente debe proporcionar informacion veraz al registrarse.</li>
+      <li>Cada cuenta es personal e intransferible.</li>
+      <li>El Cliente es responsable de mantener la seguridad de sus credenciales de acceso.</li>
+      <li>El Cliente puede crear cuentas de agente para miembros de su equipo de ventas, bajo su responsabilidad.</li>
+    </ul>
 
-      <h3>1.3 Registro y Cuenta</h3>
-      <ul>
-        <li>El Cliente debe proporcionar información veraz al registrarse.</li>
-        <li>Cada cuenta es personal e intransferible.</li>
-        <li>El Cliente es responsable de mantener la seguridad de sus credenciales de acceso.</li>
-        <li>El Cliente puede crear cuentas de agente para miembros de su equipo de ventas, bajo su responsabilidad.</li>
-      </ul>
+    <h3>1.4 Periodo de Prueba y Planes</h3>
+    <ul>
+      <li><strong>Trial:</strong> 7 dias gratuitos con funcionalidad completa.</li>
+      <li><strong>Mensual:</strong> USD $12/mes.</li>
+      <li><strong>Trimestral:</strong> USD $30/trimestre.</li>
+      <li><strong>Semestral:</strong> USD $55/semestre.</li>
+      <li><strong>Anual:</strong> USD $75/ano.</li>
+      <li>Cada agente adicional tiene un costo de USD $3/mes.</li>
+    </ul>
+    <p>Al finalizar el periodo de prueba, el acceso a la plataforma quedara restringido hasta que se active un plan de pago.</p>
 
-      <h3>1.4 Período de Prueba y Planes</h3>
-      <ul>
-        <li><strong>Trial:</strong> 7 días gratuitos con funcionalidad completa.</li>
-        <li><strong>Mensual:</strong> USD $12/mes.</li>
-        <li><strong>Trimestral:</strong> USD $30/trimestre.</li>
-        <li><strong>Semestral:</strong> USD $55/semestre.</li>
-        <li><strong>Anual:</strong> USD $75/año.</li>
-        <li>Cada agente adicional tiene un costo de USD $3/mes.</li>
-      </ul>
-      <p>Al finalizar el período de prueba, el acceso a la plataforma quedará restringido hasta que se active un plan de pago.</p>
+    <h3>1.5 Uso Aceptable</h3>
+    <p>El Cliente se compromete a:</p>
+    <ul>
+      <li>Utilizar MIIA exclusivamente para fines comerciales legitimos.</li>
+      <li>No utilizar el servicio para enviar spam, contenido ilegal o enganoso.</li>
+      <li>Cumplir con las politicas de uso de WhatsApp y las leyes aplicables.</li>
+      <li>No intentar realizar ingenieria inversa, hackear o comprometer la seguridad del servicio.</li>
+    </ul>
 
-      <h3>1.5 Uso Aceptable</h3>
-      <p>El Cliente se compromete a:</p>
-      <ul>
-        <li>Utilizar MIIA exclusivamente para fines comerciales legítimos.</li>
-        <li>No utilizar el servicio para enviar spam, contenido ilegal o engañoso.</li>
-        <li>Cumplir con las políticas de uso de WhatsApp y las leyes aplicables.</li>
-        <li>No intentar realizar ingeniería inversa, hackear o comprometer la seguridad del servicio.</li>
-      </ul>
-
-      <h3>1.6 Limitación de Responsabilidad</h3>
-      <div class="highlight-box">
-        <p>MIIA es una herramienta de asistencia basada en inteligencia artificial. Las respuestas generadas por la IA pueden contener inexactitudes. El Cliente es el responsable final de las comunicaciones enviadas a través de su cuenta de WhatsApp y debe supervisar el comportamiento del asistente.</p>
-      </div>
-      <p>MIIA no se hace responsable por:</p>
-      <ul>
-        <li>Pérdidas comerciales derivadas de respuestas generadas por la IA.</li>
-        <li>Interrupciones del servicio por mantenimiento, actualizaciones o causas de fuerza mayor.</li>
-        <li>Bloqueos de la cuenta de WhatsApp del Cliente por violación de las políticas de WhatsApp/Meta.</li>
-      </ul>
-
-      <h3>1.7 Cancelación</h3>
-      <p>El Cliente puede cancelar su suscripción en cualquier momento. La cancelación será efectiva al final del período de facturación vigente. No se realizan reembolsos por períodos parciales.</p>
-
-      <h3>1.8 Modificaciones</h3>
-      <p>MIIA se reserva el derecho de modificar estos términos notificando a los usuarios con al menos 15 días de anticipación. El uso continuado del servicio tras la notificación constituye aceptación de los nuevos términos.</p>
+    <h3>1.6 Limitacion de Responsabilidad</h3>
+    <div class="highlight-box">
+      <p>MIIA es una herramienta de asistencia basada en inteligencia artificial. Las respuestas generadas por la IA pueden contener inexactitudes. El Cliente es el responsable final de las comunicaciones enviadas a traves de su cuenta de WhatsApp y debe supervisar el comportamiento del asistente.</p>
     </div>
+    <p>MIIA no se hace responsable por:</p>
+    <ul>
+      <li>Perdidas comerciales derivadas de respuestas generadas por la IA.</li>
+      <li>Interrupciones del servicio por mantenimiento, actualizaciones o causas de fuerza mayor.</li>
+      <li>Bloqueos de la cuenta de WhatsApp del Cliente por violacion de las politicas de WhatsApp/Meta.</li>
+    </ul>
 
-    <!-- Privacy Policy -->
-    <div class="legal-card">
-      <h2>2. Política de Privacidad</h2>
+    <h3>1.7 Cancelacion</h3>
+    <p>El Cliente puede cancelar su suscripcion en cualquier momento. La cancelacion sera efectiva al final del periodo de facturacion vigente. No se realizan reembolsos por periodos parciales.</p>
 
-      <h3>2.1 Datos que Recopilamos</h3>
-      <p>Al utilizar MIIA, recopilamos y procesamos los siguientes datos:</p>
-      <ul>
-        <li><strong>Datos de cuenta:</strong> nombre, correo electrónico, foto de perfil (vía Google Auth).</li>
-        <li><strong>Datos de uso:</strong> fecha de registro, último acceso, plan contratado.</li>
-        <li><strong>Datos de WhatsApp:</strong> mensajes enviados y recibidos a través de la conexión WhatsApp del Cliente.</li>
-        <li><strong>Datos de deals:</strong> información de oportunidades comerciales registradas por el Cliente.</li>
-      </ul>
-
-      <h3>2.2 Cómo Usamos los Datos</h3>
-      <ul>
-        <li>Para operar y mejorar el servicio MIIA.</li>
-        <li>Para generar respuestas de IA personalizadas y relevantes al negocio del Cliente.</li>
-        <li>Para el proceso de Extracción de ADN comercial (ver sección 3).</li>
-        <li>Para generar estadísticas de uso y rendimiento del servicio.</li>
-      </ul>
-
-      <h3>2.3 Almacenamiento y Seguridad</h3>
-      <p>Los datos se almacenan en servidores seguros (Google Firebase, Railway) con cifrado en tránsito y en reposo. El acceso a los datos está restringido al personal autorizado de MIIA.</p>
-
-      <h3>2.4 Compartición de Datos</h3>
-      <p>MIIA no vende ni comparte datos personales con terceros, salvo:</p>
-      <ul>
-        <li>Proveedores de infraestructura (Google Cloud, Firebase, Railway) necesarios para operar el servicio.</li>
-        <li>Google Gemini API para el procesamiento de IA (los datos se envían de forma anonimizada cuando es posible).</li>
-        <li>Requerimientos legales o judiciales aplicables.</li>
-      </ul>
-
-      <h3>2.5 Retención de Datos</h3>
-      <p>Los datos se conservan mientras la cuenta del Cliente esté activa. Al cancelar, los datos se eliminarán en un plazo máximo de 90 días, salvo obligación legal de retención.</p>
-
-      <h3>2.6 Derechos del Usuario</h3>
-      <p>El Cliente tiene derecho a:</p>
-      <ul>
-        <li>Acceder a sus datos personales.</li>
-        <li>Solicitar la corrección de datos inexactos.</li>
-        <li>Solicitar la eliminación de sus datos.</li>
-        <li>Revocar su consentimiento para el procesamiento de datos.</li>
-      </ul>
-      <p>Para ejercer estos derechos, contactar a: <strong>lobsterscrm@gmail.com</strong></p>
-    </div>
-
-    <!-- DNA Extraction -->
-    <div class="legal-card">
-      <h2>3. Consentimiento de Extracción de ADN Comercial</h2>
-
-      <div class="highlight-box">
-        <p><strong>Esta sección requiere consentimiento explícito y separado.</strong> La Extracción de ADN es una funcionalidad central de MIIA que puede desactivarse si el Cliente no otorga su consentimiento.</p>
-      </div>
-
-      <h3>3.1 Qué es la Extracción de ADN</h3>
-      <p>La "Extracción de ADN Comercial" es un proceso automatizado mediante el cual MIIA analiza conversaciones históricas de WhatsApp del Cliente para identificar patrones de venta exitosos, objeciones frecuentes, técnicas de cierre y estilo de comunicación.</p>
-
-      <h3>3.2 Cómo Funciona</h3>
-      <ul>
-        <li>El proceso se ejecuta de forma automática y periódica (diariamente).</li>
-        <li>Analiza conversaciones de más de 24 horas de antigüedad.</li>
-        <li>Clasifica las conversaciones en categorías: ventas, negociaciones, debates y silencios.</li>
-        <li>Utiliza Google Gemini para extraer patrones de venta y aprendizajes.</li>
-        <li>Los aprendizajes se incorporan al comportamiento de la IA para mejorar futuras interacciones.</li>
-      </ul>
-
-      <h3>3.3 Datos Procesados</h3>
-      <p>El proceso de ADN accede a:</p>
-      <ul>
-        <li>Mensajes de WhatsApp (enviados y recibidos) del Cliente.</li>
-        <li>Historial de conversaciones con leads y clientes.</li>
-        <li>Patrones de interacción y tiempos de respuesta.</li>
-      </ul>
-
-      <h3>3.4 Beneficios</h3>
-      <ul>
-        <li>MIIA aprende el estilo de venta único del Cliente.</li>
-        <li>Mejora progresiva en la calidad de las respuestas automatizadas.</li>
-        <li>Identificación de patrones de éxito y áreas de mejora.</li>
-      </ul>
-
-      <h3>3.5 Derechos sobre la Extracción de ADN</h3>
-      <ul>
-        <li>El consentimiento es voluntario pero recomendado para el funcionamiento óptimo.</li>
-        <li>El Cliente puede revocar el consentimiento en cualquier momento contactando a soporte.</li>
-        <li>Al revocar, se detiene el procesamiento futuro pero los aprendizajes previos pueden mantenerse en el sistema.</li>
-      </ul>
-    </div>
-
-    <!-- Contact -->
-    <div class="legal-card" style="text-align: center;">
-      <h2>Contacto</h2>
-      <p>Para consultas sobre estos términos o ejercer tus derechos:</p>
-      <p style="font-weight: 600; color: var(--primary);">lobsterscrm@gmail.com</p>
-    </div>
-
-    <div class="updated-date">
-      Última actualización: 29 de marzo de 2026
-    </div>
+    <h3>1.8 Modificaciones</h3>
+    <p>MIIA se reserva el derecho de modificar estos terminos notificando a los usuarios con al menos 15 dias de anticipacion. El uso continuado del servicio tras la notificacion constituye aceptacion de los nuevos terminos.</p>
   </div>
 
-  <script>
-    window.addEventListener('scroll', () => {
-      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-    });
-  </script>
+  <!-- Privacy Policy -->
+  <div class="legal-section">
+    <h2>2. Politica de Privacidad</h2>
+
+    <h3>2.1 Datos que Recopilamos</h3>
+    <p>Al utilizar MIIA, recopilamos y procesamos los siguientes datos:</p>
+    <ul>
+      <li><strong>Datos de cuenta:</strong> nombre, correo electronico, foto de perfil (via Google Auth).</li>
+      <li><strong>Datos de uso:</strong> fecha de registro, ultimo acceso, plan contratado.</li>
+      <li><strong>Datos de WhatsApp:</strong> mensajes enviados y recibidos a traves de la conexion WhatsApp del Cliente.</li>
+      <li><strong>Datos de deals:</strong> informacion de oportunidades comerciales registradas por el Cliente.</li>
+    </ul>
+
+    <h3>2.2 Como Usamos los Datos</h3>
+    <ul>
+      <li>Para operar y mejorar el servicio MIIA.</li>
+      <li>Para generar respuestas de IA personalizadas y relevantes al negocio del Cliente.</li>
+      <li>Para el proceso de Extraccion de ADN comercial (ver seccion 3).</li>
+      <li>Para generar estadisticas de uso y rendimiento del servicio.</li>
+    </ul>
+
+    <h3>2.3 Almacenamiento y Seguridad</h3>
+    <p>Los datos se almacenan en servidores seguros (Google Firebase, Railway) con cifrado en transito y en reposo. El acceso a los datos esta restringido al personal autorizado de MIIA.</p>
+
+    <h3>2.4 Comparticion de Datos</h3>
+    <p>MIIA no vende ni comparte datos personales con terceros, salvo:</p>
+    <ul>
+      <li>Proveedores de infraestructura (Google Cloud, Firebase, Railway) necesarios para operar el servicio.</li>
+      <li>Google Gemini API para el procesamiento de IA (los datos se envian de forma anonimizada cuando es posible).</li>
+      <li>Requerimientos legales o judiciales aplicables.</li>
+    </ul>
+
+    <h3>2.5 Retencion de Datos</h3>
+    <p>Los datos se conservan mientras la cuenta del Cliente este activa. Al cancelar, los datos se eliminaran en un plazo maximo de 90 dias, salvo obligacion legal de retencion.</p>
+
+    <h3>2.6 Derechos del Usuario</h3>
+    <p>El Cliente tiene derecho a:</p>
+    <ul>
+      <li>Acceder a sus datos personales.</li>
+      <li>Solicitar la correccion de datos inexactos.</li>
+      <li>Solicitar la eliminacion de sus datos.</li>
+      <li>Revocar su consentimiento para el procesamiento de datos.</li>
+    </ul>
+    <p>Para ejercer estos derechos, contactar a: <a href="mailto:lobsterscrm@gmail.com" class="contact-link">lobsterscrm@gmail.com</a></p>
+  </div>
+
+  <!-- DNA Extraction -->
+  <div class="legal-section">
+    <h2>3. Consentimiento de Extraccion de ADN Comercial</h2>
+
+    <div class="highlight-box">
+      <p><strong>Esta seccion requiere consentimiento explicito y separado.</strong> La Extraccion de ADN es una funcionalidad central de MIIA que puede desactivarse si el Cliente no otorga su consentimiento.</p>
+    </div>
+
+    <h3>3.1 Que es la Extraccion de ADN</h3>
+    <p>La "Extraccion de ADN Comercial" es un proceso automatizado mediante el cual MIIA analiza conversaciones historicas de WhatsApp del Cliente para identificar patrones de venta exitosos, objeciones frecuentes, tecnicas de cierre y estilo de comunicacion.</p>
+
+    <h3>3.2 Como Funciona</h3>
+    <ul>
+      <li>El proceso se ejecuta de forma automatica y periodica (diariamente).</li>
+      <li>Analiza conversaciones de mas de 24 horas de antiguedad.</li>
+      <li>Clasifica las conversaciones en categorias: ventas, negociaciones, debates y silencios.</li>
+      <li>Utiliza Google Gemini para extraer patrones de venta y aprendizajes.</li>
+      <li>Los aprendizajes se incorporan al comportamiento de la IA para mejorar futuras interacciones.</li>
+    </ul>
+
+    <h3>3.3 Datos Procesados</h3>
+    <p>El proceso de ADN accede a:</p>
+    <ul>
+      <li>Mensajes de WhatsApp (enviados y recibidos) del Cliente.</li>
+      <li>Historial de conversaciones con leads y clientes.</li>
+      <li>Patrones de interaccion y tiempos de respuesta.</li>
+    </ul>
+
+    <h3>3.4 Beneficios</h3>
+    <ul>
+      <li>MIIA aprende el estilo de venta unico del Cliente.</li>
+      <li>Mejora progresiva en la calidad de las respuestas automatizadas.</li>
+      <li>Identificacion de patrones de exito y areas de mejora.</li>
+    </ul>
+
+    <h3>3.5 Derechos sobre la Extraccion de ADN</h3>
+    <ul>
+      <li>El consentimiento es voluntario pero recomendado para el funcionamiento optimo.</li>
+      <li>El Cliente puede revocar el consentimiento en cualquier momento contactando a soporte.</li>
+      <li>Al revocar, se detiene el procesamiento futuro pero los aprendizajes previos pueden mantenerse en el sistema.</li>
+    </ul>
+  </div>
+
+  <!-- Contact -->
+  <div class="legal-section" style="text-align: center;">
+    <h2>Contacto</h2>
+    <p>Para consultas sobre estos terminos o ejercer tus derechos:</p>
+    <p><a href="mailto:lobsterscrm@gmail.com" class="contact-link">lobsterscrm@gmail.com</a></p>
+  </div>
+
+</div>
+
+<footer class="legal-footer">
+  <p>&copy; 2026 MIIA. Todos los derechos reservados.</p>
+  <p style="margin-top:6px;">
+    <a href="terms.html">Terminos</a>
+    <a href="privacy.html">Privacidad</a>
+    <a href="cookies.html">Cookies</a>
+    <a href="index.html">Inicio</a>
+  </p>
+</footer>
+
 </body>
 </html>

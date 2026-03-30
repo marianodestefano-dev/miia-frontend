@@ -4,21 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIIA - Gestion de Usuarios</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #5B8DF8; --primary-dark: #4070e0; --secondary: #7C5CF6;
-      --accent: #A78BFA; --accent-dark: #8B6FF0; --danger: #ef4444; --warning: #f59e0b;
-      --bg-light: #060C1A; --bg-white: #060C1A; --bg-card: #0D1628; --bg-surface: #111D35;
-      --text-dark: #E8EDF8; --text-body: #B0BEDD; --text-muted: #8B9CC8;
+      --primary: #5B8DF8; --primary-dark: #4A7AE5; --secondary: #7C5CF6;
+      --accent: #34D399; --accent-dark: #2BC48A; --danger: #ef4444; --warning: #f59e0b;
+      --bg-light: #030508; --bg-white: #030508; --bg-card: #0A0F1A; --bg-surface: #0F1520;
+      --text-dark: #F1F5F9; --text-body: #94A3B8; --text-muted: #64748B;
       --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
       --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.4), 0 1px 3px rgba(91,141,248,0.06);
-      --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 50px;
+      --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
+      --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 100px;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:var(--text-body); background:var(--bg-light); min-height:100vh; padding-top:80px; }
+    body { font-family: 'Inter', -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:var(--text-body); background:var(--bg-light); min-height:100vh; padding-top:64px; -webkit-font-smoothing: antialiased; }
 
-    #navbar { position:fixed; top:0; left:0; right:0; height:80px; background:rgba(6,12,26,0.92); backdrop-filter:blur(20px); border-bottom:1px solid rgba(91,141,248,0.1); display:flex; justify-content:space-between; align-items:center; padding:0 40px; z-index:100; }
+    #navbar { position:fixed; top:0; left:0; right:0; height:64px; background:rgba(3,5,8,0.8); backdrop-filter:blur(20px); border-bottom:1px solid rgba(91,141,248,0.1); display:flex; justify-content:space-between; align-items:center; padding:0 40px; z-index:100; }
     .nav-logo { font-size:1.6rem; font-weight:800; background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .nav-right { display:flex; align-items:center; gap:16px; }
     .nav-email { font-size:0.85rem; color:var(--text-muted); padding:6px 14px; background:rgba(102,126,234,0.06); border-radius:var(--radius-full); }

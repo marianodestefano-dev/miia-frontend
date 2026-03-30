@@ -4,302 +4,243 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIIA - Tu Asistente IA que Vende por WhatsApp 24/7</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    /* ═══════════════════════════════════════
-       MIIA SaaS Landing — Dark Neon Design System
-       ═══════════════════════════════════════ */
     :root {
       --primary: #5B8DF8;
-      --primary-dark: #4070e0;
+      --primary-dark: #4A7AE5;
       --secondary: #7C5CF6;
       --accent: #A78BFA;
-      --accent-dark: #8B6FF0;
-      --bg-light: #060C1A;
-      --bg-white: #060C1A;
-      --bg-card: #0D1628;
-      --bg-surface: #111D35;
-      --text-dark: #E8EDF8;
-      --text-body: #B0BEDD;
-      --text-muted: #8B9CC8;
+      --green: #34D399;
+      --bg-deep: #030508;
+      --bg-card: #0A0F1A;
+      --bg-surface: #0F1520;
+      --bg-elevated: #141C2B;
+      --border: rgba(91,141,248,0.08);
+      --border-hover: rgba(91,141,248,0.2);
+      --text-white: #F1F5F9;
+      --text-primary: #E2E8F0;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
       --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
-      --gradient-accent: linear-gradient(135deg, #7C5CF6 0%, #A78BFA 100%);
-      --gradient-dark: linear-gradient(135deg, #060C1A 0%, #0D1628 100%);
-      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
-      --shadow-md: 0 8px 30px rgba(91,141,248,0.12);
-      --shadow-lg: 0 20px 60px rgba(91,141,248,0.15);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.4), 0 1px 3px rgba(91,141,248,0.08);
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-      --radius-full: 50px;
-      --border-glow: rgba(91,141,248,0.18);
-    }
-
-    @keyframes shimmerPulse {
-      0%, 100% { filter: brightness(1) drop-shadow(0 0 5px rgba(0,229,255,0.4)); }
-      50% { filter: brightness(1.15) drop-shadow(0 0 18px rgba(0,229,255,0.7)); }
-    }
-    @keyframes chemicalFlow {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+      --gradient-subtle: linear-gradient(135deg, rgba(91,141,248,0.12) 0%, rgba(124,92,246,0.12) 100%);
+      --radius: 12px;
+      --radius-lg: 20px;
+      --radius-full: 100px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--text-body);
-      background: var(--bg-white);
-      background-image:
-        radial-gradient(circle at 0% 0%, rgba(124,92,246,0.06) 0%, transparent 40%),
-        radial-gradient(circle at 100% 100%, rgba(91,141,248,0.06) 0%, transparent 40%);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--text-secondary);
+      background: var(--bg-deep);
       line-height: 1.6;
       overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ═══ ANIMATIONS ═══ */
-    .fade-in {
-      opacity: 0;
-      transform: translateY(30px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .fade-in.visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    .fade-in-left {
-      opacity: 0;
-      transform: translateX(-40px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .fade-in-left.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-    .fade-in-right {
-      opacity: 0;
-      transform: translateX(40px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
-    }
-    .fade-in-right.visible {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    /* ═══ NAVBAR ═══ */
-    .navbar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 1000;
-      padding: 16px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      background: rgba(5,5,8,0.92);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,229,255,0.08);
-      transition: all 0.3s ease;
-    }
-    .navbar.scrolled {
-      padding: 10px 40px;
-      box-shadow: var(--shadow-sm);
-    }
-    .nav-logo {
-      font-size: 1.6rem;
-      font-weight: 800;
+    /* ═══ UTILITIES ═══ */
+    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    .text-gradient {
       background: var(--gradient-main);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+    .fade-in {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ═══ NAVBAR ═══ */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(3,5,8,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.3s;
+    }
+    .navbar.scrolled { background: rgba(3,5,8,0.95); }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-white);
       letter-spacing: -0.5px;
     }
+    .nav-logo svg { height: 24px; width: 24px; }
     .nav-links {
       display: flex;
-      gap: 32px;
       align-items: center;
+      gap: 32px;
       list-style: none;
     }
     .nav-links a {
       text-decoration: none;
-      color: var(--text-body);
+      color: var(--text-muted);
+      font-size: 0.875rem;
       font-weight: 500;
-      font-size: 0.95rem;
-      transition: color 0.3s;
+      transition: color 0.2s;
     }
-    .nav-links a:hover { color: var(--primary); }
-    .nav-cta {
-      padding: 10px 28px;
-      background: var(--gradient-main);
-      color: white !important;
-      -webkit-text-fill-color: white !important;
+    .nav-links a:hover { color: var(--text-white); }
+    .btn-nav {
+      padding: 8px 20px;
+      background: var(--text-white);
+      color: var(--bg-deep) !important;
+      -webkit-text-fill-color: var(--bg-deep) !important;
       border-radius: var(--radius-full);
       font-weight: 600 !important;
-      transition: transform 0.3s, box-shadow 0.3s !important;
+      font-size: 0.875rem !important;
+      transition: opacity 0.2s !important;
     }
-    .nav-cta:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.35);
-    }
+    .btn-nav:hover { opacity: 0.9; }
     .nav-toggle {
       display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
       background: none;
       border: none;
-      padding: 5px;
+      cursor: pointer;
+      padding: 4px;
     }
     .nav-toggle span {
-      width: 24px;
-      height: 2.5px;
-      background: var(--text-dark);
-      border-radius: 2px;
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--text-secondary);
+      margin: 4px 0;
+      border-radius: 1px;
       transition: all 0.3s;
     }
 
     /* ═══ HERO ═══ */
     .hero {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      padding: 120px 40px 80px;
-      background: var(--gradient-main);
+      padding: 160px 24px 120px;
+      text-align: center;
       position: relative;
       overflow: hidden;
     }
     .hero::before {
       content: '';
       position: absolute;
-      top: -50%;
-      right: -20%;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
       width: 800px;
-      height: 800px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-    }
-    .hero::after {
-      content: '';
-      position: absolute;
-      bottom: -30%;
-      left: -10%;
-      width: 600px;
       height: 600px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.03);
+      background: radial-gradient(ellipse, rgba(91,141,248,0.08) 0%, transparent 70%);
+      pointer-events: none;
     }
-    .hero-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-      width: 100%;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 60px;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
-    .hero-content { color: white; }
     .hero-badge {
-      display: inline-block;
-      padding: 6px 16px;
-      background: rgba(255,255,255,0.15);
-      border-radius: var(--radius-full);
-      font-size: 0.85rem;
-      font-weight: 600;
-      margin-bottom: 24px;
-      backdrop-filter: blur(10px);
-    }
-    .hero h1 {
-      font-size: 3.5rem;
-      font-weight: 800;
-      line-height: 1.1;
-      margin-bottom: 20px;
-      letter-spacing: -1px;
-    }
-    .hero h1 .highlight {
-      background: linear-gradient(135deg, #25d366, #7fefaa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .hero p {
-      font-size: 1.2rem;
-      opacity: 0.9;
-      margin-bottom: 36px;
-      line-height: 1.7;
-      max-width: 500px;
-    }
-    .hero-buttons {
-      display: flex;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    .btn-hero {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 16px 36px;
+      padding: 6px 16px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
       border-radius: var(--radius-full);
-      font-size: 1.1rem;
-      font-weight: 700;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 32px;
+    }
+    .hero-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .hero h1 {
+      font-size: 4.5rem;
+      font-weight: 800;
+      color: var(--text-white);
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 24px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero .subtitle {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border-radius: var(--radius-full);
+      font-size: 0.95rem;
+      font-weight: 600;
       text-decoration: none;
-      transition: all 0.3s ease;
-      cursor: pointer;
       border: none;
+      cursor: pointer;
+      transition: all 0.2s;
     }
     .btn-primary {
-      background: white;
-      color: var(--primary);
-      box-shadow: 0 8px 30px rgba(0,0,0,0.15);
+      background: var(--text-white);
+      color: var(--bg-deep);
     }
-    .btn-primary:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 40px rgba(0,0,0,0.2);
-    }
-    .btn-outline {
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-ghost {
       background: transparent;
-      color: white;
-      border: 2px solid rgba(255,255,255,0.4);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
     }
-    .btn-outline:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: white;
-    }
+    .btn-ghost:hover { border-color: var(--border-hover); color: var(--text-white); }
+    .btn svg { width: 16px; height: 16px; }
 
-    /* Hero mockup */
+    /* Hero Visual */
     .hero-visual {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      margin-top: 72px;
+      position: relative;
+      max-width: 680px;
+      margin-left: auto;
+      margin-right: auto;
     }
-    .phone-mockup {
-      width: 300px;
-      background: #fff;
-      border-radius: 32px;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.3);
+    .hero-chat {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
       overflow: hidden;
-      transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
-      transition: transform 0.5s ease;
+      box-shadow: 0 32px 64px rgba(0,0,0,0.4);
     }
-    .phone-mockup:hover {
-      transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
-    }
-    .phone-header {
-      background: #075e54;
-      color: white;
-      padding: 14px 16px;
+    .chat-header {
+      padding: 16px 20px;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-surface);
     }
-    .phone-avatar {
+    .chat-header-avatar {
       width: 36px;
       height: 36px;
       border-radius: 50%;
@@ -307,373 +248,326 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.1rem;
     }
-    .phone-name { font-weight: 600; font-size: 0.95rem; }
-    .phone-status { font-size: 0.75rem; opacity: 0.7; }
-    .phone-chat {
-      background: #e5ddd5;
-      padding: 16px;
-      min-height: 360px;
+    .chat-header-avatar svg { width: 18px; height: 18px; color: white; }
+    .chat-header-info h4 {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-white);
+    }
+    .chat-header-info span {
+      font-size: 0.75rem;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .chat-header-info span::before {
+      content: '';
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+    .chat-messages {
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 12px;
+      min-height: 280px;
     }
-    .chat-bubble {
-      max-width: 85%;
-      padding: 8px 12px;
-      border-radius: 8px;
-      font-size: 0.85rem;
-      line-height: 1.4;
+    .msg {
+      max-width: 75%;
+      padding: 12px 16px;
+      border-radius: 16px;
+      font-size: 0.875rem;
+      line-height: 1.5;
     }
-    .chat-bubble.incoming {
-      background: white;
+    .msg-in {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
       align-self: flex-start;
-      border-bottom-left-radius: 2px;
+      border-bottom-left-radius: 4px;
     }
-    .chat-bubble.outgoing {
-      background: #dcf8c6;
+    .msg-out {
+      background: rgba(91,141,248,0.15);
+      color: var(--text-primary);
       align-self: flex-end;
-      border-bottom-right-radius: 2px;
+      border-bottom-right-radius: 4px;
+      border: 1px solid rgba(91,141,248,0.1);
     }
-    .chat-time {
+    .msg-time {
       font-size: 0.65rem;
-      color: #999;
+      color: var(--text-muted);
+      margin-top: 4px;
       text-align: right;
-      margin-top: 2px;
+    }
+    .msg-typing {
+      display: flex;
+      gap: 4px;
+      padding: 14px 18px;
+      align-self: flex-end;
+    }
+    .msg-typing span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--primary);
+      animation: typing 1.4s infinite;
+    }
+    .msg-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .msg-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing {
+      0%, 100% { opacity: 0.3; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-3px); }
     }
 
-    /* ═══ SOCIAL PROOF ═══ */
-    .social-proof {
-      padding: 60px 40px;
-      text-align: center;
-      background: var(--bg-light);
-      border-bottom: 1px solid rgba(0,229,255,0.06);
+    /* ═══ LOGOS ═══ */
+    .logos-section {
+      padding: 64px 24px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
-    .social-proof p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
+    .logos-section p {
+      text-align: center;
+      font-size: 0.75rem;
       text-transform: uppercase;
       letter-spacing: 2px;
+      color: var(--text-muted);
       font-weight: 600;
-      margin-bottom: 30px;
+      margin-bottom: 32px;
     }
-    .logo-strip {
+    .logos-row {
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 50px;
+      gap: 48px;
       flex-wrap: wrap;
-      opacity: 0.4;
+      opacity: 0.3;
     }
-    .logo-strip span {
-      font-size: 1.4rem;
+    .logos-row span {
+      font-size: 1.1rem;
       font-weight: 700;
-      color: var(--text-dark);
+      color: var(--text-secondary);
       letter-spacing: 1px;
     }
 
-    /* ═══ SECTIONS COMMON ═══ */
+    /* ═══ SECTION ═══ */
     .section {
-      padding: 100px 40px;
-      max-width: 1200px;
-      margin: 0 auto;
+      padding: 120px 24px;
     }
-    .section-tag {
-      display: inline-block;
-      padding: 6px 16px;
-      background: rgba(102, 126, 234, 0.08);
-      color: var(--primary);
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
+    .section-label {
+      font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
+      color: var(--primary);
       margin-bottom: 16px;
     }
     .section-title {
-      font-size: 2.8rem;
+      font-size: 2.75rem;
       font-weight: 800;
-      color: var(--text-dark);
+      color: var(--text-white);
+      letter-spacing: -1px;
+      line-height: 1.15;
       margin-bottom: 16px;
-      letter-spacing: -0.5px;
-      line-height: 1.2;
     }
-    .section-subtitle {
-      font-size: 1.15rem;
-      color: var(--text-muted);
-      max-width: 600px;
+    .section-desc {
+      font-size: 1.05rem;
+      color: var(--text-secondary);
+      max-width: 520px;
       line-height: 1.7;
-      margin-bottom: 60px;
+      margin-bottom: 64px;
     }
+    .section-center { text-align: center; }
+    .section-center .section-desc { margin-left: auto; margin-right: auto; }
 
     /* ═══ FEATURES ═══ */
     .features-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-    }
-    .feature-card {
-      background: rgba(9,9,15,0.85);
-      backdrop-filter: blur(12px);
-      padding: 36px 30px;
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(0,229,255,0.12);
-      transition: all 0.4s ease;
-      position: relative;
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
       overflow: hidden;
     }
-    .feature-card::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 3px;
-      background: var(--gradient-main);
-      opacity: 0;
-      transition: opacity 0.4s;
+    .feature-card {
+      background: var(--bg-deep);
+      padding: 40px 32px;
+      transition: background 0.3s;
     }
-    .feature-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 0 30px rgba(0,229,255,0.1);
-      border-color: rgba(0,229,255,0.3);
-    }
-    .feature-card:hover::before { opacity: 1; }
+    .feature-card:hover { background: var(--bg-card); }
     .feature-icon {
-      width: 56px;
-      height: 56px;
-      border-radius: 14px;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--gradient-subtle);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
       margin-bottom: 20px;
-      background: rgba(102, 126, 234, 0.08);
     }
+    .feature-icon svg { width: 20px; height: 20px; color: var(--primary); stroke: var(--primary); }
     .feature-card h3 {
-      font-size: 1.2rem;
+      font-size: 1rem;
       font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 10px;
+      color: var(--text-white);
+      margin-bottom: 8px;
     }
     .feature-card p {
-      font-size: 0.95rem;
+      font-size: 0.875rem;
       color: var(--text-muted);
       line-height: 1.6;
     }
 
     /* ═══ HOW IT WORKS ═══ */
-    .how-section {
-      background: var(--bg-light);
-      padding: 100px 40px;
-    }
-    .how-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .steps {
+    .steps-section { background: var(--bg-card); }
+    .steps-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 40px;
-      margin-top: 60px;
+      gap: 48px;
     }
     .step {
-      text-align: center;
       position: relative;
     }
-    .step-number {
-      width: 72px;
-      height: 72px;
-      border-radius: 50%;
-      background: var(--gradient-main);
-      color: white;
-      font-size: 1.8rem;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 24px;
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    .step-num {
+      font-size: 4rem;
+      font-weight: 900;
+      color: rgba(91,141,248,0.08);
+      line-height: 1;
+      margin-bottom: 16px;
     }
     .step h3 {
-      font-size: 1.3rem;
+      font-size: 1.15rem;
       font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 12px;
+      color: var(--text-white);
+      margin-bottom: 8px;
     }
     .step p {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
-      line-height: 1.6;
-      max-width: 300px;
-      margin: 0 auto;
-    }
-    .step-connector {
-      display: none;
+      line-height: 1.7;
     }
 
     /* ═══ PRICING ═══ */
     .pricing-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-      align-items: start;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
     }
     .pricing-card {
-      background: rgba(9,9,15,0.85);
-      backdrop-filter: blur(12px);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
       border-radius: var(--radius-lg);
-      padding: 40px 32px;
-      border: 1px solid rgba(0,229,255,0.12);
-      transition: all 0.4s ease;
+      padding: 36px 28px;
+      transition: border-color 0.3s;
       position: relative;
     }
-    .pricing-card:hover {
-      transform: translateY(-8px);
-      box-shadow: 0 0 40px rgba(0,229,255,0.1);
-      border-color: rgba(0,229,255,0.3);
-    }
+    .pricing-card:hover { border-color: var(--border-hover); }
     .pricing-card.featured {
-      border: 2px solid var(--primary);
-      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+      background: linear-gradient(180deg, rgba(91,141,248,0.06) 0%, var(--bg-card) 100%);
     }
-    .pricing-card.featured::before {
-      content: 'Recomendado';
+    .pricing-badge {
       position: absolute;
-      top: -14px;
+      top: -12px;
       left: 50%;
       transform: translateX(-50%);
+      padding: 4px 14px;
       background: var(--gradient-main);
       color: white;
-      padding: 4px 20px;
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
+      font-size: 0.7rem;
       font-weight: 700;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .pricing-name {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: var(--text-dark);
-      margin-bottom: 8px;
-    }
-    .pricing-desc {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 24px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
     }
     .pricing-price {
-      font-size: 3.2rem;
+      font-size: 2.5rem;
       font-weight: 800;
-      color: var(--text-dark);
-      margin-bottom: 4px;
+      color: var(--text-white);
       line-height: 1;
+      margin-bottom: 4px;
     }
     .pricing-price span {
-      font-size: 1rem;
+      font-size: 0.875rem;
       font-weight: 500;
       color: var(--text-muted);
     }
     .pricing-period {
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       color: var(--text-muted);
       margin-bottom: 28px;
     }
-    .pricing-features {
+    .pricing-list {
       list-style: none;
       margin-bottom: 32px;
     }
-    .pricing-features li {
-      padding: 10px 0;
-      font-size: 0.95rem;
-      color: var(--text-body);
+    .pricing-list li {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      padding: 8px 0;
       display: flex;
       align-items: center;
-      gap: 10px;
-      border-bottom: 1px solid rgba(0,0,0,0.04);
+      gap: 8px;
     }
-    .pricing-features li::before {
-      content: '\2713';
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 1.1rem;
-    }
+    .pricing-list li svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; }
     .btn-pricing {
       display: block;
       width: 100%;
-      padding: 14px;
+      padding: 12px;
       border-radius: var(--radius-full);
       text-align: center;
-      font-weight: 700;
-      font-size: 1rem;
+      font-weight: 600;
+      font-size: 0.875rem;
       text-decoration: none;
-      transition: all 0.3s ease;
       cursor: pointer;
       border: none;
+      transition: all 0.2s;
     }
     .btn-pricing-outline {
       background: transparent;
-      color: var(--primary);
-      border: 2px solid var(--primary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
     }
-    .btn-pricing-outline:hover {
-      background: var(--primary);
-      color: white;
-    }
+    .btn-pricing-outline:hover { border-color: var(--border-hover); color: var(--text-white); }
     .btn-pricing-solid {
-      background: var(--gradient-main);
-      color: white;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      background: var(--text-white);
+      color: var(--bg-deep);
     }
-    .btn-pricing-solid:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-    }
+    .btn-pricing-solid:hover { opacity: 0.9; }
 
     /* ═══ TESTIMONIALS ═══ */
-    .testimonials-section {
-      background: var(--bg-light);
-      padding: 100px 40px;
-    }
-    .testimonials-inner {
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    .testimonials-carousel {
-      position: relative;
-      overflow: hidden;
-    }
-    .testimonials-track {
-      display: flex;
-      transition: transform 0.5s ease;
-    }
-    .testimonial-card {
-      min-width: 100%;
+    .testimonials-section { background: var(--bg-card); }
+    .testimonials-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 30px;
-      padding: 10px;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
     }
     .testimonial {
-      background: rgba(9,9,15,0.85);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(0,229,255,0.1);
-      padding: 32px;
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-card);
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
     }
     .testimonial-stars {
-      color: #f59e0b;
-      font-size: 1.1rem;
-      margin-bottom: 16px;
+      color: #FBBF24;
+      font-size: 0.875rem;
       letter-spacing: 2px;
+      margin-bottom: 16px;
     }
     .testimonial-text {
-      font-size: 0.95rem;
-      color: var(--text-body);
+      font-size: 0.9rem;
+      color: var(--text-secondary);
       line-height: 1.7;
-      margin-bottom: 20px;
-      font-style: italic;
+      margin-bottom: 24px;
     }
     .testimonial-author {
       display: flex;
@@ -681,256 +575,282 @@
       gap: 12px;
     }
     .testimonial-avatar {
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
-      background: var(--gradient-main);
+      background: var(--gradient-subtle);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: white;
+      color: var(--primary);
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.85rem;
     }
     .testimonial-name {
-      font-weight: 700;
-      color: var(--text-dark);
-      font-size: 0.95rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-white);
     }
     .testimonial-role {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--text-muted);
-    }
-    .carousel-dots {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 30px;
-    }
-    .carousel-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: rgba(102, 126, 234, 0.2);
-      cursor: pointer;
-      transition: all 0.3s;
-      border: none;
-    }
-    .carousel-dot.active {
-      background: var(--primary);
-      width: 30px;
-      border-radius: 5px;
     }
 
     /* ═══ FAQ ═══ */
-    .faq-list {
-      max-width: 800px;
-      margin: 0 auto;
-    }
+    .faq-list { max-width: 680px; margin: 0 auto; }
     .faq-item {
-      border-bottom: 1px solid rgba(0,0,0,0.06);
+      border-bottom: 1px solid var(--border);
     }
     .faq-question {
       width: 100%;
-      padding: 22px 0;
+      padding: 24px 0;
       background: none;
       border: none;
       text-align: left;
-      font-size: 1.1rem;
+      font-size: 1rem;
       font-weight: 600;
-      color: var(--text-dark);
+      color: var(--text-primary);
       cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: color 0.3s;
+      font-family: inherit;
+      transition: color 0.2s;
     }
-    .faq-question:hover { color: var(--primary); }
+    .faq-question:hover { color: var(--text-white); }
     .faq-icon {
-      font-size: 1.4rem;
+      font-size: 1.2rem;
+      color: var(--text-muted);
       transition: transform 0.3s;
-      color: var(--primary);
     }
     .faq-item.open .faq-icon { transform: rotate(45deg); }
     .faq-answer {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.4s ease, padding 0.4s ease;
+      transition: max-height 0.4s ease;
     }
-    .faq-item.open .faq-answer {
-      max-height: 200px;
-      padding-bottom: 22px;
-    }
+    .faq-item.open .faq-answer { max-height: 200px; }
     .faq-answer p {
-      font-size: 0.95rem;
+      font-size: 0.9rem;
       color: var(--text-muted);
+      line-height: 1.7;
+      padding-bottom: 24px;
+    }
+
+    /* ═══ CTA ═══ */
+    .cta-section {
+      padding: 120px 24px;
+      text-align: center;
+      position: relative;
+    }
+    .cta-section::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 400px;
+      background: radial-gradient(ellipse, rgba(91,141,248,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-section h2 {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -1px;
+      margin-bottom: 16px;
+    }
+    .cta-section p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
       line-height: 1.7;
     }
 
-    /* ═══ FINAL CTA ═══ */
-    .final-cta {
-      background: var(--gradient-main);
-      padding: 100px 40px;
-      text-align: center;
+    /* ═══ MANIFESTO ═══ */
+    .manifesto {
+      padding: 80px 24px;
+      background: var(--bg-card);
+      display: flex;
+      justify-content: center;
+    }
+    .manifesto-card {
+      max-width: 680px;
+      width: 100%;
+      background: var(--bg-deep);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 48px 44px;
       position: relative;
-      overflow: hidden;
     }
-    .final-cta::before {
-      content: '';
-      position: absolute;
-      top: -40%;
-      right: -20%;
-      width: 600px;
-      height: 600px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.05);
-    }
-    .final-cta-inner {
-      max-width: 700px;
-      margin: 0 auto;
-      position: relative;
-      z-index: 1;
-    }
-    .final-cta h2 {
-      font-size: 2.8rem;
-      font-weight: 800;
-      color: white;
-      margin-bottom: 16px;
-      letter-spacing: -0.5px;
-    }
-    .final-cta p {
-      font-size: 1.15rem;
-      color: rgba(255,255,255,0.85);
-      margin-bottom: 40px;
-      line-height: 1.7;
-    }
-    .btn-cta-white {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 18px 44px;
-      background: white;
-      color: var(--primary);
-      border-radius: var(--radius-full);
-      font-size: 1.15rem;
+    .manifesto-label {
+      font-size: 0.7rem;
       font-weight: 700;
-      text-decoration: none;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-      transition: all 0.3s ease;
-      border: none;
-      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
-    .btn-cta-white:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 15px 45px rgba(0,0,0,0.2);
+    .manifesto-label::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--text-muted);
+    }
+    .manifesto-text {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.9;
+      font-style: italic;
+    }
+    .manifesto-text strong {
+      color: var(--text-white);
+      font-weight: 700;
+    }
+    .manifesto-text .highlight {
+      display: block;
+      margin-top: 20px;
+      padding: 16px 20px;
+      border-left: 2px solid var(--primary);
+      background: rgba(91,141,248,0.04);
+      border-radius: 0 var(--radius) var(--radius) 0;
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: var(--text-white);
+      letter-spacing: -0.01em;
+      line-height: 1.5;
+      font-style: normal;
+      text-transform: uppercase;
+    }
+    .manifesto-accent {
+      color: var(--primary);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-style: normal;
+    }
+    .manifesto-footer {
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .manifesto-footer span {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
     }
 
     /* ═══ FOOTER ═══ */
     .footer {
-      background: #030810;
-      color: rgba(255,255,255,0.6);
-      padding: 60px 40px 30px;
+      background: var(--bg-deep);
+      border-top: 1px solid var(--border);
+      padding: 64px 24px 32px;
     }
     .footer-inner {
-      max-width: 1200px;
+      max-width: 1140px;
       margin: 0 auto;
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
       gap: 40px;
-      margin-bottom: 40px;
-    }
-    .footer-brand .nav-logo {
-      margin-bottom: 16px;
-      display: block;
-      font-size: 1.4rem;
+      margin-bottom: 48px;
     }
     .footer-brand p {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
       line-height: 1.7;
-      max-width: 280px;
+      max-width: 260px;
+      margin-top: 12px;
     }
+    .footer-brand .footer-contact {
+      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .footer-brand .footer-contact a {
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-brand .footer-contact a:hover { color: var(--text-white); }
     .footer-col h4 {
-      color: white;
-      font-size: 0.9rem;
+      font-size: 0.75rem;
       font-weight: 700;
-      margin-bottom: 16px;
+      color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 1px;
+      margin-bottom: 16px;
     }
     .footer-col a {
       display: block;
-      color: rgba(255,255,255,0.5);
+      color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       padding: 4px 0;
-      transition: color 0.3s;
+      transition: color 0.2s;
     }
-    .footer-col a:hover { color: white; }
+    .footer-col a:hover { color: var(--text-white); }
     .footer-bottom {
-      max-width: 1200px;
+      max-width: 1140px;
       margin: 0 auto;
       padding-top: 24px;
-      border-top: 1px solid rgba(255,255,255,0.08);
+      border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      font-size: 0.85rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
     }
-    .footer-socials {
-      display: flex;
-      gap: 16px;
-    }
-    .footer-socials a {
-      color: rgba(255,255,255,0.4);
-      text-decoration: none;
-      font-size: 1.2rem;
-      transition: color 0.3s;
-    }
-    .footer-socials a:hover { color: white; }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 1024px) {
-      .hero h1 { font-size: 2.8rem; }
-      .hero-inner { gap: 40px; }
-      .features-grid, .steps, .pricing-grid { grid-template-columns: repeat(2, 1fr); }
-      .testimonial-card { grid-template-columns: 1fr 1fr; }
-      .testimonial-card .testimonial:last-child { display: none; }
+      .hero h1 { font-size: 3.2rem; }
+      .features-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+      .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
       .footer-inner { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 768px) {
-      .navbar { padding: 12px 20px; }
-      .nav-links { display: none; }
-      .nav-links.active {
-        display: flex;
-        flex-direction: column;
+      .navbar { padding: 0 16px; }
+      .nav-links {
+        display: none;
         position: absolute;
         top: 100%;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 20px;
-        box-shadow: var(--shadow-md);
-        gap: 16px;
+        left: 0; right: 0;
+        background: var(--bg-card);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column;
+        padding: 16px;
+        gap: 12px;
       }
-      .nav-toggle { display: flex; }
-      .hero { padding: 100px 20px 60px; }
-      .hero-inner { grid-template-columns: 1fr; text-align: center; }
-      .hero p { margin: 0 auto 36px; }
-      .hero-buttons { justify-content: center; }
-      .hero-visual { order: -1; }
-      .phone-mockup { width: 250px; transform: none; }
-      .hero h1 { font-size: 2.2rem; }
-      .section { padding: 60px 20px; }
+      .nav-links.active { display: flex; }
+      .nav-toggle { display: block; }
+      .hero { padding: 120px 20px 80px; }
+      .hero h1 { font-size: 2.4rem; letter-spacing: -1px; }
+      .hero .subtitle { font-size: 1rem; }
+      .section { padding: 80px 20px; }
       .section-title { font-size: 2rem; }
-      .how-section, .testimonials-section { padding: 60px 20px; }
-      .features-grid, .steps, .pricing-grid { grid-template-columns: 1fr; }
-      .testimonial-card { grid-template-columns: 1fr; }
-      .testimonial-card .testimonial:last-child { display: block; }
-      .final-cta { padding: 60px 20px; }
-      .final-cta h2 { font-size: 2rem; }
+      .features-grid, .steps-grid, .pricing-grid, .testimonials-grid {
+        grid-template-columns: 1fr;
+      }
+      .cta-section h2 { font-size: 2rem; }
       .footer-inner { grid-template-columns: 1fr; }
       .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+      .manifesto-card { padding: 32px 24px; }
     }
   </style>
 </head>
@@ -938,13 +858,20 @@
 
   <!-- ═══ NAVBAR ═══ -->
   <nav class="navbar" id="navbar">
-    <div class="nav-logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;vertical-align:middle;"><defs><linearGradient id="mlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8DF8"/><stop offset="100%" stop-color="#7C5CF6"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#mlg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,Montserrat,sans-serif" font-weight="800" font-size="17" fill="url(#mlg)">MIIA</text></svg></div>
+    <a href="index.html" class="nav-logo">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="18" height="18" rx="4" fill="url(#ng)"/>
+        <defs><linearGradient id="ng" x1="3" y1="3" x2="21" y2="21"><stop stop-color="#5B8DF8"/><stop offset="1" stop-color="#7C5CF6"/></linearGradient></defs>
+        <path d="M8 12l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      MIIA
+    </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#features">Funciones</a></li>
-      <li><a href="#how">Cómo funciona</a></li>
+      <li><a href="#how">Como funciona</a></li>
       <li><a href="#pricing">Precios</a></li>
       <li><a href="#faq">FAQ</a></li>
-      <li><a href="login.html" class="nav-cta">Probar Gratis</a></li>
+      <li><a href="login.html" class="btn-nav">Empezar gratis</a></li>
     </ul>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -953,56 +880,61 @@
 
   <!-- ═══ HERO ═══ -->
   <section class="hero">
-    <div class="hero-inner">
-      <div class="hero-content">
-        <div class="hero-badge">Inteligencia Artificial + WhatsApp</div>
-        <h1>Tu vendedora IA que <span class="highlight">nunca duerme</span></h1>
-        <p>MIIA se conecta a tu WhatsApp y atiende, cotiza y cierra ventas con tus clientes las 24 horas. Sin bots genéricos. Con tu estilo.</p>
-        <div class="hero-buttons">
-          <a href="login.html" class="btn-hero btn-primary">Empezar gratis</a>
-          <a href="#how" class="btn-hero btn-outline">Ver como funciona</a>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <div class="phone-mockup">
-          <div class="phone-header">
-            <div class="phone-avatar">M</div>
-            <div>
-              <div class="phone-name">MIIA</div>
-              <div class="phone-status">en linea</div>
-            </div>
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Inteligencia Artificial + WhatsApp
+    </div>
+    <h1>Tu vendedora IA que <span class="text-gradient">nunca duerme</span></h1>
+    <p class="subtitle">MIIA se conecta a tu WhatsApp y atiende, cotiza y cierra ventas con tus clientes las 24 horas. Sin bots genericos. Con tu estilo.</p>
+    <div class="hero-buttons">
+      <a href="login.html" class="btn btn-primary">
+        Empezar gratis
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="#how" class="btn btn-ghost">Ver como funciona</a>
+    </div>
+
+    <!-- Chat Preview -->
+    <div class="hero-visual fade-in">
+      <div class="hero-chat">
+        <div class="chat-header">
+          <div class="chat-header-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
           </div>
-          <div class="phone-chat">
-            <div class="chat-bubble incoming">
-              Hola, me interesa el software para mi clinica. Cuanto cuesta?
-              <div class="chat-time">10:32</div>
-            </div>
-            <div class="chat-bubble outgoing">
-              Hola Doctor! Con gusto lo asesoro. Para armarle la mejor propuesta: cuantos profesionales usarian el sistema?
-              <div class="chat-time">10:32</div>
-            </div>
-            <div class="chat-bubble incoming">
-              Somos 3 medicos y 1 secretaria
-              <div class="chat-time">10:33</div>
-            </div>
-            <div class="chat-bubble outgoing">
-              Perfecto! Le preparo una cotizacion personalizada con todo incluido. Me da un momento...
-              <div class="chat-time">10:33</div>
-            </div>
-            <div class="chat-bubble outgoing">
-              Aqui tiene su cotizacion en PDF con los 3 planes disponibles y un 30% de descuento por tiempo limitado
-              <div class="chat-time">10:34</div>
-            </div>
+          <div class="chat-header-info">
+            <h4>MIIA</h4>
+            <span>En linea</span>
+          </div>
+        </div>
+        <div class="chat-messages">
+          <div class="msg msg-in">
+            Hola, me interesa el software para mi clinica. Cuanto cuesta?
+            <div class="msg-time">10:32</div>
+          </div>
+          <div class="msg msg-out">
+            Hola Doctor! Con gusto lo asesoro. Para armarle la mejor propuesta: cuantos profesionales usarian el sistema?
+            <div class="msg-time">10:32</div>
+          </div>
+          <div class="msg msg-in">
+            Somos 3 medicos y 1 secretaria
+            <div class="msg-time">10:33</div>
+          </div>
+          <div class="msg msg-out">
+            Perfecto! Le preparo una cotizacion personalizada. Aqui tiene su PDF con los 3 planes y un 30% de descuento por tiempo limitado.
+            <div class="msg-time">10:34</div>
+          </div>
+          <div class="msg msg-out msg-typing">
+            <span></span><span></span><span></span>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ SOCIAL PROOF ═══ -->
-  <div class="social-proof">
+  <!-- ═══ LOGOS ═══ -->
+  <div class="logos-section">
     <p>Empresas que confian en MIIA</p>
-    <div class="logo-strip">
+    <div class="logos-row">
       <span>Clinica Norte</span>
       <span>MediCenter</span>
       <span>SaludPro</span>
@@ -1013,68 +945,82 @@
 
   <!-- ═══ FEATURES ═══ -->
   <section class="section" id="features">
-    <div class="fade-in">
-      <div class="section-tag">Funciones</div>
-      <h2 class="section-title">Todo lo que necesitas para vender mas</h2>
-      <p class="section-subtitle">MIIA no es un chatbot generico. Es una vendedora experta que aprende tu negocio y lo representa con tu estilo.</p>
-    </div>
-    <div class="features-grid">
-      <div class="feature-card fade-in">
-        <div class="feature-icon">💬</div>
-        <h3>Conversa como tú</h3>
-        <p>MIIA aprende tu tono, tu estilo y tu forma de vender. Responde en WhatsApp como si fueras tú.</p>
+    <div class="container">
+      <div class="fade-in">
+        <div class="section-label">Funciones</div>
+        <h2 class="section-title">Todo lo que necesitas<br>para vender mas</h2>
+        <p class="section-desc">MIIA no es un chatbot generico. Es una vendedora experta que aprende tu negocio y lo representa con tu estilo.</p>
       </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📄</div>
-        <h3>Cotizaciones en PDF</h3>
-        <p>Genera propuestas profesionales personalizadas y las envia automaticamente al lead.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🧠</div>
-        <h3>Aprende sola</h3>
-        <p>Cada noche analiza las conversaciones y mejora su estrategia de ventas autonomamente.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🎯</div>
-        <h3>Clasifica contactos</h3>
-        <p>Distingue leads, clientes, familia y equipo. Cada uno recibe el trato adecuado.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">🔒</div>
-        <h3>ISO 27001</h3>
-        <p>Seguridad de datos con el estandar mas alto. La unica plataforma en LATAM con esta certificacion.</p>
-      </div>
-      <div class="feature-card fade-in">
-        <div class="feature-icon">📊</div>
-        <h3>Pipeline de ventas</h3>
-        <p>Rastrea cada lead desde el primer contacto hasta la conversion. Sin perder oportunidades.</p>
+      <div class="features-grid fade-in">
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          </div>
+          <h3>Conversa como tu</h3>
+          <p>MIIA aprende tu tono, tu estilo y tu forma de vender. Responde en WhatsApp como si fueras tu.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <h3>Cotizaciones en PDF</h3>
+          <p>Genera propuestas profesionales personalizadas y las envia automaticamente al lead.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+          </div>
+          <h3>Aprende sola</h3>
+          <p>Cada noche analiza las conversaciones y mejora su estrategia de ventas autonomamente.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <h3>Clasifica contactos</h3>
+          <p>Distingue leads, clientes, familia y equipo. Cada uno recibe el trato adecuado.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          </div>
+          <h3>ISO 27001</h3>
+          <p>Seguridad de datos con el estandar mas alto. La unica plataforma en LATAM con esta certificacion.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <h3>Pipeline de ventas</h3>
+          <p>Rastrea cada lead desde el primer contacto hasta la conversion. Sin perder oportunidades.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ═══ HOW IT WORKS ═══ -->
-  <section class="how-section" id="how">
-    <div class="how-inner">
-      <div class="fade-in" style="text-align: center;">
-        <div class="section-tag">Cómo funciona</div>
+  <section class="section steps-section" id="how">
+    <div class="container">
+      <div class="section-center fade-in">
+        <div class="section-label">Como funciona</div>
         <h2 class="section-title">Tres pasos y MIIA vende por ti</h2>
-        <p class="section-subtitle" style="margin: 0 auto 60px;">Sin configuracion compleja. Sin necesidad de WhatsApp Business. Conecta tu WhatsApp personal y listo.</p>
+        <p class="section-desc">Sin configuracion compleja. Sin necesidad de WhatsApp Business. Conecta tu WhatsApp personal y listo.</p>
       </div>
-      <div class="steps">
+      <div class="steps-grid">
         <div class="step fade-in">
-          <div class="step-number">1</div>
+          <div class="step-num">01</div>
           <h3>Conecta tu WhatsApp</h3>
           <p>Escanea un codigo QR y MIIA se conecta a tu cuenta de WhatsApp en segundos.</p>
         </div>
         <div class="step fade-in">
-          <div class="step-number">2</div>
+          <div class="step-num">02</div>
           <h3>Entrena con tu negocio</h3>
           <p>Dile "Aprende:" seguido de cualquier informacion sobre tus productos, precios o servicios.</p>
         </div>
         <div class="step fade-in">
-          <div class="step-number">3</div>
+          <div class="step-num">03</div>
           <h3>Ella vende por ti</h3>
-          <p>MIIA atiende leads, genera cotizaciones y cierra ventas las 24 horas. Tú solo apruebas.</p>
+          <p>MIIA atiende leads, genera cotizaciones y cierra ventas las 24 horas. Tu solo apruebas.</p>
         </div>
       </div>
     </div>
@@ -1082,115 +1028,111 @@
 
   <!-- ═══ PRICING ═══ -->
   <section class="section" id="pricing">
-    <div class="fade-in" style="text-align: center;">
-      <div class="section-tag">Precios</div>
-      <h2 class="section-title">Planes que se adaptan a tu negocio</h2>
-      <p class="section-subtitle" style="margin: 0 auto 60px;">Sin contratos. Cancela cuando quieras. Comienza con 7 días gratis.</p>
-    </div>
-    <div class="pricing-grid" style="grid-template-columns: repeat(4, 1fr);">
-      <div class="pricing-card fade-in">
-        <div class="pricing-name">Mensual</div>
-        <div class="pricing-desc">Prueba con flexibilidad</div>
-        <div class="pricing-price">$12 <span>USD</span></div>
-        <div class="pricing-period">por mes</div>
-        <ul class="pricing-features">
-          <li>1 agente incluido</li>
-          <li>1 WhatsApp</li>
-          <li>Contactos ilimitados</li>
-          <li>Soporte por email</li>
-        </ul>
-        <button onclick="buyPlan('monthly')" class="btn-pricing btn-pricing-outline">Contratar</button>
+    <div class="container">
+      <div class="section-center fade-in">
+        <div class="section-label">Precios</div>
+        <h2 class="section-title">Planes que se adaptan a tu negocio</h2>
+        <p class="section-desc">Sin contratos. Cancela cuando quieras. Comienza con 7 dias gratis.</p>
       </div>
-      <div class="pricing-card fade-in">
-        <div class="pricing-name">Trimestral</div>
-        <div class="pricing-desc">Mejor relación precio</div>
-        <div class="pricing-price">$30 <span>USD</span></div>
-        <div class="pricing-period">por trimestre (17% OFF)</div>
-        <ul class="pricing-features">
-          <li>1 agente incluido</li>
-          <li>1 WhatsApp</li>
-          <li>Contactos ilimitados</li>
-          <li>Soporte por email</li>
-        </ul>
-        <button onclick="buyPlan('quarterly')" class="btn-pricing btn-pricing-outline">Contratar</button>
-      </div>
-      <div class="pricing-card featured fade-in">
-        <div class="pricing-name">Semestral</div>
-        <div class="pricing-desc">Mejor ahorro</div>
-        <div class="pricing-price">$55 <span>USD</span></div>
-        <div class="pricing-period">por semestre (24% OFF)</div>
-        <ul class="pricing-features">
-          <li>1 agente incluido</li>
-          <li>1 WhatsApp</li>
-          <li>Contactos ilimitados</li>
-          <li>Soporte prioritario</li>
-        </ul>
-        <button onclick="buyPlan('semestral')" class="btn-pricing btn-pricing-solid">Contratar</button>
-      </div>
-      <div class="pricing-card fade-in">
-        <div class="pricing-name">Anual</div>
-        <div class="pricing-desc" style="color: var(--accent); font-weight: 600;">🌟 MÁS POPULAR</div>
-        <div class="pricing-price">$75 <span>USD</span></div>
-        <div class="pricing-period">por año (48% OFF)</div>
-        <ul class="pricing-features">
-          <li>1 agente incluido</li>
-          <li>1 WhatsApp</li>
-          <li>Contactos ilimitados</li>
-          <li>Soporte prioritario 24/7</li>
-        </ul>
-        <button onclick="buyPlan('annual')" class="btn-pricing btn-pricing-solid">Contratar</button>
+      <div class="pricing-grid fade-in">
+        <!-- Monthly -->
+        <div class="pricing-card">
+          <div class="pricing-name">Mensual</div>
+          <div class="pricing-price">$12 <span>USD</span></div>
+          <div class="pricing-period">por mes</div>
+          <ul class="pricing-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 agente incluido</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 WhatsApp</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Contactos ilimitados</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte por email</li>
+          </ul>
+          <button onclick="buyPlan('monthly')" class="btn-pricing btn-pricing-outline">Contratar</button>
+        </div>
+        <!-- Quarterly -->
+        <div class="pricing-card">
+          <div class="pricing-name">Trimestral</div>
+          <div class="pricing-price">$30 <span>USD</span></div>
+          <div class="pricing-period">por trimestre (17% OFF)</div>
+          <ul class="pricing-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 agente incluido</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 WhatsApp</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Contactos ilimitados</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte por email</li>
+          </ul>
+          <button onclick="buyPlan('quarterly')" class="btn-pricing btn-pricing-outline">Contratar</button>
+        </div>
+        <!-- Semestral -->
+        <div class="pricing-card featured">
+          <div class="pricing-badge">Recomendado</div>
+          <div class="pricing-name">Semestral</div>
+          <div class="pricing-price">$55 <span>USD</span></div>
+          <div class="pricing-period">por semestre (24% OFF)</div>
+          <ul class="pricing-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 agente incluido</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 WhatsApp</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Contactos ilimitados</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario</li>
+          </ul>
+          <button onclick="buyPlan('semestral')" class="btn-pricing btn-pricing-solid">Contratar</button>
+        </div>
+        <!-- Annual -->
+        <div class="pricing-card">
+          <div class="pricing-name">Anual</div>
+          <div class="pricing-price">$75 <span>USD</span></div>
+          <div class="pricing-period">por ano (48% OFF)</div>
+          <ul class="pricing-list">
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 agente incluido</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 WhatsApp</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Contactos ilimitados</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte prioritario 24/7</li>
+          </ul>
+          <button onclick="buyPlan('annual')" class="btn-pricing btn-pricing-solid">Contratar</button>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ═══ TESTIMONIALS ═══ -->
-  <section class="testimonials-section">
-    <div class="testimonials-inner">
-      <div class="fade-in" style="text-align: center;">
-        <div class="section-tag">Testimonios</div>
+  <section class="section testimonials-section">
+    <div class="container">
+      <div class="section-center fade-in">
+        <div class="section-label">Testimonios</div>
         <h2 class="section-title">Lo que dicen nuestros clientes</h2>
-        <p class="section-subtitle" style="margin: 0 auto 60px;">Profesionales de salud en toda Latinoamerica confian en MIIA para hacer crecer su negocio.</p>
+        <p class="section-desc">Profesionales de salud en toda Latinoamerica confian en MIIA para hacer crecer su negocio.</p>
       </div>
-      <div class="testimonials-carousel">
-        <div class="testimonials-track" id="testimonialsTrack">
-          <div class="testimonial-card">
-            <div class="testimonial fade-in">
-              <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-              <p class="testimonial-text">"MIIA contesta mis WhatsApp cuando estoy en consulta. Ya cerre 3 ventas que hubiera perdido por no responder a tiempo."</p>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar">DC</div>
-                <div>
-                  <div class="testimonial-name">Dr. Carlos M.</div>
-                  <div class="testimonial-role">Clinica General - Bogota</div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial fade-in">
-              <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-              <p class="testimonial-text">"La cotizacion en PDF es increible. Se la envia al paciente en segundos y se ve super profesional. Mis leads quedan impresionados."</p>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar">LP</div>
-                <div>
-                  <div class="testimonial-name">Dra. Laura P.</div>
-                  <div class="testimonial-role">Dermatologa - Santiago</div>
-                </div>
-              </div>
-            </div>
-            <div class="testimonial fade-in">
-              <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-              <p class="testimonial-text">"Pense que seria otro chatbot aburrido. MIIA habla como yo hablo. Mis pacientes no notan la diferencia. Es como tener una empleada 24/7."</p>
-              <div class="testimonial-author">
-                <div class="testimonial-avatar">RM</div>
-                <div>
-                  <div class="testimonial-name">Dr. Ricardo M.</div>
-                  <div class="testimonial-role">Traumatologo - CDMX</div>
-                </div>
-              </div>
+      <div class="testimonials-grid fade-in">
+        <div class="testimonial">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="testimonial-text">"MIIA contesta mis WhatsApp cuando estoy en consulta. Ya cerre 3 ventas que hubiera perdido por no responder a tiempo."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">DC</div>
+            <div>
+              <div class="testimonial-name">Dr. Carlos M.</div>
+              <div class="testimonial-role">Clinica General - Bogota</div>
             </div>
           </div>
         </div>
-        <div class="carousel-dots" id="carouselDots">
-          <button class="carousel-dot active" data-index="0"></button>
+        <div class="testimonial">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="testimonial-text">"La cotizacion en PDF es increible. Se la envia al paciente en segundos y se ve super profesional."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">LP</div>
+            <div>
+              <div class="testimonial-name">Dra. Laura P.</div>
+              <div class="testimonial-role">Dermatologa - Santiago</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial">
+          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="testimonial-text">"Pense que seria otro chatbot aburrido. MIIA habla como yo hablo. Mis pacientes no notan la diferencia."</p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">RM</div>
+            <div>
+              <div class="testimonial-name">Dr. Ricardo M.</div>
+              <div class="testimonial-role">Traumatologo - CDMX</div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1198,91 +1140,99 @@
 
   <!-- ═══ FAQ ═══ -->
   <section class="section" id="faq">
-    <div class="fade-in" style="text-align: center;">
-      <div class="section-tag">Preguntas frecuentes</div>
-      <h2 class="section-title">Resolvemos tus dudas</h2>
-      <p class="section-subtitle" style="margin: 0 auto 60px;"></p>
-    </div>
-    <div class="faq-list">
-      <div class="faq-item fade-in">
-        <button class="faq-question">Necesito WhatsApp Business? <span class="faq-icon">+</span></button>
-        <div class="faq-answer"><p>No. MIIA se conecta a tu WhatsApp personal. No necesitas crear una cuenta de Business ni cambiar de numero.</p></div>
+    <div class="container">
+      <div class="section-center fade-in">
+        <div class="section-label">Preguntas frecuentes</div>
+        <h2 class="section-title">Resolvemos tus dudas</h2>
+        <p class="section-desc"></p>
       </div>
-      <div class="faq-item fade-in">
-        <button class="faq-question">Mis clientes sabran que hablan con una IA? <span class="faq-icon">+</span></button>
-        <div class="faq-answer"><p>No. MIIA aprende tu estilo de comunicacion y responde como si fueras tú. Usa tu nombre, tu tono y tu forma de vender.</p></div>
-      </div>
-      <div class="faq-item fade-in">
-        <button class="faq-question">Puedo entrenarla con informacion de mi negocio? <span class="faq-icon">+</span></button>
-        <div class="faq-answer"><p>Si! Solo escríbele "Aprende:" seguido de cualquier dato. MIIA lo guarda y lo usa en futuras conversaciones con tus leads.</p></div>
-      </div>
-      <div class="faq-item fade-in">
-        <button class="faq-question">Que pasa si un lead quiere hablar conmigo directamente? <span class="faq-icon">+</span></button>
-        <div class="faq-answer"><p>Cuando tú respondes un chat, MIIA se retira automaticamente por 90 minutos para no interferir. Ella sabe cuando darte espacio.</p></div>
-      </div>
-      <div class="faq-item fade-in">
-        <button class="faq-question">Es seguro? Mis datos estan protegidos? <span class="faq-icon">+</span></button>
-        <div class="faq-answer"><p>Absolutamente. Contamos con certificacion ISO 27001, el estandar de seguridad mas alto. Somos la unica plataforma de salud en LATAM con esta certificacion.</p></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ═══ FINAL CTA ═══ -->
-  <section class="final-cta">
-    <div class="final-cta-inner fade-in">
-      <h2>Deja que MIIA venda mientras tú atiendes</h2>
-      <p>Unite a cientos de profesionales de salud que ya automatizaron sus ventas con inteligencia artificial.</p>
-      <a href="login.html" class="btn-cta-white">Empezar gratis ahora</a>
-    </div>
-  </section>
-
-  <!-- ═══ FOOTER ═══ -->
-  <!-- ═══ MANIFIESTO ═══ -->
-  <section style="padding: 80px 40px; background: #050508; display: flex; justify-content: center;">
-    <div style="max-width: 760px; width: 100%; background: rgba(9,9,15,0.95); border: 1px solid rgba(0,229,255,0.2); border-radius: 28px; padding: 56px 52px; position: relative; box-shadow: 0 0 60px rgba(0,229,255,0.06);">
-      <div style="position: absolute; top: 20px; right: 28px; font-size: 5rem; color: rgba(0,229,255,0.08); font-weight: 900; font-style: italic; line-height: 1;">"</div>
-      <p style="font-size: 0.7rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.35em; color: rgba(0,229,255,0.5); margin-bottom: 28px; display: flex; align-items: center; gap: 12px; font-style: italic; font-family: 'Montserrat', sans-serif;">
-        <span style="display:inline-block; width: 32px; height: 1px; background: rgba(0,229,255,0.3);"></span>
-        Manifiesto MIIA
-      </p>
-      <p style="font-size: 1.05rem; color: #cbd5e1; font-weight: 500; line-height: 1.9; font-style: italic; font-family: 'Montserrat', sans-serif;">
-        "Vender no es solo cerrar tratos, es sobrevivir al caos.<br><br>
-        Como la langosta, el vendedor vive en una armadura que le queda chica: el estrés del mensaje sin responder, la presión del cierre y la repetición que agota.
-        <span style="color: #f8fafc; font-weight: 800; font-size: 1.08rem;"> Ese dolor no es una falla, es la señal de que es hora de crecer.</span><br><br>
-        <span style="color: #00e5ff; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; font-style: normal;">MIIA ES TU NUEVA ARMADURA.</span>
-        Ese espacio donde te despojas de la gestión manual para vestirte con Inteligencia Artificial hecha a tu medida.<br><br>
-        <span style="display: block; margin-top: 20px; padding: 16px 20px; border-left: 2px solid #00e5ff; background: rgba(0,229,255,0.04); border-radius: 0 12px 12px 0; font-weight: 800; font-size: 1.1rem; color: #f8fafc; letter-spacing: -0.01em; line-height: 1.5; font-style: normal; text-transform: uppercase;">
-          Deja que el sistema cargue el proceso,<br>mientras tú te preparas para tu nuevo tamaño.
-        </span>
-      </p>
-      <div style="margin-top: 32px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
-        <span style="font-size: 0.7rem; color: rgba(100,116,139,0.6); font-weight: 800; text-transform: uppercase; letter-spacing: 0.2em; font-style: italic; font-family: 'Montserrat', sans-serif;">MIIA Platform</span>
-        <div style="display: flex; gap: 6px;">
-          <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(0,229,255,0.5);"></div>
-          <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(0,229,255,0.3);"></div>
-          <div style="width: 5px; height: 5px; border-radius: 50%; background: rgba(0,229,255,0.1);"></div>
+      <div class="faq-list">
+        <div class="faq-item fade-in">
+          <button class="faq-question">Necesito WhatsApp Business? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>No. MIIA se conecta a tu WhatsApp personal. No necesitas crear una cuenta de Business ni cambiar de numero.</p></div>
+        </div>
+        <div class="faq-item fade-in">
+          <button class="faq-question">Mis clientes sabran que hablan con una IA? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>No. MIIA aprende tu estilo de comunicacion y responde como si fueras tu. Usa tu nombre, tu tono y tu forma de vender.</p></div>
+        </div>
+        <div class="faq-item fade-in">
+          <button class="faq-question">Puedo entrenarla con informacion de mi negocio? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>Si! Solo escribele "Aprende:" seguido de cualquier dato. MIIA lo guarda y lo usa en futuras conversaciones con tus leads.</p></div>
+        </div>
+        <div class="faq-item fade-in">
+          <button class="faq-question">Que pasa si un lead quiere hablar conmigo directamente? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>Cuando tu respondes un chat, MIIA se retira automaticamente por 90 minutos para no interferir. Ella sabe cuando darte espacio.</p></div>
+        </div>
+        <div class="faq-item fade-in">
+          <button class="faq-question">Es seguro? Mis datos estan protegidos? <span class="faq-icon">+</span></button>
+          <div class="faq-answer"><p>Absolutamente. Contamos con certificacion ISO 27001, el estandar de seguridad mas alto. Somos la unica plataforma de salud en LATAM con esta certificacion.</p></div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- ═══ FINAL CTA ═══ -->
+  <section class="cta-section">
+    <div class="fade-in">
+      <h2>Deja que MIIA venda<br>mientras tu atiendes</h2>
+      <p>Unite a cientos de profesionales de salud que ya automatizaron sus ventas con inteligencia artificial.</p>
+      <a href="login.html" class="btn btn-primary">
+        Empezar gratis ahora
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══ MANIFESTO ═══ -->
+  <section class="manifesto">
+    <div class="manifesto-card fade-in">
+      <div class="manifesto-label">Manifiesto MIIA</div>
+      <p class="manifesto-text">
+        "Vender no es solo cerrar tratos, es sobrevivir al caos.<br><br>
+        Como la langosta, el vendedor vive en una armadura que le queda chica: el estres del mensaje sin responder, la presion del cierre y la repeticion que agota.
+        <strong>Ese dolor no es una falla, es la senal de que es hora de crecer.</strong><br><br>
+        <span class="manifesto-accent">MIIA es tu nueva armadura.</span>
+        Ese espacio donde te despojas de la gestion manual para vestirte con Inteligencia Artificial hecha a tu medida.<br><br>
+        <span class="highlight">
+          Deja que el sistema cargue el proceso,<br>mientras tu te preparas para tu nuevo tamano.
+        </span>
+      </p>
+      <div class="manifesto-footer">
+        <span>MIIA Platform</span>
+        <div style="display:flex;gap:6px;">
+          <div style="width:5px;height:5px;border-radius:50%;background:rgba(91,141,248,0.5);"></div>
+          <div style="width:5px;height:5px;border-radius:50%;background:rgba(91,141,248,0.3);"></div>
+          <div style="width:5px;height:5px;border-radius:50%;background:rgba(91,141,248,0.15);"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <div class="nav-logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;vertical-align:middle;"><defs><linearGradient id="mlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8DF8"/><stop offset="100%" stop-color="#7C5CF6"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#mlg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,Montserrat,sans-serif" font-weight="800" font-size="17" fill="url(#mlg)">MIIA</text></svg></div>
+        <a href="index.html" class="nav-logo" style="margin-bottom:0;">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:20px;width:20px;">
+            <rect x="3" y="3" width="18" height="18" rx="4" fill="url(#fg)"/>
+            <defs><linearGradient id="fg" x1="3" y1="3" x2="21" y2="21"><stop stop-color="#5B8DF8"/><stop offset="1" stop-color="#7C5CF6"/></linearGradient></defs>
+            <path d="M8 12l3 3 5-6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          MIIA
+        </a>
         <p>Tu asistente de ventas con IA que trabaja las 24 horas en WhatsApp para hacer crecer tu negocio.</p>
-        <div style="margin-top:20px; display:flex; flex-direction:column; gap:8px;">
-          <a href="mailto:lobsterscrm@gmail.com" style="color:var(--text-muted); font-size:0.85rem; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-muted)'">✉ lobsterscrm@gmail.com</a>
-          <a href="tel:+573054169969" style="color:var(--text-muted); font-size:0.85rem; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-muted)'">📞 +57 305 416 9969</a>
+        <div class="footer-contact">
+          <a href="mailto:lobsterscrm@gmail.com">lobsterscrm@gmail.com</a>
+          <a href="tel:+573054169969">+57 305 416 9969</a>
         </div>
       </div>
       <div class="footer-col">
         <h4>Producto</h4>
         <a href="#features">Funciones</a>
         <a href="#pricing">Precios</a>
-        <a href="#how">Cómo funciona</a>
+        <a href="#how">Como funciona</a>
         <a href="#faq">Preguntas frecuentes</a>
-        <a href="login.html">Iniciar sesión</a>
+        <a href="login.html">Iniciar sesion</a>
       </div>
       <div class="footer-col">
         <h4>Empresa</h4>
@@ -1291,17 +1241,13 @@
       </div>
       <div class="footer-col">
         <h4>Legal</h4>
-        <a href="terms.html">Términos y condiciones</a>
-        <a href="privacy.html">Política de privacidad</a>
-        <a href="cookies.html">Política de cookies</a>
+        <a href="terms.html">Terminos y condiciones</a>
+        <a href="privacy.html">Politica de privacidad</a>
+        <a href="cookies.html">Politica de cookies</a>
       </div>
     </div>
     <div class="footer-bottom">
       <p>&copy; 2026 MIIA. Todos los derechos reservados. Desarrollado con IA por <strong>Lobsters CRM</strong>.</p>
-      <div class="footer-socials">
-        <a href="mailto:lobsterscrm@gmail.com" title="Email" style="font-size:1rem;">✉</a>
-        <a href="tel:+573054169969" title="Teléfono" style="font-size:1rem;">📞</a>
-      </div>
     </div>
   </footer>
 
@@ -1309,7 +1255,6 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 
-  <!-- ═══ SCRIPTS ═══ -->
   <script>
     // Firebase Config
     const firebaseConfig = {
@@ -1322,26 +1267,19 @@
     };
     firebase.initializeApp(firebaseConfig);
 
-    // Stripe checkout for pricing plans
+    // Stripe checkout
     async function buyPlan(plan) {
       const user = firebase.auth().currentUser;
-
       if (!user) {
-        // Redirect to login with plan parameter
         window.location.href = 'login.html?plan=' + plan;
         return;
       }
-
       try {
         const res = await fetch('https://miia-backend-production.up.railway.app/api/stripe/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            uid: user.uid,
-            plan: plan
-          })
+          body: JSON.stringify({ uid: user.uid, plan: plan })
         });
-
         const data = await res.json();
         if (data.url) {
           window.location.href = data.url;
@@ -1349,43 +1287,38 @@
           alert('Error al procesar: ' + (data.error || 'Desconocido'));
         }
       } catch (error) {
-        alert('Error de conexión: ' + error.message);
+        alert('Error de conexion: ' + error.message);
       }
     }
 
-    // Navbar scroll effect
+    // Navbar
     const navbar = document.getElementById('navbar');
     window.addEventListener('scroll', () => {
       navbar.classList.toggle('scrolled', window.scrollY > 50);
     });
 
-    // Mobile menu toggle
+    // Mobile menu
     document.getElementById('navToggle').addEventListener('click', () => {
       document.getElementById('navLinks').classList.toggle('active');
     });
-
-    // Close mobile menu on link click
     document.querySelectorAll('.nav-links a').forEach(link => {
       link.addEventListener('click', () => {
         document.getElementById('navLinks').classList.remove('active');
       });
     });
 
-    // Scroll animations with IntersectionObserver
+    // Scroll animations
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
-          setTimeout(() => entry.target.classList.add('visible'), i * 100);
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-    document.querySelectorAll('.fade-in, .fade-in-left, .fade-in-right').forEach(el => {
-      observer.observe(el);
-    });
-
-    // FAQ accordion
+    // FAQ
     document.querySelectorAll('.faq-question').forEach(btn => {
       btn.addEventListener('click', () => {
         const item = btn.parentElement;

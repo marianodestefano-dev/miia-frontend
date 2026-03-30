@@ -2,28 +2,27 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIIA - Casa Central</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
     :root {
-      --primary: #2d5bff; --primary-dark: #1a3fd6; --secondary: #7C5CF6;
-      --accent: #25d366; --accent-dark: #1ebe5a; --danger: #ef4444; --warning: #f59e0b;
-      --bg-deep: #030508; --bg-light: #030508; --bg-panel: #0a0c12; --bg-white: #0a0c12;
-      --bg-surface: #0f1219; --bg-card: #0a0c12;
-      --text-dark: #ffffff; --text-body: #94a3b8; --text-muted: #64748b;
+      --primary: #5B8DF8; --primary-dark: #4A7AE5; --secondary: #7C5CF6;
+      --accent: #34D399; --accent-dark: #2BC48A; --danger: #ef4444; --warning: #f59e0b;
+      --bg-deep: #030508; --bg-light: #030508; --bg-panel: #0A0F1A; --bg-white: #030508;
+      --bg-surface: #0F1520; --bg-card: #0A0F1A;
+      --text-dark: #F1F5F9; --text-body: #94A3B8; --text-muted: #64748B;
       --border-glass: rgba(255,255,255,0.06);
-      --gradient-main: linear-gradient(135deg, #2d5bff 0%, #7C5CF6 100%);
-      --shadow-sm: 0 2px 8px rgba(45,91,255,0.08);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.4), 0 1px 3px rgba(45,91,255,0.06);
-      --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 50px;
+      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
+      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
+      --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
+      --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 100px;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color:var(--text-body); background:var(--bg-deep); min-height:100vh; padding-top:80px; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color:var(--text-body); background:var(--bg-deep); min-height:100vh; padding-top:64px; -webkit-font-smoothing: antialiased; }
 
     /* Navbar */
-    #navbar { position:fixed; top:0; left:0; right:0; height:80px; background:rgba(3,5,8,0.85); backdrop-filter:blur(16px); border-bottom:1px solid var(--border-glass); display:flex; justify-content:space-between; align-items:center; padding:0 40px; z-index:100; }
+    #navbar { position:fixed; top:0; left:0; right:0; height:64px; background:rgba(3,5,8,0.8); backdrop-filter:blur(16px); border-bottom:1px solid var(--border-glass); display:flex; justify-content:space-between; align-items:center; padding:0 40px; z-index:100; }
     .nav-logo { font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .nav-right { display:flex; align-items:center; gap:16px; }
     .nav-email { font-size:0.82rem; color:var(--text-muted); padding:6px 14px; background:rgba(255,255,255,0.04); border:1px solid var(--border-glass); border-radius:var(--radius-full); }
@@ -46,14 +45,14 @@
     .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
     .stat-card { background:linear-gradient(145deg,#0d1117 0%,#07090d 100%); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-md); padding:28px 24px; text-align:center; transition:transform 0.3s, border-color 0.3s; }
     .stat-card:hover { border-color:var(--primary); transform:translateY(-4px); }
-    .stat-card .value { font-size:2.5rem; font-weight:800; color:#ffffff; display:block; letter-spacing:-0.05em; text-shadow:0 0 20px rgba(45,91,255,0.2); }
+    .stat-card .value { font-size:2.5rem; font-weight:800; color:#ffffff; display:block; letter-spacing:-0.05em; text-shadow:0 0 20px rgba(91,141,248,0.2); }
     .stat-card .label { font-size:0.72rem; color:var(--text-muted); margin-top:8px; text-transform:uppercase; letter-spacing:0.1em; }
 
     /* Tables */
     .data-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
-    .data-table th { background:rgba(45,91,255,0.06); color:var(--text-dark); font-weight:600; padding:12px 14px; text-align:left; border-bottom:1px solid var(--border-glass); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; }
+    .data-table th { background:rgba(91,141,248,0.06); color:var(--text-dark); font-weight:600; padding:12px 14px; text-align:left; border-bottom:1px solid var(--border-glass); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; }
     .data-table td { padding:12px 14px; border-bottom:1px solid var(--border-glass); vertical-align:middle; color:var(--text-body); }
-    .data-table tr:hover td { background:rgba(45,91,255,0.04); }
+    .data-table tr:hover td { background:rgba(91,141,248,0.04); }
 
     /* Badges */
     .badge { display:inline-block; padding:4px 12px; border-radius:var(--radius-full); font-size:0.78rem; font-weight:600; }
@@ -109,7 +108,7 @@
 
     /* Tenant card */
     .tenant-card { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:var(--bg-panel); border-radius:var(--radius-md); margin-bottom:8px; border:1px solid var(--border-glass); transition:border-color 0.2s; }
-    .tenant-card:hover { border-color:rgba(45,91,255,0.25); }
+    .tenant-card:hover { border-color:rgba(91,141,248,0.25); }
     .tenant-status { display:flex; align-items:center; gap:6px; font-size:0.85rem; }
     .dot { width:10px; height:10px; border-radius:50%; }
     .dot.green { background:#22c55e; } .dot.red { background:#ef4444; } .dot.yellow { background:#f59e0b; }
@@ -380,7 +379,7 @@
       <td><span class="badge badge-blue">${planNames[u.plan]||u.plan||'—'}</span></td>
       <td><span class="badge ${statusBadge(u.payment_status)}">${u.payment_status||'trial'}</span></td>
       <td>${u.agents_limit||1}</td>
-      <td>${u.role === 'admin' ? '—' : (u.gemini_api_key ? '✅' : '❌')}</td>
+      <td>${u.role === 'admin' ? '—' : (u.gemini_api_key ? '✅' : '❌')}${u.imported_backup ? ' <span class="badge badge-red" title="Importó backup de: '+(u.import_source_email||'?')+'&#10;Alerta: '+(u.import_alert_level||'?')+'">IMPORT</span>' : ''}</td>
       <td>${u.discount_percent||0}%</td>
       <td>
         <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
