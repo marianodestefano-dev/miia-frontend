@@ -617,6 +617,11 @@
   }
 
   async function connectWhatsApp() {
+    if (!currentUser || !currentUser.uid) {
+      console.error('[WA] ERROR: currentUser no está definido o no tiene UID');
+      alert('Error: No estás autenticado. Recarga la página.');
+      return;
+    }
     console.log('[WA] Iniciando conexión WhatsApp para UID:', currentUser.uid);
 
     // Get user's Gemini API key from Firestore
