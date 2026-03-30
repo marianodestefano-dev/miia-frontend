@@ -127,6 +127,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="toast.js"></script>
 </head>
 <body>
 
@@ -508,7 +509,7 @@
         document.getElementById('createResult').classList.remove('hidden');
         loadUsers();
       } else {
-        alert('Error: ' + (data.error || 'Unknown error'));
+        showToast('Error: ' + (data.error || 'Unknown error'), 'error');
       }
     } catch (e) { alert('Error: ' + e.message); }
   }
@@ -571,14 +572,14 @@
       const res = await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, { method: 'POST' });
       const data = await res.json();
       if (res.ok) {
-        alert('✅ ADN Mining iniciado. MIIA analizara las conversaciones en segundo plano.');
+        showToast('ADN Mining iniciado. MIIA analizara las conversaciones en segundo plano.', 'success');
       } else if (res.status === 503) {
-        alert('❌ WhatsApp no esta conectado. Vincula WhatsApp en Training antes de ejecutar ADN Mining.');
+        showToast('WhatsApp no esta conectado. Vincula WhatsApp en Training primero.', 'error');
       } else {
-        alert('❌ Error: ' + (data.error || 'Error desconocido'));
+        showToast('Error: ' + (data.error || 'Error desconocido'), 'error');
       }
     } catch (e) {
-      alert('❌ Error de red: ' + e.message);
+      showToast('Error de red: ' + e.message, 'error');
     }
   }
   async function forceScraperRun() {
@@ -586,12 +587,12 @@
     try {
       const res = await fetch(`${BACKEND_URL}/api/scraper/run`, { method: 'POST' });
       if (res.ok) {
-        alert('✅ Scraper iniciado. Buscara noticias regulatorias en segundo plano.');
+        showToast('Scraper iniciado. Buscara noticias regulatorias en segundo plano.', 'success');
       } else {
-        alert('❌ Error: HTTP ' + res.status);
+        showToast('Error: HTTP ' + res.status, 'error');
       }
     } catch (e) {
-      alert('❌ Error de red: ' + e.message);
+      showToast('Error de red: ' + e.message, 'error');
     }
   }
 
