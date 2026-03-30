@@ -359,7 +359,8 @@
   }
 
   function renderUsers(filtered) {
-    const list = filtered || users;
+    const myEmail = auth.currentUser?.email;
+    const list = (filtered || users).filter(u => u.email !== myEmail);
     const planNames = { trial:'Trial', monthly:'Mensual', quarterly:'Trimestral', semestral:'Semestral', annual:'Anual' };
     const statusBadge = s => s === 'active' ? 'badge-green' : s === 'pending_payment' ? 'badge-red' : 'badge-yellow';
     const tbody = document.getElementById('usersTableBody');
@@ -370,7 +371,7 @@
       <td><span class="badge badge-blue">${planNames[u.plan]||u.plan||'—'}</span></td>
       <td><span class="badge ${statusBadge(u.payment_status)}">${u.payment_status||'trial'}</span></td>
       <td>${u.agents_limit||1}</td>
-      <td>${u.gemini_api_key ? '✅' : '❌'}</td>
+      <td>${u.role === 'admin' ? '—' : (u.gemini_api_key ? '✅' : '❌')}</td>
       <td>${u.discount_percent||0}%</td>
       <td>
         <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
@@ -426,7 +427,7 @@
     // Alerts
     const alerts = [];
     if (pendingCount > 0) alerts.push({ type:'warn', text:`${pendingCount} usuario(s) con pago pendiente` });
-    const noKey = users.filter(u => !u.gemini_api_key && u.plan !== 'trial').length;
+    const noKey = users.filter(u => u.role !== 'admin' && !u.gemini_api_key && u.plan !== 'trial').length;
     if (noKey > 0) alerts.push({ type:'danger', text:`${noKey} usuario(s) de pago sin API Key configurada` });
     document.getElementById('alertsList').innerHTML = alerts.length === 0
       ? '<p style="color:var(--text-muted);font-size:0.9rem;">Sin alertas</p>'
