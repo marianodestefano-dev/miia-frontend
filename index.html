@@ -10,28 +10,30 @@
        MIIA SaaS Landing — Dark Neon Design System
        ═══════════════════════════════════════ */
     :root {
-      --primary: #00e5ff;
-      --primary-dark: #00b8cc;
-      --secondary: #bf00ff;
-      --accent: #25d366;
-      --accent-dark: #1ebe5a;
-      --bg-light: #0a0a12;
-      --bg-white: #050508;
-      --text-dark: #f8fafc;
-      --text-body: #cbd5e1;
-      --text-muted: #64748b;
-      --gradient-main: linear-gradient(135deg, #00e5ff 0%, #bf00ff 100%);
-      --gradient-accent: linear-gradient(135deg, #25d366 0%, #1ebe5a 100%);
-      --gradient-dark: linear-gradient(135deg, #050508 0%, #0a0a18 100%);
-      --shadow-sm: 0 2px 8px rgba(0, 229, 255, 0.08);
-      --shadow-md: 0 8px 30px rgba(0, 229, 255, 0.12);
-      --shadow-lg: 0 20px 60px rgba(0, 229, 255, 0.15);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.4), 0 1px 3px rgba(0,229,255,0.05);
+      --primary: #5B8DF8;
+      --primary-dark: #4070e0;
+      --secondary: #7C5CF6;
+      --accent: #A78BFA;
+      --accent-dark: #8B6FF0;
+      --bg-light: #060C1A;
+      --bg-white: #060C1A;
+      --bg-card: #0D1628;
+      --bg-surface: #111D35;
+      --text-dark: #E8EDF8;
+      --text-body: #B0BEDD;
+      --text-muted: #8B9CC8;
+      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
+      --gradient-accent: linear-gradient(135deg, #7C5CF6 0%, #A78BFA 100%);
+      --gradient-dark: linear-gradient(135deg, #060C1A 0%, #0D1628 100%);
+      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
+      --shadow-md: 0 8px 30px rgba(91,141,248,0.12);
+      --shadow-lg: 0 20px 60px rgba(91,141,248,0.15);
+      --shadow-card: 0 4px 20px rgba(0,0,0,0.4), 0 1px 3px rgba(91,141,248,0.08);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
       --radius-full: 50px;
-      --border-glow: rgba(0, 229, 255, 0.15);
+      --border-glow: rgba(91,141,248,0.18);
     }
 
     @keyframes shimmerPulse {
@@ -53,8 +55,8 @@
       color: var(--text-body);
       background: var(--bg-white);
       background-image:
-        radial-gradient(circle at 0% 0%, rgba(191,0,255,0.04) 0%, transparent 40%),
-        radial-gradient(circle at 100% 100%, rgba(0,229,255,0.04) 0%, transparent 40%);
+        radial-gradient(circle at 0% 0%, rgba(124,92,246,0.06) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(91,141,248,0.06) 0%, transparent 40%);
       line-height: 1.6;
       overflow-x: hidden;
     }
@@ -936,7 +938,7 @@
 
   <!-- ═══ NAVBAR ═══ -->
   <nav class="navbar" id="navbar">
-    <div class="nav-logo">MIIA</div>
+    <div class="nav-logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;vertical-align:middle;"><defs><linearGradient id="mlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8DF8"/><stop offset="100%" stop-color="#7C5CF6"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#mlg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,Montserrat,sans-serif" font-weight="800" font-size="17" fill="url(#mlg)">MIIA</text></svg></div>
     <ul class="nav-links" id="navLinks">
       <li><a href="#features">Funciones</a></li>
       <li><a href="#how">Cómo funciona</a></li>
@@ -1267,7 +1269,7 @@
   <footer class="footer">
     <div class="footer-inner">
       <div class="footer-brand">
-        <div class="nav-logo">MIIA</div>
+        <div class="nav-logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:28px;width:auto;vertical-align:middle;"><defs><linearGradient id="mlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8DF8"/><stop offset="100%" stop-color="#7C5CF6"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#mlg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,Montserrat,sans-serif" font-weight="800" font-size="17" fill="url(#mlg)">MIIA</text></svg></div>
         <p>Tu asistente de ventas con IA que trabaja las 24 horas en WhatsApp para hacer crecer tu negocio.</p>
         <div style="margin-top:20px; display:flex; flex-direction:column; gap:8px;">
           <a href="mailto:lobsterscrm@gmail.com" style="color:var(--text-muted); font-size:0.85rem; text-decoration:none; transition:color 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-muted)'">✉ lobsterscrm@gmail.com</a>

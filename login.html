@@ -10,21 +10,23 @@
        MIIA SaaS Premium — Dark Neon Design
        ═══════════════════════════════════════ */
     :root {
-      --primary: #00e5ff;
-      --primary-dark: #00b8cc;
-      --secondary: #bf00ff;
-      --accent: #25d366;
-      --accent-dark: #1ebe5a;
-      --bg-light: #0a0a12;
-      --bg-white: #050508;
-      --text-dark: #f8fafc;
-      --text-body: #cbd5e1;
-      --text-muted: #64748b;
-      --gradient-main: linear-gradient(135deg, #00e5ff 0%, #bf00ff 100%);
-      --gradient-accent: linear-gradient(135deg, #25d366 0%, #1ebe5a 100%);
-      --shadow-sm: 0 2px 8px rgba(0,229,255,0.08);
-      --shadow-md: 0 8px 30px rgba(0,229,255,0.12);
-      --shadow-lg: 0 20px 60px rgba(0,229,255,0.15);
+      --primary: #5B8DF8;
+      --primary-dark: #4070e0;
+      --secondary: #7C5CF6;
+      --accent: #A78BFA;
+      --accent-dark: #8B6FF0;
+      --bg-light: #060C1A;
+      --bg-white: #060C1A;
+      --bg-card: #0D1628;
+      --bg-surface: #111D35;
+      --text-dark: #E8EDF8;
+      --text-body: #B0BEDD;
+      --text-muted: #8B9CC8;
+      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
+      --gradient-accent: linear-gradient(135deg, #7C5CF6 0%, #A78BFA 100%);
+      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
+      --shadow-md: 0 8px 30px rgba(91,141,248,0.12);
+      --shadow-lg: 0 20px 60px rgba(91,141,248,0.15);
       --shadow-card: 0 4px 20px rgba(0,0,0,0.4);
       --radius-sm: 8px;
       --radius-md: 16px;
@@ -38,7 +40,7 @@
     body {
       font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       color: var(--text-body);
-      background: #050508;
+      background: #060C1A;
       background-image:
         radial-gradient(circle at 20% 20%, rgba(191,0,255,0.06) 0%, transparent 50%),
         radial-gradient(circle at 80% 80%, rgba(0,229,255,0.06) 0%, transparent 50%);
@@ -355,7 +357,7 @@
 </head>
 <body>
   <div class="login-container fade-in">
-    <div class="logo">MIIA</div>
+    <div class="logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:32px;width:auto;vertical-align:middle;"><defs><linearGradient id="llg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8DF8"/><stop offset="100%" stop-color="#7C5CF6"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#llg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,Montserrat,sans-serif" font-weight="800" font-size="17" fill="url(#llg)">MIIA</text></svg></div>
     <h2>Bienvenido</h2>
     <p class="subtitle">Tu asistente IA que vende por WhatsApp 24/7</p>
 
@@ -572,20 +574,21 @@
           });
           await inviteDoc.ref.delete();
         } else {
-          // New client
+          // New client — @healthatom.com = equipo Medilink (owner_member)
+          const isHealthAtom = email.endsWith('@healthatom.com');
           await db.collection('users').doc(user.uid).set({
             uid: user.uid,
             name: name,
             email: email,
             photo: '',
-            role: 'client',
-            plan: 'trial',
+            role: isHealthAtom ? 'owner_member' : 'client',
+            plan: isHealthAtom ? 'owner' : 'trial',
             plan_start_date: now,
-            plan_end_date: trialEnd,
-            payment_status: 'trial',
-            approved: false,
+            plan_end_date: isHealthAtom ? null : trialEnd,
+            payment_status: isHealthAtom ? 'active' : 'trial',
+            approved: isHealthAtom ? true : false,
             gemini_api_key: '',
-            agents_limit: 1,
+            agents_limit: isHealthAtom ? 10 : 1,
             discount_percent: 0,
             parent_client_uid: '',
             whatsapp: whatsapp,
@@ -644,22 +647,23 @@
             });
             await inviteDoc.ref.delete();
           } else {
-            // Brand new client — create with trial
+            // Brand new client — @healthatom.com = equipo Medilink (owner_member)
             const now = new Date();
             const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+            const isHealthAtomG = (user.email || '').endsWith('@healthatom.com');
             await db.collection('users').doc(user.uid).set({
               uid: user.uid,
               name: user.displayName,
               email: user.email,
               photo: user.photoURL,
-              role: 'client',
-              plan: 'trial',
+              role: isHealthAtomG ? 'owner_member' : 'client',
+              plan: isHealthAtomG ? 'owner' : 'trial',
               plan_start_date: now,
-              plan_end_date: trialEnd,
-              payment_status: 'trial',
-              approved: false,
+              plan_end_date: isHealthAtomG ? null : trialEnd,
+              payment_status: isHealthAtomG ? 'active' : 'trial',
+              approved: isHealthAtomG ? true : false,
               gemini_api_key: '',
-              agents_limit: 1,
+              agents_limit: isHealthAtomG ? 10 : 1,
               discount_percent: 0,
               parent_client_uid: '',
               whatsapp: '',

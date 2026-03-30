@@ -6,23 +6,25 @@
   <title>Entrenar MIIA</title>
   <style>
     :root {
-      --primary: #00e5ff;
-      --primary-dark: #00b8cc;
-      --secondary: #bf00ff;
-      --accent: #25d366;
-      --accent-dark: #1ebe5a;
-      --bg-light: #0a0a12;
-      --bg-white: #050508;
-      --text-dark: #f8fafc;
-      --text-body: #cbd5e1;
-      --text-muted: #64748b;
-      --gradient-main: linear-gradient(135deg, #00e5ff 0%, #bf00ff 100%);
-      --gradient-accent: linear-gradient(135deg, #25d366 0%, #1ebe5a 100%);
+      --primary: #5B8DF8;
+      --primary-dark: #4070e0;
+      --secondary: #7C5CF6;
+      --accent: #A78BFA;
+      --accent-dark: #8B6FF0;
+      --bg-light: #060C1A;
+      --bg-white: #060C1A;
+      --bg-card: #0D1628;
+      --bg-surface: #111D35;
+      --text-dark: #E8EDF8;
+      --text-body: #B0BEDD;
+      --text-muted: #8B9CC8;
+      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
+      --gradient-accent: linear-gradient(135deg, #7C5CF6 0%, #A78BFA 100%);
       --danger: #ef4444;
       --warning: #f59e0b;
-      --shadow-sm: 0 2px 8px rgba(0,229,255,0.08);
-      --shadow-md: 0 8px 30px rgba(0,229,255,0.12);
-      --shadow-card: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
+      --shadow-md: 0 8px 30px rgba(91,141,248,0.12);
+      --shadow-card: 0 4px 20px rgba(0,0,0,0.4), 0 1px 3px rgba(91,141,248,0.06);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
@@ -42,9 +44,9 @@
     #navbar {
       position: fixed; top: 0; left: 0; right: 0;
       height: 80px;
-      background: rgba(5,5,8,0.92);
+      background: rgba(6,12,26,0.92);
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,229,255,0.08);
+      border-bottom: 1px solid rgba(91,141,248,0.1);
       display: flex; justify-content: space-between; align-items: center;
       padding: 0 40px; z-index: 100;
     }
@@ -197,6 +199,39 @@
     .modal-card #qrCode img { max-width: 260px; margin: 16px auto; }
     .hidden { display: none !important; }
 
+    /* ═══ COBROS (Payment Methods) ═══ */
+    .payment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .payment-card {
+      background: rgba(9,9,15,0.6); border: 1px solid rgba(102,126,234,0.12); border-radius: var(--radius-md);
+      padding: 20px; transition: border-color 0.3s;
+    }
+    .payment-card.enabled { border-color: rgba(0,229,255,0.3); }
+    .payment-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .payment-icon { font-size: 1.8rem; width: 44px; text-align: center; }
+    .payment-card-header h4 { flex: 1; color: var(--text-dark); font-weight: 700; font-size: 1rem; }
+    .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0; background: rgba(100,116,139,0.3); border-radius: 999px; cursor: pointer; transition: background 0.3s;
+    }
+    .toggle-track::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 0.3s; }
+    .toggle-switch input:checked + .toggle-track { background: var(--primary); }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(20px); }
+    .payment-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
+    .payment-card textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid rgba(102,126,234,0.15); border-radius: var(--radius-sm);
+      background: rgba(5,5,8,0.8); color: var(--text-body); font-size: 0.85rem; resize: vertical; min-height: 80px;
+      font-family: inherit; transition: border-color 0.3s;
+    }
+    .payment-card textarea:focus { outline: none; border-color: var(--primary); }
+    .payment-card textarea:disabled { opacity: 0.4; cursor: not-allowed; }
+    .payment-card textarea::placeholder { color: #475569; font-style: italic; }
+    .payment-group-header {
+      grid-column: 1 / -1; font-size: 0.8rem; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 16px 0 6px; border-bottom: 1px solid rgba(102,126,234,0.1); margin-bottom: 4px;
+    }
+
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
       #navbar { padding: 0 16px; }
@@ -219,7 +254,7 @@
 
 <!-- ═══ NAVBAR ═══ -->
 <nav id="navbar">
-  <span class="nav-logo">MIIA</span>
+  <span class="nav-logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:26px;width:auto;vertical-align:middle;"><defs><linearGradient id="tlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8DF8"/><stop offset="100%" stop-color="#7C5CF6"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#tlg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,Montserrat,sans-serif" font-weight="800" font-size="17" fill="url(#tlg)">MIIA</text></svg></span>
   <button class="nav-back" onclick="goToDashboard()">← Dashboard</button>
 </nav>
 
@@ -237,6 +272,7 @@
     <button class="tab-btn" onclick="switchTab('expert')">Chat Experto</button>
     <button class="tab-btn" onclick="switchTab('docs')">Documentos</button>
     <button class="tab-btn" onclick="switchTab('test')">Testear MIIA</button>
+    <button class="tab-btn" onclick="switchTab('cobros')">Cobros</button>
   </div>
 
   <div class="tab-content">
@@ -388,6 +424,25 @@
       </div>
     </div>
 
+    <!-- ════ TAB 6: COBROS ════ -->
+    <div id="tab-cobros" class="tab-panel">
+      <h3 class="section-title">Métodos de Cobro</h3>
+      <p class="section-desc">Activa los métodos de pago que aceptas y escribe las instrucciones que MIIA debe dar a tus clientes cuando pregunten cómo pagar.</p>
+
+      <div class="payment-grid" id="paymentGrid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div style="background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.12);border-radius:var(--radius-md);padding:16px;margin-bottom:20px;">
+        <p style="font-size:0.85rem;color:var(--text-muted);">💡 <strong style="color:var(--text-dark);">Tip:</strong> Cuando un cliente pregunte "¿cómo pago?" o "¿qué métodos de pago tienen?", MIIA responderá automáticamente con los métodos que tengas activos y sus instrucciones.</p>
+      </div>
+
+      <div class="grid-toolbar">
+        <button class="btn-sm btn-primary" onclick="savePaymentMethods()">Guardar métodos de cobro</button>
+        <span id="cobrosStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -436,6 +491,7 @@
       loadProducts();
       loadContactRules();
       loadSessions();
+      loadPaymentMethods();
     });
   };
 
@@ -581,7 +637,7 @@
 
   async function saveProduct(index) {
     const data = getRowData(index);
-    if (!data || !data.name.trim()) { alert('El nombre del producto es obligatorio'); return; }
+    if (!data || !data.name.trim()) { showToast('El nombre del producto es obligatorio', 'warning'); return; }
     const statusEl = document.getElementById('productStatus');
     statusEl.textContent = 'Guardando...';
     try {
@@ -794,7 +850,7 @@
   }
 
   async function saveCurrentSession() {
-    if (expertSessionMessages.length === 0) { alert('No hay mensajes en la sesion actual'); return; }
+    if (expertSessionMessages.length === 0) { showToast('No hay mensajes en la sesión actual', 'warning'); return; }
     const statusEl = document.getElementById('sessionSaveStatus');
     statusEl.textContent = 'Guardando sesion...';
 
@@ -827,10 +883,10 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ additionalText: text.trim() })
       });
-      alert('Sesion actualizada. MIIA aprendio la nueva informacion.');
+      showToast('Sesión actualizada. MIIA aprendió la nueva información.', 'success');
       loadSessions();
     } catch (e) {
-      alert('Error al actualizar');
+      showToast('Error al actualizar', 'error');
     }
   }
 
@@ -841,7 +897,7 @@
       sessions = sessions.filter(s => s.date !== date);
       renderSessions();
     } catch (e) {
-      alert('Error al eliminar');
+      showToast('Error al eliminar', 'error');
     }
   }
 
@@ -872,6 +928,212 @@
       '<div class="message miia"><div class="message-bubble">Hola! Bienvenido. En que puedo ayudarte hoy?</div></div>';
   }
 
+  // ═══ TAB 6: COBROS ═══
+  const COUNTRY_LABELS = { CO: '🇨🇴 Colombia', AR: '🇦🇷 Argentina', CL: '🇨🇱 Chile', MX: '🇲🇽 México', ALL: '🌐 Internacional' };
+
+  const PAYMENT_METHODS_DEFAULT = [
+    // ── Colombia ──
+    { id: 'nequi',          name: 'Nequi',                    type: 'link',          country: 'CO', icon: '📲', enabled: false, payment_link: '' },
+    { id: 'daviplata',      name: 'Daviplata',                type: 'link',          country: 'CO', icon: '📱', enabled: false, payment_link: '' },
+    { id: 'pse',            name: 'PSE',                      type: 'link',          country: 'CO', icon: '🏦', enabled: false, payment_link: '' },
+    { id: 'bold',           name: 'Bold',                     type: 'link',          country: 'CO', icon: '💳', enabled: false, payment_link: '' },
+    { id: 'wompi',          name: 'Wompi / Bancolombia',      type: 'link',          country: 'CO', icon: '🏧', enabled: false, payment_link: '' },
+    { id: 'efecty',         name: 'Efecty',                   type: 'instrucciones', country: 'CO', icon: '🏪', enabled: false, reference_code: '', instructions: '' },
+    { id: 'baloto',         name: 'Baloto',                   type: 'instrucciones', country: 'CO', icon: '🎰', enabled: false, reference_code: '', instructions: '' },
+    // ── Argentina ──
+    { id: 'mercadopago',    name: 'MercadoPago',              type: 'link',          country: 'AR', icon: '💳', enabled: false, payment_link: '' },
+    { id: 'transferencia_ar', name: 'Transferencia (CBU/CVU)',type: 'banco',         country: 'AR', icon: '🏦', enabled: false, cbu_alias: '', bank_name: '', account_holder: '' },
+    { id: 'modo',           name: 'Modo',                     type: 'link',          country: 'AR', icon: '📲', enabled: false, payment_link: '' },
+    { id: 'uala',           name: 'Ualá',                     type: 'link',          country: 'AR', icon: '📱', enabled: false, payment_link: '' },
+    { id: 'rapipago',       name: 'Rapipago / PagoFácil',     type: 'instrucciones', country: 'AR', icon: '🏪', enabled: false, reference_code: '', instructions: '' },
+    // ── Chile ──
+    { id: 'webpay',         name: 'Webpay (Transbank)',        type: 'link',          country: 'CL', icon: '💳', enabled: false, payment_link: '' },
+    { id: 'khipu',          name: 'Khipu',                    type: 'link',          country: 'CL', icon: '🔗', enabled: false, payment_link: '' },
+    { id: 'transferencia_cl', name: 'Transferencia bancaria', type: 'banco',         country: 'CL', icon: '🏦', enabled: false, cci_rut: '', bank_name: '', account_holder: '' },
+    { id: 'mach',           name: 'Mach (BCI)',               type: 'link',          country: 'CL', icon: '📲', enabled: false, payment_link: '' },
+    // ── México ──
+    { id: 'spei',           name: 'SPEI (Transferencia)',      type: 'banco',         country: 'MX', icon: '🏦', enabled: false, clabe: '', bank_name: '', account_holder: '' },
+    { id: 'oxxo',           name: 'OXXO Pay',                 type: 'instrucciones', country: 'MX', icon: '🏪', enabled: false, reference_code: '', instructions: '' },
+    { id: 'clip',           name: 'CLIP',                     type: 'link',          country: 'MX', icon: '💳', enabled: false, payment_link: '' },
+    { id: 'mercadopago_mx', name: 'MercadoPago MX',           type: 'link',          country: 'MX', icon: '💳', enabled: false, payment_link: '' },
+    // ── Internacional ──
+    { id: 'paypal',         name: 'PayPal',                   type: 'link',          country: 'ALL', icon: '🅿️', enabled: false, payment_link: '' },
+    { id: 'stripe',         name: 'Stripe',                   type: 'link',          country: 'ALL', icon: '💠', enabled: false, payment_link: '' },
+    { id: 'cripto',         name: 'Criptomonedas',            type: 'cripto',        country: 'ALL', icon: '₿',  enabled: false, wallet_address: '', network: '', coin: '' },
+    { id: 'efectivo',       name: 'Efectivo en local',        type: 'instrucciones', country: 'ALL', icon: '💵', enabled: false, reference_code: '', instructions: '' },
+    { id: 'qr',             name: 'QR Genérico',              type: 'qr',            country: 'ALL', icon: '📱', enabled: false, qr_image_base64: '', qr_description: '' }
+  ];
+
+  let paymentMethods = [];
+
+  function getMethodFields(m) {
+    if (!m.enabled) return '';
+    switch (m.type) {
+      case 'link': {
+        const linkPlaceholders = {
+          nequi: 'https://link.nequi.com.co/pagos/... o número de celular', daviplata: 'https://daviplata.com/cobrar/...',
+          pse: 'Link del botón PSE de tu pasarela (PayU, Wompi...)', bold: 'https://commerce.bold.co/link/...',
+          wompi: 'https://checkout.wompi.co/l/...', mercadopago: 'https://mpago.la/...',
+          modo: 'https://modo.com.ar/link/...', uala: 'https://uala.com.ar/cobrar/...',
+          webpay: 'Link de pago Webpay (Transbank)', khipu: 'https://khipu.com/payment/create/...',
+          mach: 'Link de pago Mach (BCI)', clip: 'https://clip.mx/...', mercadopago_mx: 'https://mpago.la/...',
+          paypal: 'https://paypal.me/tuempresa o tu link de pago', stripe: 'https://buy.stripe.com/...'
+        };
+        return `<p class="payment-label">Link de pago</p>
+                <input type="url" id="plink-${m.id}" placeholder="${linkPlaceholders[m.id] || 'https://...'}" value="${esc(m.payment_link||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;">`;
+      }
+      case 'banco': {
+        const bankLabel = m.country === 'MX' ? 'CLABE (18 dígitos)' : m.country === 'CL' ? 'RUT / CCI' : 'CBU, CVU o Alias';
+        const bankPlaceholder = m.country === 'MX' ? '000000000000000000' : m.country === 'CL' ? '12345678-9 / 0123...' : '0000000000000000000000 / mi.alias';
+        const bankVal = m.cbu_alias || m.clabe || m.cci_rut || '';
+        return `<p class="payment-label">${bankLabel}</p>
+                <input type="text" id="pcbu-${m.id}" placeholder="${bankPlaceholder}" value="${esc(bankVal)}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">
+                <p class="payment-label">Banco</p>
+                <input type="text" id="pbank-${m.id}" placeholder="Nombre del banco" value="${esc(m.bank_name||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">
+                <p class="payment-label">Titular de la cuenta</p>
+                <input type="text" id="pholder-${m.id}" placeholder="Nombre completo del titular" value="${esc(m.account_holder||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;">`;
+      }
+      case 'instrucciones': {
+        const refPlaceholders = { efecty: '900-123456 (generado por tu pasarela)', baloto: 'Código Baloto', rapipago: 'Código de pago', oxxo: 'Referencia OXXO (generada por Conekta/Stripe)', efectivo: '' };
+        const instrPlaceholders = { efecty: 'Ve a cualquier punto Efecty, indica el código y paga. Luego envíame el comprobante.', baloto: 'Paga en cualquier punto Baloto con este código.', rapipago: 'Lleva este código a cualquier Rapipago o PagoFácil.', oxxo: 'Ve a cualquier tienda OXXO y pide pagar con referencia.', efectivo: 'Ej: Aceptamos pago en efectivo en nuestra oficina: Calle 123, Bogotá. Horario: L-V 9-18h.' };
+        const showRef = m.id !== 'efectivo';
+        return (showRef ? `<p class="payment-label">Código / referencia de pago</p>
+                <input type="text" id="prefcode-${m.id}" placeholder="${refPlaceholders[m.id]||'Código'}" value="${esc(m.reference_code||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">` : '') +
+               `<p class="payment-label">Instrucciones para el cliente</p>
+                <textarea id="pinstr-${m.id}" placeholder="${instrPlaceholders[m.id]||''}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-body);font-size:0.85rem;resize:vertical;min-height:60px;font-family:inherit;">${esc(m.instructions||'')}</textarea>`;
+      }
+      case 'qr': {
+        const preview = m.qr_image_base64 ? `<img src="${m.qr_image_base64}" style="width:80px;height:80px;object-fit:contain;border-radius:8px;margin-top:6px;display:block;">` : '';
+        return `<p class="payment-label">Imagen QR de cobro</p>
+                <input type="file" id="pqrfile-${m.id}" accept="image/*" onchange="handleQRUpload(event,'${m.id}')" style="width:100%;font-size:0.82rem;color:var(--text-muted);">
+                <div id="pqrpreview-${m.id}">${preview}</div>
+                <p class="payment-label" style="margin-top:8px;">Descripción (opcional)</p>
+                <input type="text" id="pqdesc-${m.id}" placeholder="Ej: QR Nequi, QR empresa, QR punto de venta..." value="${esc(m.qr_description||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;">`;
+      }
+      case 'cripto':
+        return `<p class="payment-label">Dirección wallet</p>
+                <input type="text" id="pwallet-${m.id}" placeholder="Dirección de la billetera" value="${esc(m.wallet_address||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">
+                <p class="payment-label">Red</p>
+                <input type="text" id="pnet-${m.id}" placeholder="TRC20, ERC20, BEP20..." value="${esc(m.network||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">
+                <p class="payment-label">Moneda</p>
+                <input type="text" id="pcoin-${m.id}" placeholder="USDT, BTC, ETH..." value="${esc(m.coin||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;">`;
+    }
+    return '';
+  }
+
+  function renderPaymentCard(m) {
+    return `
+      <div class="payment-card ${m.enabled ? 'enabled' : ''}" id="pcard-${m.id}">
+        <div class="payment-card-header">
+          <div class="payment-icon">${m.icon}</div>
+          <h4>${m.name}</h4>
+          <label class="toggle-switch">
+            <input type="checkbox" ${m.enabled ? 'checked' : ''} onchange="togglePayment('${m.id}', this.checked)">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div id="pfields-${m.id}">${getMethodFields(m)}</div>
+      </div>`;
+  }
+
+  function renderPaymentGrid() {
+    const groups = ['CO', 'AR', 'CL', 'MX', 'ALL'];
+    let html = '';
+    for (const country of groups) {
+      const methods = paymentMethods.filter(m => m.country === country);
+      html += `<div class="payment-group-header">${COUNTRY_LABELS[country]}</div>`;
+      html += methods.map(m => renderPaymentCard(m)).join('');
+    }
+    document.getElementById('paymentGrid').innerHTML = html;
+  }
+
+  function togglePayment(id, enabled) {
+    const m = paymentMethods.find(x => x.id === id);
+    if (!m) return;
+    m.enabled = enabled;
+    const card = document.getElementById('pcard-' + id);
+    card.classList.toggle('enabled', enabled);
+    document.getElementById('pfields-' + id).innerHTML = getMethodFields(m);
+  }
+
+  function handleQRUpload(event, id) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const m = paymentMethods.find(x => x.id === id);
+      if (m) m.qr_image_base64 = e.target.result;
+      document.getElementById('pqrpreview-' + id).innerHTML =
+        `<img src="${e.target.result}" style="width:80px;height:80px;object-fit:contain;border-radius:8px;margin-top:6px;display:block;">`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function readMethodFields(m) {
+    if (!m.enabled) return;
+    switch (m.type) {
+      case 'link':
+        m.payment_link = document.getElementById('plink-' + m.id)?.value || ''; break;
+      case 'banco': {
+        const v = document.getElementById('pcbu-' + m.id)?.value || '';
+        if (m.country === 'MX') m.clabe = v;
+        else if (m.country === 'CL') m.cci_rut = v;
+        else m.cbu_alias = v;
+        m.bank_name = document.getElementById('pbank-' + m.id)?.value || '';
+        m.account_holder = document.getElementById('pholder-' + m.id)?.value || '';
+        break;
+      }
+      case 'instrucciones':
+        m.reference_code = document.getElementById('prefcode-' + m.id)?.value || '';
+        m.instructions = document.getElementById('pinstr-' + m.id)?.value || '';
+        break;
+      case 'qr':
+        m.qr_description = document.getElementById('pqdesc-' + m.id)?.value || '';
+        break;
+      case 'cripto':
+        m.wallet_address = document.getElementById('pwallet-' + m.id)?.value || '';
+        m.network = document.getElementById('pnet-' + m.id)?.value || '';
+        m.coin = document.getElementById('pcoin-' + m.id)?.value || '';
+        break;
+    }
+  }
+
+  async function loadPaymentMethods() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/payment-methods`);
+      const data = await res.json();
+      if (data && data.length > 0) {
+        paymentMethods = PAYMENT_METHODS_DEFAULT.map(def => {
+          const saved = data.find(d => d.id === def.id);
+          return saved ? { ...def, ...saved } : { ...def };
+        });
+      } else {
+        paymentMethods = PAYMENT_METHODS_DEFAULT.map(d => ({ ...d }));
+      }
+    } catch (e) {
+      paymentMethods = PAYMENT_METHODS_DEFAULT.map(d => ({ ...d }));
+    }
+    renderPaymentGrid();
+  }
+
+  async function savePaymentMethods() {
+    paymentMethods.forEach(readMethodFields);
+    const statusEl = document.getElementById('cobrosStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/train/payment-methods`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ methods: paymentMethods })
+      });
+      const activeCount = paymentMethods.filter(m => m.enabled).length;
+      statusEl.textContent = `${activeCount} método${activeCount !== 1 ? 's' : ''} activado${activeCount !== 1 ? 's' : ''} — MIIA ya sabe cómo cobrar`;
+      setTimeout(() => statusEl.textContent = '', 4000);
+    } catch (e) {
+      statusEl.textContent = 'Error al guardar';
+    }
+  }
+
   // ═══ HELPERS ═══
   function addChatMessage(containerId, sender, text) {
     const container = document.getElementById(containerId);
@@ -888,5 +1150,6 @@
     return div.innerHTML;
   }
 </script>
+<script src="toast.js"></script>
 </body>
 </html>

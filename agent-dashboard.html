@@ -6,19 +6,21 @@
   <title>MIIA - Mi Dashboard</title>
   <style>
     :root {
-      --primary: #00e5ff;
-      --primary-dark: #00b8cc;
-      --secondary: #bf00ff;
-      --accent: #25d366;
-      --bg-light: #0a0a12;
-      --bg-white: #050508;
-      --text-dark: #f8fafc;
-      --text-body: #cbd5e1;
-      --text-muted: #64748b;
-      --gradient-main: linear-gradient(135deg, #00e5ff 0%, #bf00ff 100%);
-      --shadow-sm: 0 2px 8px rgba(0,229,255,0.08);
-      --shadow-md: 0 8px 30px rgba(0,229,255,0.12);
-      --shadow-lg: 0 20px 60px rgba(0,229,255,0.15);
+      --primary: #5B8DF8;
+      --primary-dark: #4070e0;
+      --secondary: #7C5CF6;
+      --accent: #A78BFA;
+      --bg-light: #060C1A;
+      --bg-white: #060C1A;
+      --bg-card: #0D1628;
+      --bg-surface: #111D35;
+      --text-dark: #E8EDF8;
+      --text-body: #B0BEDD;
+      --text-muted: #8B9CC8;
+      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
+      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
+      --shadow-md: 0 8px 30px rgba(91,141,248,0.12);
+      --shadow-lg: 0 20px 60px rgba(91,141,248,0.15);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
@@ -50,9 +52,9 @@
       position: fixed;
       top: 0; left: 0; right: 0;
       height: 80px;
-      background: rgba(5,5,8,0.92);
+      background: rgba(6,12,26,0.92);
       backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(0,229,255,0.08);
+      border-bottom: 1px solid rgba(91,141,248,0.1);
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -326,7 +328,7 @@
 <body>
   <!-- Navbar -->
   <nav id="navbar">
-    <a href="index.html" class="nav-logo">🤖 MIIA</a>
+    <a href="index.html" class="nav-logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:26px;width:auto;vertical-align:middle;"><defs><linearGradient id="alg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8DF8"/><stop offset="100%" stop-color="#7C5CF6"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#alg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,Montserrat,sans-serif" font-weight="800" font-size="17" fill="url(#alg)">MIIA</text></svg></a>
     <div class="nav-actions">
       <span class="nav-email" id="agentEmail"></span>
       <span class="nav-role-badge">Agente</span>
@@ -452,12 +454,12 @@
         const res = await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, { method: 'POST' });
         const data = await res.json();
         if (res.ok) {
-          alert('✅ ' + data.message + '\n\nMIIA está procesando tu historial en segundo plano. Podés cerrar esta ventana.');
+          showToast(data.message + ' — MIIA está procesando tu historial en segundo plano.', 'success', 6000);
         } else {
-          alert('⚠️ ' + (data.error || 'Error al iniciar la extracción'));
+          showToast(data.error || 'Error al iniciar la extracción', 'warning');
         }
       } catch (e) {
-        alert('❌ No se pudo conectar con el servidor. Verificá tu conexión.');
+        showToast('No se pudo conectar con el servidor. Verifica tu conexión.', 'error');
       }
     }
 
@@ -597,32 +599,34 @@
 
       await db.collection('users').doc(user.uid).update({
         terms_accepted: true,
-        terms_accepted_at: consentTimestamp,
-        consent_adn: dnaOk,
-        consent_adn_date: dnaOk ? consentTimestamp : null
+        terms_accepted_at: consentTimestamp
       });
+      // consent_adn y consent_adn_date los actualiza el backend en /api/consent/adn
 
-      // Firma electrónica del consentimiento ADN
+      // Firma electrónica del consentimiento ADN — via backend para capturar IP del servidor
       if (dnaOk) {
-        let userIp = 'desconocida';
+        let browserIp = 'desconocida';
         try {
           const ipRes = await fetch('https://api.ipify.org?format=json');
-          const ipData = await ipRes.json();
-          userIp = ipData.ip;
+          browserIp = (await ipRes.json()).ip;
         } catch (_) {}
 
-        await db.collection('consent_records').doc(user.uid + '_adn').set({
-          uid: user.uid,
-          email: user.email,
-          consent_type: 'adn_mining',
-          accepted: true,
-          timestamp: consentTimestamp.toISOString(),
-          ip: userIp,
-          user_agent: navigator.userAgent,
-          screen: `${screen.width}x${screen.height}`,
-          language: navigator.language,
-          consent_text: 'Autorizo la Extracción de ADN Comercial: MIIA analizará conversaciones de WhatsApp para mejorar las respuestas de IA.'
-        });
+        try {
+          await fetch(`${BACKEND_URL}/api/consent/adn`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              uid: user.uid,
+              email: user.email,
+              accepted: true,
+              browser_ip: browserIp,
+              user_agent: navigator.userAgent,
+              screen: `${screen.width}x${screen.height}`,
+              language: navigator.language,
+              consent_text: 'Autorizo la Extracción de ADN Comercial: MIIA analizará conversaciones de WhatsApp para mejorar las respuestas de IA.'
+            })
+          });
+        } catch (_) {}
       }
 
       document.getElementById('consentOverlay').classList.remove('active');
@@ -684,5 +688,6 @@
       }
     }
   </script>
+<script src="toast.js"></script>
 </body>
 </html>
