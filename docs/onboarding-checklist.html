@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA - Onboarding Checklist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { padding: 0; }
+    .doc-header {
+      background: var(--gradient-hero);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .doc-header::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .doc-header h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; position: relative; }
+    .doc-header p { font-size: 1.1rem; opacity: 0.9; position: relative; max-width: 600px; margin: 0 auto; }
+    .doc-back {
+      position: absolute;
+      top: 20px; left: 20px;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .doc-back:hover { color: white; text-decoration: none; }
+    .doc-content { max-width: 800px; margin: 0 auto; padding: 40px; }
+    .progress-bar {
+      background: var(--bg-surface);
+      border-radius: var(--radius-full);
+      height: 12px;
+      margin-bottom: 32px;
+      overflow: hidden;
+      border: 1px solid var(--border-glass);
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient-main);
+      border-radius: var(--radius-full);
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+    .progress-text {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+    .progress-text strong { color: var(--primary); }
+    .checklist-group { margin-bottom: 36px; }
+    .checklist-group h2 {
+      color: var(--text-dark);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .group-number {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: var(--gradient-main);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: var(--shadow-card);
+    }
+    .checklist-item:hover { border-color: rgba(79,142,255,0.2); }
+    .checklist-item.done { opacity: 0.6; }
+    .checklist-item.done .item-text { text-decoration: line-through; }
+    .checklist-item input[type="checkbox"] {
+      width: 20px; height: 20px;
+      margin-top: 2px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+    .item-content { flex: 1; }
+    .item-text { color: var(--text-dark); font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+    .item-hint { color: var(--text-muted); font-size: 0.85rem; line-height: 1.5; }
+    .celebration {
+      text-align: center;
+      padding: 40px;
+      display: none;
+    }
+    .celebration.visible { display: block; }
+    .celebration h2 {
+      color: var(--accent-green);
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+    .celebration p { color: var(--text-body); font-size: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="doc-header">
+    <a href="../dashboard.html" class="doc-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      Volver al Dashboard
+    </a>
+    <h1>Checklist de Activacion</h1>
+    <p>Segui estos pasos para tener MIIA funcionando en tu negocio</p>
+  </div>
+
+  <div class="doc-content">
+    <div class="progress-text">Progreso: <strong id="progressCount">0</strong> de <strong id="totalCount">0</strong> pasos completados</div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="checklist-group">
+      <h2><span class="group-number">1</span> Configuracion inicial</h2>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Crear cuenta en MIIA</div>
+          <div class="item-hint">Registrate con tu email corporativo en la pagina de login.</div>
+        </div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Conectar WhatsApp</div>
+          <div class="item-hint">Escanea el codigo QR desde tu WhatsApp Business. MIIA usara este numero para comunicarse.</div>
+        </div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Aceptar consentimiento de ADN</div>
+          <div class="item-hint">MIIA necesita tu permiso para analizar conversaciones pasadas y aprender tu estilo de ventas.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-group">
+      <h2><span class="group-number">2</span> Entrenamiento</h2>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Cargar productos/servicios</div>
+          <div class="item-hint">Ir a Entrenamiento > Productos y agregar tu catalogo con precios, descripciones y stock.</div>
+        </div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Configurar keywords de clasificacion</div>
+          <div class="item-hint">Definir que palabras identifican a un lead, cliente u otro tipo de contacto.</div>
+        </div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Agregar sesiones de chat experto</div>
+          <div class="item-hint">Crear ejemplos de conversaciones ideales para que MIIA aprenda como responder.</div>
+        </div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Configurar metodos de cobro</div>
+          <div class="item-hint">Ir a Entrenamiento > Cobros y activar los metodos de pago con sus instrucciones.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-group">
+      <h2><span class="group-number">3</span> Pruebas</h2>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Probar MIIA en el chat de test</div>
+          <div class="item-hint">Ir a Entrenamiento > Testear MIIA y hacer preguntas como si fueras un lead.</div>
+        </div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Enviar un mensaje real de prueba</div>
+          <div class="item-hint">Pedi a un companero que escriba al WhatsApp conectado y verifica que MIIA responda correctamente.</div>
+        </div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Probar envio de audio/imagen</div>
+          <div class="item-hint">Envia un audio de voz y una foto al WhatsApp de MIIA para verificar que procesa media correctamente.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="checklist-group">
+      <h2><span class="group-number">4</span> Lanzamiento</h2>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Configurar horario de atencion</div>
+          <div class="item-hint">Ajustar las horas y dias en que MIIA debe responder automaticamente.</div>
+        </div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Activar respuesta automatica</div>
+          <div class="item-hint">Encender autoResponse desde el dashboard. MIIA comenzara a atender leads.</div>
+        </div>
+      </div>
+      <div class="checklist-item" onclick="toggleCheck(this)">
+        <input type="checkbox">
+        <div class="item-content">
+          <div class="item-text">Monitorear primeras conversaciones</div>
+          <div class="item-hint">Revisar las primeras 10 conversaciones para asegurarte de que MIIA responde bien. Ajustar entrenamiento si es necesario.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="celebration" id="celebration">
+      <h2>MIIA esta lista!</h2>
+      <p>Completaste todos los pasos. Tu asistente de ventas esta operativo y listo para atender leads.</p>
+    </div>
+  </div>
+
+  <script>
+    function toggleCheck(item) {
+      const cb = item.querySelector('input[type="checkbox"]');
+      cb.checked = !cb.checked;
+      item.classList.toggle('done', cb.checked);
+      updateProgress();
+    }
+    function updateProgress() {
+      const items = document.querySelectorAll('.checklist-item');
+      const checked = document.querySelectorAll('.checklist-item input:checked');
+      const total = items.length;
+      const done = checked.length;
+      document.getElementById('progressCount').textContent = done;
+      document.getElementById('totalCount').textContent = total;
+      document.getElementById('progressFill').style.width = (done / total * 100) + '%';
+      document.getElementById('celebration').classList.toggle('visible', done === total);
+    }
+    updateProgress();
+  </script>
+</body>
+</html>

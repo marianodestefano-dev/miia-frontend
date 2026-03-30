@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA - Politica de Privacidad IA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles.css">
+  <style>
+    body { padding: 0; }
+    .doc-header {
+      background: var(--gradient-hero);
+      color: white;
+      padding: 60px 40px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .doc-header::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .doc-header h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; position: relative; }
+    .doc-header p { font-size: 1.1rem; opacity: 0.9; position: relative; max-width: 600px; margin: 0 auto; }
+    .doc-back {
+      position: absolute;
+      top: 20px; left: 20px;
+      color: rgba(255,255,255,0.7);
+      font-size: 0.9rem;
+      text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .doc-back:hover { color: white; text-decoration: none; }
+    .doc-content { max-width: 800px; margin: 0 auto; padding: 40px; }
+    .doc-section { margin-bottom: 40px; }
+    .doc-section h2 {
+      color: var(--text-dark);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--border-glass);
+    }
+    .doc-section p, .doc-section li { color: var(--text-body); line-height: 1.8; margin-bottom: 10px; }
+    .doc-section ul, .doc-section ol { padding-left: 24px; }
+    .highlight-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-left: 3px solid var(--primary);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      padding: 20px 24px;
+      margin: 16px 0;
+    }
+    .highlight-box p { margin: 0; }
+    .data-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 16px 0;
+    }
+    .data-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+    }
+    .data-card h3 { color: var(--text-dark); font-size: 0.95rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .data-card ul { padding-left: 18px; }
+    .data-card li { font-size: 0.85rem; margin-bottom: 4px; }
+    .yes-card { border-top: 3px solid var(--accent-green); }
+    .no-card { border-top: 3px solid var(--danger); }
+    .last-updated { text-align: center; color: var(--text-muted); font-size: 0.8rem; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-glass); }
+    @media (max-width: 600px) { .data-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="doc-header">
+    <a href="../dashboard.html" class="doc-back">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="m12 19-7-7 7-7"/></svg>
+      Volver al Dashboard
+    </a>
+    <h1>Politica de Privacidad IA</h1>
+    <p>Como MIIA maneja, almacena y protege los datos de tus leads y clientes</p>
+  </div>
+
+  <div class="doc-content">
+    <div class="doc-section">
+      <h2>1. Que datos procesa MIIA</h2>
+      <div class="data-grid">
+        <div class="data-card yes-card">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 4 12 14.01 9 11.01"/></svg> Datos que SI procesa</h3>
+          <ul>
+            <li>Mensajes de texto de WhatsApp</li>
+            <li>Notas de voz (transcripcion temporal)</li>
+            <li>Imagenes y videos (descripcion temporal)</li>
+            <li>Documentos enviados (resumen temporal)</li>
+            <li>Numero de telefono del lead</li>
+            <li>Nombre del contacto (si lo comparte)</li>
+            <li>Historial de conversacion (ultimos 40 mensajes)</li>
+          </ul>
+        </div>
+        <div class="data-card no-card">
+          <h3><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Datos que NO almacena</h3>
+          <ul>
+            <li>Archivos multimedia originales (se procesan y descartan)</li>
+            <li>Contrasenas o datos bancarios</li>
+            <li>Ubicacion GPS</li>
+            <li>Contactos del telefono del lead</li>
+            <li>Mensajes de grupos de WhatsApp</li>
+            <li>Estados de WhatsApp</li>
+            <li>Conversaciones de otros tenants</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <h2>2. Almacenamiento y retencion</h2>
+      <ul>
+        <li><strong>Conversaciones:</strong> Se almacenan en Google Cloud Firestore, encriptado en transito y en reposo. Cada tenant tiene datos completamente aislados.</li>
+        <li><strong>Historial activo:</strong> MIIA mantiene los ultimos 40 mensajes por conversacion en memoria. Los mas antiguos se descartan automaticamente.</li>
+        <li><strong>Media (audio/imagen/video):</strong> Se descarga temporalmente en memoria RAM para transcripcion/descripcion, se procesa y se elimina inmediatamente. No se almacena en disco ni en la nube.</li>
+        <li><strong>Backups:</strong> Los usuarios pueden exportar sus datos en formato .miia (encriptado con AES-256). Solo el propietario puede importar su backup.</li>
+      </ul>
+      <div class="highlight-box">
+        <p><strong>Importante:</strong> MIIA no entrena modelos de IA con los datos de tus conversaciones. Los datos se envian a Gemini/OpenAI/Claude unicamente para generar respuestas en tiempo real, no para fine-tuning.</p>
+      </div>
+    </div>
+
+    <div class="doc-section">
+      <h2>3. Proveedores de IA</h2>
+      <p>MIIA envia el contenido de los mensajes a uno de estos proveedores para generar respuestas:</p>
+      <ul>
+        <li><strong>Google Gemini</strong> — Sujeto a la <a href="https://ai.google.dev/terms" target="_blank">Politica de uso de Google AI</a>. No usa datos de API para entrenar modelos.</li>
+        <li><strong>OpenAI</strong> — Sujeto a la <a href="https://openai.com/policies/api-data-usage-policies" target="_blank">Politica de datos de API de OpenAI</a>. Los datos de API no se usan para entrenar.</li>
+        <li><strong>Anthropic (Claude)</strong> — Sujeto a la <a href="https://www.anthropic.com/policies/privacy" target="_blank">Politica de privacidad de Anthropic</a>. No entrena con datos de API.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <h2>4. Derechos del lead</h2>
+      <ul>
+        <li><strong>Opt-out:</strong> Cualquier lead puede enviar "baja", "no molestar", "spam" o "unsubscribe" para que MIIA deje de contactarlo permanentemente.</li>
+        <li><strong>Comando STOP:</strong> Detiene todas las comunicaciones automaticas inmediatamente.</li>
+        <li><strong>Eliminacion:</strong> El propietario del tenant puede eliminar conversaciones y datos de un lead especifico.</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <h2>5. Seguridad tecnica</h2>
+      <ul>
+        <li>Autenticacion via Firebase Auth (OAuth 2.0 + email/password)</li>
+        <li>Sesiones de WhatsApp almacenadas en Firestore con chunks encriptados</li>
+        <li>Comunicacion HTTPS (TLS 1.2+) para todas las APIs</li>
+        <li>Rate limiting: maximo 50 mensajes por hora por instancia</li>
+        <li>Deteccion automatica de bots para prevenir abuso</li>
+        <li>Aislamiento multi-tenant: datos, conversaciones y entrenamiento separados por cuenta</li>
+        <li>Backups con encriptacion AES-256 y deteccion de abuso en importacion</li>
+      </ul>
+    </div>
+
+    <div class="doc-section">
+      <h2>6. Contacto</h2>
+      <p>Para consultas sobre privacidad, solicitudes de eliminacion de datos o reportar incidentes de seguridad, contactar al equipo de MIIA a traves del dashboard o por email.</p>
+    </div>
+
+    <div class="last-updated">Ultima actualizacion: Marzo 2026</div>
+  </div>
+</body>
+</html>
