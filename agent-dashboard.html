@@ -593,12 +593,37 @@
       const user = auth.currentUser;
       if (!user) return;
 
+      const consentTimestamp = new Date();
+
       await db.collection('users').doc(user.uid).update({
         terms_accepted: true,
-        terms_accepted_at: new Date(),
-        dna_consent: dnaOk,
-        dna_consent_at: dnaOk ? new Date() : null
+        terms_accepted_at: consentTimestamp,
+        consent_adn: dnaOk,
+        consent_adn_date: dnaOk ? consentTimestamp : null
       });
+
+      // Firma electrónica del consentimiento ADN
+      if (dnaOk) {
+        let userIp = 'desconocida';
+        try {
+          const ipRes = await fetch('https://api.ipify.org?format=json');
+          const ipData = await ipRes.json();
+          userIp = ipData.ip;
+        } catch (_) {}
+
+        await db.collection('consent_records').doc(user.uid + '_adn').set({
+          uid: user.uid,
+          email: user.email,
+          consent_type: 'adn_mining',
+          accepted: true,
+          timestamp: consentTimestamp.toISOString(),
+          ip: userIp,
+          user_agent: navigator.userAgent,
+          screen: `${screen.width}x${screen.height}`,
+          language: navigator.language,
+          consent_text: 'Autorizo la Extracción de ADN Comercial: MIIA analizará conversaciones de WhatsApp para mejorar las respuestas de IA.'
+        });
+      }
 
       document.getElementById('consentOverlay').classList.remove('active');
 

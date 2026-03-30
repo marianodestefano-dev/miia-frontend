@@ -185,6 +185,17 @@
   </div>
 </div>
 
+<!-- CONSENT RECORD MODAL -->
+<div class="modal-overlay" id="consentModal" onclick="if(event.target===this)closeModal('consentModal')">
+  <div class="modal" style="max-width:540px;">
+    <h3>📋 Registro de Consentimiento ADN</h3>
+    <div id="consentModalBody" style="margin-top:16px;"></div>
+    <div style="margin-top:24px; text-align:right;">
+      <button class="btn-sm btn-outline" onclick="closeModal('consentModal')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
 <!-- EDIT USER MODAL -->
 <div class="modal-overlay" id="editModal" onclick="if(event.target===this)closeModal('editModal')">
   <div class="modal">
@@ -307,6 +318,7 @@
         <td><div class="actions-cell">
           <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
           <button class="btn-icon" onclick="viewAsUser('${esc(u.uid)}')" title="Ver como usuario">👁</button>
+          <button class="btn-icon" onclick="viewConsentRecord('${esc(u.uid)}')" title="${u.consent_adn ? 'Ver firma de consentimiento ADN' : 'Sin consentimiento ADN registrado'}" style="opacity:${u.consent_adn ? '1' : '0.35'}; cursor:${u.consent_adn ? 'pointer' : 'not-allowed'}">📋</button>
         </div></td>
       </tr>`;
     }).join('');
@@ -314,6 +326,38 @@
 
   function viewAsUser(uid) {
     window.open('../dashboard.html?adminView=1&impersonateUid=' + encodeURIComponent(uid), '_blank');
+  }
+
+  async function viewConsentRecord(uid) {
+    try {
+      const snap = await db.collection('consent_records').doc(uid + '_adn').get();
+      if (!snap.exists) {
+        alert('Este usuario no tiene registro de consentimiento ADN.');
+        return;
+      }
+      const c = snap.data();
+      const fecha = c.timestamp ? new Date(c.timestamp).toLocaleString('es', { timeZone: 'America/Bogota' }) : 'Sin fecha';
+      document.getElementById('consentModalBody').innerHTML = `
+        <div style="font-family:monospace;font-size:0.85rem;line-height:2;color:var(--text-body);">
+          <div style="border-bottom:1px solid var(--border-color);padding-bottom:12px;margin-bottom:16px;">
+            <div><strong>Usuario:</strong> ${c.email || '—'}</div>
+            <div><strong>UID:</strong> <span style="color:var(--text-muted);font-size:0.78rem;">${c.uid || uid}</span></div>
+          </div>
+          <div><strong>Fecha (Bogotá):</strong> ${fecha}</div>
+          <div><strong>IP:</strong> ${c.ip || 'desconocida'}</div>
+          <div><strong>Dispositivo:</strong> <span style="word-break:break-all;font-size:0.78rem;">${c.user_agent || '—'}</span></div>
+          <div><strong>Resolución:</strong> ${c.screen || '—'}</div>
+          <div><strong>Idioma:</strong> ${c.language || '—'}</div>
+          <div style="margin-top:16px;padding:14px;background:rgba(0,229,255,0.05);border:1px solid rgba(0,229,255,0.15);border-radius:10px;">
+            <strong>Texto aceptado:</strong><br>
+            <em style="color:var(--text-muted);">"${c.consent_text || '—'}"</em>
+          </div>
+          <div style="margin-top:16px;color:#22c55e;font-weight:700;">✅ Consentimiento verificado y almacenado</div>
+        </div>`;
+      document.getElementById('consentModal').classList.add('active');
+    } catch (e) {
+      alert('Error al cargar el registro: ' + e.message);
+    }
   }
 
   // ═══ CREATE ═══
@@ -413,6 +457,9 @@
 
   // ═══ HELPERS ═══
   function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  // Referencia a db (usersclients usa 'dbFs' para Firestore, no 'db')
+  const db = dbFs;
   function toSlug(email) { return (email || '').split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
   function esc(s) { const d = document.createElement('div'); d.textContent = s || ''; return d.innerHTML; }
 </script>
