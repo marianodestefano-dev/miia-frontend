@@ -7,30 +7,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <style>
+    /* Variables inherited from styles.css - only override if needed */
     :root {
-      --primary: #5B8DF8;
-      --primary-dark: #4A7AE5;
-      --secondary: #7C5CF6;
-      --accent: #34D399;
-      --accent-dark: #2BB882;
-      --bg-light: #030508;
-      --bg-white: #030508;
-      --bg-card: #0A0F1A;
-      --bg-surface: #0F1520;
-      --text-dark: #F1F5F9;
-      --text-body: #94A3B8;
-      --text-muted: #64748B;
-      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
-      --gradient-accent: linear-gradient(135deg, #7C5CF6 0%, #A78BFA 100%);
-      --danger: #ef4444;
-      --warning: #f59e0b;
-      --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
-      --shadow-md: 0 8px 30px rgba(0,0,0,0.25);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
-      --radius-sm: 10px;
-      --radius-md: 12px;
-      --radius-lg: 20px;
-      --radius-full: 100px;
+      --gradient-accent: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%);
     }
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
