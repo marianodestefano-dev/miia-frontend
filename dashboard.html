@@ -479,6 +479,72 @@
           </div>
         </div>
 
+        <!-- Email Config -->
+        <div class="card fade-in">
+          <h2 style="display:flex;align-items:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            Correo Electrónico
+          </h2>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Configura SMTP para que MIIA pueda enviar emails a tus clientes.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <input type="email" id="emailFrom" placeholder="Tu email (ej: tu@gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+            <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;">
+              <input type="text" id="smtpHost" placeholder="SMTP Host (ej: smtp.gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+              <input type="number" id="smtpPort" placeholder="587" value="587" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+            </div>
+            <input type="text" id="smtpUser" placeholder="Usuario SMTP (normalmente tu email)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+            <input type="password" id="smtpPass" placeholder="Contraseña SMTP o App Password" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+            <div style="display:flex;gap:8px;">
+              <button onclick="saveEmailConfig()" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar config</button>
+              <button onclick="sendTestEmail()" id="emailTestBtn" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-family:inherit;">Enviar prueba</button>
+            </div>
+            <div id="emailStatus" style="font-size:0.78rem;color:var(--text-muted);"></div>
+          </div>
+          <!-- IMAP: Aprendizaje desde email -->
+          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-glass);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Aprendizaje desde email (IMAP)</span>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                <input type="checkbox" id="emailLearningToggle" onchange="saveImapConfig()" style="accent-color:var(--primary);">
+                <span style="font-size:0.78rem;color:var(--text-muted);">Activo</span>
+              </label>
+            </div>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">MIIA revisará tu bandeja de entrada cada 30 min y aprenderá del contenido de tus emails.</p>
+            <input type="text" id="imapHost" placeholder="IMAP Host (ej: imap.gmail.com)" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;">
+            <input type="password" id="imapPass" placeholder="Contraseña IMAP" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;">
+            <div style="display:flex;gap:8px;">
+              <button onclick="saveImapConfig()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Guardar IMAP</button>
+              <button onclick="scanEmailsNow()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Escanear ahora</button>
+            </div>
+            <div id="imapStatus" style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;"></div>
+          </div>
+        </div>
+
+        <!-- Google Calendar -->
+        <div class="card fade-in">
+          <h2 style="display:flex;align-items:center;gap:8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            Google Calendar
+          </h2>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Permite que MIIA verifique tu disponibilidad y agende citas automáticamente.</p>
+          <div id="calendarStatus" style="margin-bottom:12px;"></div>
+          <div id="calendarConnectSection">
+            <a href="https://miia-backend-production.up.railway.app/api/auth/google" target="_blank" id="calConnectBtn" style="display:block;text-align:center;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:10px;font-size:0.85rem;cursor:pointer;font-weight:600;text-decoration:none;">Conectar Google Calendar</a>
+            <p style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;text-align:center;">Se abrirá una ventana de Google para autorizar</p>
+          </div>
+          <div id="calendarConnectedSection" style="display:none;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Agendamiento automático</span>
+              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                <input type="checkbox" id="calendarAutoToggle" onchange="saveCalendarConfig()" style="accent-color:var(--primary);">
+                <span style="font-size:0.78rem;color:var(--text-muted);">Activo</span>
+              </label>
+            </div>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">Cuando un lead quiera una demo/cita, MIIA verificará tu disponibilidad y creará el evento automáticamente.</p>
+            <button onclick="disconnectCalendar()" style="width:100%;background:none;border:1px solid rgba(255,26,140,0.3);color:#FF1A8C;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Desconectar Calendar</button>
+          </div>
+        </div>
+
         <!-- Contacts Preview -->
         <div class="card fade-in">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Contactos Clasificados</h2>
@@ -688,6 +754,9 @@
       // Load deals (real-time)
       loadDeals();
       loadAIConfig();
+      loadEmailConfig();
+      loadImapConfig();
+      loadCalendarStatus();
 
       // Setup UI
       setupScrollAndAnimations();
@@ -729,6 +798,9 @@
       loadAgents();
       loadDeals();
       loadAIConfig();
+      loadEmailConfig();
+      loadImapConfig();
+      loadCalendarStatus();
       setupScrollAndAnimations();
     }
 
@@ -1373,6 +1445,127 @@
       } catch (e) {
         aiStatus.innerHTML = `<span style="color:#EF4444;">Error de conexión</span>`;
       }
+    }
+
+    // ═══ EMAIL CONFIG ═══
+    const API = 'https://miia-backend-production.up.railway.app';
+
+    async function loadEmailConfig() {
+      try {
+        const res = await fetch(API + '/api/email/config');
+        const data = await res.json();
+        if (data.email) document.getElementById('emailFrom').value = data.email;
+        if (data.smtpHost) document.getElementById('smtpHost').value = data.smtpHost;
+        if (data.smtpPort) document.getElementById('smtpPort').value = data.smtpPort;
+        if (data.smtpUser) document.getElementById('smtpUser').value = data.smtpUser;
+        if (data.configured) {
+          document.getElementById('emailStatus').textContent = '✅ SMTP configurado';
+          document.getElementById('emailStatus').style.color = '#4ade80';
+        }
+      } catch (_) {}
+    }
+
+    async function saveEmailConfig() {
+      const email = document.getElementById('emailFrom').value.trim();
+      const smtpHost = document.getElementById('smtpHost').value.trim();
+      const smtpPort = document.getElementById('smtpPort').value;
+      const smtpUser = document.getElementById('smtpUser').value.trim();
+      const smtpPass = document.getElementById('smtpPass').value;
+      if (!email || !smtpHost || !smtpPass) { showToast('Completa email, host y contraseña', 'warning'); return; }
+      try {
+        const res = await fetch(API + '/api/email/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, smtpHost, smtpPort, smtpUser, smtpPass }) });
+        if (res.ok) {
+          showToast('✅ Configuración de email guardada', 'success');
+          document.getElementById('emailStatus').textContent = '✅ SMTP configurado';
+          document.getElementById('emailStatus').style.color = '#4ade80';
+        }
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+
+    async function sendTestEmail() {
+      const email = document.getElementById('emailFrom').value.trim();
+      if (!email) { showToast('Primero guarda tu email', 'warning'); return; }
+      document.getElementById('emailTestBtn').textContent = 'Enviando...';
+      try {
+        const res = await fetch(API + '/api/email/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ to: email, subject: 'Test MIIA ✅', body: 'Este es un email de prueba enviado por MIIA. ¡Todo funciona correctamente!' }) });
+        const data = await res.json();
+        if (data.ok) showToast('✅ Email de prueba enviado a ' + email, 'success');
+        else showToast('Error: ' + data.error, 'error');
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+      finally { document.getElementById('emailTestBtn').textContent = 'Enviar prueba'; }
+    }
+
+    async function loadImapConfig() {
+      try {
+        const res = await fetch(API + '/api/email/imap-config');
+        const data = await res.json();
+        if (data.imapHost) document.getElementById('imapHost').value = data.imapHost;
+        document.getElementById('emailLearningToggle').checked = !!data.emailLearningEnabled;
+        if (data.lastEmailCheck) {
+          document.getElementById('imapStatus').textContent = `Última revisión: ${new Date(data.lastEmailCheck).toLocaleString('es-ES')}`;
+        }
+      } catch (_) {}
+    }
+
+    async function saveImapConfig() {
+      const imapHost = document.getElementById('imapHost').value.trim();
+      const imapPass = document.getElementById('imapPass').value;
+      const imapUser = document.getElementById('smtpUser').value.trim() || document.getElementById('emailFrom').value.trim();
+      const emailLearningEnabled = document.getElementById('emailLearningToggle').checked;
+      try {
+        await fetch(API + '/api/email/imap-config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ imapHost, imapUser, imapPass, emailLearningEnabled }) });
+        showToast('✅ Config IMAP guardada', 'success');
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+
+    async function scanEmailsNow() {
+      showToast('⏳ Escaneando emails...', 'info');
+      try {
+        const res = await fetch(API + '/api/email/scan', { method: 'POST' });
+        const data = await res.json();
+        if (data.ok) showToast(`✅ ${data.learned} emails procesados`, 'success');
+        else if (data.skipped) showToast('⚠️ IMAP no configurado o aprendizaje desactivado', 'warning');
+        else showToast('Error: ' + (data.error || 'desconocido'), 'error');
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+
+    // ═══ GOOGLE CALENDAR ═══
+    async function loadCalendarStatus() {
+      try {
+        const res = await fetch(API + '/api/calendar/status');
+        const data = await res.json();
+        const statusEl = document.getElementById('calendarStatus');
+        const connectSection = document.getElementById('calendarConnectSection');
+        const connectedSection = document.getElementById('calendarConnectedSection');
+
+        if (data.connected) {
+          statusEl.innerHTML = '<span style="color:#4ade80;font-size:0.82rem;">✅ Google Calendar conectado</span>';
+          connectSection.style.display = 'none';
+          connectedSection.style.display = 'block';
+          document.getElementById('calendarAutoToggle').checked = !!data.calendarEnabled;
+        } else {
+          statusEl.innerHTML = '<span style="color:var(--text-muted);font-size:0.82rem;">Sin conectar</span>';
+          connectSection.style.display = 'block';
+          connectedSection.style.display = 'none';
+        }
+      } catch (_) {}
+    }
+
+    async function saveCalendarConfig() {
+      const calendarEnabled = document.getElementById('calendarAutoToggle').checked;
+      try {
+        await fetch(API + '/api/calendar/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ calendarEnabled }) });
+        showToast(calendarEnabled ? '✅ Agendamiento automático activado' : 'Agendamiento desactivado', 'success');
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+
+    async function disconnectCalendar() {
+      if (!confirm('¿Desconectar Google Calendar?')) return;
+      try {
+        await fetch(API + '/api/calendar/disconnect', { method: 'POST' });
+        showToast('Google Calendar desconectado', 'success');
+        loadCalendarStatus();
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
     }
 
     // ═══ LOGOUT ═══

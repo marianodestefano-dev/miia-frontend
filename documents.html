@@ -641,21 +641,42 @@
     async function uploadFile(event) {
       const file = event.target.files[0];
       if (!file) return;
+      // Reset input para permitir subir el mismo archivo de nuevo
+      event.target.value = '';
+
+      showToast('⏳ Procesando archivo...', 'info');
 
       try {
-        // TODO: upload to backend /api/train/upload
-        // For now, just save metadata to Firestore
+        const formData = new FormData();
+        formData.append('file', file);
+        const token = await firebase.auth().currentUser.getIdToken();
+
+        const res = await fetch('https://miia-backend-production.up.railway.app/api/documents/upload', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token },
+          body: formData
+        });
+
+        const data = await res.json();
+
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || 'Error desconocido al procesar el archivo');
+        }
+
+        // Guardar metadata en Firestore (con info de fragmentos)
         await db.collection('knowledge_files').doc(currentUser.uid).collection('items').add({
           name: file.name,
           size: file.size,
           type: file.type,
+          chunks: data.chunks,
+          preview: data.preview || '',
           uploaded_at: new Date()
         });
 
-        showToast('Archivo guardado (la carga completa se implementará próximamente)', 'success');
+        showToast(`✅ ${file.name} — ${data.chunks} fragmentos aprendidos por MIIA`, 'success');
         loadKnowledgeFiles();
       } catch (error) {
-        showToast('Error: ' + error.message, 'error');
+        showToast('❌ Error: ' + error.message, 'error');
       }
     }
 
@@ -669,17 +690,23 @@
           return;
         }
 
-        list.innerHTML = snapshot.docs.map(doc => `
-          <div class="item">
-            <div>
-              <div class="item-title"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> ${doc.data().name}</div>
-              <div class="item-desc">${(doc.data().size / 1024).toFixed(1)} KB</div>
+        list.innerHTML = snapshot.docs.map(doc => {
+          const d = doc.data();
+          const chunks = d.chunks ? `· ${d.chunks} fragmentos` : '';
+          const preview = d.preview ? `<div class="item-desc" style="font-size:0.78rem;opacity:0.6;margin-top:2px;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${d.preview}</div>` : '';
+          return `
+            <div class="item">
+              <div>
+                <div class="item-title"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> ${d.name}</div>
+                <div class="item-desc">${(d.size / 1024).toFixed(1)} KB ${chunks}</div>
+                ${preview}
+              </div>
+              <div class="item-actions">
+                <button class="btn-icon btn-delete" onclick="deleteFile('${doc.id}')">Eliminar</button>
+              </div>
             </div>
-            <div class="item-actions">
-              <button class="btn-icon btn-delete" onclick="deleteFile('${doc.id}')">Eliminar</button>
-            </div>
-          </div>
-        `).join('');
+          `;
+        }).join('');
       } catch (error) {
         console.error('Error cargando archivos:', error);
       }
