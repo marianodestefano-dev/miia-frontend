@@ -446,7 +446,7 @@
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
-      authDomain: "www.lobsterscrm.com",
+      authDomain: "miia-app-8cbd0.firebaseapp.com",
       projectId: "miia-app-8cbd0",
       storageBucket: "miia-app-8cbd0.firebasestorage.app",
       messagingSenderId: "481282126913",
@@ -652,49 +652,84 @@
       renderAgentUI(doc.data(), user.uid);
     }
 
-    function loadAgentDeals(agentUid) {
-      db.collection('deals').where('agent_uid', '==', agentUid)
-        .onSnapshot(snapshot => {
-          const deals = [];
-          snapshot.forEach(doc => deals.push({ id: doc.id, ...doc.data() }));
+    async function loadAgentDeals(agentUid) {
+      try {
+        const user = auth.currentUser;
+        if (!user) return;
 
-          // Update stat cards
-          const today = new Date().toDateString();
-          const dealsToday = deals.filter(d => {
-            const created = d.created_at?.toDate ? d.created_at.toDate() : new Date(d.created_at);
-            return created.toDateString() === today;
-          });
-          const leads = deals.filter(d => d.status === 'pending' || d.status === 'negotiation');
-          const presales = deals.filter(d => d.status === 'negotiation');
-          const won = deals.filter(d => d.status === 'won');
+        const token = await user.getIdToken();
+        const userData = await db.collection('users').doc(user.uid).get();
+        const ownerUid = userData.data().parent_client_uid;
 
-          document.getElementById('statConvos').textContent = dealsToday.length;
-          document.getElementById('statLeads').textContent = leads.length;
-          document.getElementById('statPresales').textContent = presales.length;
-          document.getElementById('statSales').textContent = won.length;
+        if (!ownerUid) {
+          document.getElementById('myDealsBody').innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">Error: no parent tenant found</td></tr>';
+          return;
+        }
 
-          // Render deals table
-          const tbody = document.getElementById('myDealsBody');
-          if (deals.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">Sin deals aún</td></tr>';
-            return;
-          }
-
-          const statusLabels = { pending: '🟡 Pendiente', negotiation: '🔵 Negociación', won: '🟢 Ganado', lost: '🔴 Perdido' };
-          const statusColors = { pending: '#f59e0b', negotiation: '#667eea', won: '#25d366', lost: '#e74c3c' };
-
-          tbody.innerHTML = deals.sort((a, b) => {
-            const da = a.created_at?.toDate ? a.created_at.toDate() : new Date(a.created_at);
-            const db2 = b.created_at?.toDate ? b.created_at.toDate() : new Date(b.created_at);
-            return db2 - da;
-          }).map(d => `
-            <tr style="border-bottom: 1px solid rgba(102,126,234,0.06);">
-              <td style="padding: 12px 14px; font-weight: 500; color: var(--text-dark);">${d.lead_name || 'Sin nombre'}</td>
-              <td style="padding: 12px 14px; font-weight: 600; color: var(--primary);">$${(d.amount || 0).toLocaleString()}</td>
-              <td style="padding: 12px 14px;"><span style="background: ${statusColors[d.status] || '#888'}22; color: ${statusColors[d.status] || '#888'}; padding: 4px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;">${statusLabels[d.status] || d.status}</span></td>
-            </tr>
-          `).join('');
+        const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+        const resp = await fetch(`${BACKEND_URL}/api/tenant/${ownerUid}/agent-conversations`, {
+          headers: { 'Authorization': 'Bearer ' + token }
         });
+
+        if (!resp.ok) {
+          throw new Error(`API error: ${resp.status}`);
+        }
+
+        const data = await resp.json();
+        const conversations = data.conversations || {};
+        const leadNames = data.leadNames || {};
+
+        // Convert conversations to deals format
+        const deals = Object.entries(conversations).map(([phone, conv]) => ({
+          id: phone,
+          lead_name: leadNames[phone] || phone.split('@')[0],
+          status: conv.status || 'pending',
+          amount: 0,
+          created_at: conv.timestamp || new Date(),
+          messages: conv.messages || []
+        }));
+
+        // Update stat cards
+        const today = new Date().toDateString();
+        const dealsToday = deals.filter(d => {
+          const created = d.created_at instanceof Date ? d.created_at : new Date(d.created_at);
+          return created.toDateString() === today;
+        });
+        const leads = deals.filter(d => d.status === 'pending' || d.status === 'negotiation');
+        const presales = deals.filter(d => d.status === 'negotiation');
+        const won = deals.filter(d => d.status === 'won');
+
+        document.getElementById('statConvos').textContent = dealsToday.length;
+        document.getElementById('statLeads').textContent = leads.length;
+        document.getElementById('statPresales').textContent = presales.length;
+        document.getElementById('statSales').textContent = won.length;
+
+        // Render conversations table
+        const tbody = document.getElementById('myDealsBody');
+        if (deals.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">Sin conversaciones asignadas</td></tr>';
+          return;
+        }
+
+        const statusLabels = { pending: '🟡 Pendiente', negotiation: '🔵 Negociación', won: '🟢 Ganado', lost: '🔴 Perdido' };
+        const statusColors = { pending: '#f59e0b', negotiation: '#667eea', won: '#25d366', lost: '#e74c3c' };
+
+        tbody.innerHTML = deals.sort((a, b) => {
+          const da = a.created_at instanceof Date ? a.created_at : new Date(a.created_at);
+          const db2 = b.created_at instanceof Date ? b.created_at : new Date(b.created_at);
+          return db2 - da;
+        }).map(d => `
+          <tr style="border-bottom: 1px solid rgba(102,126,234,0.06);">
+            <td style="padding: 12px 14px; font-weight: 500; color: var(--text-dark);">${d.lead_name || 'Sin nombre'}</td>
+            <td style="padding: 12px 14px; font-weight: 600; color: var(--primary);">${d.messages ? d.messages.length + ' mensajes' : '0 mensajes'}</td>
+            <td style="padding: 12px 14px;"><span style="background: ${statusColors[d.status] || '#888'}22; color: ${statusColors[d.status] || '#888'}; padding: 4px 12px; border-radius: 20px; font-size: 0.82rem; font-weight: 600;">${statusLabels[d.status] || d.status}</span></td>
+          </tr>
+        `).join('');
+
+      } catch (err) {
+        console.error('[AGENT] Error loading conversations:', err);
+        document.getElementById('myDealsBody').innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--danger);">Error cargando conversaciones: ' + err.message + '</td></tr>';
+      }
     }
 
     function handleLogout() {
