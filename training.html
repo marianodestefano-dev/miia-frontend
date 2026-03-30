@@ -679,7 +679,7 @@
         // QR found
         if (data.qrCode) {
           console.log('[WA] ✅ QR FOUND! Rendering...');
-          document.getElementById('qrCode').innerHTML = `<img src="data:image/png;base64,${data.qrCode}" alt="QR" style="max-width:260px;">`;
+          document.getElementById('qrCode').innerHTML = `<img src="${data.qrCode}" alt="QR" style="max-width:260px;">`;
         }
 
         // WhatsApp ready
