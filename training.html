@@ -602,6 +602,9 @@
       updateWaBanner();
     } catch (e) {
       console.error('Error checking WA status:', e);
+      // Fallback: assume not connected, show button anyway
+      waConnected = false;
+      updateWaBanner();
     }
   }
 
@@ -634,7 +637,7 @@
     }
   }
 
-  function connectWhatsApp() {
+  async function connectWhatsApp() {
     if (socket) return;
     socket = io(BACKEND_URL);
     socket.on('qr', (qrDataUrl) => {
@@ -645,12 +648,25 @@
       updateWaBanner();
       document.getElementById('qrModal').classList.add('hidden');
     });
-    // Trigger tenant init
-    fetch(`${BACKEND_URL}/api/tenant/init`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ uid: currentUser.uid, geminiApiKey: '' })
-    });
+    // Get user's Gemini API key from Firestore
+    try {
+      const userDoc = await db.collection('users').doc(currentUser.uid).get();
+      const geminiApiKey = userDoc.exists ? (userDoc.data().gemini_api_key || '') : '';
+      // Trigger tenant init
+      fetch(`${BACKEND_URL}/api/tenant/init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: currentUser.uid, geminiApiKey })
+      });
+    } catch (e) {
+      console.error('Error getting Gemini API key:', e);
+      // Continue anyway with empty key
+      fetch(`${BACKEND_URL}/api/tenant/init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: currentUser.uid, geminiApiKey: '' })
+      });
+    }
   }
 
   // ═══ TAB 1: PRODUCTS ═══
