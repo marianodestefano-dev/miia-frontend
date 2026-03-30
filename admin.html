@@ -8,14 +8,14 @@
   <title>MIIA - Casa Central</title>
   <style>
     :root {
-      --primary: #5B8DF8; --primary-dark: #4A7AE5; --secondary: #7C5CF6;
+      --primary: #3B5BFF; --primary-dark: #2A45DB; --secondary: #FF1A8C;
       --accent: #34D399; --accent-dark: #2BC48A; --danger: #ef4444; --warning: #f59e0b;
-      --bg-deep: #030508; --bg-light: #030508; --bg-panel: #0A0F1A; --bg-white: #030508;
-      --bg-surface: #0F1520; --bg-card: #0A0F1A;
+      --bg-deep: #0F0F0F; --bg-light: #0F0F0F; --bg-panel: #141414; --bg-white: #0F0F0F;
+      --bg-surface: #1A1A1A; --bg-card: #141414;
       --text-dark: #F1F5F9; --text-body: #94A3B8; --text-muted: #64748B;
       --border-glass: rgba(255,255,255,0.06);
-      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
-      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
+      --gradient-main: linear-gradient(135deg, #3B5BFF 0%, #8B30E0 50%, #FF1A8C 100%);
+      --shadow-sm: 0 2px 8px rgba(59,91,255,0.08);
       --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
       --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 100px;
     }
@@ -46,14 +46,14 @@
     .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
     .stat-card { background:linear-gradient(145deg,#0d1117 0%,#07090d 100%); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-md); padding:28px 24px; text-align:center; transition:transform 0.3s, border-color 0.3s; }
     .stat-card:hover { border-color:var(--primary); transform:translateY(-4px); }
-    .stat-card .value { font-size:2.5rem; font-weight:800; color:#ffffff; display:block; letter-spacing:-0.05em; text-shadow:0 0 20px rgba(91,141,248,0.2); }
+    .stat-card .value { font-size:2.5rem; font-weight:800; color:#ffffff; display:block; letter-spacing:-0.05em; text-shadow:0 0 20px rgba(59,91,255,0.2); }
     .stat-card .label { font-size:0.72rem; color:var(--text-muted); margin-top:8px; text-transform:uppercase; letter-spacing:0.1em; }
 
     /* Tables */
     .data-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
-    .data-table th { background:rgba(91,141,248,0.06); color:var(--text-dark); font-weight:600; padding:12px 14px; text-align:left; border-bottom:1px solid var(--border-glass); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; }
+    .data-table th { background:rgba(59,91,255,0.06); color:var(--text-dark); font-weight:600; padding:12px 14px; text-align:left; border-bottom:1px solid var(--border-glass); font-size:0.78rem; text-transform:uppercase; letter-spacing:0.06em; }
     .data-table td { padding:12px 14px; border-bottom:1px solid var(--border-glass); vertical-align:middle; color:var(--text-body); }
-    .data-table tr:hover td { background:rgba(91,141,248,0.04); }
+    .data-table tr:hover td { background:rgba(59,91,255,0.04); }
 
     /* Badges */
     .badge { display:inline-block; padding:4px 12px; border-radius:var(--radius-full); font-size:0.78rem; font-weight:600; }
@@ -109,7 +109,7 @@
 
     /* Tenant card */
     .tenant-card { display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:var(--bg-panel); border-radius:var(--radius-md); margin-bottom:8px; border:1px solid var(--border-glass); transition:border-color 0.2s; }
-    .tenant-card:hover { border-color:rgba(91,141,248,0.25); }
+    .tenant-card:hover { border-color:rgba(59,91,255,0.25); }
     .tenant-status { display:flex; align-items:center; gap:6px; font-size:0.85rem; }
     .dot { width:10px; height:10px; border-radius:50%; }
     .dot.green { background:#22c55e; } .dot.red { background:#ef4444; } .dot.yellow { background:#f59e0b; }

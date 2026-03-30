@@ -8,19 +8,19 @@
   <link rel="stylesheet" href="../styles.css">
   <style>
     :root {
-      --primary: #5B8DF8; --primary-dark: #4A7AE5; --secondary: #7C5CF6;
+      --primary: #3B5BFF; --primary-dark: #2A45DB; --secondary: #FF1A8C;
       --accent: #34D399; --accent-dark: #2BC48A; --danger: #ef4444; --warning: #f59e0b;
-      --bg-light: #030508; --bg-white: #030508; --bg-card: #0A0F1A; --bg-surface: #0F1520;
+      --bg-light: #0F0F0F; --bg-white: #0F0F0F; --bg-card: #141414; --bg-surface: #1A1A1A;
       --text-dark: #F1F5F9; --text-body: #94A3B8; --text-muted: #64748B;
-      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
-      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
+      --gradient-main: linear-gradient(135deg, #3B5BFF 0%, #8B30E0 50%, #FF1A8C 100%);
+      --shadow-sm: 0 2px 8px rgba(59,91,255,0.08);
       --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
       --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 100px;
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: 'Inter', -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; color:var(--text-body); background:var(--bg-light); min-height:100vh; padding-top:64px; -webkit-font-smoothing: antialiased; }
 
-    #navbar { position:fixed; top:0; left:0; right:0; height:64px; background:rgba(3,5,8,0.8); backdrop-filter:blur(20px); border-bottom:1px solid rgba(91,141,248,0.1); display:flex; justify-content:space-between; align-items:center; padding:0 40px; z-index:100; }
+    #navbar { position:fixed; top:0; left:0; right:0; height:64px; background:rgba(3,5,8,0.8); backdrop-filter:blur(20px); border-bottom:1px solid rgba(59,91,255,0.1); display:flex; justify-content:space-between; align-items:center; padding:0 40px; z-index:100; }
     .nav-logo { font-size:1.6rem; font-weight:800; background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .nav-right { display:flex; align-items:center; gap:16px; }
     .nav-email { font-size:0.85rem; color:var(--text-muted); padding:6px 14px; background:rgba(102,126,234,0.06); border-radius:var(--radius-full); }
@@ -107,7 +107,7 @@
 <body>
 
 <nav id="navbar">
-  <span class="nav-logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:24px;width:auto;vertical-align:middle;margin-right:8px;"><defs><linearGradient id="ulg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5B8DF8"/><stop offset="100%" stop-color="#7C5CF6"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#ulg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,sans-serif" font-weight="800" font-size="17" fill="url(#ulg)">MIIA</text></svg>Admin › Usuarios</span>
+  <span class="nav-logo"><svg viewBox="0 0 120 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="height:24px;width:auto;vertical-align:middle;margin-right:8px;"><defs><linearGradient id="ulg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs><rect x="2" y="9" width="14" height="14" rx="3.5" fill="url(#ulg)" transform="rotate(45 9 16)"/><text x="26" y="22" font-family="Inter,sans-serif" font-weight="800" font-size="17" fill="url(#ulg)">MIIA</text></svg>Admin › Usuarios</span>
   <div class="nav-right">
     <span class="nav-email" id="adminEmail">&mdash;</span>
     <button class="nav-btn back" onclick="window.location.href='../admin.html'">Volver a Admin</button>
