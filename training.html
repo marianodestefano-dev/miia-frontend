@@ -608,8 +608,15 @@
   function toggleWhatsApp() {
     if (waConnected) {
       if (!confirm('Desvincular WhatsApp?')) return;
-      fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/logout`, { method: 'POST' })
-        .then(() => { waConnected = false; updateWaBanner(); });
+      currentUser.getIdToken().then(token => {
+        fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/logout`, {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token }
+        })
+          .then(r => r.json())
+          .then(() => { waConnected = false; updateWaBanner(); })
+          .catch(err => { console.error('[WA] Error desvinculando:', err); alert('Error al desvincular. Intenta de nuevo.'); });
+      });
     } else {
       document.getElementById('qrModal').classList.remove('hidden');
       connectWhatsApp();
