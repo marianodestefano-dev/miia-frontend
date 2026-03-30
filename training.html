@@ -617,35 +617,51 @@
   }
 
   async function connectWhatsApp() {
-    if (socket) return;
-    socket = io(BACKEND_URL);
-    socket.on('qr', (qrDataUrl) => {
-      document.getElementById('qrCode').innerHTML = `<img src="${qrDataUrl}" alt="QR" style="max-width:260px;">`;
-    });
-    socket.on('whatsapp_ready', () => {
-      waConnected = true;
-      updateWaBanner();
-      document.getElementById('qrModal').classList.add('hidden');
-    });
     // Get user's Gemini API key from Firestore
     try {
       const userDoc = await db.collection('users').doc(currentUser.uid).get();
       const geminiApiKey = userDoc.exists ? (userDoc.data().gemini_api_key || '') : '';
+
       // Trigger tenant init
-      fetch(`${BACKEND_URL}/api/tenant/init`, {
+      await fetch(`${BACKEND_URL}/api/tenant/init`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uid: currentUser.uid, geminiApiKey })
       });
     } catch (e) {
-      console.error('Error getting Gemini API key:', e);
-      // Continue anyway with empty key
-      fetch(`${BACKEND_URL}/api/tenant/init`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ uid: currentUser.uid, geminiApiKey: '' })
-      });
+      console.error('Error initializing tenant:', e);
     }
+
+    // Poll for QR code via HTTP (no Socket.IO needed)
+    let pollCount = 0;
+    const pollInterval = setInterval(async () => {
+      pollCount++;
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/qr`);
+        const data = await res.json();
+
+        // QR found
+        if (data.qrCode) {
+          document.getElementById('qrCode').innerHTML = `<img src="data:image/png;base64,${data.qrCode}" alt="QR" style="max-width:260px;">`;
+        }
+
+        // WhatsApp ready
+        if (data.isReady) {
+          clearInterval(pollInterval);
+          waConnected = true;
+          updateWaBanner();
+          document.getElementById('qrModal').classList.add('hidden');
+        }
+      } catch (e) {
+        console.error('[QR POLL] Error:', e.message);
+      }
+
+      // Stop polling after 2 minutes
+      if (pollCount > 120) {
+        clearInterval(pollInterval);
+        document.getElementById('qrCode').innerHTML = '<p style="color: var(--text-muted);">Timeout - no QR generado. Intenta de nuevo.</p>';
+      }
+    }, 1000); // Poll every 1 second
   }
 
   // ═══ TAB 1: PRODUCTS ═══
