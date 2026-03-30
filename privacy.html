@@ -111,11 +111,14 @@
     <p>Para brindarte el servicio MIIA, recopilamos los siguientes datos:</p>
     <ul>
       <li><strong>Datos de cuenta:</strong> nombre, dirección de correo electrónico, contraseña (encriptada), foto de perfil (si usas Google).</li>
-      <li><strong>Datos de WhatsApp:</strong> número de teléfono vinculado, historial de conversaciones procesadas por MIIA, estado de la sesión de WhatsApp Web.</li>
-      <li><strong>Datos de entrenamiento:</strong> la información que ingresas en el panel de entrenamiento (productos, precios, instrucciones) para personalizar el comportamiento de MIIA.</li>
+      <li><strong>Datos de entrenamiento:</strong> la información que proporcionas voluntariamente para personalizar a MIIA (productos, precios, instrucciones, palabras clave). Tú decides qué enseñarle a MIIA y eres responsable del contenido que utilizas para entrenarla.</li>
+      <li><strong>Datos de WhatsApp:</strong> MIIA procesa mensajes únicamente en conversaciones donde está activada, para generar respuestas con contexto. MIIA no accede ni almacena conversaciones donde no interviene.</li>
       <li><strong>Datos de facturación:</strong> plan contratado, historial de pagos. Los datos de tarjeta son procesados exclusivamente por Stripe y no los almacenamos.</li>
       <li><strong>Datos técnicos:</strong> dirección IP, tipo de navegador, logs de errores para diagnóstico.</li>
     </ul>
+    <div class="highlight-box">
+      <p>MIIA solo almacena y procesa los datos que tú proporcionas directamente o que se generan en conversaciones donde MIIA está activa. El resto de tus conversaciones de WhatsApp permanecen privadas y no son accesibles para la plataforma.</p>
+    </div>
   </div>
 
   <div class="legal-section">
@@ -135,12 +138,13 @@
 
   <div class="legal-section">
     <h2><span class="section-num">3</span> ¿Cómo protegemos tus datos?</h2>
-    <p>La seguridad de tus datos es nuestra prioridad:</p>
+    <p>Todos los datos se encriptan automáticamente en el momento de su almacenamiento:</p>
     <ul>
-      <li>Toda la comunicación usa HTTPS/TLS.</li>
-      <li>Los datos se almacenan en Firebase Firestore con reglas de acceso estrictas: solo tú puedes leer y escribir tus propios datos.</li>
-      <li>Las sesiones de WhatsApp se guardan de forma encriptada en el servidor.</li>
-      <li>Las contraseñas nunca se almacenan en texto plano (Firebase Authentication).</li>
+      <li><strong>En tránsito:</strong> toda la comunicación utiliza HTTPS/TLS (cifrado entre tu navegador y nuestros servidores).</li>
+      <li><strong>En reposo:</strong> los datos almacenados en Google Firebase se encriptan automáticamente con AES-256, gestionado por Google Cloud.</li>
+      <li><strong>Backups:</strong> las exportaciones de datos se encriptan con AES-256-CBC antes de la descarga.</li>
+      <li><strong>Contraseñas:</strong> nunca se almacenan en texto plano (Firebase Authentication con hash seguro).</li>
+      <li><strong>Acceso:</strong> restringido al personal autorizado de MIIA mediante reglas estrictas de Firebase.</li>
     </ul>
   </div>
 
@@ -175,7 +179,7 @@
     <p>MIIA utiliza los siguientes proveedores de confianza:</p>
     <ul>
       <li><strong>Firebase (Google):</strong> autenticación y base de datos.</li>
-      <li><strong>Google Gemini:</strong> generación de respuestas de IA. Las conversaciones pueden ser procesadas por Google según sus políticas de privacidad.</li>
+      <li><strong>Proveedores de IA (actualmente Google Gemini):</strong> generación de respuestas inteligentes. Los datos enviados se limitan al contexto necesario para generar la respuesta. En el futuro, el Cliente podrá elegir su proveedor de IA preferido.</li>
       <li><strong>Stripe:</strong> procesamiento de pagos.</li>
       <li><strong>Railway / Vercel:</strong> infraestructura de hosting.</li>
     </ul>
