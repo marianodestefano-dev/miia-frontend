@@ -492,7 +492,7 @@
         const user = userCredential.user;
         if (!user.emailVerified) { showVerifyScreen(user); return; }
         localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, email: user.email, logged_in: true, login_time: new Date().toISOString() }));
-        setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
+        setTimeout(() => redirectByRole(user), 800);
       } catch (error) {
         if (error.code === 'auth/account-exists-with-different-credential' || error.code === 'auth/invalid-login-credentials' || error.code === 'auth/wrong-password') {
           showError('Email o contraseña incorrectos. Si creaste tu cuenta con Google, usa el botón "Google" para ingresar.');
@@ -571,13 +571,32 @@
         }
         localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, name: user.displayName, email: user.email, logged_in: true }));
         showSuccess('Bienvenido ' + user.displayName + '! Redirigiendo...');
-        setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
+        setTimeout(() => redirectByRole(user), 800);
       } catch (error) {
         showError('Error al iniciar sesión con Google: ' + error.message);
       }
     }
 
     function toSlug(email) { return email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
+
+    // Redirect por rol: owner → dashboard, agent → agent-dashboard
+    async function redirectByRole(user) {
+      const slug = toSlug(user.email);
+      try {
+        const token = await user.getIdToken();
+        const resp = await fetch(`${API_BASE}/api/user/role`, {
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.role === 'agent') {
+            window.location.href = 'agent-dashboard.html?u=' + slug;
+            return;
+          }
+        }
+      } catch (e) { console.log('[LOGIN] Role check failed, defaulting to dashboard:', e.message); }
+      window.location.href = 'dashboard.html?u=' + slug;
+    }
 
     function showError(message) {
       const e = document.getElementById('errorMessage');
@@ -608,7 +627,7 @@
       if (!pendingVerifyUser) return;
       await pendingVerifyUser.reload();
       if (pendingVerifyUser.emailVerified) {
-        window.location.href = 'dashboard.html?u=' + toSlug(pendingVerifyUser.email);
+        redirectByRole(pendingVerifyUser);
       } else {
         document.getElementById('verifyMsg').textContent = 'Aún no has verificado el email. Revisa tu bandeja de entrada.';
       }
@@ -627,7 +646,7 @@
     auth.onAuthStateChanged(user => {
       if (user) {
         if (!user.emailVerified && user.providerData[0]?.providerId === 'password') { showVerifyScreen(user); return; }
-        window.location.href = 'dashboard.html?u=' + toSlug(user.email);
+        redirectByRole(user);
       }
     });
   </script>
