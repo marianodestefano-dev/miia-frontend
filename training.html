@@ -273,6 +273,7 @@
     <button class="tab-btn" onclick="switchTab('docs')">Documentos</button>
     <button class="tab-btn" onclick="switchTab('test')">Testear MIIA</button>
     <button class="tab-btn" onclick="switchTab('cobros')">Cobros</button>
+    <button class="tab-btn" onclick="switchTab('config')">⚙️ Configuración</button>
   </div>
 
   <div class="tab-content">
@@ -443,6 +444,41 @@
       </div>
     </div>
 
+    <!-- ════ TAB 7: CONFIGURACIÓN ════ -->
+    <div id="tab-config" class="tab-panel">
+      <h3 class="section-title">Configuración de MIIA</h3>
+      <p class="section-desc">Ajustes avanzados del comportamiento de tu asistente.</p>
+
+      <div style="max-width:600px;">
+        <div class="payment-card" style="margin-bottom:20px;">
+          <div class="payment-card-header" style="align-items:flex-start;gap:16px;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:12px;width:100%;">
+              <span style="font-size:1.8rem;">🤖</span>
+              <div style="flex:1;">
+                <h4 style="color:var(--text-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">Humanizador de respuestas</h4>
+                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">Hace que MIIA introduzca pequeños errores tipográficos ocasionales (2% de mensajes) y tome pausas variables antes de responder. Útil para que WhatsApp no detecte comportamiento automático.</p>
+              </div>
+              <label class="toggle-switch" style="flex-shrink:0;">
+                <input type="checkbox" id="humanizerToggle" onchange="saveHumanizerPref(this.checked)">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(91,141,248,0.06);border-radius:8px;width:100%;">
+              <span style="font-size:0.85rem;color:var(--text-muted);">Estado actual:</span>
+              <span id="humanizerLabel" style="font-size:0.85rem;font-weight:700;color:var(--primary);">Cargando...</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:rgba(91,141,248,0.06);border:1px solid rgba(91,141,248,0.15);border-radius:12px;padding:16px 20px;">
+          <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;">
+            <strong style="color:var(--text-dark);">Tip:</strong> También puedes activar o desactivar el humanizador enviando un mensaje a MIIA por WhatsApp:<br>
+            <code style="background:rgba(0,0,0,0.3);padding:2px 8px;border-radius:4px;font-size:0.8rem;">"desactivar humanizador"</code> o <code style="background:rgba(0,0,0,0.3);padding:2px 8px;border-radius:4px;font-size:0.8rem;">"activar humanizador"</code>
+          </p>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -492,6 +528,7 @@
       loadContactRules();
       loadSessions();
       loadPaymentMethods();
+      loadHumanizerPref();
     });
   };
 
@@ -1148,6 +1185,28 @@
     const div = document.createElement('div');
     div.textContent = str || '';
     return div.innerHTML;
+  }
+
+  // ═══ HUMANIZER TOGGLE ═══
+  async function loadHumanizerPref() {
+    try {
+      const doc = await db.collection('users').doc(currentUser.uid).get();
+      const enabled = doc.data()?.humanizer_enabled !== false; // default true
+      document.getElementById('humanizerToggle').checked = enabled;
+      document.getElementById('humanizerLabel').textContent = enabled ? 'Activado' : 'Desactivado';
+    } catch(e) {
+      document.getElementById('humanizerLabel').textContent = 'Activado (por defecto)';
+    }
+  }
+
+  async function saveHumanizerPref(enabled) {
+    try {
+      await db.collection('users').doc(currentUser.uid).update({ humanizer_enabled: enabled });
+      document.getElementById('humanizerLabel').textContent = enabled ? 'Activado' : 'Desactivado';
+      showToast(enabled ? 'Humanizador activado' : 'Humanizador desactivado', enabled ? 'success' : 'info');
+    } catch(e) {
+      showToast('Error al guardar preferencia', 'error');
+    }
   }
 </script>
 <script src="toast.js"></script>
