@@ -347,9 +347,9 @@
   </style>
   <link rel="prefetch" href="dashboard.html">
 
-  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <div class="login-container">
@@ -464,6 +464,8 @@
       messagingSenderId: "481282126913",
       appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
     };
+
+    const API_BASE = 'https://miia-backend-production.up.railway.app';
 
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
