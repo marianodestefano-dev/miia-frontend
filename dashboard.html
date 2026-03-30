@@ -1116,20 +1116,53 @@
       }
     }
 
+    let _waReconnectAttempts = 0;
     async function checkWhatsAppStatus() {
       try {
         const res = await fetch('https://miia-backend-production.up.railway.app/api/status');
         const data = await res.json();
 
         if (data.connected) {
+          _waReconnectAttempts = 0;
           showWhatsAppModal();
+        } else {
+          _waReconnectAttempts++;
+          if (_waReconnectAttempts <= 18) {
+            // Hasta 90s (18 x 5s): mostrar "Reconectando..." sin redirigir
+            showReconnectingBanner(_waReconnectAttempts);
+            setTimeout(checkWhatsAppStatus, 5000);
+          } else {
+            // Después de 90s sin conectar → redirigir a QR
+            window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
+          }
+        }
+      } catch (error) {
+        _waReconnectAttempts++;
+        if (_waReconnectAttempts <= 18) {
+          setTimeout(checkWhatsAppStatus, 5000);
         } else {
           window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
         }
-      } catch (error) {
-        // En caso de error, redirigir a training
-        window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
       }
+    }
+
+    function showReconnectingBanner(attempt) {
+      let banner = document.getElementById('wa-reconnecting-banner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'wa-reconnecting-banner';
+        banner.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+          background:rgba(20,20,20,0.95);border:1px solid rgba(59,91,255,0.3);
+          border-radius:12px;padding:14px 24px;display:flex;align-items:center;gap:12px;
+          z-index:999;color:#94A3B8;font-size:0.85rem;box-shadow:0 8px 30px rgba(0,0,0,0.4);`;
+        banner.innerHTML = `
+          <div style="width:10px;height:10px;border-radius:50%;background:#3B5BFF;animation:pulse-glow 1.5s infinite;flex-shrink:0"></div>
+          <span id="wa-reconnect-text">MIIA está restaurando la sesión de WhatsApp...</span>
+          <span style="color:#64748B;font-size:0.75rem" id="wa-reconnect-timer"></span>`;
+        document.body.appendChild(banner);
+      }
+      const remaining = Math.max(0, 90 - attempt * 5);
+      document.getElementById('wa-reconnect-timer').textContent = `~${remaining}s`;
     }
 
     function showWhatsAppModal() {

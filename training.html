@@ -367,7 +367,7 @@
             </div>
           </div>
           <div class="chat-input">
-            <input type="text" id="expertInput" placeholder="Explicale algo a MIIA..." onkeypress="if(event.key==='Enter')sendExpertMessage()">
+            <input type="text" id="expertInput" placeholder="Preguntale o conversá... Para guardar: 'APRENDE: [info]'" onkeypress="if(event.key==='Enter')sendExpertMessage()">
             <button onclick="sendExpertMessage()">Enviar</button>
           </div>
         </div>
@@ -979,19 +979,36 @@
     addChatMessage('expertMessages', 'user', message);
     expertSessionMessages.push({ role: 'user', content: message });
 
+    const isLearn = message.toUpperCase().startsWith('APRENDE:');
+
     try {
-      const res = await fetch(`${BACKEND_URL}/api/train`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message })
-      });
-      const data = await res.json();
-      const reply = data.response || 'Entendido, lo he guardado.';
-      addChatMessage('expertMessages', 'miia', reply);
-      expertSessionMessages.push({ role: 'assistant', content: reply });
-      if (data.saved === true) showToast('✅ Guardado en memoria permanente', 'success');
-      else if (data.tipo === 'PREGUNTA') showToast('⚠️ Eso es una pregunta, no se guardó', 'warning');
-      else if (data.tipo === 'BASURA') showToast('❌ Texto no válido, no se guardó', 'error');
+      if (isLearn) {
+        // Guardar aprendizaje explícito
+        const res = await fetch(`${BACKEND_URL}/api/train`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: message.replace(/^APRENDE:/i, '').trim() })
+        });
+        const data = await res.json();
+        const reply = data.response || '✅ Guardado.';
+        addChatMessage('expertMessages', 'miia', reply);
+        expertSessionMessages.push({ role: 'assistant', content: reply });
+        if (data.saved === true) showToast('✅ Guardado en memoria permanente', 'success');
+        else if (data.tipo === 'PREGUNTA') showToast('⚠️ Eso es una pregunta, no se guardó', 'warning');
+        else showToast('❌ No se guardó', 'error');
+      } else {
+        // Conversación normal — igual que WhatsApp
+        const history = expertSessionMessages.slice(-20);
+        const res = await fetch(`${BACKEND_URL}/api/admin-chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, history })
+        });
+        const data = await res.json();
+        const reply = data.response || 'Sin respuesta.';
+        addChatMessage('expertMessages', 'miia', reply);
+        expertSessionMessages.push({ role: 'assistant', content: reply });
+      }
     } catch (e) {
       addChatMessage('expertMessages', 'miia', 'Error al procesar. Intenta de nuevo.');
     }
