@@ -529,7 +529,7 @@
           <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Permite que MIIA verifique tu disponibilidad y agende citas automáticamente.</p>
           <div id="calendarStatus" style="margin-bottom:12px;"></div>
           <div id="calendarConnectSection">
-            <a href="https://miia-backend-production.up.railway.app/api/auth/google" target="_blank" id="calConnectBtn" style="display:block;text-align:center;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:10px;font-size:0.85rem;cursor:pointer;font-weight:600;text-decoration:none;">Conectar Google Calendar</a>
+            <a href="#" onclick="connectCalendar(event)" id="calConnectBtn" style="display:block;text-align:center;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:10px;font-size:0.85rem;cursor:pointer;font-weight:600;text-decoration:none;">Conectar Google Calendar</a>
             <p style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;text-align:center;">Se abrirá una ventana de Google para autorizar</p>
           </div>
           <div id="calendarConnectedSection" style="display:none;">
@@ -1530,9 +1530,22 @@
     }
 
     // ═══ GOOGLE CALENDAR ═══
+    async function connectCalendar(e) {
+      e.preventDefault();
+      const user = auth.currentUser;
+      if (!user) return showToast('Sesión no iniciada', 'error');
+      // Abre el flujo OAuth pasando el uid — el callback guarda tokens en Firestore para este usuario
+      window.open(API + '/api/auth/google?uid=' + encodeURIComponent(user.uid), '_blank');
+      // Recheck status después de 5s (el usuario autoriza en la ventana emergente)
+      setTimeout(() => loadCalendarStatus(), 5000);
+    }
+
     async function loadCalendarStatus() {
       try {
-        const res = await fetch(API + '/api/calendar/status');
+        const user = auth.currentUser;
+        if (!user) return;
+        const token = await user.getIdToken();
+        const res = await fetch(API + '/api/calendar/status', { headers: { 'Authorization': 'Bearer ' + token } });
         const data = await res.json();
         const statusEl = document.getElementById('calendarStatus');
         const connectSection = document.getElementById('calendarConnectSection');
@@ -1554,7 +1567,8 @@
     async function saveCalendarConfig() {
       const calendarEnabled = document.getElementById('calendarAutoToggle').checked;
       try {
-        await fetch(API + '/api/calendar/config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ calendarEnabled }) });
+        const token = await auth.currentUser.getIdToken();
+        await fetch(API + '/api/calendar/config', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ calendarEnabled }) });
         showToast(calendarEnabled ? '✅ Agendamiento automático activado' : 'Agendamiento desactivado', 'success');
       } catch (e) { showToast('Error: ' + e.message, 'error'); }
     }
@@ -1562,7 +1576,8 @@
     async function disconnectCalendar() {
       if (!confirm('¿Desconectar Google Calendar?')) return;
       try {
-        await fetch(API + '/api/calendar/disconnect', { method: 'POST' });
+        const token = await auth.currentUser.getIdToken();
+        await fetch(API + '/api/calendar/disconnect', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
         showToast('Google Calendar desconectado', 'success');
         loadCalendarStatus();
       } catch (e) { showToast('Error: ' + e.message, 'error'); }
