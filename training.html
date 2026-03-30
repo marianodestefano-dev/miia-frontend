@@ -662,8 +662,16 @@
       return;
     }
 
-    // Poll for QR code via HTTP (no Socket.IO needed)
+    // Poll for QR code via HTTP
     let pollCount = 0;
+    let countdown = 30;
+    let countdownTimer = setInterval(() => {
+      countdown--;
+      const el = document.getElementById('qrCountdown');
+      if (el) el.textContent = countdown > 0 ? `Iniciando WhatsApp... ${countdown}s` : 'Casi listo...';
+    }, 1000);
+    document.getElementById('qrCode').innerHTML = `<div style="text-align:center;padding:40px 20px;"><div style="font-size:2rem;margin-bottom:12px;">⏳</div><p id="qrCountdown" style="color:var(--text-muted);font-size:0.9rem;">Iniciando WhatsApp... 30s</p><p style="color:var(--text-muted);font-size:0.8rem;margin-top:8px;">Puppeteer tarda ~15-30s en arrancar</p></div>`;
+
     const pollInterval = setInterval(async () => {
       pollCount++;
       try {
@@ -673,9 +681,9 @@
           const error = await res.json();
           console.error(`[WA POLL #${pollCount}] ❌ ${res.status}:`, error.error);
           if (pollCount === 1) {
-            // Only show error on first poll
-            document.getElementById('qrCode').innerHTML = `<p style="color: red;">Error: ${error.error || 'No se pudo inicializar WhatsApp'}</p>`;
             clearInterval(pollInterval);
+            clearInterval(countdownTimer);
+            document.getElementById('qrCode').innerHTML = `<p style="color: red;">Error: ${error.error || 'No se pudo inicializar WhatsApp'}</p>`;
           }
           return;
         }
@@ -683,8 +691,15 @@
         const data = await res.json();
         console.log(`[WA POLL #${pollCount}]`, data);
 
+        // WhatsApp authenticated (session loaded), waiting for ready
+        if (data.phase === 'authenticated_loading') {
+          clearInterval(countdownTimer);
+          document.getElementById('qrCode').innerHTML = `<div style="text-align:center;padding:40px 20px;"><div style="font-size:2rem;margin-bottom:12px;">🔄</div><p style="color:#34D399;font-size:0.9rem;">Sesión autenticada — cargando WhatsApp...</p></div>`;
+        }
+
         // QR found
         if (data.qrCode) {
+          clearInterval(countdownTimer);
           console.log('[WA] ✅ QR FOUND! Rendering...');
           document.getElementById('qrCode').innerHTML = `<img src="${data.qrCode}" alt="QR" style="max-width:260px;">`;
         }
@@ -693,6 +708,7 @@
         if (data.isReady) {
           console.log('[WA] ✅ WhatsApp READY!');
           clearInterval(pollInterval);
+          clearInterval(countdownTimer);
           waConnected = true;
           updateWaBanner();
           document.getElementById('qrModal').classList.add('hidden');
@@ -701,13 +717,14 @@
         console.error('[QR POLL] Error:', e.message);
       }
 
-      // Stop polling after 2 minutes
-      if (pollCount > 120) {
+      // Stop polling after 3 minutes
+      if (pollCount > 180) {
         clearInterval(pollInterval);
-        console.error('[WA] ⏱️ TIMEOUT - No QR generated after 2 minutes');
-        document.getElementById('qrCode').innerHTML = '<p style="color: var(--text-muted);">Timeout - no QR generado. Intenta de nuevo.</p>';
+        clearInterval(countdownTimer);
+        console.error('[WA] ⏱️ TIMEOUT');
+        document.getElementById('qrCode').innerHTML = '<p style="color: var(--text-muted);">Timeout. Cierra y vuelve a intentar.</p>';
       }
-    }, 1000); // Poll every 1 second
+    }, 1000);
   }
 
   // ═══ TAB 1: PRODUCTS ═══
