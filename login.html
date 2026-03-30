@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIIA - Iniciar Sesion</title>
+  <title>MIIA - Iniciar Sesión</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
     :root {
@@ -368,7 +368,7 @@
     <div class="message success" id="successMessage"></div>
 
     <div class="tabs">
-      <div class="tab active" onclick="switchTab('login')">Iniciar Sesion</div>
+      <div class="tab active" onclick="switchTab('login')">Iniciar Sesión</div>
       <div class="tab" onclick="switchTab('register')">Registrarse</div>
     </div>
 
@@ -379,10 +379,10 @@
         <input type="email" id="loginEmail" required placeholder="tu@email.com">
       </div>
       <div class="form-group">
-        <label>Contrasena</label>
+        <label>Contraseña</label>
         <input type="password" id="loginPassword" required placeholder="••••••••">
       </div>
-      <button type="submit" class="btn-submit">Iniciar Sesion</button>
+      <button type="submit" class="btn-submit">Iniciar Sesión</button>
     </form>
 
     <!-- Register Form -->
@@ -396,13 +396,13 @@
         <input type="email" id="registerEmail" required placeholder="tu@email.com">
       </div>
       <div class="form-group">
-        <label>WhatsApp (con codigo pais)</label>
+        <label>WhatsApp (con código país)</label>
         <input type="tel" id="registerWhatsapp" required placeholder="+57 300 123 4567">
       </div>
       <div class="form-group">
         <label>Plan</label>
         <select id="registerPlan" required>
-          <option value="trial" selected>Trial gratuito — 7 dias</option>
+          <option value="trial" selected>Trial gratuito — 7 días</option>
           <option value="monthly">Mensual — $12 USD/mes</option>
           <option value="quarterly">Trimestral — $30 USD</option>
           <option value="semestral">Semestral — $55 USD</option>
@@ -410,13 +410,13 @@
         </select>
       </div>
       <div class="form-group">
-        <label>Contrasena</label>
-        <input type="password" id="registerPassword" required placeholder="Minimo 6 caracteres">
+        <label>Contraseña</label>
+        <input type="password" id="registerPassword" required placeholder="Mínimo 6 caracteres">
       </div>
       <button type="submit" class="btn-submit">Crear Cuenta</button>
     </form>
 
-    <div class="divider">O continua con</div>
+    <div class="divider">O continúa con</div>
 
     <button class="google-btn" onclick="handleGoogleLogin()">
       <svg width="18" height="18" viewBox="0 0 20 20">
@@ -429,7 +429,7 @@
     </button>
 
     <p class="terms-text">
-      Al registrarte aceptas nuestros <a href="terms.html" target="_blank">Terminos y Condiciones</a> y <a href="privacy.html" target="_blank">Politica de Privacidad</a>.
+      Al registrarte aceptas nuestros <a href="terms.html" target="_blank">Términos y Condiciones</a> y <a href="privacy.html" target="_blank">Política de Privacidad</a>.
     </p>
 
     <div class="back-link">
@@ -444,10 +444,10 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
       </div>
       <h2>Verifica tu email</h2>
-      <p>Te enviamos un link de activacion a:</p>
+      <p>Te enviamos un link de activación a:</p>
       <p id="verifyEmail" class="verify-email"></p>
-      <p style="margin-bottom:28px;">Haz clic en el enlace del email para activar tu cuenta. Revisa tambien la carpeta de spam.</p>
-      <button onclick="checkVerified()" class="btn-verify btn-verify-primary">Ya verifique mi email</button>
+      <p style="margin-bottom:28px;">Haz clic en el enlace del email para activar tu cuenta. Revisa también la carpeta de spam.</p>
+      <button onclick="checkVerified()" class="btn-verify btn-verify-primary">Ya verifiqué mi email</button>
       <button onclick="resendVerification()" class="btn-verify btn-verify-ghost">Reenviar email</button>
       <div id="verifyMsg" style="font-size:0.8rem; color:var(--text-secondary); margin-top:12px;"></div>
     </div>
@@ -493,7 +493,7 @@
         setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
       } catch (error) {
         if (error.code === 'auth/account-exists-with-different-credential' || error.code === 'auth/invalid-login-credentials' || error.code === 'auth/wrong-password') {
-          showError('Email o contrasena incorrectos. Si creaste tu cuenta con Google, usa el boton "Google" para ingresar.');
+          showError('Email o contraseña incorrectos. Si creaste tu cuenta con Google, usa el botón "Google" para ingresar.');
         } else {
           showError('Error: ' + error.message);
         }
@@ -507,8 +507,8 @@
       const whatsapp = document.getElementById('registerWhatsapp').value;
       const plan = document.getElementById('registerPlan').value;
       const password = document.getElementById('registerPassword').value;
-      if (password.length < 6) { showError('La contrasena debe tener al menos 6 caracteres'); return; }
-      if (!whatsapp.startsWith('+')) { showError('El WhatsApp debe incluir codigo pais (ejemplo: +57)'); return; }
+      if (password.length < 6) { showError('La contraseña debe tener al menos 6 caracteres'); return; }
+      if (!whatsapp.startsWith('+')) { showError('El WhatsApp debe incluir código país (ejemplo: +57)'); return; }
       try {
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
@@ -571,7 +571,7 @@
         showSuccess('Bienvenido ' + user.displayName + '! Redirigiendo...');
         setTimeout(() => window.location.href = 'dashboard.html?u=' + toSlug(user.email), 800);
       } catch (error) {
-        showError('Error al iniciar sesion con Google: ' + error.message);
+        showError('Error al iniciar sesión con Google: ' + error.message);
       }
     }
 
@@ -608,7 +608,7 @@
       if (pendingVerifyUser.emailVerified) {
         window.location.href = 'dashboard.html?u=' + toSlug(pendingVerifyUser.email);
       } else {
-        document.getElementById('verifyMsg').textContent = 'Aun no has verificado el email. Revisa tu bandeja de entrada.';
+        document.getElementById('verifyMsg').textContent = 'Aún no has verificado el email. Revisa tu bandeja de entrada.';
       }
     }
 
