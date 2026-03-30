@@ -6,20 +6,23 @@
   <title>MIIA - Dashboard</title>
   <style>
     :root {
-      --primary: #00e5ff;
-      --primary-dark: #00b8cc;
-      --secondary: #bf00ff;
+      --primary: #5B8DF8;
+      --primary-dark: #4070e0;
+      --secondary: #7C5CF6;
       --accent: #25d366;
-      --bg-light: #0a0a12;
-      --bg-white: #050508;
-      --text-dark: #f8fafc;
-      --text-body: #cbd5e1;
-      --text-muted: #64748b;
-      --gradient-main: linear-gradient(135deg, #00e5ff 0%, #bf00ff 100%);
-      --shadow-sm: 0 2px 8px rgba(0,229,255,0.08);
-      --shadow-md: 0 8px 30px rgba(0,229,255,0.12);
-      --shadow-lg: 0 20px 60px rgba(0,229,255,0.15);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.06), 0 1px 3px rgba(0,0,0,0.04);
+      --bg-light: #060C1A;
+      --bg-white: #060C1A;
+      --bg-card: #0D1628;
+      --bg-surface: #111D35;
+      --text-dark: #E8EDF8;
+      --text-body: #B0BEDD;
+      --text-muted: #8B9CC8;
+      --border-glass: rgba(91,141,248,0.12);
+      --gradient-main: linear-gradient(135deg, #5B8DF8 0%, #7C5CF6 100%);
+      --shadow-sm: 0 2px 8px rgba(91,141,248,0.08);
+      --shadow-md: 0 8px 30px rgba(91,141,248,0.12);
+      --shadow-lg: 0 20px 60px rgba(91,141,248,0.15);
+      --shadow-card: 0 4px 20px rgba(0,0,0,0.4), 0 1px 3px rgba(91,141,248,0.06);
       --radius-sm: 8px;
       --radius-md: 16px;
       --radius-lg: 24px;
@@ -1370,7 +1373,7 @@
       const email = emailInput.value.trim();
 
       if (!name || !email) {
-        alert('Ingresa nombre y email del agente');
+        showToast('Ingresa nombre y email del agente', 'warning');
         return;
       }
 
@@ -1380,14 +1383,14 @@
         .get();
 
       if (snapshot.size >= (currentUserData.agents_limit || 1)) {
-        alert('Has alcanzado el límite de agentes de tu plan.');
+        showToast('Has alcanzado el límite de agentes de tu plan.', 'warning');
         return;
       }
 
       // Check if email already exists
       const existing = await db.collection('users').where('email', '==', email).get();
       if (!existing.empty) {
-        alert('Ya existe un usuario con ese email.');
+        showToast('Ya existe un usuario con ese email.', 'warning');
         return;
       }
 
@@ -1413,7 +1416,7 @@
         emailInput.value = '';
         loadAgents();
       } catch (error) {
-        alert('Error al agregar agente: ' + error.message);
+        showToast('Error al agregar agente: ' + error.message, 'error');
       }
     }
 
@@ -1424,7 +1427,7 @@
         await db.collection('users').doc(agentId).delete();
         loadAgents();
       } catch (error) {
-        alert('Error: ' + error.message);
+        showToast('Error: ' + error.message, 'error');
       }
     }
 
@@ -1527,9 +1530,9 @@
       const product = document.getElementById('dealProduct').value.trim();
       const amount = parseFloat(document.getElementById('dealAmount').value) || 0;
 
-      if (!leadName) { alert('Ingresa el nombre del lead'); return; }
-      if (!product) { alert('Ingresa el producto/servicio'); return; }
-      if (amount <= 0) { alert('Ingresa un monto válido'); return; }
+      if (!leadName) { showToast('Ingresa el nombre del lead', 'warning'); return; }
+      if (!product) { showToast('Ingresa el producto/servicio', 'warning'); return; }
+      if (amount <= 0) { showToast('Ingresa un monto válido', 'warning'); return; }
 
       try {
         await db.collection('deals').add({
@@ -1547,7 +1550,7 @@
         document.getElementById('dealProduct').value = '';
         document.getElementById('dealAmount').value = '';
       } catch (error) {
-        alert('Error: ' + error.message);
+        showToast('Error: ' + error.message, 'error');
       }
     }
 
@@ -1561,7 +1564,7 @@
           updated_at: new Date()
         });
       } catch (error) {
-        alert('Error: ' + error.message);
+        showToast('Error: ' + error.message, 'error');
       }
     }
 
@@ -1646,11 +1649,11 @@
         const data = await res.json();
 
         if (data.success) {
-          alert('WhatsApp desvinculado correctamente');
-          window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
+          showToast('WhatsApp desvinculado correctamente', 'success');
+          setTimeout(() => window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : ''), 1200);
         }
       } catch (error) {
-        alert('Error al desvincular: ' + error.message);
+        showToast('Error al desvincular: ' + error.message, 'error');
       }
     }
 
@@ -1671,10 +1674,10 @@
         if (data.url) {
           window.location.href = data.url;
         } else {
-          alert('Error al procesar el pago: ' + (data.error || 'Desconocido'));
+          showToast('Error al procesar el pago: ' + (data.error || 'Desconocido'), 'error');
         }
       } catch (error) {
-        alert('Error de conexión: ' + error.message);
+        showToast('Error de conexión: ' + error.message, 'error');
       }
     }
 
@@ -1705,5 +1708,6 @@
       document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     }
   </script>
+  <script src="toast.js"></script>
 </body>
 </html>

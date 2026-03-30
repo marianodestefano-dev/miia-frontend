@@ -94,6 +94,16 @@
       background: #dbeafe;
       color: #164e63;
     }
+    .nav-role-badge.medilink {
+      background: linear-gradient(135deg, #5B8DF8, #7C5CF6);
+      color: white;
+    }
+    .medilink-banner {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 12px;
+      padding: 8px 18px; border-radius: var(--radius-full);
+      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
+      font-size: 0.85rem; font-weight: 700; color: white;
+    }
 
     .logout-btn {
       padding: 10px 20px;
@@ -536,6 +546,14 @@
     async function renderAgentUI(userData, uid) {
       document.getElementById('agentEmail').textContent = userData.email;
       document.getElementById('agentName').textContent = (userData.name || userData.email).split(' ')[0];
+
+      // Badge "Equipo Medilink" para owner_member
+      if (userData.role === 'owner_member') {
+        const roleBadge = document.querySelector('.nav-role-badge');
+        if (roleBadge) { roleBadge.textContent = '⭐ Equipo Medilink'; roleBadge.classList.add('medilink'); }
+        const heroBand = document.querySelector('.hero-band p');
+        if (heroBand) heroBand.innerHTML = 'Miembro del equipo Medilink <span class="medilink-banner">⭐ Equipo Medilink — acceso completo</span>';
+      }
 
       // Load parent company name
       if (userData.parent_client_uid) {
