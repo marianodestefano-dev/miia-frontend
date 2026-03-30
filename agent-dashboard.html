@@ -473,18 +473,13 @@
       }
     }
 
-    const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
-
     auth.onAuthStateChanged(async user => {
       if (!user) {
         window.location.href = 'login.html';
         return;
       }
 
-      if (ADMIN_EMAILS.includes(user.email)) {
-        window.location.href = 'admin.html';
-        return;
-      }
+      try { const _tok = await user.getIdToken(); const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin.html';return;} } catch(_){}
 
       // Load user doc
       const doc = await db.collection('users').doc(user.uid).get();

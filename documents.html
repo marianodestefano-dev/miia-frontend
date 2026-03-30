@@ -449,7 +449,6 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const ADMIN_EMAILS = ['lobsterscrm@gmail.com', 'lobsterscrm@gmail.com'];
     let currentUser = null;
     let clientSlug = '';
 
@@ -488,9 +487,8 @@
       const adminView = urlParams.get('adminView') === '1';
       const impersonateUid = urlParams.get('impersonateUid');
 
-      if (ADMIN_EMAILS.includes(user.email) && !adminView) {
-        window.location.href = 'admin.html';
-        return;
+      if (!adminView) {
+        try { const _tok = await user.getIdToken(); const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin.html';return;} } catch(_){}
       }
 
       const targetUid = (adminView && impersonateUid) ? impersonateUid : user.uid;
