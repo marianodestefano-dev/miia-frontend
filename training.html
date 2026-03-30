@@ -628,18 +628,31 @@
     try {
       const userDoc = await db.collection('users').doc(currentUser.uid).get();
       const geminiApiKey = userDoc.exists ? (userDoc.data().gemini_api_key || '') : '';
-      console.log('[WA] Gemini API Key:', geminiApiKey ? 'YES' : 'NO (empty)');
+      console.log('[WA] Gemini API Key:', geminiApiKey ? 'YES' : 'NO (empty - will use fallback)');
 
       // Trigger tenant init
+      console.log('[WA] Calling /api/tenant/init with UID:', currentUser.uid);
       const initRes = await fetch(`${BACKEND_URL}/api/tenant/init`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ uid: currentUser.uid, geminiApiKey })
       });
+
+      if (!initRes.ok) {
+        const error = await initRes.json();
+        console.error('[WA] ❌ Tenant init FAILED:', error);
+        alert('Error al iniciar WhatsApp: ' + (error.error || 'Error desconocido'));
+        document.getElementById('qrModal').classList.add('hidden');
+        return;
+      }
+
       const initData = await initRes.json();
-      console.log('[WA] Tenant init response:', initData);
+      console.log('[WA] ✅ Tenant init response:', initData);
     } catch (e) {
       console.error('[WA] Error initializing tenant:', e);
+      alert('Error al conectar WhatsApp: ' + e.message);
+      document.getElementById('qrModal').classList.add('hidden');
+      return;
     }
 
     // Poll for QR code via HTTP (no Socket.IO needed)
@@ -648,18 +661,30 @@
       pollCount++;
       try {
         const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/qr`);
+
+        if (!res.ok) {
+          const error = await res.json();
+          console.error(`[WA POLL #${pollCount}] ❌ ${res.status}:`, error.error);
+          if (pollCount === 1) {
+            // Only show error on first poll
+            document.getElementById('qrCode').innerHTML = `<p style="color: red;">Error: ${error.error || 'No se pudo inicializar WhatsApp'}</p>`;
+            clearInterval(pollInterval);
+          }
+          return;
+        }
+
         const data = await res.json();
         console.log(`[WA POLL #${pollCount}]`, data);
 
         // QR found
         if (data.qrCode) {
-          console.log('[WA] QR FOUND! Rendering...');
+          console.log('[WA] ✅ QR FOUND! Rendering...');
           document.getElementById('qrCode').innerHTML = `<img src="data:image/png;base64,${data.qrCode}" alt="QR" style="max-width:260px;">`;
         }
 
         // WhatsApp ready
         if (data.isReady) {
-          console.log('[WA] WhatsApp READY!');
+          console.log('[WA] ✅ WhatsApp READY!');
           clearInterval(pollInterval);
           waConnected = true;
           updateWaBanner();
@@ -672,7 +697,7 @@
       // Stop polling after 2 minutes
       if (pollCount > 120) {
         clearInterval(pollInterval);
-        console.error('[WA] TIMEOUT - No QR generated after 2 minutes');
+        console.error('[WA] ⏱️ TIMEOUT - No QR generated after 2 minutes');
         document.getElementById('qrCode').innerHTML = '<p style="color: var(--text-muted);">Timeout - no QR generado. Intenta de nuevo.</p>';
       }
     }, 1000); // Poll every 1 second
