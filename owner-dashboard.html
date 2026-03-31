@@ -274,39 +274,42 @@
             <circle cx="18" cy="18" r="17" fill="url(#sb_g)"/>
             <path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
           </svg>
-          <span>MIIA</span>
+          <span class="sidebar-label">MIIA</span>
         </a>
+        <button class="collapse-btn" id="collapseBtn" onclick="toggleSidebar()" title="Colapsar menú">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;transition:transform .3s" id="collapseIcon"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
       </div>
 
       <!-- Nav links -->
       <nav class="sidebar-nav">
         <button class="sidebar-btn active" onclick="showSection('inicio', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-          Inicio
+          <span class="sidebar-label">Inicio</span>
         </button>
         <a href="contacts.html">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          Contactos
+          <span class="sidebar-label">Contactos</span>
         </a>
         <a href="training.html">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-          Entrenamiento MIIA
+          <span class="sidebar-label">Entrenamiento MIIA</span>
         </a>
         <a href="documents.html">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          Documentos
+          <span class="sidebar-label">Documentos</span>
         </a>
         <button class="sidebar-btn" onclick="showSection('agentes', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          Agentes
+          <span class="sidebar-label">Agentes</span>
         </button>
         <button class="sidebar-btn" onclick="showSection('planes', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-          Mi Plan
+          <span class="sidebar-label">Mi Plan</span>
         </button>
         <button class="sidebar-btn" onclick="showSection('config', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
-          Configuración
+          <span class="sidebar-label">Configuración</span>
         </button>
       </nav>
 
@@ -1895,6 +1898,23 @@
       document.getElementById('appSidebar').classList.toggle('mobile-open');
       document.getElementById('sidebarOverlay').classList.toggle('active');
     }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('appSidebar');
+      const icon = document.getElementById('collapseIcon');
+      const collapsed = sidebar.classList.toggle('collapsed');
+      if (icon) icon.style.transform = collapsed ? 'rotate(180deg)' : '';
+      localStorage.setItem('sidebarCollapsed', collapsed ? '1' : '0');
+    }
+    // Restore collapsed state on load
+    (function() {
+      if (localStorage.getItem('sidebarCollapsed') === '1') {
+        const sidebar = document.getElementById('appSidebar');
+        const icon = document.getElementById('collapseIcon');
+        if (sidebar) sidebar.classList.add('collapsed');
+        if (icon) icon.style.transform = 'rotate(180deg)';
+      }
+    })();
 
     function toggleProfileMenu() {
       document.getElementById('profileMenu').classList.toggle('open');

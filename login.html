@@ -4,435 +4,496 @@
   <meta charset="UTF-8">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIIA - Iniciar Sesión</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <title>MIIA — Iniciar Sesión</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --primary: #3B5BFF;
-      --secondary: #FF1A8C;
-      --green: #34D399;
-      --bg-deep: #0F0F0F;
-      --bg-card: #141414;
-      --bg-surface: #1A1A1A;
-      --bg-elevated: #222222;
-      --border: rgba(59,91,255,0.08);
-      --border-hover: rgba(59,91,255,0.2);
-      --text-white: #F1F5F9;
-      --text-primary: #E2E8F0;
-      --text-secondary: #94A3B8;
-      --text-muted: #64748B;
-      --gradient-main: linear-gradient(135deg, #3B5BFF 0%, #8B30E0 50%, #FF1A8C 100%);
-      --radius: 12px;
-      --radius-full: 100px;
+      --base:     #030712; --surface: #0d1117; --raise: #111827; --lift: #1a2236;
+      --indigo:   #6366f1; --indigo-hi: #818cf8; --indigo-lo: rgba(99,102,241,.12);
+      --cyan:     #22d3ee; --emerald: #10b981; --rose: #f43f5e;
+      --tx-bright:#f8fafc; --tx-body: #94a3b8; --tx-dim: #475569;
+      --bd-1: rgba(148,163,184,.07); --bd-2: rgba(148,163,184,.12);
+      --r-md: 10px; --r-lg: 16px; --r-xl: 22px; --r-full: 9999px;
     }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
+    html, body { height: 100%; }
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--text-secondary);
-      background: var(--bg-deep);
-      min-height: 100vh;
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: var(--base);
+      color: var(--tx-body);
       display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      line-height: 1.6;
+      min-height: 100vh;
       -webkit-font-smoothing: antialiased;
-      position: relative;
     }
 
-    body::before {
+    /* ── LEFT PANEL ── */
+    .login-left {
+      flex: 0 0 44%;
+      background: linear-gradient(145deg, #0a0f1e 0%, #0d1337 50%, #0a0f1e 100%);
+      border-right: 1px solid var(--bd-1);
+      display: flex;
+      flex-direction: column;
+      padding: 48px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .login-left::before {
       content: '';
-      position: fixed;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 400px;
-      background: radial-gradient(ellipse, rgba(59,91,255,0.06) 0%, transparent 70%);
+      position: absolute;
+      top: -120px; left: -80px;
+      width: 420px; height: 420px;
+      background: radial-gradient(ellipse, rgba(99,102,241,.18) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .login-left::after {
+      content: '';
+      position: absolute;
+      bottom: -80px; right: -60px;
+      width: 320px; height: 320px;
+      background: radial-gradient(ellipse, rgba(34,211,238,.1) 0%, transparent 65%);
       pointer-events: none;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(16px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* Particles */
+    .particles {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .particle {
+      position: absolute;
+      width: 2px; height: 2px;
+      border-radius: 50%;
+      background: rgba(99,102,241,.4);
+      animation: float linear infinite;
+    }
+    @keyframes float {
+      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: .3; }
+      100% { transform: translateY(-20px) scale(1.5); opacity: 0; }
     }
 
-    .login-container {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      padding: 48px 40px;
-      border-radius: 16px;
-      max-width: 420px;
-      width: 100%;
+    .left-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: auto;
       position: relative;
       z-index: 1;
-      animation: fadeIn 0.5s ease forwards;
-    }
-
-    .logo {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-    .logo a {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
       text-decoration: none;
+    }
+    .left-logo-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, var(--indigo), var(--cyan));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem; color: white;
+    }
+    .left-logo-text {
       font-size: 1.25rem;
       font-weight: 800;
-      color: var(--text-white);
-      letter-spacing: -0.5px;
-    }
-    .logo svg { height: 36px; width: 36px; }
-
-    h2 {
-      text-align: center;
-      color: var(--text-white);
-      font-size: 1.5rem;
-      font-weight: 700;
-      margin-bottom: 8px;
+      color: var(--tx-bright);
     }
 
-    .subtitle {
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.875rem;
-      margin-bottom: 32px;
+    .left-hero {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 48px 0;
+    }
+    .left-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 13px;
+      border-radius: var(--r-full);
+      background: var(--indigo-lo);
+      border: 1px solid rgba(99,102,241,.2);
+      color: var(--indigo-hi);
+      font-size: .75rem;
+      font-weight: 600;
+      margin-bottom: 20px;
+      width: fit-content;
+    }
+    .left-tag-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 6px var(--cyan);
+    }
+    .left-title {
+      font-size: 2.4rem;
+      font-weight: 800;
+      color: var(--tx-bright);
+      line-height: 1.15;
+      letter-spacing: -.03em;
+      margin-bottom: 16px;
+    }
+    .left-title span {
+      background: linear-gradient(135deg, var(--indigo-hi), var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .left-sub {
+      font-size: .95rem;
+      color: var(--tx-body);
+      line-height: 1.65;
+      margin-bottom: 36px;
+      max-width: 340px;
+    }
+
+    .features-list { display: flex; flex-direction: column; gap: 12px; }
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: .88rem;
+      color: var(--tx-body);
+    }
+    .feature-icon {
+      width: 32px; height: 32px;
+      border-radius: 9px;
+      background: rgba(13,17,23,.8);
+      border: 1px solid var(--bd-2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .9rem;
+      flex-shrink: 0;
+    }
+
+    .left-footer {
+      position: relative;
+      z-index: 1;
+      font-size: .75rem;
+      color: var(--tx-dim);
+    }
+
+    /* ── RIGHT PANEL ── */
+    .login-right {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+      background: var(--base);
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 420px;
+      animation: fadeUp .4s ease forwards;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .login-box h2 {
+      font-size: 1.65rem;
+      font-weight: 800;
+      color: var(--tx-bright);
+      margin-bottom: 6px;
+      letter-spacing: -.025em;
+    }
+    .login-box .subtitle {
+      font-size: .88rem;
+      color: var(--tx-dim);
+      margin-bottom: 28px;
     }
 
     .tabs {
       display: flex;
-      margin-bottom: 28px;
-      border-bottom: 1px solid var(--border);
+      margin-bottom: 26px;
+      background: var(--raise);
+      border-radius: var(--r-lg);
+      padding: 4px;
+      gap: 4px;
     }
-
     .tab {
       flex: 1;
-      padding: 12px;
+      padding: 9px;
       text-align: center;
       cursor: pointer;
-      color: var(--text-muted);
+      color: var(--tx-dim);
       font-weight: 600;
-      font-size: 0.875rem;
-      border-bottom: 2px solid transparent;
-      transition: all 0.2s;
+      font-size: .84rem;
+      border-radius: 10px;
+      transition: all .2s;
       background: none;
-      border-top: none;
-      border-left: none;
-      border-right: none;
+      border: none;
       font-family: inherit;
     }
+    .tab.active { background: var(--surface); color: var(--tx-bright); box-shadow: 0 1px 4px rgba(0,0,0,.4); }
 
-    .tab:hover { color: var(--text-secondary); }
-    .tab.active {
-      color: var(--text-white);
-      border-bottom-color: var(--primary);
-    }
-
-    .form-group { margin-bottom: 20px; }
-
+    .form-group { margin-bottom: 16px; }
     label {
       display: block;
       margin-bottom: 6px;
-      color: var(--text-secondary);
-      font-weight: 500;
-      font-size: 0.8rem;
+      color: var(--tx-body);
+      font-weight: 600;
+      font-size: .78rem;
+      letter-spacing: .01em;
     }
-
     input, select {
       width: 100%;
       padding: 11px 14px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 0.9rem;
-      transition: border-color 0.2s;
-      background: var(--bg-surface);
-      color: var(--text-white);
+      border: 1px solid var(--bd-2);
+      border-radius: var(--r-md);
+      font-size: .88rem;
+      background: var(--raise);
+      color: var(--tx-bright);
       font-family: inherit;
+      transition: all .2s;
     }
-
-    select option {
-      background: var(--bg-card);
-      color: var(--text-white);
-    }
-
-    input::placeholder { color: var(--text-muted); }
-
-    input:focus, select:focus {
-      outline: none;
-      border-color: var(--primary);
-    }
+    input:focus, select:focus { outline: none; border-color: var(--indigo); box-shadow: 0 0 0 3px rgba(99,102,241,.12); }
+    input::placeholder { color: var(--tx-dim); }
+    select option { background: var(--surface); }
 
     .btn-submit {
       width: 100%;
       padding: 12px;
-      background: var(--text-white);
-      color: var(--bg-deep);
+      background: var(--indigo);
+      color: white;
       border: none;
-      border-radius: var(--radius-full);
-      font-size: 0.9rem;
-      font-weight: 600;
+      border-radius: var(--r-full);
+      font-size: .9rem;
+      font-weight: 700;
       cursor: pointer;
-      transition: opacity 0.2s;
-      margin-top: 4px;
+      transition: all .2s;
+      margin-top: 6px;
       font-family: inherit;
+      letter-spacing: .01em;
     }
-
-    .btn-submit:hover { opacity: 0.9; }
+    .btn-submit:hover { background: var(--indigo-hi); box-shadow: 0 4px 16px rgba(99,102,241,.35); transform: translateY(-1px); }
 
     .divider {
       text-align: center;
-      margin: 28px 0;
-      color: var(--text-muted);
+      margin: 22px 0;
+      color: var(--tx-dim);
       position: relative;
-      font-size: 0.8rem;
+      font-size: .76rem;
     }
-
-    .divider::before,
-    .divider::after {
+    .divider::before, .divider::after {
       content: '';
       position: absolute;
       top: 50%;
-      width: 35%;
+      width: 38%;
       height: 1px;
-      background: var(--border);
+      background: var(--bd-2);
     }
     .divider::before { left: 0; }
-    .divider::after { right: 0; }
+    .divider::after  { right: 0; }
 
     .google-btn {
       width: 100%;
-      padding: 12px;
-      background: var(--bg-surface);
-      color: var(--text-primary);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      font-size: 0.9rem;
+      padding: 11px;
+      background: var(--raise);
+      color: var(--tx-body);
+      border: 1px solid var(--bd-2);
+      border-radius: var(--r-md);
+      font-size: .88rem;
       font-weight: 600;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      transition: border-color 0.2s;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      transition: all .2s;
       font-family: inherit;
     }
-
-    .google-btn:hover { border-color: var(--border-hover); }
+    .google-btn:hover { border-color: rgba(99,102,241,.3); background: var(--lift); color: var(--tx-bright); }
 
     .message {
-      padding: 12px 14px;
-      border-radius: 10px;
-      margin-bottom: 16px;
+      padding: 11px 14px;
+      border-radius: var(--r-md);
+      margin-bottom: 14px;
       display: none;
-      font-size: 0.85rem;
-      animation: fadeIn 0.3s ease;
+      font-size: .83rem;
+      font-weight: 500;
     }
-
-    .error {
-      background: rgba(239,68,68,0.1);
-      color: #F87171;
-      border: 1px solid rgba(239,68,68,0.15);
-    }
-
-    .success {
-      background: rgba(52,211,153,0.1);
-      color: var(--green);
-      border: 1px solid rgba(52,211,153,0.15);
-    }
-
-    .hidden { display: none; }
+    .error   { background: rgba(244,63,94,.1);  color: #f87171;  border: 1px solid rgba(244,63,94,.2); }
+    .success { background: rgba(16,185,129,.1); color: #34d399; border: 1px solid rgba(16,185,129,.2); }
 
     .terms-text {
       text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 16px;
+      font-size: .73rem;
+      color: var(--tx-dim);
+      margin-top: 14px;
       line-height: 1.5;
     }
-    .terms-text a {
-      color: var(--primary);
-      text-decoration: none;
-      font-weight: 500;
-    }
-    .terms-text a:hover { text-decoration: underline; }
+    .terms-text a { color: var(--indigo-hi); }
+    .terms-text a:hover { color: var(--cyan); }
 
-    .back-link {
-      text-align: center;
-      margin-top: 24px;
-    }
-    .back-link a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.85rem;
-      transition: color 0.2s;
-    }
-    .back-link a:hover { color: var(--text-white); }
+    .back-link { text-align: center; margin-top: 20px; }
+    .back-link a { color: var(--tx-dim); font-size: .82rem; font-weight: 500; transition: color .2s; }
+    .back-link a:hover { color: var(--tx-body); }
 
-    /* Verify screen */
+    .hidden { display: none; }
+
+    /* Verify */
     .verify-overlay {
       display: none;
       position: fixed;
       inset: 0;
-      background: var(--bg-deep);
+      background: rgba(3,7,18,.96);
+      backdrop-filter: blur(8px);
       align-items: center;
       justify-content: center;
       padding: 20px;
       z-index: 9999;
     }
     .verify-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 48px 36px;
-      max-width: 420px;
+      background: var(--surface);
+      border: 1px solid var(--bd-2);
+      border-radius: var(--r-xl);
+      padding: 44px 36px;
+      max-width: 400px;
       width: 100%;
       text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.7);
     }
     .verify-icon {
-      width: 56px;
-      height: 56px;
+      width: 52px; height: 52px;
       border-radius: 50%;
-      background: rgba(59,91,255,0.1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 20px;
+      background: var(--indigo-lo);
+      border: 1px solid rgba(99,102,241,.2);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 18px;
     }
-    .verify-icon svg { width: 24px; height: 24px; stroke: var(--primary); }
-    .verify-card h2 {
-      font-size: 1.3rem;
-      color: var(--text-white);
-      margin-bottom: 8px;
-    }
-    .verify-card p {
-      color: var(--text-secondary);
-      font-size: 0.875rem;
-      margin-bottom: 8px;
-    }
-    .verify-email {
-      font-weight: 700;
-      color: var(--primary);
-      margin-bottom: 24px;
-    }
-    .verify-card .btn-verify {
+    .verify-icon svg { width: 22px; height: 22px; stroke: var(--indigo-hi); }
+    .verify-card h2 { font-size: 1.2rem; color: var(--tx-bright); margin-bottom: 8px; font-weight: 700; }
+    .verify-card p  { color: var(--tx-body); font-size: .85rem; margin-bottom: 6px; }
+    .verify-email   { font-weight: 700; color: var(--indigo-hi); margin-bottom: 22px; }
+    .btn-verify {
       width: 100%;
-      padding: 12px;
+      padding: 11px;
       border: none;
-      border-radius: var(--radius-full);
-      font-size: 0.9rem;
+      border-radius: var(--r-full);
+      font-size: .88rem;
       font-weight: 600;
       cursor: pointer;
       font-family: inherit;
-      margin-bottom: 10px;
-      transition: opacity 0.2s;
+      margin-bottom: 8px;
+      transition: all .2s;
     }
-    .btn-verify-primary {
-      background: var(--text-white);
-      color: var(--bg-deep);
-    }
-    .btn-verify-ghost {
-      background: transparent;
-      color: var(--text-secondary);
-      border: 1px solid var(--border) !important;
-    }
-    .btn-verify-ghost:hover { border-color: var(--border-hover) !important; }
+    .btn-verify-primary { background: var(--indigo); color: white; }
+    .btn-verify-primary:hover { background: var(--indigo-hi); }
+    .btn-verify-ghost { background: transparent; color: var(--tx-body); border: 1px solid var(--bd-2); }
+    .btn-verify-ghost:hover { border-color: var(--bd-indigo, rgba(99,102,241,.2)); color: var(--tx-bright); }
 
-    @media (max-width: 600px) {
-      .login-container { padding: 36px 24px; }
-      h2 { font-size: 1.3rem; }
+    @media (max-width: 860px) {
+      .login-left { display: none; }
+      .login-right { justify-content: center; }
     }
   </style>
   <link rel="prefetch" href="owner-dashboard.html">
-
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <div class="login-container">
-    <div class="logo">
-      <a href="index.html">
-        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;flex-shrink:0"><defs><linearGradient id="miia_g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#miia_g1)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>
-        MIIA
-      </a>
+
+  <!-- LEFT DECORATIVE PANEL -->
+  <div class="login-left">
+    <div class="particles" id="particles"></div>
+
+    <a href="index.html" class="left-logo">
+      <div class="left-logo-icon">M</div>
+      <span class="left-logo-text">MIIA</span>
+    </a>
+
+    <div class="left-hero">
+      <div class="left-tag">
+        <div class="left-tag-dot"></div>
+        Asistente de Ventas con IA
+      </div>
+      <h1 class="left-title">Vende más<br>mientras <span>dormís</span></h1>
+      <p class="left-sub">MIIA responde, califica leads y cierra ventas en WhatsApp las 24 horas. Sin esfuerzo.</p>
+      <div class="features-list">
+        <div class="feature-item"><div class="feature-icon">💬</div>Responde clientes en segundos</div>
+        <div class="feature-item"><div class="feature-icon">🤖</div>IA entrenada con tu negocio</div>
+        <div class="feature-item"><div class="feature-icon">📊</div>Pipeline de ventas automático</div>
+        <div class="feature-item"><div class="feature-icon">📅</div>Agenda reuniones sin fricción</div>
+      </div>
     </div>
-    <h2>Bienvenido</h2>
-    <p class="subtitle">Tu asistente IA que vende por WhatsApp 24/7</p>
 
-    <div class="message error" id="errorMessage"></div>
-    <div class="message success" id="successMessage"></div>
+    <div class="left-footer">© 2025 MIIA · <a href="terms.html" style="color:inherit;">Términos</a> · <a href="privacy.html" style="color:inherit;">Privacidad</a></div>
+  </div>
 
-    <div class="tabs">
-      <div class="tab active" onclick="switchTab('login')">Iniciar Sesión</div>
-      <div class="tab" onclick="switchTab('register')">Registrarse</div>
-    </div>
+  <!-- RIGHT FORM PANEL -->
+  <div class="login-right">
+    <div class="login-box">
+      <h2>Bienvenido</h2>
+      <p class="subtitle">Tu asistente IA que vende por WhatsApp 24/7</p>
 
-    <!-- Login Form -->
-    <form id="loginForm" onsubmit="handleLogin(event)">
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="loginEmail" required placeholder="tu@email.com">
+      <div class="message error" id="errorMessage"></div>
+      <div class="message success" id="successMessage"></div>
+
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('login', this)">Iniciar Sesión</button>
+        <button class="tab" onclick="switchTab('register', this)">Registrarse</button>
       </div>
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" id="loginPassword" required placeholder="••••••••">
-      </div>
-      <button type="submit" class="btn-submit">Iniciar Sesión</button>
-    </form>
 
-    <!-- Register Form -->
-    <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
-      <div class="form-group">
-        <label>Nombre/Empresa</label>
-        <input type="text" id="registerName" required placeholder="Tu nombre o empresa">
-      </div>
-      <div class="form-group">
-        <label>Email</label>
-        <input type="email" id="registerEmail" required placeholder="tu@email.com">
-      </div>
-      <div class="form-group">
-        <label>WhatsApp (con código país)</label>
-        <input type="tel" id="registerWhatsapp" required placeholder="+57 300 123 4567">
-      </div>
-      <div class="form-group">
-        <label>Plan</label>
-        <select id="registerPlan" required>
-          <option value="trial" selected>Trial gratuito — 7 días</option>
-          <option value="monthly">Mensual — $12 USD/mes</option>
-          <option value="quarterly">Trimestral — $30 USD</option>
-          <option value="semestral">Semestral — $55 USD</option>
-          <option value="annual">Anual — $75 USD</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Contraseña</label>
-        <input type="password" id="registerPassword" required placeholder="Mínimo 6 caracteres">
-      </div>
-      <button type="submit" class="btn-submit">Crear Cuenta</button>
-    </form>
+      <!-- Login Form -->
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="loginEmail" required placeholder="tu@email.com">
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-submit">Iniciar Sesión</button>
+      </form>
 
-    <div class="divider">O continúa con</div>
+      <!-- Register Form -->
+      <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
+        <div class="form-group">
+          <label>Nombre / Empresa</label>
+          <input type="text" id="registerName" required placeholder="Tu nombre o empresa">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="registerEmail" required placeholder="tu@email.com">
+        </div>
+        <div class="form-group">
+          <label>WhatsApp (con código país)</label>
+          <input type="tel" id="registerWhatsapp" required placeholder="+57 300 123 4567">
+        </div>
+        <div class="form-group">
+          <label>Plan</label>
+          <select id="registerPlan" required>
+            <option value="trial" selected>Trial gratuito — 7 días</option>
+            <option value="monthly">Mensual — $12 USD/mes</option>
+            <option value="quarterly">Trimestral — $30 USD</option>
+            <option value="semestral">Semestral — $55 USD</option>
+            <option value="annual">Anual — $75 USD</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Contraseña</label>
+          <input type="password" id="registerPassword" required placeholder="Mínimo 6 caracteres">
+        </div>
+        <button type="submit" class="btn-submit">Crear Cuenta</button>
+      </form>
 
-    <button class="google-btn" onclick="handleGoogleLogin()">
-      <svg width="18" height="18" viewBox="0 0 20 20">
-        <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
-        <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
-        <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
-        <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
-      </svg>
-      Google
-    </button>
+      <div class="divider">O continúa con</div>
 
-    <p class="terms-text">
-      Al registrarte aceptas nuestros <a href="terms.html" target="_blank">Términos y Condiciones</a> y <a href="privacy.html" target="_blank">Política de Privacidad</a>.
-    </p>
+      <button class="google-btn" onclick="handleGoogleLogin()">
+        <svg width="17" height="17" viewBox="0 0 20 20">
+          <path fill="#4285F4" d="M19.6 10.23c0-.82-.1-1.42-.25-2.05H10v3.72h5.5c-.15.96-.74 2.31-2.04 3.22v2.45h3.16c1.89-1.73 2.98-4.3 2.98-7.34z"/>
+          <path fill="#34A853" d="M13.46 15.13c-.83.59-1.96 1-3.46 1-2.64 0-4.88-1.74-5.68-4.15H1.07v2.52C2.72 17.75 6.09 20 10 20c2.7 0 4.96-.89 6.62-2.42l-3.16-2.45z"/>
+          <path fill="#FBBC05" d="M3.99 10c0-.69.12-1.35.32-1.97V5.51H1.07A9.973 9.973 0 000 10c0 1.61.39 3.14 1.07 4.49l3.24-2.52c-.2-.62-.32-1.28-.32-1.97z"/>
+          <path fill="#EA4335" d="M10 3.88c1.88 0 3.13.81 3.85 1.48l2.84-2.76C14.96.99 12.7 0 10 0 6.09 0 2.72 2.25 1.07 5.51l3.24 2.52C5.12 5.62 7.36 3.88 10 3.88z"/>
+        </svg>
+        Continuar con Google
+      </button>
 
-    <div class="back-link">
-      <a href="index.html">← Volver al inicio</a>
+      <p class="terms-text">Al registrarte aceptás los <a href="terms.html" target="_blank">Términos</a> y <a href="privacy.html" target="_blank">Privacidad</a>.</p>
+      <div class="back-link"><a href="index.html">← Volver al inicio</a></div>
     </div>
   </div>
 
@@ -442,17 +503,26 @@
       <div class="verify-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
       </div>
-      <h2>Verifica tu email</h2>
-      <p>Te enviamos un link de activación a:</p>
+      <h2>Verificá tu email</h2>
+      <p>Enviamos un link de activación a:</p>
       <p id="verifyEmail" class="verify-email"></p>
-      <p style="margin-bottom:28px;">Haz clic en el enlace del email para activar tu cuenta. Revisa también la carpeta de spam.</p>
+      <p style="margin-bottom:24px;font-size:.83rem;">Hacé clic en el enlace del email para activar tu cuenta. Revisá también spam.</p>
       <button onclick="checkVerified()" class="btn-verify btn-verify-primary">Ya verifiqué mi email</button>
       <button onclick="resendVerification()" class="btn-verify btn-verify-ghost">Reenviar email</button>
-      <div id="verifyMsg" style="font-size:0.8rem; color:var(--text-secondary); margin-top:12px;"></div>
+      <div id="verifyMsg" style="font-size:.77rem;color:#94a3b8;margin-top:10px;"></div>
     </div>
   </div>
 
   <script>
+    // Particles animation
+    const container = document.getElementById('particles');
+    for (let i = 0; i < 18; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.cssText = `left:${Math.random()*100}%;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;animation-duration:${8+Math.random()*14}s;animation-delay:${Math.random()*10}s;opacity:${.2+Math.random()*.5};background:${Math.random()>.5?'rgba(99,102,241,.4)':'rgba(34,211,238,.35)'};`;
+      container.appendChild(p);
+    }
+
     const firebaseConfig = {
       apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
       authDomain: "miia-app-8cbd0.firebaseapp.com",
@@ -463,41 +533,32 @@
     };
 
     const API_BASE = 'https://miia-backend-production.up.railway.app';
-
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    function switchTab(tab) {
+    function switchTab(tab, el) {
       document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      event.target.classList.add('active');
-      if (tab === 'login') {
-        document.getElementById('loginForm').classList.remove('hidden');
-        document.getElementById('registerForm').classList.add('hidden');
-      } else {
-        document.getElementById('loginForm').classList.add('hidden');
-        document.getElementById('registerForm').classList.remove('hidden');
-      }
+      el.classList.add('active');
+      document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
     }
 
     async function handleLogin(event) {
       event.preventDefault();
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
-      if (!email || !password) { showError('Por favor completa todos los campos'); return; }
-      showSuccess('Bienvenido! Redirigiendo...');
       try {
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
         const user = userCredential.user;
         if (!user.emailVerified) { showVerifyScreen(user); return; }
-        localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, email: user.email, logged_in: true, login_time: new Date().toISOString() }));
-        setTimeout(() => redirectByRole(user), 800);
+        localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, email: user.email, logged_in: true }));
+        showSuccess('Bienvenido! Redirigiendo...');
+        setTimeout(() => redirectByRole(user), 700);
       } catch (error) {
-        if (error.code === 'auth/account-exists-with-different-credential' || error.code === 'auth/invalid-login-credentials' || error.code === 'auth/wrong-password') {
-          showError('Email o contraseña incorrectos. Si creaste tu cuenta con Google, usa el botón "Google" para ingresar.');
-        } else {
-          showError('Error: ' + error.message);
-        }
+        if (['auth/account-exists-with-different-credential','auth/invalid-login-credentials','auth/wrong-password'].includes(error.code)) {
+          showError('Email o contraseña incorrectos.');
+        } else { showError('Error: ' + error.message); }
       }
     }
 
@@ -513,30 +574,26 @@
       try {
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         const user = userCredential.user;
-        const inviteSnap = await db.collection('users').where('email', '==', email).where('invite_pending', '==', true).limit(1).get();
+        const inviteSnap = await db.collection('users').where('email','==',email).where('invite_pending','==',true).limit(1).get();
         const now = new Date();
-        const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+        const trialEnd = new Date(now.getTime() + 7*24*60*60*1000);
         if (!inviteSnap.empty) {
           const inviteDoc = inviteSnap.docs[0];
-          const inviteData = inviteDoc.data();
-          await db.collection('users').doc(user.uid).set({ ...inviteData, uid: user.uid, name: name, whatsapp: whatsapp, invite_pending: false, last_login: now });
+          await db.collection('users').doc(user.uid).set({ ...inviteDoc.data(), uid: user.uid, name, whatsapp, invite_pending: false, last_login: now });
           await inviteDoc.ref.delete();
         } else {
-          const isHealthAtom = email.endsWith('@healthatom.com');
           await db.collection('users').doc(user.uid).set({
-            uid: user.uid, name: name, email: email, photo: '', role: isHealthAtom ? 'owner_member' : 'client',
-            plan: isHealthAtom ? 'owner' : 'trial', plan_start_date: now, plan_end_date: isHealthAtom ? null : trialEnd,
-            payment_status: isHealthAtom ? 'active' : 'trial', approved: isHealthAtom ? true : false,
-            gemini_api_key: '', agents_limit: isHealthAtom ? 10 : 1, discount_percent: 0, parent_client_uid: '',
-            whatsapp: whatsapp, registered_at: now, last_login: now
+            uid: user.uid, name, email, photo: '', role: 'client',
+            plan: 'trial', plan_start_date: now, plan_end_date: trialEnd,
+            payment_status: 'trial', approved: false,
+            gemini_api_key: '', agents_limit: 1, discount_percent: 0, parent_client_uid: '',
+            whatsapp, registered_at: now, last_login: now
           });
         }
         await user.sendEmailVerification();
-        localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, name: name, email: email, logged_in: true }));
+        localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, name, email, logged_in: true }));
         showVerifyScreen(user);
-      } catch (error) {
-        showError('Error: ' + error.message);
-      }
+      } catch (error) { showError('Error: ' + error.message); }
     }
 
     async function handleGoogleLogin() {
@@ -548,98 +605,69 @@
         if (existingDoc.exists) {
           await db.collection('users').doc(user.uid).update({ last_login: new Date() });
         } else {
-          const inviteSnap = await db.collection('users').where('email', '==', user.email).where('invite_pending', '==', true).limit(1).get();
+          const inviteSnap = await db.collection('users').where('email','==',user.email).where('invite_pending','==',true).limit(1).get();
           if (!inviteSnap.empty) {
             const inviteDoc = inviteSnap.docs[0];
-            const inviteData = inviteDoc.data();
-            await db.collection('users').doc(user.uid).set({ ...inviteData, uid: user.uid, name: user.displayName || inviteData.name, photo: user.photoURL || '', invite_pending: false, last_login: new Date() });
+            await db.collection('users').doc(user.uid).set({ ...inviteDoc.data(), uid: user.uid, name: user.displayName||inviteDoc.data().name, photo: user.photoURL||'', invite_pending: false, last_login: new Date() });
             await inviteDoc.ref.delete();
           } else {
             const now = new Date();
-            const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-            const isHealthAtomG = (user.email || '').endsWith('@healthatom.com');
+            const trialEnd = new Date(now.getTime() + 7*24*60*60*1000);
             await db.collection('users').doc(user.uid).set({
               uid: user.uid, name: user.displayName, email: user.email, photo: user.photoURL,
-              role: isHealthAtomG ? 'owner_member' : 'client', plan: isHealthAtomG ? 'owner' : 'trial',
-              plan_start_date: now, plan_end_date: isHealthAtomG ? null : trialEnd,
-              payment_status: isHealthAtomG ? 'active' : 'trial', approved: isHealthAtomG ? true : false,
-              gemini_api_key: '', agents_limit: isHealthAtomG ? 10 : 1, discount_percent: 0, parent_client_uid: '',
+              role: 'client', plan: 'trial', plan_start_date: now, plan_end_date: trialEnd,
+              payment_status: 'trial', approved: false,
+              gemini_api_key: '', agents_limit: 1, discount_percent: 0, parent_client_uid: '',
               whatsapp: '', registered_at: now, last_login: now
             });
           }
         }
         localStorage.setItem('miia_user', JSON.stringify({ uid: user.uid, name: user.displayName, email: user.email, logged_in: true }));
         showSuccess('Bienvenido ' + user.displayName + '! Redirigiendo...');
-        setTimeout(() => redirectByRole(user), 800);
-      } catch (error) {
-        showError('Error al iniciar sesión con Google: ' + error.message);
-      }
+        setTimeout(() => redirectByRole(user), 700);
+      } catch (error) { showError('Error al iniciar con Google: ' + error.message); }
     }
 
-    function toSlug(email) { return email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase(); }
+    function toSlug(email) { return email.split('@')[0].replace(/[^a-z0-9]/gi,'-').toLowerCase(); }
 
-    // Redirect por rol: owner → dashboard, agent → agent-dashboard
     async function redirectByRole(user) {
-      const slug = toSlug(user.email);
       try {
         const token = await user.getIdToken();
-        const resp = await fetch(`${API_BASE}/api/user/role`, {
-          headers: { 'Authorization': 'Bearer ' + token }
-        });
+        const resp = await fetch(`${API_BASE}/api/user/role`, { headers: { 'Authorization': 'Bearer ' + token } });
         if (resp.ok) {
           const data = await resp.json();
-          if (data.role === 'agent') {
-            window.location.href = 'agent-owner-dashboard.html?u=' + slug;
-            return;
-          }
+          if (data.role === 'agent') { window.location.href = 'agent-owner-dashboard.html?u=' + toSlug(user.email); return; }
         }
-      } catch (e) { console.log('[LOGIN] Role check failed, defaulting to dashboard:', e.message); }
-      window.location.href = 'owner-dashboard.html?u=' + slug;
+      } catch(e) {}
+      window.location.href = 'owner-dashboard.html?u=' + toSlug(user.email);
     }
 
-    function showError(message) {
-      const e = document.getElementById('errorMessage');
-      const s = document.getElementById('successMessage');
-      s.style.display = 'none';
-      e.textContent = message;
-      e.style.display = 'block';
-      setTimeout(() => { e.style.display = 'none'; }, 5000);
+    function showError(msg) {
+      const e = document.getElementById('errorMessage'), s = document.getElementById('successMessage');
+      s.style.display='none'; e.textContent=msg; e.style.display='block';
+      setTimeout(()=>{ e.style.display='none'; }, 5000);
     }
-
-    function showSuccess(message) {
-      const e = document.getElementById('errorMessage');
-      const s = document.getElementById('successMessage');
-      e.style.display = 'none';
-      s.textContent = message;
-      s.style.display = 'block';
+    function showSuccess(msg) {
+      const e = document.getElementById('errorMessage'), s = document.getElementById('successMessage');
+      e.style.display='none'; s.textContent=msg; s.style.display='block';
     }
 
     let pendingVerifyUser = null;
-
     function showVerifyScreen(user) {
       pendingVerifyUser = user;
       document.getElementById('verifyEmail').textContent = user.email;
       document.getElementById('verifyScreen').style.display = 'flex';
     }
-
     async function checkVerified() {
       if (!pendingVerifyUser) return;
       await pendingVerifyUser.reload();
-      if (pendingVerifyUser.emailVerified) {
-        redirectByRole(pendingVerifyUser);
-      } else {
-        document.getElementById('verifyMsg').textContent = 'Aún no has verificado el email. Revisa tu bandeja de entrada.';
-      }
+      if (pendingVerifyUser.emailVerified) { redirectByRole(pendingVerifyUser); }
+      else { document.getElementById('verifyMsg').textContent = 'Aún no verificaste el email. Revisá tu bandeja.'; }
     }
-
     async function resendVerification() {
       if (!pendingVerifyUser) return;
-      try {
-        await pendingVerifyUser.sendEmailVerification();
-        document.getElementById('verifyMsg').textContent = 'Email reenviado. Revisa tu bandeja.';
-      } catch (e) {
-        document.getElementById('verifyMsg').textContent = 'Error al reenviar: ' + e.message;
-      }
+      try { await pendingVerifyUser.sendEmailVerification(); document.getElementById('verifyMsg').textContent = 'Email reenviado.'; }
+      catch(e) { document.getElementById('verifyMsg').textContent = 'Error: ' + e.message; }
     }
 
     auth.onAuthStateChanged(user => {
