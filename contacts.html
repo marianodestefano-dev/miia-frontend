@@ -248,7 +248,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a href="owner-dashboard.html">
+      <a href="owner-dashboard.html" id="sidebarHomeLink">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Inicio
       </a>
@@ -425,8 +425,14 @@
       const impersonateUid = urlParams.get('impersonateUid');
 
       if (!adminView) {
-        try { const _tok = await user.getIdToken(); const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin-owner-dashboard.html';return;} } catch(_){}
+        try { const _tok = await user.getIdToken(); const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin-dashboard.html';return;} } catch(_){}
       }
+      // Ajustar link Inicio según rol
+      try {
+        const _tok2 = await user.getIdToken();
+        const _rr = await fetch('https://miia-backend-production.up.railway.app/api/user/role', { headers: { Authorization: 'Bearer ' + _tok2 } });
+        if (_rr.ok) { const _rd = await _rr.json(); const hl = document.getElementById('sidebarHomeLink'); if (hl && _rd.role === 'agent') hl.href = 'agent-dashboard.html'; }
+      } catch (_) {}
 
       const targetUid = (adminView && impersonateUid) ? impersonateUid : user.uid;
 
@@ -438,7 +444,7 @@
 
       const userData = doc.data();
       if (userData.role === 'agent') {
-        window.location.href = 'agent-owner-dashboard.html';
+        window.location.href = 'agent-dashboard.html';
         return;
       }
 

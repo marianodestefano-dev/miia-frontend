@@ -636,7 +636,8 @@
         const resp = await fetch(`${API_BASE}/api/user/role`, { headers: { 'Authorization': 'Bearer ' + token } });
         if (resp.ok) {
           const data = await resp.json();
-          if (data.role === 'agent') { window.location.href = 'agent-owner-dashboard.html?u=' + toSlug(user.email); return; }
+          if (data.role === 'admin') { window.location.href = 'admin-dashboard.html'; return; }
+          if (data.role === 'agent') { window.location.href = 'agent-dashboard.html?u=' + toSlug(user.email); return; }
         }
       } catch(e) {}
       window.location.href = 'owner-dashboard.html?u=' + toSlug(user.email);

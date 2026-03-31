@@ -241,7 +241,7 @@
     </div>
 
     <nav class="sidebar-nav">
-      <a href="owner-dashboard.html">
+      <a href="owner-dashboard.html" id="sidebarHomeLink">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
         Inicio
       </a>
@@ -591,11 +591,29 @@
     const params = new URLSearchParams(window.location.search);
     clientSlug = params.get('u') || '';
 
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged(async user => {
       if (!user) { window.location.href = 'login.html'; return; }
       currentUser = user;
       if (!clientSlug) clientSlug = user.email.split('@')[0].replace(/[^a-z0-9]/gi, '-').toLowerCase();
       updateSidebarProfile({ name: user.displayName, email: user.email, photo: user.photoURL });
+
+      // Si es admin → el link "Inicio" apunta a admin-dashboard.html
+      try {
+        const token = await user.getIdToken();
+        const rr = await fetch(BACKEND_URL + '/api/user/role', { headers: { Authorization: 'Bearer ' + token } });
+        if (rr.ok) {
+          const rd = await rr.json();
+          if (rd.role === 'admin') {
+            const homeLink = document.getElementById('sidebarHomeLink');
+            if (homeLink) homeLink.href = 'admin-dashboard.html';
+          }
+          if (rd.role === 'agent') {
+            const homeLink = document.getElementById('sidebarHomeLink');
+            if (homeLink) homeLink.href = 'agent-dashboard.html';
+          }
+        }
+      } catch (_) {}
+
       checkWhatsAppStatus();
       loadProducts();
       loadContactRules();
