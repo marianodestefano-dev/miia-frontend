@@ -85,7 +85,7 @@
     .btn-sm-inline { padding:4px 12px; border-radius:var(--radius-sm); font-size:0.82rem; font-weight:600; cursor:pointer; border:1px solid rgba(102,126,234,0.2); background:transparent; color:var(--primary); }
 
     /* Generic card (used in Conexiones) */
-    .card { background:var(--bg-panel); border:1px solid var(--border-glass); border-radius:var(--radius-lg); padding:22px; }
+    .card { background:var(--bg-surface); border:1px solid rgba(255,255,255,0.12); border-radius:var(--radius-lg); padding:22px; }
 
     /* Alert cards */
     .alert-card { padding:14px 20px; border-radius:var(--radius-md); margin-bottom:8px; font-size:0.88rem; display:flex; align-items:center; gap:10px; }
@@ -577,8 +577,45 @@
           </div>
         </div>
 
+        <!-- WhatsApp Admin -->
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.989.574 3.842 1.567 5.406L2.046 22l4.733-1.497A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 11.999 2zm.001 18.18a8.178 8.178 0 01-4.164-1.132l-.299-.177-3.098.98.912-3.02-.195-.31A8.173 8.173 0 013.82 12c0-4.51 3.67-8.18 8.18-8.18 4.51 0 8.18 3.67 8.18 8.18 0 4.51-3.67 8.18-8.18 8.18z"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp Admin</h3>
+                <span id="adminWaBadgeConexiones" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">Desconectado</span>
+              </div>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Número de WhatsApp principal de MIIA para responder a los mensajes de tus clientes.</p>
+            </div>
+          </div>
+          <div id="adminWaStatusConexiones" style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;">Verificando estado...</div>
+          <button onclick="document.getElementById('qrModal').classList.remove('hidden');adminOpenQrModal()" style="width:100%;padding:9px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">Conectar WhatsApp</button>
+        </div>
+
+        <!-- Gemini API Key -->
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(59,91,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B5BFF" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">Gemini API Key</h3>
+                <span id="adminGeminiBadge" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(37,211,102,.1);color:#16a34a;font-weight:600;">Configurada</span>
+              </div>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Clave de la IA de Google Gemini. Se configura en las variables de Railway.</p>
+            </div>
+          </div>
+          <div style="font-size:0.78rem;color:var(--text-muted);padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;">
+            Configurada como variable de entorno <code style="color:#3B5BFF;">GEMINI_API_KEY</code> en Railway. Los clientes configuran su propia key en su dashboard.
+          </div>
+        </div>
+
         <!-- Sistema / Variables de entorno -->
-        <div class="card fade-in" style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="width:42px;height:42px;border-radius:10px;background:rgba(99,102,241,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -791,6 +828,7 @@
       <td>
         <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
         <button class="btn-sm-inline" onclick="window.open('owner-dashboard.html?adminView=1&impersonateUid=${u.uid}','_blank')" title="Ver como usuario" style="margin-left:4px;"><svg style="width:13px;height:13px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        <button class="btn-sm-inline" onclick="resetUserPassword('${u.uid}','${esc(u.email||u.uid)}')" title="Resetear contraseña" style="margin-left:4px;color:#f59e0b;border-color:rgba(245,158,11,0.3);">🔑</button>
       </td>
     </tr>`).join('');
   }
@@ -860,6 +898,19 @@
     document.getElementById('alertsList').innerHTML = alerts.length === 0
       ? '<p style="color:var(--text-muted);font-size:0.9rem;">Sin alertas</p>'
       : alerts.map(a => `<div class="alert-card ${a.type}"><span class="${a.type==='warn'?'alert-icon-warn':'dot-danger'}"></span><span>${a.text}</span></div>`).join('');
+  }
+
+  async function resetUserPassword(uid, email) {
+    if (!confirm(`¿Resetear contraseña de ${email}? Se generará una contraseña aleatoria.`)) return;
+    try {
+      const token = await auth.currentUser.getIdToken();
+      const res = await fetch(`${BACKEND_URL}/api/admin/user/${uid}/reset-password`, { method:'POST', headers:{ 'Authorization':'Bearer '+token } });
+      const data = await res.json();
+      if (data.password) {
+        const msg = `Nueva contraseña para ${email}:\n\n${data.password}\n\nGuardala en un lugar seguro y enviásela al cliente.`;
+        alert(msg);
+      } else { alert('Error: ' + (data.error || 'Desconocido')); }
+    } catch (e) { alert('Error: ' + e.message); }
   }
 
   // ═══ EDIT/CREATE MODALS ═══
@@ -1121,10 +1172,24 @@
     }, 1000);
   }
 
+  function adminOpenQrModal() {
+    adminConnectWhatsApp();
+  }
+
   function adminUpdateWaBanner() {
     const banner = document.getElementById('adminWaBanner');
     const text = document.getElementById('adminWaStatusText');
     const btn = document.getElementById('adminWaActionBtn');
+    // Update conexiones card
+    const badge = document.getElementById('adminWaBadgeConexiones');
+    const statusEl = document.getElementById('adminWaStatusConexiones');
+    if (adminWaConnected) {
+      if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(37,211,102,.1)'; badge.style.color = '#16a34a'; }
+      if (statusEl) { statusEl.textContent = '✅ WhatsApp conectado y listo para recibir mensajes.'; statusEl.style.color = '#16a34a'; }
+    } else {
+      if (badge) { badge.textContent = 'Desconectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#EF4444'; }
+      if (statusEl) { statusEl.textContent = '❌ WhatsApp desconectado. Hacé clic en "Conectar WhatsApp" para vincular.'; statusEl.style.color = '#f87171'; }
+    }
     if (!banner) return;
     if (adminWaConnected) {
       banner.style.background = 'rgba(52,211,153,0.1)';
