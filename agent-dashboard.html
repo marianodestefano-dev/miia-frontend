@@ -6,6 +6,7 @@
   <title>MIIA - Mi Dashboard</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     :root {
       --primary: #3B5BFF;
@@ -39,7 +40,6 @@
       background: var(--bg-light);
       min-height: 100vh;
       line-height: 1.6;
-      padding-top: 64px;
       -webkit-font-smoothing: antialiased;
     }
 
@@ -50,45 +50,6 @@
       transition: opacity 0.7s ease, transform 0.7s ease;
     }
     .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    /* ═══ NAVBAR ═══ */
-    #navbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 64px;
-      background: rgba(3,5,8,0.8);
-      backdrop-filter: blur(20px);
-      border-bottom: 1px solid rgba(59,91,255,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0 40px;
-      z-index: 100;
-      transition: all 0.3s ease;
-    }
-
-    #navbar.scrolled { height: 60px; box-shadow: var(--shadow-sm); }
-
-    .nav-logo {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: var(--gradient-main);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      text-decoration: none;
-    }
-
-    .nav-actions {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .nav-email {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
 
     .nav-role-badge {
       padding: 5px 12px;
@@ -323,8 +284,6 @@
     .consent-dna-note { font-size: 0.8rem; color: var(--text-muted); margin-top: 12px; }
 
     @media (max-width: 480px) {
-      body { padding-top: 64px; }
-      #navbar { height: 64px; padding: 0 16px; }
       .nav-logo { font-size: 1.3rem; }
       .nav-email { display: none; }
       .stats { grid-template-columns: 1fr; }
@@ -340,15 +299,56 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav id="navbar">
-    <a href="index.html" class="nav-logo"><svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;flex-shrink:0"><defs><linearGradient id="miia_g6" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#miia_g6)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg></a>
-    <div class="nav-actions">
-      <span class="nav-email" id="agentEmail"></span>
-      <span class="nav-role-badge">Agente</span>
-      <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
+
+<!-- Mobile toggle -->
+<button class="sidebar-toggle" onclick="toggleMobileSidebar()" aria-label="Menu">
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
+
+<div class="app-layout">
+  <aside class="sidebar" id="appSidebar">
+    <div class="sidebar-header">
+      <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:8px;">
+        <svg viewBox="0 0 36 36" fill="none" style="width:28px;height:28px;flex-shrink:0">
+          <defs><linearGradient id="sb_gAG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs>
+          <circle cx="18" cy="18" r="17" fill="url(#sb_gAG)"/>
+          <path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
+        </svg>
+        <span>MIIA</span>
+      </a>
     </div>
-  </nav>
+
+    <nav class="sidebar-nav">
+      <a href="agent-dashboard.html" class="active">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Inicio
+      </a>
+      <a href="training.html">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Entrenamiento MIIA
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="sidebar-profile" id="sidebarProfile" onclick="toggleProfileMenu()" style="cursor:pointer;">
+        <div class="profile-avatar" id="sidebarAvatar">?</div>
+        <div class="profile-info">
+          <div class="profile-name" id="sidebarProfileName">—</div>
+          <div class="profile-plan" id="sidebarProfilePlan">—</div>
+        </div>
+        <div class="profile-menu" id="profileMenu">
+          <hr>
+          <button onclick="handleLogout ? handleLogout() : (firebase.auth().signOut(), window.location.href='login.html')">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Cerrar sesión
+          </button>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main-content">
 
   <!-- Hero Band -->
   <div class="hero-band">
@@ -442,6 +442,10 @@
       <p class="consent-dna-note">El consentimiento de ADN es opcional pero recomendado.</p>
     </div>
   </div>
+
+  <footer class="page-footer">MIIA © 2025 · <a href="terms.html">Términos</a> · <a href="privacy.html">Privacidad</a></footer>
+  </div><!-- end .main-content -->
+</div><!-- end .app-layout -->
 
   <script>
     const firebaseConfig = {
@@ -543,8 +547,8 @@
     });
 
     async function renderAgentUI(userData, uid) {
-      document.getElementById('agentEmail').textContent = userData.email;
       document.getElementById('agentName').textContent = (userData.name || userData.email).split(' ')[0];
+      updateSidebarProfile(userData);
 
       // Badge "Equipo Medilink" para owner_member
       if (userData.role === 'owner_member') {
@@ -579,9 +583,6 @@
       await db.collection('users').doc(uid).update({ last_login: new Date() });
 
       // Setup UI
-      window.addEventListener('scroll', () => {
-        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-      });
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, i) => {
@@ -741,5 +742,39 @@
     }
   </script>
 <script src="toast.js"></script>
+<script>
+// ═══ SIDEBAR JS ═══
+function toggleMobileSidebar() {
+  document.getElementById('appSidebar').classList.toggle('mobile-open');
+  document.getElementById('sidebarOverlay').classList.toggle('active');
+}
+function toggleProfileMenu() {
+  const m = document.getElementById('profileMenu');
+  if (m) m.classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  const p = document.getElementById('sidebarProfile');
+  if (p && !p.contains(e.target)) {
+    const m = document.getElementById('profileMenu');
+    if (m) m.classList.remove('open');
+  }
+});
+function updateSidebarProfile(userData) {
+  const nameEl = document.getElementById('sidebarProfileName');
+  const planEl = document.getElementById('sidebarProfilePlan');
+  const avatarEl = document.getElementById('sidebarAvatar');
+  if (!userData) return;
+  if (nameEl) nameEl.textContent = userData.name || userData.email?.split('@')[0] || '—';
+  if (planEl) planEl.textContent = userData.plan || 'Trial';
+  if (avatarEl) {
+    if (userData.photo) {
+      avatarEl.innerHTML = `<img src="${userData.photo}" alt="avatar" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`;
+    } else {
+      const initials = (userData.name || userData.email || 'U').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+      avatarEl.textContent = initials;
+    }
+  }
+}
+</script>
 </body>
 </html>

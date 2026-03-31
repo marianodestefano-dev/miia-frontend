@@ -8,12 +8,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <style>
     /* Design tokens moved to styles.css */
 
     /* Base reset in styles.css */
-
-    body { padding-top: 64px; }
 
     /* ═══ ADD AGENT FORM ═══ */
     .add-agent-form {
@@ -258,17 +257,102 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
-  <!-- Navbar -->
-  <nav id="navbar">
-    <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:10px;"><svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:36px;height:36px;flex-shrink:0"><defs><linearGradient id="miia_gD" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#miia_gD)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg> MIIA</a>
-    <div class="nav-actions">
-      <span class="nav-email" id="userEmail"></span>
-      <span class="nav-plan-badge" id="navPlan">Trial</span>
-      <button class="logout-btn" onclick="exportMIIA()" style="background:transparent;border:1px solid var(--border-glass);color:var(--text-body);">Exportar MIIA</button>
-      <button class="logout-btn" onclick="handleLogout()">Cerrar Sesión</button>
-    </div>
-  </nav>
+  <!-- Mobile toggle -->
+  <button class="sidebar-toggle" onclick="toggleMobileSidebar()" aria-label="Menu">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileSidebar()"></div>
 
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="appSidebar">
+      <!-- Header: logo -->
+      <div class="sidebar-header">
+        <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:8px;">
+          <svg viewBox="0 0 36 36" fill="none" style="width:28px;height:28px;flex-shrink:0">
+            <defs><linearGradient id="sb_g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs>
+            <circle cx="18" cy="18" r="17" fill="url(#sb_g)"/>
+            <path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/>
+          </svg>
+          <span>MIIA</span>
+        </a>
+      </div>
+
+      <!-- Nav links -->
+      <nav class="sidebar-nav">
+        <button class="sidebar-btn active" onclick="showSection('inicio', this)">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          Inicio
+        </button>
+        <a href="contacts.html">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+          Contactos
+        </a>
+        <a href="training.html">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+          Entrenamiento MIIA
+        </a>
+        <a href="documents.html">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          Documentos
+        </a>
+        <button class="sidebar-btn" onclick="showSection('agentes', this)">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+          Agentes
+        </button>
+        <button class="sidebar-btn" onclick="showSection('planes', this)">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          Mi Plan
+        </button>
+        <button class="sidebar-btn" onclick="showSection('config', this)">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 010 14.14M4.93 4.93a10 10 0 000 14.14"/></svg>
+          Configuración
+        </button>
+      </nav>
+
+      <!-- Footer: WA status + profile -->
+      <div class="sidebar-footer">
+        <!-- WhatsApp Status -->
+        <div class="sidebar-wa-status" id="sidebarWaStatus">
+          <span class="status-dot red" id="sidebarWaDot"></span>
+          <span class="wa-label" id="sidebarWaLabel">WhatsApp</span>
+          <button class="sidebar-wa-btn" id="sidebarWaBtn" onclick="openQRModal()">Conectar</button>
+        </div>
+        <!-- Profile -->
+        <div class="sidebar-profile" id="sidebarProfile" onclick="toggleProfileMenu()">
+          <div class="profile-avatar" id="sidebarAvatar">?</div>
+          <div class="profile-info">
+            <div class="profile-name" id="sidebarProfileName">—</div>
+            <div class="profile-plan" id="sidebarProfilePlan">—</div>
+          </div>
+          <!-- Profile dropdown menu -->
+          <div class="profile-menu" id="profileMenu">
+            <a href="training.html">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
+              Entrenar MIIA
+            </a>
+            <a href="documents.html">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16h16V8z"/></svg>
+              Documentos
+            </a>
+            <a href="contacts.html">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              Contactos
+            </a>
+            <hr>
+            <button onclick="handleLogout()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+  <div id="section-inicio" class="page-section">
   <!-- Hero Band -->
   <div class="hero-band">
     <h1>Bienvenido, <span id="userName">Usuario</span></h1>
@@ -323,38 +407,6 @@
               <span class="action-icon"><svg style="width:20px;height:20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></span> Documentos
             </button>
           </div>
-        </div>
-
-        <!-- Agents Section -->
-        <div class="card fade-in" id="agentsSection">
-          <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/></svg> Tu Equipo de Agentes</h2>
-          <div class="agents-counter">
-            Agentes: <strong><span id="agentsUsed">0</span> / <span id="agentsLimit">1</span></strong>
-          </div>
-
-          <table class="agents-table" id="agentsTable">
-            <thead>
-              <tr>
-                <th>Agente</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody id="agentsBody">
-              <tr id="noAgentsRow">
-                <td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">
-                  No hay agentes en tu equipo aún
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          <div class="add-agent-form" id="addAgentForm">
-            <input type="text" id="agentName" placeholder="Nombre del agente">
-            <input type="email" id="agentEmail" placeholder="Email del agente">
-            <button class="btn-add" id="addAgentBtn" onclick="addAgent()">+ Agregar</button>
-          </div>
-          <p id="agentLimitMsg" class="hidden" style="color: #f39c12; font-size: 0.85rem; margin-top: 12px; text-align: center;"></p>
         </div>
 
         <!-- Deals / Pre-sales Section -->
@@ -451,100 +503,6 @@
           </div>
         </div>
 
-        <!-- AI Provider Config -->
-        <div class="card fade-in">
-          <h2 style="display:flex;align-items:center;gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="15" r="2"/></svg>
-            Proveedor de IA
-          </h2>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Elige qué modelo de IA usa MIIA para responder.</p>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <select id="aiProviderSelect" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
-              <option value="gemini">Google Gemini (default)</option>
-              <option value="openai">OpenAI (GPT)</option>
-              <option value="claude">Anthropic (Claude)</option>
-            </select>
-            <div id="aiKeyContainer" style="display:none;flex-direction:column;gap:8px;">
-              <div style="position:relative;">
-                <input type="password" id="aiApiKeyInput" placeholder="Tu API key del proveedor" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;padding-right:40px;">
-                <button onclick="toggleKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;" id="aiKeyToggle">mostrar</button>
-              </div>
-              <div style="display:flex;gap:8px;">
-                <button onclick="testAIConnection()" id="aiTestBtn" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Probar conexión</button>
-                <button onclick="saveAIConfig()" id="aiSaveBtn" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar</button>
-              </div>
-            </div>
-            <button onclick="resetAIConfig()" id="aiResetBtn" style="display:none;background:none;border:none;color:var(--text-muted);font-size:0.75rem;cursor:pointer;text-align:left;padding:4px 0;font-family:inherit;">Restablecer a Gemini (default)</button>
-            <div id="aiStatus" style="font-size:0.78rem;color:var(--text-muted);"></div>
-          </div>
-        </div>
-
-        <!-- Email Config -->
-        <div class="card fade-in">
-          <h2 style="display:flex;align-items:center;gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            Correo Electrónico
-          </h2>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Configura SMTP para que MIIA pueda enviar emails a tus clientes.</p>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <input type="email" id="emailFrom" placeholder="Tu email (ej: tu@gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
-            <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;">
-              <input type="text" id="smtpHost" placeholder="SMTP Host (ej: smtp.gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
-              <input type="number" id="smtpPort" placeholder="587" value="587" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
-            </div>
-            <input type="text" id="smtpUser" placeholder="Usuario SMTP (normalmente tu email)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
-            <input type="password" id="smtpPass" placeholder="Contraseña SMTP o App Password" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
-            <div style="display:flex;gap:8px;">
-              <button onclick="saveEmailConfig()" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar config</button>
-              <button onclick="sendTestEmail()" id="emailTestBtn" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-family:inherit;">Enviar prueba</button>
-            </div>
-            <div id="emailStatus" style="font-size:0.78rem;color:var(--text-muted);"></div>
-          </div>
-          <!-- IMAP: Aprendizaje desde email -->
-          <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-glass);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-              <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Aprendizaje desde email (IMAP)</span>
-              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
-                <input type="checkbox" id="emailLearningToggle" onchange="saveImapConfig()" style="accent-color:var(--primary);">
-                <span style="font-size:0.78rem;color:var(--text-muted);">Activo</span>
-              </label>
-            </div>
-            <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">MIIA revisará tu bandeja de entrada cada 30 min y aprenderá del contenido de tus emails.</p>
-            <input type="text" id="imapHost" placeholder="IMAP Host (ej: imap.gmail.com)" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;">
-            <input type="password" id="imapPass" placeholder="Contraseña IMAP" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;">
-            <div style="display:flex;gap:8px;">
-              <button onclick="saveImapConfig()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Guardar IMAP</button>
-              <button onclick="scanEmailsNow()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Escanear ahora</button>
-            </div>
-            <div id="imapStatus" style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;"></div>
-          </div>
-        </div>
-
-        <!-- Google Calendar -->
-        <div class="card fade-in">
-          <h2 style="display:flex;align-items:center;gap:8px;">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-            Google Calendar
-          </h2>
-          <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Permite que MIIA verifique tu disponibilidad y agende citas automáticamente.</p>
-          <div id="calendarStatus" style="margin-bottom:12px;"></div>
-          <div id="calendarConnectSection">
-            <a href="#" onclick="connectCalendar(event)" id="calConnectBtn" style="display:block;text-align:center;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:10px;font-size:0.85rem;cursor:pointer;font-weight:600;text-decoration:none;">Conectar Google Calendar</a>
-            <p style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;text-align:center;">Se abrirá una ventana de Google para autorizar</p>
-          </div>
-          <div id="calendarConnectedSection" style="display:none;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
-              <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Agendamiento automático</span>
-              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
-                <input type="checkbox" id="calendarAutoToggle" onchange="saveCalendarConfig()" style="accent-color:var(--primary);">
-                <span style="font-size:0.78rem;color:var(--text-muted);">Activo</span>
-              </label>
-            </div>
-            <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">Cuando un lead quiera una demo/cita, MIIA verificará tu disponibilidad y creará el evento automáticamente.</p>
-            <button onclick="disconnectCalendar()" style="width:100%;background:none;border:1px solid rgba(255,26,140,0.3);color:#FF1A8C;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Desconectar Calendar</button>
-          </div>
-        </div>
-
         <!-- Contacts Preview -->
         <div class="card fade-in">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Contactos Clasificados</h2>
@@ -556,7 +514,186 @@
         </div>
       </div>
     </div>
-  </div>
+  </div><!-- end section-inicio -->
+
+  <!-- SECTION: AGENTES -->
+  <div id="section-agentes" class="page-section section-hidden">
+    <div class="container">
+      <div class="card fade-in" id="agentsSection">
+        <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/></svg> Tu Equipo de Agentes</h2>
+        <div class="agents-counter">
+          Agentes: <strong><span id="agentsUsed">0</span> / <span id="agentsLimit">1</span></strong>
+        </div>
+
+        <table class="agents-table" id="agentsTable">
+          <thead>
+            <tr>
+              <th>Agente</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="agentsBody">
+            <tr id="noAgentsRow">
+              <td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">
+                No hay agentes en tu equipo aún
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="add-agent-form" id="addAgentForm">
+          <input type="text" id="agentName" placeholder="Nombre del agente">
+          <input type="email" id="agentEmail" placeholder="Email del agente">
+          <button class="btn-add" id="addAgentBtn" onclick="addAgent()">+ Agregar</button>
+        </div>
+        <p id="agentLimitMsg" class="hidden" style="color: #f39c12; font-size: 0.85rem; margin-top: 12px; text-align: center;"></p>
+      </div>
+    </div>
+  </div><!-- end section-agentes -->
+
+  <!-- SECTION: PLANES -->
+  <div id="section-planes" class="page-section section-hidden">
+    <div class="container">
+      <div class="card fade-in">
+        <h2>Mi Plan</h2>
+        <div class="account-item">
+          <span class="account-label">Plan actual</span>
+          <span class="account-value" id="planSectionPlan">—</span>
+        </div>
+        <div class="account-item">
+          <span class="account-label">Estado</span>
+          <span class="account-value" id="planSectionStatus">—</span>
+        </div>
+        <div class="account-item">
+          <span class="account-label">Vence</span>
+          <span class="account-value" id="planSectionExpiry">—</span>
+        </div>
+        <div style="margin-top:20px;padding:20px;background:rgba(59,91,255,0.05);border-radius:var(--radius-md);">
+          <p style="color:var(--text-body);font-size:0.9rem;margin-bottom:8px;">Para cambiar tu plan, contacta al equipo:</p>
+          <p style="color:var(--primary);font-weight:600;">lobsterscrm@gmail.com</p>
+        </div>
+      </div>
+    </div>
+  </div><!-- end section-planes -->
+
+  <!-- SECTION: CONFIG -->
+  <div id="section-config" class="page-section section-hidden">
+    <div class="container">
+
+      <!-- AI Provider Config -->
+      <div class="card fade-in">
+        <h2 style="display:flex;align-items:center;gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="15" r="2"/></svg>
+          Proveedor de IA
+          <span class="tooltip-wrap">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Selecciona qué modelo de IA usará MIIA para responder. Gemini es gratuito con tu API key.</span>
+          </span>
+        </h2>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Elige qué modelo de IA usa MIIA para responder.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;">
+          <select id="aiProviderSelect" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+            <option value="gemini">Google Gemini (default)</option>
+            <option value="openai">OpenAI (GPT)</option>
+            <option value="claude">Anthropic (Claude)</option>
+          </select>
+          <div id="aiKeyContainer" style="display:none;flex-direction:column;gap:8px;">
+            <div style="position:relative;">
+              <input type="password" id="aiApiKeyInput" placeholder="Tu API key del proveedor" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;padding-right:40px;">
+              <button onclick="toggleKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-muted);cursor:pointer;font-size:0.8rem;" id="aiKeyToggle">mostrar</button>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button onclick="testAIConnection()" id="aiTestBtn" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Probar conexión</button>
+              <button onclick="saveAIConfig()" id="aiSaveBtn" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar</button>
+            </div>
+          </div>
+          <button onclick="resetAIConfig()" id="aiResetBtn" style="display:none;background:none;border:none;color:var(--text-muted);font-size:0.75rem;cursor:pointer;text-align:left;padding:4px 0;font-family:inherit;">Restablecer a Gemini (default)</button>
+          <div id="aiStatus" style="font-size:0.78rem;color:var(--text-muted);"></div>
+        </div>
+      </div>
+
+      <!-- Email Config -->
+      <div class="card fade-in">
+        <h2 style="display:flex;align-items:center;gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          Correo Electrónico
+          <span class="tooltip-wrap">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">Permite que MIIA envíe emails en tu nombre: cotizaciones, respuestas, confirmaciones.</span>
+          </span>
+        </h2>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Configura SMTP para que MIIA pueda enviar emails a tus clientes.</p>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <input type="email" id="emailFrom" placeholder="Tu email (ej: tu@gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+          <div style="display:grid;grid-template-columns:1fr 80px;gap:8px;">
+            <input type="text" id="smtpHost" placeholder="SMTP Host (ej: smtp.gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+            <input type="number" id="smtpPort" placeholder="587" value="587" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+          </div>
+          <input type="text" id="smtpUser" placeholder="Usuario SMTP (normalmente tu email)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+          <input type="password" id="smtpPass" placeholder="Contraseña SMTP o App Password" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:10px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+          <div style="display:flex;gap:8px;">
+            <button onclick="saveEmailConfig()" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar config</button>
+            <button onclick="sendTestEmail()" id="emailTestBtn" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-family:inherit;">Enviar prueba</button>
+          </div>
+          <div id="emailStatus" style="font-size:0.78rem;color:var(--text-muted);"></div>
+        </div>
+        <!-- IMAP: Aprendizaje desde email -->
+        <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border-glass);">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Aprendizaje desde email (IMAP)
+              <span class="tooltip-wrap" style="display:inline-flex;">
+                <span class="tooltip-icon">?</span>
+                <span class="tooltip-text">MIIA leerá tu bandeja de entrada cada 30 minutos para aprender del contexto de tus emails.</span>
+              </span>
+            </span>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="emailLearningToggle" onchange="saveImapConfig()" style="accent-color:var(--primary);">
+              <span style="font-size:0.78rem;color:var(--text-muted);">Activo</span>
+            </label>
+          </div>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">MIIA revisará tu bandeja de entrada cada 30 min y aprenderá del contenido de tus emails.</p>
+          <input type="text" id="imapHost" placeholder="IMAP Host (ej: imap.gmail.com)" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;">
+          <input type="password" id="imapPass" placeholder="Contraseña IMAP" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;">
+          <div style="display:flex;gap:8px;">
+            <button onclick="saveImapConfig()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Guardar IMAP</button>
+            <button onclick="scanEmailsNow()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Escanear ahora</button>
+          </div>
+          <div id="imapStatus" style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;"></div>
+        </div>
+      </div>
+
+      <!-- Google Calendar -->
+      <div class="card fade-in">
+        <h2 style="display:flex;align-items:center;gap:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Google Calendar
+          <span class="tooltip-wrap">
+            <span class="tooltip-icon">?</span>
+            <span class="tooltip-text">MIIA verificará tu disponibilidad y agendará citas automáticamente cuando un lead lo solicite.</span>
+          </span>
+        </h2>
+        <p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:14px;">Permite que MIIA verifique tu disponibilidad y agende citas automáticamente.</p>
+        <div id="calendarStatus" style="margin-bottom:12px;"></div>
+        <div id="calendarConnectSection">
+          <a href="#" onclick="connectCalendar(event)" id="calConnectBtn" style="display:block;text-align:center;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:10px;font-size:0.85rem;cursor:pointer;font-weight:600;text-decoration:none;">Conectar Google Calendar</a>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin-top:6px;text-align:center;">Se abrirá una ventana de Google para autorizar</p>
+        </div>
+        <div id="calendarConnectedSection" style="display:none;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+            <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Agendamiento automático</span>
+            <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+              <input type="checkbox" id="calendarAutoToggle" onchange="saveCalendarConfig()" style="accent-color:var(--primary);">
+              <span style="font-size:0.78rem;color:var(--text-muted);">Activo</span>
+            </label>
+          </div>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin-bottom:10px;">Cuando un lead quiera una demo/cita, MIIA verificará tu disponibilidad y creará el evento automáticamente.</p>
+          <button onclick="disconnectCalendar()" style="width:100%;background:none;border:1px solid rgba(255,26,140,0.3);color:#FF1A8C;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Desconectar Calendar</button>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end section-config -->
 
   <!-- Paywall Overlay -->
   <div class="paywall-overlay" id="paywallOverlay">
@@ -832,10 +969,6 @@
 
     // ═══ RENDER DASHBOARD ═══
     function renderDashboard(userData) {
-      // Navbar
-      document.getElementById('userEmail').textContent = userData.email;
-      document.getElementById('navPlan').textContent = PLAN_NAMES[userData.plan] || userData.plan;
-
       // Hero
       const name = userData.name || userData.email;
       document.getElementById('userName').textContent = name.split(' ')[0];
@@ -859,6 +992,32 @@
 
       // Agents counter
       document.getElementById('agentsLimit').textContent = userData.agents_limit || 1;
+
+      // Update sidebar profile
+      const nameEl = document.getElementById('sidebarProfileName');
+      const planEl = document.getElementById('sidebarProfilePlan');
+      const avatarEl = document.getElementById('sidebarAvatar');
+      if (nameEl) nameEl.textContent = userData.name || userData.email?.split('@')[0] || '—';
+      if (planEl) planEl.textContent = (userData.plan || 'Trial') + ' · ' + (userData.payment_status === 'active' ? 'Activo' : 'Trial');
+      if (avatarEl) {
+        if (userData.photo) {
+          avatarEl.innerHTML = `<img src="${userData.photo}" alt="avatar">`;
+        } else {
+          const initials = (userData.name || userData.email || 'U').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+          avatarEl.textContent = initials;
+        }
+      }
+
+      // Sync plan section cards
+      const planSectionPlan = document.getElementById('planSectionPlan');
+      const planSectionStatus = document.getElementById('planSectionStatus');
+      const planSectionExpiry = document.getElementById('planSectionExpiry');
+      if (planSectionPlan) planSectionPlan.textContent = PLAN_NAMES[userData.plan] || userData.plan;
+      if (planSectionStatus) planSectionStatus.textContent = STATUS_NAMES[userData.payment_status] || userData.payment_status;
+      if (planSectionExpiry && userData.plan_end_date) {
+        const endDate = userData.plan_end_date.toDate ? userData.plan_end_date.toDate() : new Date(userData.plan_end_date);
+        planSectionExpiry.textContent = endDate.toLocaleDateString('es-ES');
+      }
 
       // Also update localStorage for backward compatibility with training.html
       localStorage.setItem('miia_user', JSON.stringify({
@@ -1594,9 +1753,7 @@
 
     // ═══ UI ═══
     function setupScrollAndAnimations() {
-      window.addEventListener('scroll', () => {
-        document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
-      });
+      // navbar removed; sidebar handles navigation
 
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, i) => {
@@ -1610,6 +1767,74 @@
       document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     }
   </script>
+  <script>
+    // ═══ SIDEBAR JS ═══
+    function showSection(name, btn) {
+      document.querySelectorAll('.page-section').forEach(s => s.classList.add('section-hidden'));
+      const target = document.getElementById('section-' + name);
+      if (target) target.classList.remove('section-hidden');
+      document.querySelectorAll('.sidebar-nav .sidebar-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      // Handle hash for direct links
+      history.replaceState(null, '', '#' + name);
+    }
+
+    function toggleMobileSidebar() {
+      document.getElementById('appSidebar').classList.toggle('mobile-open');
+      document.getElementById('sidebarOverlay').classList.toggle('active');
+    }
+
+    function toggleProfileMenu() {
+      document.getElementById('profileMenu').classList.toggle('open');
+    }
+    // Close profile menu when clicking outside
+    document.addEventListener('click', function(e) {
+      const p = document.getElementById('sidebarProfile');
+      if (p && !p.contains(e.target)) {
+        const m = document.getElementById('profileMenu');
+        if (m) m.classList.remove('open');
+      }
+    });
+
+    // Restore section from hash on load
+    window.addEventListener('DOMContentLoaded', function() {
+      const hash = window.location.hash.replace('#', '');
+      const validSections = ['inicio', 'agentes', 'planes', 'config'];
+      if (hash && validSections.includes(hash)) {
+        const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
+        showSection(hash, btn);
+      }
+    });
+
+    // Update sidebar WA status from existing socket/status logic
+    function updateSidebarWaStatus(connected) {
+      const dot = document.getElementById('sidebarWaDot');
+      const label = document.getElementById('sidebarWaLabel');
+      const btn = document.getElementById('sidebarWaBtn');
+      if (!dot) return;
+      if (connected) {
+        dot.className = 'status-dot green pulse';
+        label.textContent = 'WhatsApp activo';
+        btn.textContent = 'Ver';
+        btn.onclick = () => showSection('inicio', document.querySelector('.sidebar-btn'));
+      } else {
+        dot.className = 'status-dot red';
+        label.textContent = 'WhatsApp';
+        btn.textContent = 'Conectar';
+        btn.onclick = openQRModal;
+      }
+    }
+
+    // openQRModal alias (maps to checkWhatsAppStatus)
+    function openQRModal() {
+      checkWhatsAppStatus();
+    }
+  </script>
   <script src="toast.js"></script>
+    <footer class="page-footer">
+      MIIA © 2025 · <a href="terms.html">Términos</a> · <a href="privacy.html">Privacidad</a>
+    </footer>
+  </div><!-- end .main-content -->
+</div><!-- end .app-layout -->
 </body>
 </html>
