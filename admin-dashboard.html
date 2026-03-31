@@ -615,7 +615,7 @@
         </div>
 
         <!-- Sistema / Variables de entorno -->
-        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;grid-column: span 1;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="width:42px;height:42px;border-radius:10px;background:rgba(99,102,241,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
@@ -625,15 +625,15 @@
               <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Estado de las variables de entorno configuradas en Railway.</p>
             </div>
           </div>
-          <div class="env-list" id="envList" style="font-size:0.8rem;">
-            <div class="env-item"><span>GEMINI_API_KEY</span><span id="envGemini">—</span></div>
-            <div class="env-item"><span>STRIPE_SECRET_KEY</span><span id="envStripe">—</span></div>
-            <div class="env-item"><span>STRIPE_WEBHOOK_SECRET</span><span id="envWebhook">—</span></div>
-            <div class="env-item"><span>FRONTEND_URL</span><span id="envFrontend">—</span></div>
-            <div class="env-item"><span>ADMIN_API_KEY</span><span id="envAdmin">—</span></div>
-            <div class="env-item"><span>SKIP_WA_INIT</span><span id="envSkipWA">—</span></div>
+          <div id="envList" style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">GEMINI_API_KEY</span><span id="envGemini" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">STRIPE_SECRET_KEY</span><span id="envStripe" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">STRIPE_WEBHOOK_SECRET</span><span id="envWebhook" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">FRONTEND_URL</span><span id="envFrontend" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">ADMIN_API_KEY</span><span id="envAdmin" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">SKIP_WA_INIT <span style="color:var(--text-muted);font-size:0.72rem;">(no configurar = WhatsApp activo)</span></span><span id="envSkipWA" style="font-weight:600;">—</span></div>
           </div>
-          <div id="serverInfo" style="font-size:0.78rem;color:var(--text-muted);padding-top:10px;border-top:1px solid var(--border-glass);">Cargando...</div>
+          <div id="serverInfo" style="font-size:0.82rem;padding-top:10px;border-top:1px solid var(--border-glass);display:flex;flex-direction:column;gap:6px;">Cargando...</div>
         </div>
 
       </div>
@@ -1076,9 +1076,16 @@
     try {
       const res = await fetch(`${BACKEND_URL}/health`);
       const data = await res.json();
+      const waOk = data.whatsapp === 'connected' || data.whatsapp === true || data.whatsapp === 'true';
       document.getElementById('serverInfo').innerHTML = `
-        <div class="tenant-card"><span>WhatsApp</span><span class="badge ${data.whatsapp === 'connected' ? 'badge-green' : 'badge-red'}">${data.whatsapp}</span></div>
-        <div class="tenant-card"><span>Conversaciones en memoria</span><span>${data.conversationCount || 0}</span></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;">
+          <span style="color:var(--text-body);">WhatsApp</span>
+          <span style="font-weight:700;color:${waOk ? '#16a34a' : '#ef4444'}">${waOk ? '✅ Conectado' : '❌ Desconectado'}</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;">
+          <span style="color:var(--text-body);">Conversaciones en memoria</span>
+          <span style="font-weight:600;color:var(--text-dark);">${data.conversationCount || 0}</span>
+        </div>
       `;
       document.getElementById('envGemini').textContent = '✅';
       document.getElementById('envStripe').textContent = '✅';
