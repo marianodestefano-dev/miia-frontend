@@ -422,7 +422,7 @@
                   <div><div style="font-size:0.95rem;font-weight:600;">MIIA — Modo Entrenamiento</div><div style="font-size:0.78rem;opacity:0.85;">Explicale todo sobre tu negocio</div></div>
                 </div>
                 <div id="adminExpertMessages" style="flex:1;overflow-y:auto;padding:16px;background:var(--bg-card);">
-                  <div class="message miia"><div class="message-bubble">¡Hola! Soy MIIA, tu asistente de ventas inteligente. 🎯<br><br>Estoy lista para aprender todo sobre tu negocio. Aquí te cuento cómo enseñarme:<br><br>💬 Cuéntame sobre tus productos, precios y servicios<br>🎯 Explícame cómo manejar objeciones de tus clientes<br>📋 Dime cómo cerrar ventas, qué decir y qué evitar<br>🔄 Usá <strong>"APRENDE: [información]"</strong> para guardar algo permanentemente<br><br>Todo lo que me expliques aquí lo usaré cuando atienda por WhatsApp.<br><br>¿Por dónde empezamos?</div></div>
+                  <div class="message miia"><div class="message-bubble">¡Hola! Soy MIIA, tu asistente de ventas inteligente. 🎯<br><br>Acá podés enseñarme sobre tu negocio de <strong>dos formas</strong>:<br><br><strong>💬 Conversación libre</strong> — Contame sobre productos, precios, clientes, objeciones, cómo cerrar ventas. Yo <em>detecto automáticamente</em> qué información es importante y la guardo en mi memoria permanente sin que hagas nada extra. Un toast verde te avisa cuando guardo algo.<br><br><strong>🔄 Guardado explícito</strong> — Si querés forzar que recuerde algo puntual, usá el prefijo <strong>"APRENDE: [info]"</strong> y lo guardo directamente.<br><br><strong>📋 Historial de sesiones</strong> — En el panel izquierdo podés ver todas las sesiones anteriores con fecha y resumen. Cada sesión guarda el historial completo de la conversación.<br><br>Todo lo que aprendas acá lo usaré cuando atienda por WhatsApp.<br><br>¿Por dónde empezamos?</div></div>
                 </div>
                 <div style="display:flex;gap:8px;padding:12px;background:var(--bg-surface);border-top:1px solid rgba(59,91,255,0.08);">
                   <input type="text" id="adminExpertInput" placeholder="Preguntale o conversá... Para guardar: 'APRENDE: [info]'" style="flex:1;padding:10px 14px;border:1px solid rgba(59,91,255,0.08);border-radius:99px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);" onkeypress="if(event.key==='Enter')adminSendExpertMessage()">
@@ -1461,6 +1461,7 @@
         const reply = data.response || 'Sin respuesta.';
         adminAddChatMsg('adminExpertMessages','miia',reply);
         adminExpertSessionMessages.push({ role:'assistant', content:reply });
+        if (data.autoSaved) showToast('🧠 MIIA guardó automáticamente: "' + data.autoSaved.substring(0,60) + (data.autoSaved.length>60?'...':'') + '"', 'success');
       }
     } catch (e) { adminAddChatMsg('adminExpertMessages','miia','Error al procesar. Intentá de nuevo.'); }
   }
