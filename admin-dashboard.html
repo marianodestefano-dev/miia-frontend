@@ -1221,24 +1221,41 @@
 
   async function adminRequestPairingCode() {
     const phone = document.getElementById('adminPairingPhone').value.replace(/\D/g, '');
-    if (!phone || phone.length < 10) { document.getElementById('adminPairingError').style.display = ''; document.getElementById('adminPairingError').textContent = 'Ingresá un número válido'; return; }
-    document.getElementById('adminPairingError').style.display = 'none';
+    const errEl = document.getElementById('adminPairingError');
+    if (!phone || phone.length < 10) { errEl.style.display=''; errEl.style.color='#f87171'; errEl.textContent='Ingresá número con código de país (ej: 5491112345678)'; return; }
+    errEl.style.display = '';
+    errEl.style.color = '#94A3B8';
+    errEl.textContent = '⏳ Inicializando cliente WhatsApp...';
     document.getElementById('adminPairingCodeDisplay').style.display = 'none';
     try {
+      // Ensure client is initialized
       await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/qr`);
-      await new Promise(r => setTimeout(r, 2000));
+      // Wait up to 15s for QR to be available (means client is in QR state, ready for pairing)
+      let qrReady = false;
+      for (let i = 0; i < 15; i++) {
+        await new Promise(r => setTimeout(r, 1000));
+        const statusRes = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/qr`);
+        const statusData = await statusRes.json();
+        console.log('[PAIRING] poll', i, 'hasQR:', !!statusData.qrCode, 'isReady:', statusData.isReady);
+        if (statusData.isReady) { errEl.style.display='none'; adminWaConnected=true; adminUpdateWaBanner(); document.getElementById('qrModal').classList.add('hidden'); return; }
+        if (statusData.qrCode) { qrReady = true; break; }
+        errEl.textContent = `⏳ Esperando cliente... (${i+1}/15)`;
+      }
+      if (!qrReady) { errEl.style.color='#f87171'; errEl.textContent='No se pudo inicializar WhatsApp. Cerrá el modal y volvé a abrir.'; return; }
+      errEl.textContent = '📲 Solicitando código a WhatsApp...';
       const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/request-pairing-code`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ phone }) });
       const data = await res.json();
       if (data.code) {
+        errEl.style.display = 'none';
         document.getElementById('adminPairingCodeDisplay').style.display = '';
         document.getElementById('adminPairingCodeValue').textContent = data.code;
       } else {
-        document.getElementById('adminPairingError').style.display = '';
-        document.getElementById('adminPairingError').textContent = data.error || 'Error generando código. Intentá con QR.';
+        errEl.style.color = '#f87171';
+        errEl.textContent = (data.error || 'Error generando código') + ' — Intentá con QR.';
       }
     } catch (e) {
-      document.getElementById('adminPairingError').style.display = '';
-      document.getElementById('adminPairingError').textContent = 'Error: ' + e.message;
+      errEl.style.color = '#f87171';
+      errEl.textContent = 'Error: ' + e.message;
     }
   }
 
