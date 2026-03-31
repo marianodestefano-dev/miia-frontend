@@ -1108,7 +1108,7 @@
           document.getElementById('adminQrCode').innerHTML = `<div style="text-align:center;padding:30px;"><p style="color:#34D399;">Sesión autenticada — cargando...</p></div>`;
         }
         if (data.qrCode) {
-          document.getElementById('adminQrCode').innerHTML = `<img src="${data.qrCode}" alt="QR" style="max-width:280px;margin:0 auto;display:block;">`;
+          document.getElementById('adminQrCode').innerHTML = `<img src="${data.qrCode}" alt="QR" style="width:300px;height:300px;margin:0 auto;display:block;image-rendering:pixelated;">`;
         }
         if (data.isReady) {
           clearInterval(poll);
