@@ -718,11 +718,25 @@
         </tbody>
       </table>
 
-      <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-        <button onclick="subscribePaddle('monthly')" class="btn-primary" style="width:100%;padding:12px;">Mensual — $12 USD/mes</button>
-        <button onclick="subscribePaddle('quarterly')" class="btn-secondary" style="width:100%;padding:12px;">Trimestral — $30 USD / 3 meses</button>
-        <button onclick="subscribePaddle('semestral')" class="btn-secondary" style="width:100%;padding:12px;">Semestral — $55 USD / 6 meses</button>
-        <button onclick="subscribePaddle('annual')" class="btn-secondary" style="width:100%;padding:12px;">Anual — $75 USD / año</button>
+      <div style="margin-top: 24px;">
+        <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:12px;text-align:center;">Elegí tu plan y método de pago</p>
+        <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;">
+          <span style="font-weight:600;font-size:0.9rem;">Mensual — $12/mes</span>
+          <button onclick="subscribePaddle('monthly')" class="btn-primary" style="padding:8px 14px;font-size:0.82rem;white-space:nowrap;">Paddle</button>
+          <button onclick="subscribePayPal('monthly')" style="background:#003087;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
+
+          <span style="font-weight:600;font-size:0.9rem;">Trimestral — $30 / 3 meses</span>
+          <button onclick="subscribePaddle('quarterly')" class="btn-primary" style="padding:8px 14px;font-size:0.82rem;white-space:nowrap;">Paddle</button>
+          <button onclick="subscribePayPal('quarterly')" style="background:#003087;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
+
+          <span style="font-weight:600;font-size:0.9rem;">Semestral — $55 / 6 meses</span>
+          <button onclick="subscribePaddle('semestral')" class="btn-primary" style="padding:8px 14px;font-size:0.82rem;white-space:nowrap;">Paddle</button>
+          <button onclick="subscribePayPal('semestral')" style="background:#003087;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
+
+          <span style="font-weight:600;font-size:0.9rem;">Anual — $75 / año</span>
+          <button onclick="subscribePaddle('annual')" class="btn-primary" style="padding:8px 14px;font-size:0.82rem;white-space:nowrap;">Paddle</button>
+          <button onclick="subscribePayPal('annual')" style="background:#003087;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
+        </div>
       </div>
     </div>
   </div>
@@ -788,6 +802,19 @@
       if (params.get('agent_success') === '1') {
         showToast('Agente adicional activado.', 'success');
         window.history.replaceState({}, '', window.location.pathname);
+      }
+      if (params.get('paypal_capture') === '1') {
+        const ppToken = params.get('token');
+        const ppPlan = params.get('plan');
+        const ppUid = params.get('uid');
+        window.history.replaceState({}, '', window.location.pathname);
+        if (ppToken && ppPlan && ppUid) capturePayPal(ppToken, ppPlan, ppUid);
+      }
+      if (params.get('paypal_agent_capture') === '1') {
+        const ppToken = params.get('token');
+        const ppUid = params.get('uid');
+        window.history.replaceState({}, '', window.location.pathname);
+        if (ppToken && ppUid) capturePayPalAgent(ppToken, ppUid);
       }
     }
 
@@ -1105,9 +1132,14 @@
             <p style="margin: 0 0 10px 0; color: #4a4a6a; font-size: 0.9rem;">
               🔒 Has alcanzado el límite de ${limit} agente${limit > 1 ? 's' : ''}
             </p>
-            <button onclick="buyAgentPaddle(${count})" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
-              + Agregar agente extra — $3 USD/mes
-            </button>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <button onclick="buyAgentPaddle(${count})" style="flex:1;padding:10px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.85rem;">
+                + Agente extra $3/mes — Paddle
+              </button>
+              <button onclick="buyAgentPayPal(${count})" style="flex:1;padding:10px;background:#003087;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.85rem;">
+                + Agente extra $3 — PayPal
+              </button>
+            </div>
           </div>
         `;
       } else {
@@ -1441,6 +1473,22 @@
     }
 
     // ═══ PADDLE CHECKOUT ═══
+    async function buyAgentPayPal(agentCount) {
+      try {
+        showToast('Redirigiendo a PayPal...', 'info');
+        const res = await fetch(API + '/api/paypal/agent-checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid: currentUser.uid, agentCount })
+        });
+        const data = await res.json();
+        if (data.url) window.location.href = data.url;
+        else showToast('Error: ' + (data.error || 'Desconocido'), 'error');
+      } catch (e) {
+        showToast('Error de conexión: ' + e.message, 'error');
+      }
+    }
+
     async function buyAgentPaddle(agentCount) {
       try {
         showToast('Redirigiendo a Paddle...', 'info');
@@ -1468,6 +1516,54 @@
         const data = await res.json();
         if (data.url) window.location.href = data.url;
         else showToast('Error: ' + (data.error || 'Desconocido'), 'error');
+      } catch (e) {
+        showToast('Error: ' + e.message, 'error');
+      }
+    }
+
+    async function subscribePayPal(plan) {
+      try {
+        showToast('Redirigiendo a PayPal...', 'info');
+        const res = await fetch(API + '/api/paypal/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid: currentUser.uid, plan })
+        });
+        const data = await res.json();
+        if (data.url) window.location.href = data.url;
+        else showToast('Error: ' + (data.error || 'Desconocido'), 'error');
+      } catch (e) {
+        showToast('Error: ' + e.message, 'error');
+      }
+    }
+
+    async function capturePayPal(token, plan, uid) {
+      try {
+        showToast('Procesando pago PayPal...', 'info');
+        const res = await fetch(API + '/api/paypal/capture', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, plan, uid })
+        });
+        const data = await res.json();
+        if (data.success) showToast('Plan activado. Bienvenido a MIIA.', 'success');
+        else showToast('Error al confirmar pago: ' + (data.error || 'Desconocido'), 'error');
+      } catch (e) {
+        showToast('Error: ' + e.message, 'error');
+      }
+    }
+
+    async function capturePayPalAgent(token, uid) {
+      try {
+        showToast('Procesando pago PayPal...', 'info');
+        const res = await fetch(API + '/api/paypal/capture-agent', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, uid })
+        });
+        const data = await res.json();
+        if (data.success) showToast('Agente adicional activado.', 'success');
+        else showToast('Error al confirmar pago: ' + (data.error || 'Desconocido'), 'error');
       } catch (e) {
         showToast('Error: ' + e.message, 'error');
       }
