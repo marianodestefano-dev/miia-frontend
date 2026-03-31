@@ -718,12 +718,11 @@
         </tbody>
       </table>
 
-      <div class="paywall-contact">
-        <p>Para activar tu plan, contacta al equipo:</p>
-        <p><strong>lobsterscrm@gmail.com</strong></p>
-        <p style="font-size: 0.8rem; margin-top: 8px; color: var(--text-muted);">
-          Envía tu comprobante de pago y te activaremos en minutos.
-        </p>
+      <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
+        <button onclick="subscribePaddle('monthly')" class="btn-primary" style="width:100%;padding:12px;">Mensual — $12 USD/mes</button>
+        <button onclick="subscribePaddle('quarterly')" class="btn-secondary" style="width:100%;padding:12px;">Trimestral — $30 USD / 3 meses</button>
+        <button onclick="subscribePaddle('semestral')" class="btn-secondary" style="width:100%;padding:12px;">Semestral — $55 USD / 6 meses</button>
+        <button onclick="subscribePaddle('annual')" class="btn-secondary" style="width:100%;padding:12px;">Anual — $75 USD / año</button>
       </div>
     </div>
   </div>
@@ -782,6 +781,14 @@
     function readUrlParams() {
       const params = new URLSearchParams(window.location.search);
       clientSlug = params.get('u') || '';
+      if (params.get('sub_success') === '1') {
+        showToast('Plan activado. Bienvenido a MIIA.', 'success');
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      if (params.get('agent_success') === '1') {
+        showToast('Agente adicional activado.', 'success');
+        window.history.replaceState({}, '', window.location.pathname);
+      }
     }
 
     const PLAN_NAMES = {
@@ -1098,8 +1105,8 @@
             <p style="margin: 0 0 10px 0; color: #4a4a6a; font-size: 0.9rem;">
               🔒 Has alcanzado el límite de ${limit} agente${limit > 1 ? 's' : ''}
             </p>
-            <button onclick="buyAgentStripe(${count})" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
-              + Agregar agente extra — $${priceInDollars} (10% dto por agente)
+            <button onclick="buyAgentPaddle(${count})" style="width: 100%; padding: 10px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem;">
+              + Agregar agente extra — $3 USD/mes
             </button>
           </div>
         `;
@@ -1433,27 +1440,36 @@
       }
     }
 
-    // ═══ STRIPE CHECKOUT ═══
-    async function buyAgentStripe(agentCount) {
+    // ═══ PADDLE CHECKOUT ═══
+    async function buyAgentPaddle(agentCount) {
       try {
-        const res = await fetch('https://miia-backend-production.up.railway.app/api/stripe/create-checkout-session', {
+        showToast('Redirigiendo a Paddle...', 'info');
+        const res = await fetch(API + '/api/paddle/agent-checkout', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            uid: currentUser.uid,
-            type: 'agent',
-            agentCount: agentCount
-          })
+          body: JSON.stringify({ uid: currentUser.uid, agentCount })
         });
-
         const data = await res.json();
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          showToast('Error al procesar el pago: ' + (data.error || 'Desconocido'), 'error');
-        }
+        if (data.url) window.location.href = data.url;
+        else showToast('Error al procesar el pago: ' + (data.error || 'Desconocido'), 'error');
       } catch (error) {
         showToast('Error de conexión: ' + error.message, 'error');
+      }
+    }
+
+    async function subscribePaddle(plan) {
+      try {
+        showToast('Redirigiendo a Paddle...', 'info');
+        const res = await fetch(API + '/api/paddle/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ uid: currentUser.uid, plan })
+        });
+        const data = await res.json();
+        if (data.url) window.location.href = data.url;
+        else showToast('Error: ' + (data.error || 'Desconocido'), 'error');
+      } catch (e) {
+        showToast('Error: ' + e.message, 'error');
       }
     }
 
