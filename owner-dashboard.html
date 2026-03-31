@@ -681,7 +681,7 @@
 
       if (!adminView) {
         const _tok = await user.getIdToken();
-        try { const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin.html';return;} } catch(_){}
+        try { const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin-dashboard.html';return;} } catch(_){}
       }
 
       currentUser = user;
@@ -694,7 +694,7 @@
       if (adminView && impersonateUid) {
         const bar = document.createElement('div');
         bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:white;text-align:center;padding:10px;font-size:0.85rem;z-index:9999;';
-        bar.innerHTML = `👁 <strong>Modo Admin:</strong> Viendo dashboard de ${doc.exists ? doc.data().email : impersonateUid} &nbsp;|&nbsp; <a href="admin.html" style="color:#667eea;">Volver a Admin</a>`;
+        bar.innerHTML = `👁 <strong>Modo Admin:</strong> Viendo dashboard de ${doc.exists ? doc.data().email : impersonateUid} &nbsp;|&nbsp; <a href="admin-dashboard.html" style="color:#667eea;">Volver a Admin</a>`;
         document.body.appendChild(bar);
         document.body.style.paddingBottom = '45px';
       }

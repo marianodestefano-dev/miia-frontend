@@ -401,7 +401,7 @@
         parts.push('adminView=1');
         parts.push('impersonateUid=' + impersonateUid);
       }
-      window.location.href = 'dashboard.html' + (parts.length ? '?' + parts.join('&') : '');
+      window.location.href = 'owner-dashboard.html' + (parts.length ? '?' + parts.join('&') : '');
     }
 
     // Auth guard
@@ -418,7 +418,7 @@
       const impersonateUid = urlParams.get('impersonateUid');
 
       if (!adminView) {
-        try { const _tok = await user.getIdToken(); const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin.html';return;} } catch(_){}
+        try { const _tok = await user.getIdToken(); const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin-owner-dashboard.html';return;} } catch(_){}
       }
 
       const targetUid = (adminView && impersonateUid) ? impersonateUid : user.uid;
@@ -431,7 +431,7 @@
 
       const userData = doc.data();
       if (userData.role === 'agent') {
-        window.location.href = 'agent-dashboard.html';
+        window.location.href = 'agent-owner-dashboard.html';
         return;
       }
 
@@ -441,7 +441,7 @@
       if (adminView && impersonateUid) {
         const bar = document.createElement('div');
         bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:white;text-align:center;padding:10px;font-size:0.85rem;z-index:9999;';
-        bar.innerHTML = `👁 <strong>Modo Admin:</strong> Viendo contactos de ${doc.exists ? doc.data().email : impersonateUid} &nbsp;|&nbsp; <a href="dashboard.html?adminView=1&impersonateUid=${impersonateUid}" style="color:#667eea;">← Dashboard</a> &nbsp;|&nbsp; <a href="admin.html" style="color:#667eea;">Volver a Admin</a>`;
+        bar.innerHTML = `👁 <strong>Modo Admin:</strong> Viendo contactos de ${doc.exists ? doc.data().email : impersonateUid} &nbsp;|&nbsp; <a href="owner-dashboard.html?adminView=1&impersonateUid=${impersonateUid}" style="color:#667eea;">← Dashboard</a> &nbsp;|&nbsp; <a href="admin-dashboard.html" style="color:#667eea;">Volver a Admin</a>`;
         document.body.appendChild(bar);
         document.body.style.paddingBottom = '45px';
       }

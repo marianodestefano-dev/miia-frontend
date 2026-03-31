@@ -483,7 +483,7 @@
         return;
       }
 
-      try { const _tok = await user.getIdToken(); const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin.html';return;} } catch(_){}
+      try { const _tok = await user.getIdToken(); const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin-dashboard.html';return;} } catch(_){}
 
       // Load user doc
       const doc = await db.collection('users').doc(user.uid).get();
@@ -515,7 +515,7 @@
           await inviteDoc.ref.delete();
         } else {
           // Not an agent — redirect to regular dashboard (will create client doc there)
-          window.location.href = 'dashboard.html';
+          window.location.href = 'owner-dashboard.html';
           return;
         }
       }
@@ -526,7 +526,7 @@
 
       // Must be agent role
       if (userData.role !== 'agent') {
-        window.location.href = 'dashboard.html';
+        window.location.href = 'owner-dashboard.html';
         return;
       }
 

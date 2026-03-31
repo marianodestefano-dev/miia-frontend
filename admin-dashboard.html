@@ -338,7 +338,7 @@
     if (!user) { window.location.href = 'login.html'; return; }
     const token = await user.getIdToken();
     const isAdmin = await checkIsAdmin(token);
-    if (!isAdmin) { window.location.href = 'dashboard.html'; return; }
+    if (!isAdmin) { window.location.href = 'owner-dashboard.html'; return; }
     document.getElementById('adminEmail').textContent = user.email;
     currentIdToken = token;
     loadAll();
@@ -384,7 +384,7 @@
       <td>${u.discount_percent||0}%</td>
       <td>
         <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
-        <button class="btn-sm-inline" onclick="window.open('dashboard.html?adminView=1&impersonateUid=${u.uid}','_blank')" title="Ver como usuario" style="margin-left:4px;"><svg style="width:14px;height:14px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        <button class="btn-sm-inline" onclick="window.open('owner-dashboard.html?adminView=1&impersonateUid=${u.uid}','_blank')" title="Ver como usuario" style="margin-left:4px;"><svg style="width:14px;height:14px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </td>
     </tr>`).join('');
   }

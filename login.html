@@ -345,7 +345,7 @@
       h2 { font-size: 1.3rem; }
     }
   </style>
-  <link rel="prefetch" href="dashboard.html">
+  <link rel="prefetch" href="owner-dashboard.html">
 
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -588,12 +588,12 @@
         if (resp.ok) {
           const data = await resp.json();
           if (data.role === 'agent') {
-            window.location.href = 'agent-dashboard.html?u=' + slug;
+            window.location.href = 'agent-owner-dashboard.html?u=' + slug;
             return;
           }
         }
       } catch (e) { console.log('[LOGIN] Role check failed, defaulting to dashboard:', e.message); }
-      window.location.href = 'dashboard.html?u=' + slug;
+      window.location.href = 'owner-dashboard.html?u=' + slug;
     }
 
     function showError(message) {
