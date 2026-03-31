@@ -127,12 +127,36 @@
     .dot-danger { display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; box-shadow:0 0 6px #ef4444; flex-shrink:0; }
     .alert-icon-warn { display:inline-block; width:16px; height:16px; flex-shrink:0; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-size:contain; }
     .hidden { display:none !important; }
+    /* ═══ TRAINING TAB STYLES ═══ */
+    .tab-btn { padding:12px 18px;border:none;background:transparent;color:var(--text-muted);font-weight:600;font-size:0.88rem;cursor:pointer;border-radius:8px 8px 0 0;white-space:nowrap;transition:all .25s; }
+    .tab-btn:hover { color:var(--text-dark); }
+    .tab-btn.active { color:var(--primary);border-bottom:3px solid var(--primary); }
+    .grid-table { width:100%;border-collapse:collapse;font-size:0.88rem; }
+    .grid-table th { background:rgba(59,91,255,0.06);color:var(--text-dark);font-weight:600;padding:10px 12px;text-align:left;border-bottom:2px solid rgba(59,91,255,0.08);font-size:0.8rem;text-transform:uppercase;letter-spacing:.3px; }
+    .grid-table td { padding:6px 4px;border-bottom:1px solid rgba(59,91,255,0.04);vertical-align:middle; }
+    .grid-table input[type="text"],.grid-table input[type="number"] { width:100%;padding:7px 10px;border:1px solid rgba(59,91,255,0.1);border-radius:8px;font-size:0.86rem;color:var(--text-dark);background:var(--bg-surface);transition:border-color .2s; }
+    .grid-table input:focus { outline:none;border-color:var(--primary); }
+    .grid-table input::placeholder { color:var(--text-muted);font-style:italic; }
+    .row-btn { width:30px;height:30px;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;display:inline-flex;align-items:center;justify-content:center;transition:all .2s; }
+    .row-btn.save { background:rgba(52,211,153,.1);color:#34D399; } .row-btn.save:hover { background:#34D399;color:white; }
+    .row-btn.add { background:rgba(59,91,255,.1);color:var(--primary); } .row-btn.add:hover { background:var(--primary);color:white; }
+    .row-btn.delete { background:rgba(239,68,68,.08);color:var(--danger); } .row-btn.delete:hover { background:var(--danger);color:white; }
+    .message { margin-bottom:10px;display:flex; }
+    .message.user { justify-content:flex-end; }
+    .message-bubble { max-width:75%;padding:10px 14px;border-radius:12px;font-size:0.88rem;line-height:1.5; }
+    .message.miia .message-bubble { background:var(--bg-surface);color:var(--text-dark);border-bottom-left-radius:4px; }
+    .message.user .message-bubble { background:var(--gradient-main);color:white;border-bottom-right-radius:4px; }
+    .session-tag { display:flex;align-items:center;justify-content:space-between;padding:9px 10px;margin-bottom:4px;border-radius:8px;cursor:pointer;font-size:0.8rem;color:var(--text-body);transition:all .2s;border:1px solid transparent; }
+    .session-tag:hover { background:rgba(59,91,255,0.06); }
+    .session-tag.active { background:rgba(59,91,255,0.1);border-color:rgba(59,91,255,0.1);color:var(--primary);font-weight:600; }
+    .session-tag .tag-date { font-size:0.73rem;color:var(--text-muted); }
+
     @media (max-width:768px) {
-      #navbar { padding:0 16px; } .tabs-container { padding:0 12px; }
-      .tab-content { padding:20px 0; } .tab-btn { padding:10px 14px; font-size:0.82rem; }
+      #navbar { padding:0 16px; }
       .env-list { grid-template-columns:1fr; }
     }
   </style>
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -180,20 +204,16 @@
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         Pagos
       </button>
-      <a href="training.html">
-        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a4.5 4.5 0 00-3.6 7.2L12 14l3.6-4.8A4.5 4.5 0 0012 2z"/><path d="M12 14v8"/></svg>
-        <span class="sidebar-label">Entrenar mi MIIA</span>
-      </a>
-      <button class="sidebar-btn" onclick="showAdminSection('configuracion', this)">
+      <button class="sidebar-btn" onclick="showAdminSection('conexiones', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
-        <span class="sidebar-label">Conexiones</span>
+        Conexiones
       </button>
     </nav>
 
     <div class="sidebar-footer">
       <div class="sidebar-wa-status" id="adminSidebarStatus">
-        <span class="status-dot green pulse" id="adminStatusDot"></span>
-        <span class="wa-label">Plataforma MIIA</span>
+        <span class="status-dot red" id="adminStatusDot"></span>
+        <span class="wa-label" id="adminStatusLabel">WhatsApp desconectado</span>
       </div>
       <div class="sidebar-profile" onclick="toggleAdminProfileMenu()" style="cursor:pointer;">
         <div class="profile-avatar" id="adminAvatar">A</div>
@@ -215,24 +235,44 @@
   <div class="main-content">
 
     <!-- ═══ SECTION: RESUMEN ═══ -->
-    <div id="admin-section-resumen" class="page-section">
-    <div class="stats-grid">
-        <div class="stat-card"><div class="value" id="statTotal">0</div><div class="label">Total usuarios</div></div>
+    <div id="admin-section-resumen" class="page-section" style="padding:28px 24px 60px;max-width:1400px;">
+      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Resumen de Plataforma</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Vista general de clientes, ingresos y alertas del sistema.</p>
+
+      <div class="stats-grid">
+        <div class="stat-card"><div class="value" id="statTotal">0</div><div class="label">Total clientes</div></div>
         <div class="stat-card"><div class="value" id="statActive">0</div><div class="label">Activos</div></div>
         <div class="stat-card"><div class="value" id="statTrial">0</div><div class="label">En trial</div></div>
         <div class="stat-card"><div class="value">$<span id="statMRR">0</span></div><div class="label">MRR estimado (USD)</div></div>
       </div>
 
-      <h4 class="section-title">Alertas</h4>
-      <div id="alertsList">
-        <p style="color:var(--text-muted);font-size:0.9rem;">Cargando...</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px;">
+        <div class="card">
+          <h4 class="section-title" style="margin-bottom:12px;">Alertas</h4>
+          <div id="alertsList"><p style="color:var(--text-muted);font-size:0.9rem;">Cargando...</p></div>
+        </div>
+        <div class="card">
+          <h4 class="section-title" style="margin-bottom:12px;">Distribución por plan</h4>
+          <div id="planBreakdownResumen"></div>
+        </div>
       </div>
     </div><!-- end admin-section-resumen -->
 
     <!-- ═══ SECTION: CLIENTES ═══ -->
-    <div id="admin-section-clientes" class="page-section section-hidden">
+    <div id="admin-section-clientes" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
+      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Gestión de Clientes</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Administrá planes, estados y configuración de cada cuenta.</p>
+
+      <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-bottom:24px;">
+        <div class="stat-card"><div class="value" id="statTotal2">0</div><div class="label">Total</div></div>
+        <div class="stat-card"><div class="value" id="statActive2">0</div><div class="label">Activos</div></div>
+        <div class="stat-card"><div class="value" id="statTrial2">0</div><div class="label">Trial</div></div>
+        <div class="stat-card"><div class="value" id="statPending2">0</div><div class="label">Pago pendiente</div></div>
+        <div class="stat-card"><div class="value" id="statNoKey2">0</div><div class="label">Sin API Key</div></div>
+      </div>
+
       <div class="toolbar">
-        <input type="text" id="userSearch" placeholder="Buscar por email o nombre..." oninput="filterUsers()">
+        <input type="text" id="userSearch" placeholder="Buscar por email, nombre o UID..." oninput="filterUsers()">
         <select id="filterPlan" onchange="filterUsers()">
           <option value="">Todos los planes</option>
           <option value="trial">Trial</option>
@@ -246,17 +286,17 @@
           <option value="trial">Trial</option>
           <option value="active">Activo</option>
           <option value="pending_payment">Pago pendiente</option>
+          <option value="expired">Expirado</option>
         </select>
         <button class="btn-sm btn-primary" onclick="openCreateModal()">+ Crear usuario</button>
-        <button class="btn-sm btn-outline" onclick="window.open('admin/usersclients.html','_blank')">Vista completa</button>
       </div>
 
       <div style="overflow-x:auto;">
         <table class="data-table">
           <thead>
             <tr>
-              <th>Usuario</th><th>Role</th><th>Plan</th><th>Estado</th>
-              <th>Agentes</th><th>API Key</th><th>Descuento</th><th>Acciones</th>
+              <th>Usuario</th><th>UID</th><th>Role</th><th>Plan</th><th>Estado</th>
+              <th>Agentes</th><th>API Key</th><th>Descuento</th><th>Creado</th><th>Acciones</th>
             </tr>
           </thead>
           <tbody id="usersTableBody"></tbody>
@@ -265,42 +305,237 @@
     </div><!-- end admin-section-clientes -->
 
     <!-- ═══ SECTION: CONTACTOS ═══ -->
-    <div id="admin-section-contactos" class="page-section section-hidden">
-      <h4 class="section-title">Contactos</h4>
+    <div id="admin-section-contactos" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
+      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Sesiones WhatsApp</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Sesiones de WhatsApp activas de tus clientes conectadas al servidor.</p>
       <div id="tenantsList"><p style="color:var(--text-muted);">Cargando...</p></div>
     </div><!-- end admin-section-contactos -->
 
     <!-- ═══ SECTION: PAGOS ═══ -->
-    <div id="admin-section-pagos" class="page-section section-hidden">
+    <div id="admin-section-pagos" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
+      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Facturación y Pagos</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Ingresos recurrentes y distribución por plan de suscripción.</p>
       <div class="stats-grid" style="margin-bottom:24px;">
-        <div class="stat-card"><div class="value">$<span id="billingMRR">0</span></div><div class="label">MRR actual</div></div>
+        <div class="stat-card"><div class="value">$<span id="billingMRR">0</span></div><div class="label">MRR actual (USD)</div></div>
         <div class="stat-card"><div class="value" id="billingPaid">0</div><div class="label">Clientes de pago</div></div>
         <div class="stat-card"><div class="value" id="billingPending">0</div><div class="label">Pagos pendientes</div></div>
       </div>
-
-      <h4 class="section-title">Clientes por plan</h4>
-      <div id="planBreakdown"></div>
+      <div class="card">
+        <h4 class="section-title" style="margin-bottom:12px;">Clientes por plan</h4>
+        <div id="planBreakdown"></div>
+      </div>
     </div><!-- end admin-section-pagos -->
 
     <!-- ═══ SECTION: ENTRENAMIENTO ═══ -->
-    <div id="admin-section-entrenamiento" class="page-section section-hidden">
-      <div class="stats-grid" style="margin-bottom:24px;">
+    <div id="admin-section-entrenamiento" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
+      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Entrenamiento de MIIA</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Enseñá a MIIA sobre tu negocio: productos, palabras clave, respuestas y configuración avanzada.</p>
+
+      <div class="stats-grid" style="margin-bottom:24px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));">
         <div class="stat-card"><div class="value" id="brainSize">—</div><div class="label">Cerebro (chars)</div></div>
         <div class="stat-card"><div class="value" id="brainConvos">—</div><div class="label">Conversaciones</div></div>
       </div>
 
-      <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:24px;">
-        <button class="btn-sm btn-primary" onclick="window.location.href='training.html'">Entrenar mi MIIA</button>
-        <button class="btn-sm btn-outline" onclick="forceADNMining()">Forzar ADN Mining</button>
-        <button class="btn-sm btn-outline" onclick="forceScraperRun()">Ejecutar Scraper</button>
+      <!-- WA banner -->
+      <div id="adminWaBanner" style="padding:12px 18px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;font-size:0.9rem;font-weight:600;margin-bottom:20px;background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.15);">
+        <span id="adminWaStatusText">Verificando WhatsApp...</span>
+        <button id="adminWaActionBtn" onclick="adminToggleWhatsApp()" style="padding:6px 16px;border-radius:99px;font-size:0.85rem;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,#FF1A8C,#A78BFA);color:white;">Conectar</button>
       </div>
 
-      <h4 class="section-title">Estado del cerebro</h4>
-      <div id="cerebroStatus"><p style="color:var(--text-muted);">Cargando...</p></div>
+      <!-- Training tabs -->
+      <div style="margin-bottom:0;">
+        <div id="trainTabsNav" style="display:flex;gap:4px;background:var(--bg-card);border-radius:12px 12px 0 0;padding:8px 8px 0;border:1px solid rgba(59,91,255,0.08);border-bottom:none;overflow-x:auto;scrollbar-width:none;">
+          <button class="tab-btn active" onclick="switchTrainingTab('t-products',this)">Productos</button>
+          <button class="tab-btn" onclick="switchTrainingTab('t-recognize',this)">Como Reconocer</button>
+          <button class="tab-btn" onclick="switchTrainingTab('t-expert',this)">Chat Experto</button>
+          <button class="tab-btn" onclick="switchTrainingTab('t-docs',this)">Documentos</button>
+          <button class="tab-btn" onclick="switchTrainingTab('t-test',this)">Testear MIIA</button>
+          <button class="tab-btn" onclick="switchTrainingTab('t-config',this)" style="display:inline-flex;align-items:center;gap:6px;">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+            Configuración
+          </button>
+        </div>
+        <div id="trainTabContent" style="background:var(--bg-card);border:1px solid rgba(59,91,255,0.08);border-radius:0 0 16px 16px;padding:28px;min-height:400px;">
+
+          <!-- TAB: PRODUCTOS -->
+          <div id="t-products" class="train-panel">
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Productos y Servicios</h3>
+            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Cargá tus productos para que MIIA sepa qué ofrecer. Cada línea guardada se incorpora al cerebro.</p>
+            <div style="overflow-x:auto;">
+              <table class="grid-table" id="adminProductsTable">
+                <thead><tr>
+                  <th>Nombre</th><th>Descripción</th><th>Precio base</th><th>Precio promo</th><th>Stock</th><th style="width:100px;">Acciones</th>
+                </tr></thead>
+                <tbody id="adminProductsBody"></tbody>
+              </table>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:14px;">
+              <button class="btn-sm btn-outline" onclick="adminAddProductRow()">+ Agregar línea</button>
+              <span id="adminProductStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+            </div>
+          </div>
+
+          <!-- TAB: COMO RECONOCER -->
+          <div id="t-recognize" class="train-panel" style="display:none;">
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Cómo MIIA reconoce a tus contactos</h3>
+            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Define palabras clave para clasificar contactos como Lead, Cliente u Otro.</p>
+            <div style="margin-bottom:28px;">
+              <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Leads (Potenciales Clientes)</h4>
+              <p style="font-size:0.83rem;color:var(--text-muted);margin-bottom:10px;">Palabras que indican interés de compra</p>
+              <table class="grid-table"><thead><tr><th>Palabra o frase clave</th><th>Ejemplo de contexto</th><th style="width:60px;"></th></tr></thead><tbody id="adminLeadKeywordsBody"></tbody></table>
+              <button class="btn-sm btn-outline" style="margin-top:8px;" onclick="adminAddKeywordRow('lead')">+ Agregar</button>
+            </div>
+            <div style="margin-bottom:28px;">
+              <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Clientes (Ya compraron)</h4>
+              <p style="font-size:0.83rem;color:var(--text-muted);margin-bottom:10px;">Palabras que indican que ya son clientes</p>
+              <table class="grid-table"><thead><tr><th>Palabra o frase clave</th><th>Ejemplo de contexto</th><th style="width:60px;"></th></tr></thead><tbody id="adminClientKeywordsBody"></tbody></table>
+              <button class="btn-sm btn-outline" style="margin-top:8px;" onclick="adminAddKeywordRow('client')">+ Agregar</button>
+            </div>
+            <div style="background:rgba(102,126,234,0.04);padding:16px;border-radius:12px;margin-bottom:20px;">
+              <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Otros</h4>
+              <p style="font-size:0.83rem;color:var(--text-muted);">Contactos que no activen ninguna palabra clave serán clasificados como "Otros". MIIA no los atenderá comercialmente.</p>
+            </div>
+            <div style="display:flex;gap:10px;margin-top:16px;">
+              <button class="btn-sm btn-primary" onclick="adminSaveContactRules()">Guardar reglas</button>
+              <span id="adminRulesStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+            </div>
+          </div>
+
+          <!-- TAB: CHAT EXPERTO -->
+          <div id="t-expert" class="train-panel" style="display:none;">
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Entrenamiento Experto</h3>
+            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Conversá con MIIA para enseñarle la lógica de tu negocio. Cada sesión se guarda con un resumen.</p>
+            <div style="display:flex;gap:0;height:520px;border:1px solid rgba(59,91,255,0.08);border-radius:12px;overflow:hidden;">
+              <!-- Sessions sidebar -->
+              <div style="width:240px;min-width:240px;background:var(--bg-surface);border-right:1px solid rgba(59,91,255,0.08);display:flex;flex-direction:column;">
+                <div style="padding:14px;border-bottom:1px solid rgba(59,91,255,0.08);">
+                  <h4 style="font-size:0.9rem;color:var(--text-dark);margin-bottom:8px;">Sesiones</h4>
+                  <button class="btn-sm btn-primary" style="width:100%;font-size:0.82rem;" onclick="adminStartNewSession()">+ Nueva sesión</button>
+                </div>
+                <div id="adminSessionsList" style="flex:1;overflow-y:auto;padding:8px;"></div>
+              </div>
+              <!-- Chat -->
+              <div style="flex:1;display:flex;flex-direction:column;">
+                <div style="padding:14px 18px;background:var(--gradient-main);color:white;display:flex;align-items:center;gap:10px;">
+                  <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🤖</div>
+                  <div><div style="font-size:0.95rem;font-weight:600;">MIIA — Modo Entrenamiento</div><div style="font-size:0.78rem;opacity:0.85;">Explicale todo sobre tu negocio</div></div>
+                </div>
+                <div id="adminExpertMessages" style="flex:1;overflow-y:auto;padding:16px;background:var(--bg-card);">
+                  <div class="message miia"><div class="message-bubble">¡Hola! Soy MIIA, tu asistente de ventas inteligente. 🎯<br><br>Estoy lista para aprender todo sobre tu negocio. Aquí te cuento cómo enseñarme:<br><br>💬 Cuéntame sobre tus productos, precios y servicios<br>🎯 Explícame cómo manejar objeciones de tus clientes<br>📋 Dime cómo cerrar ventas, qué decir y qué evitar<br>🔄 Usá <strong>"APRENDE: [información]"</strong> para guardar algo permanentemente<br><br>Todo lo que me expliques aquí lo usaré cuando atienda por WhatsApp.<br><br>¿Por dónde empezamos?</div></div>
+                </div>
+                <div style="display:flex;gap:8px;padding:12px;background:var(--bg-surface);border-top:1px solid rgba(59,91,255,0.08);">
+                  <input type="text" id="adminExpertInput" placeholder="Preguntale o conversá... Para guardar: 'APRENDE: [info]'" style="flex:1;padding:10px 14px;border:1px solid rgba(59,91,255,0.08);border-radius:99px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);" onkeypress="if(event.key==='Enter')adminSendExpertMessage()">
+                  <button onclick="adminSendExpertMessage()" style="padding:10px 20px;background:var(--gradient-main);color:white;border:none;border-radius:99px;font-weight:600;cursor:pointer;">Enviar</button>
+                </div>
+              </div>
+            </div>
+            <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
+              <button class="btn-sm btn-primary" onclick="adminSaveCurrentSession()">Guardar sesión de hoy</button>
+              <span id="adminSessionSaveStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+            </div>
+          </div>
+
+          <!-- TAB: DOCUMENTOS -->
+          <div id="t-docs" class="train-panel" style="display:none;">
+            <div style="text-align:center;padding:48px 32px;border:2px dashed rgba(59,91,255,0.15);border-radius:16px;">
+              <div style="font-size:3rem;margin-bottom:14px;">📂</div>
+              <h3 style="color:var(--text-dark);margin-bottom:8px;">Documentos de Conocimiento</h3>
+              <p style="color:var(--text-muted);margin-bottom:20px;font-size:0.9rem;">Subí PDFs, Word, Excel o TXT con información de tu negocio. MIIA los estudiará y los incorporará a su cerebro.</p>
+              <input type="file" id="adminDocFileInput" accept=".pdf,.txt,.docx,.xlsx,.csv" multiple style="display:none;" onchange="adminUploadTrainingDocs(event)">
+              <button class="btn-sm btn-primary" onclick="document.getElementById('adminDocFileInput').click()">📂 Seleccionar archivos</button>
+              <div id="adminDocUploadStatus" style="margin-top:12px;font-size:0.85rem;color:var(--accent);"></div>
+            </div>
+          </div>
+
+          <!-- TAB: TESTEAR MIIA -->
+          <div id="t-test" class="train-panel" style="display:none;">
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Testear MIIA</h3>
+            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Hablá con tu MIIA como si fueras un cliente con todo el conocimiento que le enseñaste. La conversación de prueba NO se guarda como lead real.</p>
+            <div style="height:460px;border:1px solid rgba(59,91,255,0.08);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;">
+              <div style="padding:12px 18px;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;display:flex;align-items:center;gap:10px;">
+                <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">🧪</div>
+                <div style="flex:1;"><div style="font-size:0.95rem;font-weight:600;">Modo Prueba</div><div style="font-size:0.78rem;opacity:0.85;">Hablás con MIIA como si fueras un cliente</div></div>
+                <button onclick="adminResetTest()" style="padding:5px 12px;background:rgba(255,255,255,0.2);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">Reiniciar</button>
+              </div>
+              <div id="adminTestMessages" style="flex:1;overflow-y:auto;padding:14px;background:var(--bg-card);">
+                <div class="message miia"><div class="message-bubble">¡Hola! Bienvenido. ¿En qué puedo ayudarte hoy?</div></div>
+              </div>
+              <div style="display:flex;gap:8px;padding:10px 14px;background:var(--bg-surface);border-top:1px solid rgba(59,91,255,0.08);">
+                <input type="text" id="adminTestInput" placeholder="Escribí como si fueras un cliente..." style="flex:1;padding:10px 14px;border:1px solid rgba(59,91,255,0.08);border-radius:99px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);" onkeypress="if(event.key==='Enter')adminSendTestMessage()">
+                <button onclick="adminSendTestMessage()" style="padding:10px 20px;background:var(--gradient-main);color:white;border:none;border-radius:99px;font-weight:600;cursor:pointer;">Enviar</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: CONFIGURACIÓN -->
+          <div id="t-config" class="train-panel" style="display:none;">
+            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Configuración de MIIA</h3>
+            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Ajustes avanzados del comportamiento de tu asistente.</p>
+            <div style="max-width:640px;display:flex;flex-direction:column;gap:16px;">
+
+              <!-- Humanizador -->
+              <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+                <div style="display:flex;align-items:center;gap:14px;">
+                  <div style="width:42px;height:42px;border-radius:10px;background:rgba(99,102,241,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="9" cy="16" r="1"/><circle cx="15" cy="16" r="1"/><path d="M12 2v4M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-weight:700;color:var(--text-dark);font-size:0.95rem;">Humanizador de respuestas</div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-top:2px;">Introduce pequeños errores tipográficos y pausas variables para que WhatsApp no detecte comportamiento automático.</div>
+                  </div>
+                  <label style="position:relative;width:44px;height:24px;flex-shrink:0;">
+                    <input type="checkbox" id="adminHumanizerToggle" onchange="adminSaveHumanizerPref(this.checked)" style="opacity:0;width:0;height:0;">
+                    <span id="adminHumanizerTrack" style="position:absolute;inset:0;background:rgba(100,116,139,0.3);border-radius:999px;cursor:pointer;transition:background .3s;" onclick="document.getElementById('adminHumanizerToggle').click()"></span>
+                  </label>
+                </div>
+                <div style="font-size:0.82rem;color:var(--text-muted);padding:8px 12px;background:rgba(59,91,255,0.06);border-radius:8px;">Estado: <strong id="adminHumanizerLabel" style="color:var(--primary);">Cargando...</strong></div>
+              </div>
+
+              <!-- ADN Mining -->
+              <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+                <div style="display:flex;align-items:center;gap:14px;">
+                  <div style="width:42px;height:42px;border-radius:10px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M2 12h4M6 12c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6"/><path d="M18 12h4M12 2v4M12 18v4"/></svg>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-weight:700;color:var(--text-dark);font-size:0.95rem;">Forzar ADN Mining</div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-top:2px;">Analiza las conversaciones de WhatsApp para extraer patrones, intereses y comportamiento de tus clientes. MIIA aprende automáticamente de cada interacción.</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn-sm btn-primary" style="flex:1;" onclick="forceADNMining()">Activar ADN Mining</button>
+                  <button class="btn-sm btn-outline" onclick="window.open('reportesadn.html','_blank')">Reportes</button>
+                </div>
+              </div>
+
+              <!-- Scraper -->
+              <div class="card" style="display:flex;flex-direction:column;gap:12px;">
+                <div style="display:flex;align-items:center;gap:14px;">
+                  <div style="width:42px;height:42px;border-radius:10px;background:rgba(245,158,11,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v3M11 14h.01"/></svg>
+                  </div>
+                  <div style="flex:1;">
+                    <div style="font-weight:700;color:var(--text-dark);font-size:0.95rem;">Ejecutar Scraper</div>
+                    <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-top:2px;">Busca y captura novedades regulatorias, noticias del sector y actualizaciones relevantes para que MIIA esté siempre informada.</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;">
+                  <button class="btn-sm btn-primary" style="flex:1;" onclick="forceScraperRun()">Activar Scraper</button>
+                  <button class="btn-sm btn-outline" onclick="window.open('reportesscrap.html','_blank')">Reportes</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div><!-- end trainTabContent -->
+      </div>
+
+      <div id="cerebroStatus" style="margin-top:20px;"></div>
     </div><!-- end admin-section-entrenamiento -->
 
-    <!-- ═══ SECTION: CONFIGURACION ═══ -->
-    <div id="admin-section-configuracion" class="page-section section-hidden" style="padding:28px 24px 60px;">
+    <!-- ═══ SECTION: CONEXIONES ═══ -->
+    <div id="admin-section-conexiones" class="page-section section-hidden" style="padding:28px 24px 60px; max-width:1400px;">
       <div style="margin-bottom:28px;">
         <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin-bottom:6px;display:flex;align-items:center;gap:10px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
@@ -366,19 +601,53 @@
       </div>
     </div><!-- end admin-section-configuracion -->
 
+<!-- ═══ QR MODAL ═══ -->
+<div id="qrModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;z-index:300;backdrop-filter:blur(4px);" onclick="if(event.target===this)document.getElementById('qrModal').classList.add('hidden')" class="hidden">
+  <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:24px;padding:36px;max-width:440px;width:90%;text-align:center;">
+    <h3 style="color:var(--text-dark);margin-bottom:16px;">Conectar WhatsApp</h3>
+    <div style="display:flex;border:1px solid var(--border-glass);border-radius:8px;margin-bottom:20px;overflow:hidden;">
+      <button id="adminWaTabQR" onclick="adminSwitchWaTab('qr')" style="flex:1;padding:9px;border:none;cursor:pointer;background:var(--primary);color:white;font-weight:600;font-size:0.85rem;">📷 Escanear QR</button>
+      <button id="adminWaTabCode" onclick="adminSwitchWaTab('code')" style="flex:1;padding:9px;border:none;cursor:pointer;background:transparent;color:var(--text-muted);font-weight:600;font-size:0.85rem;">🔢 Código (móvil)</button>
+    </div>
+    <div id="adminWaPanelQR">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px;">Abrí WhatsApp → Dispositivos vinculados → Vincular dispositivo → escaneá</p>
+      <div id="adminQrCode"><p style="color:var(--text-muted);">Generando QR...</p></div>
+    </div>
+    <div id="adminWaPanelCode" style="display:none;">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:14px;">Ingresá tu número en formato internacional (sin + ni espacios).<br>En WhatsApp: Dispositivos vinculados → Vincular con número de teléfono → ingresá el código.</p>
+      <div style="display:flex;gap:8px;margin-bottom:10px;">
+        <input id="adminPairingPhone" type="tel" placeholder="ej: 5491112345678" style="flex:1;padding:10px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;color:var(--text-dark);font-size:0.9rem;outline:none;">
+        <button onclick="adminRequestPairingCode()" style="padding:10px 14px;background:var(--gradient-main);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">Generar</button>
+      </div>
+      <div id="adminPairingCodeDisplay" style="display:none;text-align:center;padding:18px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:12px;">
+        <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:6px;">Tu código (válido ~60s):</p>
+        <div id="adminPairingCodeValue" style="font-size:2.2rem;font-weight:800;letter-spacing:8px;color:#6366f1;font-family:monospace;"></div>
+      </div>
+      <div id="adminPairingError" style="display:none;color:#f87171;font-size:0.82rem;text-align:center;margin-top:8px;"></div>
+    </div>
+    <button class="btn-sm btn-outline" style="margin-top:18px;width:100%;" onclick="document.getElementById('qrModal').classList.add('hidden')">Cerrar</button>
+  </div>
+</div>
+
 <!-- ═══ EDIT MODAL ═══ -->
 <div class="modal-overlay" id="editModal" onclick="if(event.target===this)closeEditModal()">
   <div class="modal">
     <h3 id="editModalTitle">Editar usuario</h3>
     <form id="editForm" onsubmit="submitEditForm(event)">
-      <div class="form-group"><label>Plan</label>
-        <select id="editPlan"><option value="trial">Trial</option><option value="monthly">Mensual - $12</option><option value="quarterly">Trimestral - $30</option><option value="semestral">Semestral - $55</option><option value="annual">Anual - $75</option></select>
+      <div class="form-group"><label>Nombre</label><input type="text" id="editName" placeholder="Nombre del cliente"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group"><label>Plan</label>
+          <select id="editPlan"><option value="trial">Trial</option><option value="monthly">Mensual - $12</option><option value="quarterly">Trimestral - $30</option><option value="semestral">Semestral - $55</option><option value="annual">Anual - $75</option></select>
+        </div>
+        <div class="form-group"><label>Estado de pago</label>
+          <select id="editPaymentStatus"><option value="trial">Trial</option><option value="active">Activo</option><option value="pending_payment">Pago pendiente</option><option value="expired">Expirado</option></select>
+        </div>
       </div>
-      <div class="form-group"><label>Limite de agentes</label><input type="number" id="editAgentsLimit" min="1" max="100"></div>
-      <div class="form-group"><label>Descuento (%)</label><input type="number" id="editDiscount" min="0" max="100"></div>
-      <div class="form-group"><label>Estado de pago</label>
-        <select id="editPaymentStatus"><option value="trial">Trial</option><option value="active">Activo</option><option value="pending_payment">Pago pendiente</option><option value="expired">Expirado</option></select>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group"><label>Limite de agentes</label><input type="number" id="editAgentsLimit" min="1" max="100"></div>
+        <div class="form-group"><label>Descuento (%)</label><input type="number" id="editDiscount" min="0" max="100"></div>
       </div>
+      <div class="form-group"><label>Notas internas</label><textarea id="editNotes" rows="2" style="width:100%;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.88rem;background:rgba(255,255,255,0.05);color:var(--text-body);font-family:inherit;resize:vertical;" placeholder="Notas visibles solo para admin..."></textarea></div>
       <div class="modal-actions">
         <button type="submit" class="btn-sm btn-primary">Guardar</button>
         <button type="button" class="btn-sm btn-outline" onclick="closeEditModal()">Cancelar</button>
@@ -451,13 +720,11 @@
     const isAdmin = await checkIsAdmin(token);
     if (!isAdmin) { window.location.href = 'owner-dashboard.html'; return; }
     document.getElementById('adminEmail').textContent = user.email;
-    // Update admin avatar initials
     const adminAv = document.getElementById('adminAvatar');
-    if (adminAv && user.email) {
-      adminAv.textContent = user.email.charAt(0).toUpperCase();
-    }
+    if (adminAv && user.email) adminAv.textContent = user.email.charAt(0).toUpperCase();
     currentIdToken = token;
     loadAll();
+    initTraining(user.uid);
   });
 
   function switchTab(btn, id) {
@@ -472,6 +739,25 @@
     loadTenants();
     loadCerebroStatus();
     loadServerInfo();
+    checkAdminWaStatus();
+  }
+
+  async function checkAdminWaStatus() {
+    try {
+      const user = firebase.auth().currentUser;
+      if (!user) return;
+      const res = await fetch(`${BACKEND_URL}/api/status?uid=${user.uid}`);
+      const data = await res.json();
+      const dot = document.getElementById('adminStatusDot');
+      const label = document.getElementById('adminStatusLabel');
+      if (data.connected) {
+        if (dot) { dot.className = 'status-dot green pulse'; }
+        if (label) label.textContent = 'WhatsApp activo';
+      } else {
+        if (dot) { dot.className = 'status-dot red'; }
+        if (label) label.textContent = 'WhatsApp desconectado';
+      }
+    } catch (_) {}
   }
 
   // ═══ USERS ═══
@@ -490,17 +776,20 @@
     const statusBadge = s => s === 'active' ? 'badge-green' : s === 'pending_payment' ? 'badge-red' : 'badge-yellow';
     const tbody = document.getElementById('usersTableBody');
     if (list.length === 0) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted);">No hay usuarios</td></tr>'; return; }
+    const fmtDate = ts => ts?.seconds ? new Date(ts.seconds*1000).toLocaleDateString('es',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—';
     tbody.innerHTML = list.map(u => `<tr>
       <td><div class="user-cell"><div class="user-avatar">${(u.name||'?').charAt(0).toUpperCase()}</div><div><div class="user-name">${esc(u.name||'Sin nombre')}</div><div class="user-email">${esc(u.email)}</div></div></div></td>
-      <td><span class="badge badge-blue">${u.role||'admin'}</span></td>
+      <td style="font-size:0.75rem;color:var(--text-muted);font-family:monospace;">${(u.uid||'').substring(0,12)}…</td>
+      <td><span class="badge badge-blue">${u.role||'owner'}</span></td>
       <td><span class="badge badge-${u.plan==='trial'?'trial':'pro'}">${planNames[u.plan]||u.plan||'trial'}</span></td>
-      <td>${u.payment_status==='active' ? '<span class="badge badge-active">Activo</span>' : u.payment_status==='pending_payment' ? '<span class="badge badge-pending">Pendiente</span>' : '<span class="badge badge-trial">Trial</span>'}</td>
+      <td>${u.payment_status==='active' ? '<span class="badge badge-active">Activo</span>' : u.payment_status==='pending_payment' ? '<span class="badge badge-pending">Pendiente</span>' : u.payment_status==='expired' ? '<span class="badge badge-red">Expirado</span>' : '<span class="badge badge-trial">Trial</span>'}</td>
       <td>${u.agents_limit||1}</td>
-      <td>${u.role === 'admin' ? '—' : (u.gemini_api_key ? '✅' : '❌')}${u.imported_backup ? ' <span class="badge badge-red" title="Importó backup de: '+(u.import_source_email||'?')+'&#10;Alerta: '+(u.import_alert_level||'?')+'">IMPORT</span>' : ''}</td>
+      <td>${u.role === 'admin' ? '—' : (u.gemini_api_key ? '✅' : '❌')}${u.imported_backup ? ' <span class="badge badge-red" title="Import">IMPORT</span>' : ''}</td>
       <td>${u.discount_percent||0}%</td>
+      <td style="font-size:0.8rem;">${fmtDate(u.createdAt)}</td>
       <td>
         <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
-        <button class="btn-sm-inline" onclick="window.open('owner-dashboard.html?adminView=1&impersonateUid=${u.uid}','_blank')" title="Ver como usuario" style="margin-left:4px;"><svg style="width:14px;height:14px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+        <button class="btn-sm-inline" onclick="window.open('owner-dashboard.html?adminView=1&impersonateUid=${u.uid}','_blank')" title="Ver como usuario" style="margin-left:4px;"><svg style="width:13px;height:13px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
       </td>
     </tr>`).join('');
   }
@@ -520,9 +809,17 @@
 
   function updateDashboard() {
     const clients = users.filter(u => u.role !== 'admin');
-    document.getElementById('statTotal').textContent = clients.length;
-    document.getElementById('statActive').textContent = clients.filter(u => u.payment_status === 'active').length;
-    document.getElementById('statTrial').textContent = clients.filter(u => !u.plan || u.plan === 'trial').length;
+    const total = clients.length;
+    const active = clients.filter(u => u.payment_status === 'active').length;
+    const trial = clients.filter(u => !u.plan || u.plan === 'trial').length;
+    const pending = clients.filter(u => u.payment_status === 'pending_payment').length;
+    const noKey = clients.filter(u => !u.gemini_api_key).length;
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statActive').textContent = active;
+    document.getElementById('statTrial').textContent = trial;
+    // Clientes section stats
+    const s2 = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+    s2('statTotal2',total); s2('statActive2',active); s2('statTrial2',trial); s2('statPending2',pending); s2('statNoKey2',noKey);
 
     const planPrices = { monthly:12, quarterly:10, semestral:9.17, annual:6.25 };
     let mrr = 0;
@@ -548,8 +845,11 @@
 
     // Plan breakdown
     const planNames = { trial:'Trial', monthly:'Mensual', quarterly:'Trimestral', semestral:'Semestral', annual:'Anual' };
-    document.getElementById('planBreakdown').innerHTML = Object.entries(planCounts)
+    const breakdownHtml = Object.entries(planCounts)
       .map(([k,v]) => `<div class="tenant-card"><span>${planNames[k]||k}</span><span class="badge badge-blue">${v} usuarios</span></div>`).join('');
+    document.getElementById('planBreakdown').innerHTML = breakdownHtml;
+    const res2 = document.getElementById('planBreakdownResumen');
+    if (res2) res2.innerHTML = breakdownHtml || '<p style="color:var(--text-muted);font-size:0.88rem;">Sin datos</p>';
 
     // Alerts
     const alerts = [];
@@ -567,22 +867,29 @@
     const u = users.find(x => x.uid === uid);
     if (!u) { showToast('Error: recarga la página e intenta de nuevo.', 'error'); return; }
     document.getElementById('editModalTitle').textContent = `Editar: ${u.name || u.email || uid}`;
+    document.getElementById('editName').value = u.name || '';
     document.getElementById('editPlan').value = u.plan || 'trial';
     document.getElementById('editAgentsLimit').value = u.agents_limit || 1;
     document.getElementById('editDiscount').value = u.discount_percent || 0;
     document.getElementById('editPaymentStatus').value = u.payment_status || 'trial';
+    document.getElementById('editNotes').value = u.admin_notes || '';
     document.getElementById('editModal').classList.add('active');
   }
   function closeEditModal() { document.getElementById('editModal').classList.remove('active'); currentEditUid = null; }
 
   async function submitEditForm(e) {
     e.preventDefault();
-    await dbFs.collection('users').doc(currentEditUid).update({
+    const updates = {
       plan: document.getElementById('editPlan').value,
       agents_limit: parseInt(document.getElementById('editAgentsLimit').value),
       discount_percent: parseInt(document.getElementById('editDiscount').value),
       payment_status: document.getElementById('editPaymentStatus').value
-    });
+    };
+    const name = document.getElementById('editName').value.trim();
+    if (name) updates.name = name;
+    const notes = document.getElementById('editNotes').value.trim();
+    if (notes) updates.admin_notes = notes;
+    await dbFs.collection('users').doc(currentEditUid).update(updates);
     closeEditModal();
     loadUsers();
   }
@@ -736,6 +1043,429 @@
     if (confirm('Cerrar sesion?')) { auth.signOut(); window.location.href = 'login.html'; }
   }
 
+  // ════════════════════════════════════════════
+  // ═══ TRAINING SECTION JS ════════════════════
+  // ════════════════════════════════════════════
+
+  let adminTrainingUid = null; // set after auth
+  let adminExpertSessionMessages = [];
+  let adminSessionSaved = true;
+  let adminSessions = [];
+  let adminCurrentSessionDate = null;
+  let adminProducts = [];
+  let adminLeadKeywords = [];
+  let adminClientKeywords = [];
+  let adminWaConnected = false;
+
+  function switchTrainingTab(tabId, btn) {
+    document.querySelectorAll('#trainTabContent .train-panel').forEach(p => p.style.display = 'none');
+    document.querySelectorAll('#trainTabsNav .tab-btn').forEach(b => b.classList.remove('active'));
+    const panel = document.getElementById(tabId);
+    if (panel) panel.style.display = '';
+    if (btn) btn.classList.add('active');
+  }
+
+  function initTraining(uid) {
+    adminTrainingUid = uid;
+    checkAdminWaStatus();
+    adminLoadProducts();
+    adminLoadContactRules();
+    adminLoadSessions();
+    adminLoadHumanizerPref();
+  }
+
+  // ─── WhatsApp ─────────────────────────────
+  async function adminToggleWhatsApp() {
+    if (adminWaConnected) {
+      if (!confirm('Desvincular WhatsApp?')) return;
+      const token = await firebase.auth().currentUser.getIdToken();
+      await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/logout`, { method:'POST', headers:{ Authorization:'Bearer '+token } });
+      adminWaConnected = false;
+      adminUpdateWaBanner();
+    } else {
+      document.getElementById('qrModal').classList.remove('hidden');
+      adminConnectWhatsApp();
+    }
+  }
+
+  async function adminConnectWhatsApp() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+    const userDoc = await dbFs.collection('users').doc(user.uid).get();
+    const geminiApiKey = userDoc.exists ? (userDoc.data().gemini_api_key || '') : '';
+    const initRes = await fetch(`${BACKEND_URL}/api/tenant/init`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ uid: user.uid, geminiApiKey }) });
+    if (!initRes.ok) { alert('Error al iniciar WhatsApp'); document.getElementById('qrModal').classList.add('hidden'); return; }
+
+    let pollCount = 0;
+    document.getElementById('adminQrCode').innerHTML = `<div style="text-align:center;padding:30px;"><p id="adminQrCountdown" style="color:var(--text-muted);font-size:0.9rem;">Iniciando WhatsApp...</p></div>`;
+    const poll = setInterval(async () => {
+      pollCount++;
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${user.uid}/qr`);
+        const data = await res.json();
+        if (data.phase === 'authenticated_loading') {
+          document.getElementById('adminQrCode').innerHTML = `<div style="text-align:center;padding:30px;"><p style="color:#34D399;">Sesión autenticada — cargando...</p></div>`;
+        }
+        if (data.qrCode) {
+          document.getElementById('adminQrCode').innerHTML = `<img src="${data.qrCode}" alt="QR" style="max-width:280px;margin:0 auto;display:block;">`;
+        }
+        if (data.isReady) {
+          clearInterval(poll);
+          adminWaConnected = true;
+          adminUpdateWaBanner();
+          document.getElementById('qrModal').classList.add('hidden');
+        }
+      } catch (e) { console.error('[QR poll]', e.message); }
+      if (pollCount > 180) { clearInterval(poll); }
+    }, 1000);
+  }
+
+  function adminUpdateWaBanner() {
+    const banner = document.getElementById('adminWaBanner');
+    const text = document.getElementById('adminWaStatusText');
+    const btn = document.getElementById('adminWaActionBtn');
+    if (!banner) return;
+    if (adminWaConnected) {
+      banner.style.background = 'rgba(52,211,153,0.1)';
+      banner.style.color = '#34D399';
+      banner.style.borderColor = 'rgba(52,211,153,0.2)';
+      if (text) text.textContent = 'WhatsApp conectado';
+      if (btn) btn.textContent = 'Desvincular';
+    } else {
+      banner.style.background = 'rgba(239,68,68,0.08)';
+      banner.style.color = '#f87171';
+      banner.style.borderColor = 'rgba(239,68,68,0.15)';
+      if (text) text.textContent = 'WhatsApp no conectado';
+      if (btn) btn.textContent = 'Conectar';
+    }
+    const dot = document.getElementById('adminStatusDot');
+    const label = document.getElementById('adminStatusLabel');
+    if (dot) dot.className = adminWaConnected ? 'status-dot green pulse' : 'status-dot red';
+    if (label) label.textContent = adminWaConnected ? 'WhatsApp activo' : 'WhatsApp desconectado';
+  }
+
+  // Pairing code
+  function adminSwitchWaTab(tab) {
+    const isQR = tab === 'qr';
+    document.getElementById('adminWaPanelQR').style.display = isQR ? '' : 'none';
+    document.getElementById('adminWaPanelCode').style.display = isQR ? 'none' : '';
+    document.getElementById('adminWaTabQR').style.cssText = isQR ? 'flex:1;padding:9px;border:none;cursor:pointer;background:var(--primary);color:white;font-weight:600;font-size:0.85rem;' : 'flex:1;padding:9px;border:none;cursor:pointer;background:transparent;color:var(--text-muted);font-weight:600;font-size:0.85rem;';
+    document.getElementById('adminWaTabCode').style.cssText = isQR ? 'flex:1;padding:9px;border:none;cursor:pointer;background:transparent;color:var(--text-muted);font-weight:600;font-size:0.85rem;' : 'flex:1;padding:9px;border:none;cursor:pointer;background:var(--primary);color:white;font-weight:600;font-size:0.85rem;';
+  }
+
+  async function adminRequestPairingCode() {
+    const phone = document.getElementById('adminPairingPhone').value.replace(/\D/g, '');
+    if (!phone || phone.length < 10) { document.getElementById('adminPairingError').style.display = ''; document.getElementById('adminPairingError').textContent = 'Ingresá un número válido'; return; }
+    document.getElementById('adminPairingError').style.display = 'none';
+    document.getElementById('adminPairingCodeDisplay').style.display = 'none';
+    try {
+      await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/qr`);
+      await new Promise(r => setTimeout(r, 2000));
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/request-pairing-code`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ phone }) });
+      const data = await res.json();
+      if (data.code) {
+        document.getElementById('adminPairingCodeDisplay').style.display = '';
+        document.getElementById('adminPairingCodeValue').textContent = data.code;
+      } else {
+        document.getElementById('adminPairingError').style.display = '';
+        document.getElementById('adminPairingError').textContent = data.error || 'Error generando código. Intentá con QR.';
+      }
+    } catch (e) {
+      document.getElementById('adminPairingError').style.display = '';
+      document.getElementById('adminPairingError').textContent = 'Error: ' + e.message;
+    }
+  }
+
+  // ─── Products ─────────────────────────────
+  const ADMIN_PRODUCT_EXAMPLES = [
+    { name:'Consulta inicial', description:'Primera consulta', price:'50', pricePromo:'45', stock:'Disponible' },
+    { name:'Plan premium', description:'Acceso completo', price:'29.99', pricePromo:'24.99', stock:'Ilimitado' },
+  ];
+
+  function adminRenderProductRow(product, index) {
+    const ex = ADMIN_PRODUCT_EXAMPLES[index % ADMIN_PRODUCT_EXAMPLES.length];
+    return `<tr data-idx="${index}">
+      <td><input type="text" value="${esc(product.name||'')}" placeholder="${ex.name}" data-field="name"></td>
+      <td><input type="text" value="${esc(product.description||'')}" placeholder="${ex.description}" data-field="description"></td>
+      <td><input type="text" value="${esc(product.price||'')}" placeholder="${ex.price}" data-field="price" style="width:90px;"></td>
+      <td><input type="text" value="${esc(product.pricePromo||'')}" placeholder="${ex.pricePromo}" data-field="pricePromo" style="width:90px;"></td>
+      <td><input type="text" value="${esc(product.stock||'')}" placeholder="${ex.stock}" data-field="stock" style="width:90px;"></td>
+      <td><div style="display:flex;gap:4px;">
+        <button class="row-btn save" onclick="adminSaveProduct(${index})" title="Guardar"><svg style="width:13px;height:13px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg></button>
+        <button class="row-btn add" onclick="adminAddProductRow(${index})" title="Agregar">+</button>
+        <button class="row-btn delete" onclick="adminDeleteProduct(${index})" title="Eliminar"><svg style="width:13px;height:13px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div></td>
+    </tr>`;
+  }
+
+  function adminRenderProducts() {
+    document.getElementById('adminProductsBody').innerHTML = adminProducts.map((p,i) => adminRenderProductRow(p,i)).join('');
+  }
+
+  async function adminLoadProducts() {
+    if (!adminTrainingUid) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/products`);
+      const data = await res.json();
+      adminProducts = data.length > 0 ? data : [{ name:'', description:'', price:'', pricePromo:'', stock:'', id:null }];
+    } catch (e) {
+      adminProducts = [{ name:'', description:'', price:'', pricePromo:'', stock:'', id:null }];
+    }
+    adminRenderProducts();
+  }
+
+  function adminGetRowData(index) {
+    const row = document.querySelector(`#adminProductsTable tr[data-idx="${index}"]`);
+    if (!row) return null;
+    const data = {};
+    row.querySelectorAll('input').forEach(inp => { data[inp.dataset.field] = inp.value; });
+    return data;
+  }
+
+  async function adminSaveProduct(index) {
+    const data = adminGetRowData(index);
+    if (!data || !data.name.trim()) { showToast('El nombre es obligatorio', 'warning'); return; }
+    const statusEl = document.getElementById('adminProductStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/product`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(data) });
+      const result = await res.json();
+      if (result.success) { adminProducts[index] = { ...data, id: result.id }; statusEl.textContent = 'MIIA aprendió este producto'; setTimeout(() => statusEl.textContent='', 3000); }
+    } catch (e) { statusEl.textContent = 'Error al guardar'; }
+  }
+
+  function adminAddProductRow(afterIndex) {
+    const idx = afterIndex !== undefined ? afterIndex + 1 : adminProducts.length;
+    adminProducts.splice(idx, 0, { name:'', description:'', price:'', pricePromo:'', stock:'', id:null });
+    adminRenderProducts();
+  }
+
+  async function adminDeleteProduct(index) {
+    const p = adminProducts[index];
+    if (p.id && !confirm('Eliminar este producto? MIIA olvidará esta información.')) return;
+    if (p.id) await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/product/${p.id}`, { method:'DELETE' });
+    adminProducts.splice(index, 1);
+    if (!adminProducts.length) adminProducts.push({ name:'', description:'', price:'', pricePromo:'', stock:'', id:null });
+    adminRenderProducts();
+  }
+
+  // ─── Keywords ─────────────────────────────
+  const ADMIN_LEAD_EX = [{ keyword:'precio', context:'Pregunta de precio' },{ keyword:'cuanto cuesta', context:'Consulta directa' }];
+  const ADMIN_CLIENT_EX = [{ keyword:'mi cuenta', context:'Tiene cuenta activa' },{ keyword:'soporte', context:'Necesita ayuda' }];
+
+  function adminRenderKeywordRow(type, item, index, examples) {
+    const ex = examples[index % examples.length];
+    return `<tr>
+      <td><input type="text" value="${esc(item.keyword||'')}" placeholder="${ex.keyword}" data-type="${type}" data-idx="${index}" data-field="keyword"></td>
+      <td><input type="text" value="${esc(item.context||'')}" placeholder="${ex.context}" data-type="${type}" data-idx="${index}" data-field="context"></td>
+      <td><button class="row-btn delete" onclick="adminDeleteKeyword('${type}',${index})"><svg style="width:13px;height:13px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></td>
+    </tr>`;
+  }
+
+  function adminRenderKeywords() {
+    document.getElementById('adminLeadKeywordsBody').innerHTML = adminLeadKeywords.map((k,i) => adminRenderKeywordRow('lead',k,i,ADMIN_LEAD_EX)).join('');
+    document.getElementById('adminClientKeywordsBody').innerHTML = adminClientKeywords.map((k,i) => adminRenderKeywordRow('client',k,i,ADMIN_CLIENT_EX)).join('');
+  }
+
+  async function adminLoadContactRules() {
+    if (!adminTrainingUid) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/contact-rules`);
+      const data = await res.json();
+      adminLeadKeywords = (data.lead_keywords || []).map(k => ({ keyword:k, context:'' }));
+      adminClientKeywords = (data.client_keywords || []).map(k => ({ keyword:k, context:'' }));
+      if (!adminLeadKeywords.length) adminLeadKeywords = [{ keyword:'', context:'' }];
+      if (!adminClientKeywords.length) adminClientKeywords = [{ keyword:'', context:'' }];
+    } catch (e) {
+      adminLeadKeywords = [{ keyword:'', context:'' }];
+      adminClientKeywords = [{ keyword:'', context:'' }];
+    }
+    adminRenderKeywords();
+  }
+
+  function adminAddKeywordRow(type) {
+    const arr = type === 'lead' ? adminLeadKeywords : adminClientKeywords;
+    arr.push({ keyword:'', context:'' });
+    adminRenderKeywords();
+  }
+
+  function adminDeleteKeyword(type, index) {
+    const arr = type === 'lead' ? adminLeadKeywords : adminClientKeywords;
+    arr.splice(index, 1);
+    if (!arr.length) arr.push({ keyword:'', context:'' });
+    adminRenderKeywords();
+  }
+
+  async function adminSaveContactRules() {
+    document.querySelectorAll('input[data-type="lead"]').forEach(inp => { const idx=parseInt(inp.dataset.idx); if(adminLeadKeywords[idx]) adminLeadKeywords[idx][inp.dataset.field]=inp.value; });
+    document.querySelectorAll('input[data-type="client"]').forEach(inp => { const idx=parseInt(inp.dataset.idx); if(adminClientKeywords[idx]) adminClientKeywords[idx][inp.dataset.field]=inp.value; });
+    const statusEl = document.getElementById('adminRulesStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      const parse = arr => arr.filter(k=>k.keyword.trim()).flatMap(k=>k.keyword.split(',').map(kw=>kw.trim()).filter(x=>x));
+      await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/contact-rules`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ lead_keywords:parse(adminLeadKeywords), client_keywords:parse(adminClientKeywords) }) });
+      statusEl.textContent = 'Reglas guardadas';
+      setTimeout(() => statusEl.textContent='', 3000);
+    } catch (e) { statusEl.textContent = 'Error al guardar'; }
+  }
+
+  // ─── Expert Chat ──────────────────────────
+  async function adminLoadSessions() {
+    if (!adminTrainingUid) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/sessions`);
+      adminSessions = await res.json();
+      adminRenderSessions();
+    } catch (e) {}
+  }
+
+  function adminRenderSessions() {
+    const list = document.getElementById('adminSessionsList');
+    list.innerHTML = adminSessions.map(s => `
+      <div class="session-tag ${s.date===adminCurrentSessionDate?'active':''}" onclick="adminViewSession('${s.date}')">
+        <div><div class="tag-date">${s.date}</div><div style="font-size:0.78rem;">${esc(s.summary||s.date)}</div></div>
+        <div style="display:flex;gap:2px;">
+          <button style="background:none;border:none;cursor:pointer;font-size:0.75rem;padding:2px 4px;border-radius:4px;" title="Eliminar" onclick="event.stopPropagation();adminDeleteSession('${s.date}')">🗑</button>
+        </div>
+      </div>`).join('');
+  }
+
+  function adminStartNewSession() {
+    adminCurrentSessionDate = new Date().toISOString().split('T')[0];
+    adminExpertSessionMessages = [];
+    adminSessionSaved = false;
+    document.getElementById('adminExpertMessages').innerHTML = '<div class="message miia"><div class="message-bubble">Nueva sesión iniciada. Explicame lo que necesites sobre tu negocio.</div></div>';
+  }
+
+  function adminViewSession(date) {
+    const s = adminSessions.find(x => x.date === date);
+    if (!s) return;
+    adminCurrentSessionDate = date;
+    adminRenderSessions();
+    const msgs = document.getElementById('adminExpertMessages');
+    msgs.innerHTML = (s.messages||[]).map(m => `<div class="message ${m.role==='user'?'user':'miia'}"><div class="message-bubble">${esc(m.content).replace(/\n/g,'<br>')}</div></div>`).join('');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  async function adminSendExpertMessage() {
+    const input = document.getElementById('adminExpertInput');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+    adminAddChatMsg('adminExpertMessages', 'user', message);
+    adminExpertSessionMessages.push({ role:'user', content:message });
+    adminSessionSaved = false;
+    const isLearn = message.toUpperCase().startsWith('APRENDE:');
+    try {
+      if (isLearn) {
+        const res = await fetch(`${BACKEND_URL}/api/train`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: message.replace(/^APRENDE:/i,'').trim() }) });
+        const data = await res.json();
+        const reply = data.response || '✅ Guardado.';
+        adminAddChatMsg('adminExpertMessages','miia',reply);
+        adminExpertSessionMessages.push({ role:'assistant', content:reply });
+        if (data.saved) showToast('✅ Guardado en memoria permanente','success');
+      } else {
+        const history = adminExpertSessionMessages.slice(-20);
+        const res = await fetch(`${BACKEND_URL}/api/admin-chat`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message, history }) });
+        const data = await res.json();
+        const reply = data.response || 'Sin respuesta.';
+        adminAddChatMsg('adminExpertMessages','miia',reply);
+        adminExpertSessionMessages.push({ role:'assistant', content:reply });
+      }
+    } catch (e) { adminAddChatMsg('adminExpertMessages','miia','Error al procesar. Intentá de nuevo.'); }
+  }
+
+  async function adminSaveCurrentSession() {
+    if (!adminExpertSessionMessages.length) { showToast('No hay mensajes en la sesión', 'warning'); return; }
+    const statusEl = document.getElementById('adminSessionSaveStatus');
+    statusEl.textContent = 'Guardando...';
+    const trainingBlock = adminExpertSessionMessages.filter(m=>m.role==='user').map(m=>m.content).join('\n');
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/session`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ messages:adminExpertSessionMessages, trainingBlock }) });
+      const data = await res.json();
+      statusEl.textContent = `Sesión guardada: "${data.summary||'OK'}"`;
+      adminSessionSaved = true;
+      setTimeout(() => statusEl.textContent='', 4000);
+      adminLoadSessions();
+    } catch (e) { statusEl.textContent = 'Error al guardar'; }
+  }
+
+  async function adminDeleteSession(date) {
+    if (!confirm(`Eliminar sesión del ${date}?`)) return;
+    await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/session/${date}`, { method:'DELETE' });
+    adminSessions = adminSessions.filter(s => s.date !== date);
+    adminRenderSessions();
+  }
+
+  // ─── Test MIIA ────────────────────────────
+  async function adminSendTestMessage() {
+    const input = document.getElementById('adminTestInput');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+    adminAddChatMsg('adminTestMessages','user',message);
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/test`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message }) });
+      const data = await res.json();
+      adminAddChatMsg('adminTestMessages','miia', data.response || 'No pude responder. Entrenate a MIIA primero.');
+    } catch (e) { adminAddChatMsg('adminTestMessages','miia','Error de conexión.'); }
+  }
+
+  function adminResetTest() {
+    document.getElementById('adminTestMessages').innerHTML = '<div class="message miia"><div class="message-bubble">¡Hola! Bienvenido. ¿En qué puedo ayudarte hoy?</div></div>';
+  }
+
+  // ─── Docs upload ──────────────────────────
+  async function adminUploadTrainingDocs(event) {
+    const files = Array.from(event.target.files);
+    if (!files.length) return;
+    const statusEl = document.getElementById('adminDocUploadStatus');
+    statusEl.textContent = `Subiendo ${files.length} archivo(s)...`;
+    const fd = new FormData();
+    files.forEach(f => fd.append('files', f));
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/documents/upload`, { method:'POST', body:fd });
+      const data = await res.json();
+      statusEl.textContent = data.success ? `✅ ${files.length} archivo(s) subido(s). MIIA está aprendiendo.` : ('Error: ' + (data.error||'desconocido'));
+    } catch (e) { statusEl.textContent = 'Error: ' + e.message; }
+    event.target.value = '';
+  }
+
+  // ─── Humanizer ────────────────────────────
+  async function adminLoadHumanizerPref() {
+    if (!adminTrainingUid) return;
+    try {
+      const doc = await dbFs.collection('users').doc(adminTrainingUid).get();
+      const enabled = doc.data()?.humanizer_enabled !== false;
+      document.getElementById('adminHumanizerToggle').checked = enabled;
+      document.getElementById('adminHumanizerLabel').textContent = enabled ? 'Activado' : 'Desactivado';
+      const track = document.getElementById('adminHumanizerTrack');
+      if (track) track.style.background = enabled ? 'var(--primary)' : 'rgba(100,116,139,0.3)';
+    } catch (e) { document.getElementById('adminHumanizerLabel').textContent = 'Activado (por defecto)'; }
+  }
+
+  async function adminSaveHumanizerPref(enabled) {
+    if (!adminTrainingUid) return;
+    try {
+      await dbFs.collection('users').doc(adminTrainingUid).update({ humanizer_enabled: enabled });
+      document.getElementById('adminHumanizerLabel').textContent = enabled ? 'Activado' : 'Desactivado';
+      const track = document.getElementById('adminHumanizerTrack');
+      if (track) track.style.background = enabled ? 'var(--primary)' : 'rgba(100,116,139,0.3)';
+      showToast(enabled ? 'Humanizador activado' : 'Humanizador desactivado', enabled ? 'success' : 'info');
+    } catch (e) { showToast('Error al guardar', 'error'); }
+  }
+
+  // ─── Helpers ──────────────────────────────
+  function adminAddChatMsg(containerId, sender, text) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const div = document.createElement('div');
+    div.className = `message ${sender}`;
+    div.innerHTML = `<div class="message-bubble">${esc(text).replace(/\n/g,'<br>')}</div>`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
   function toSlug(email) { return (email||'').split('@')[0].replace(/[^a-z0-9]/gi,'-').toLowerCase(); }
   function esc(s) { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
 
@@ -768,7 +1498,7 @@
   // Restore section from hash
   window.addEventListener('DOMContentLoaded', function() {
     const hash = window.location.hash.replace('#', '');
-    const valid = ['resumen','clientes','contactos','entrenamiento','pagos','configuracion'];
+    const valid = ['resumen','clientes','contactos','entrenamiento','pagos','conexiones'];
     if (hash && valid.includes(hash)) {
       const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
       showAdminSection(hash, btn);
