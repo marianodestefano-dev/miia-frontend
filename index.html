@@ -102,15 +102,27 @@
     .nav-links a:hover { color: var(--text-white); }
     .btn-nav {
       padding: 8px 20px;
-      background: var(--text-white);
-      color: var(--bg-deep) !important;
-      -webkit-text-fill-color: var(--bg-deep) !important;
+      background: var(--gradient-main);
+      color: white !important;
+      -webkit-text-fill-color: white !important;
       border-radius: var(--radius-full);
       font-weight: 600 !important;
       font-size: 0.875rem !important;
-      transition: opacity 0.2s !important;
+      transition: opacity 0.2s, transform 0.2s !important;
     }
-    .btn-nav:hover { opacity: 0.9; }
+    .btn-nav:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-nav-ghost {
+      padding: 8px 20px;
+      background: transparent;
+      color: var(--text-secondary) !important;
+      -webkit-text-fill-color: var(--text-secondary) !important;
+      border-radius: var(--radius-full);
+      font-weight: 600 !important;
+      font-size: 0.875rem !important;
+      border: 1px solid rgba(255,255,255,0.1);
+      transition: all 0.2s !important;
+    }
+    .btn-nav-ghost:hover { color: var(--text-white) !important; -webkit-text-fill-color: var(--text-white) !important; border-color: rgba(255,255,255,0.25); }
     .nav-toggle {
       display: none;
       background: none;
@@ -869,7 +881,8 @@
       <li><a href="#how">Cómo funciona</a></li>
       <li><a href="#pricing">Precios</a></li>
       <li><a href="#faq">FAQ</a></li>
-      <li><a href="login.html" class="btn-nav">Empezar gratis</a></li>
+      <li><a href="login.html" class="btn-nav-ghost">Ingresar</a></li>
+      <li><a href="login.html?tab=register" class="btn-nav">Empezar gratis</a></li>
     </ul>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">
       <span></span><span></span><span></span>
