@@ -83,6 +83,9 @@
     .btn-danger:hover { background:var(--danger); color:white; }
     .btn-sm-inline { padding:4px 12px; border-radius:var(--radius-sm); font-size:0.82rem; font-weight:600; cursor:pointer; border:1px solid rgba(102,126,234,0.2); background:transparent; color:var(--primary); }
 
+    /* Generic card (used in Conexiones) */
+    .card { background:var(--bg-panel); border:1px solid var(--border-glass); border-radius:var(--radius-lg); padding:22px; }
+
     /* Alert cards */
     .alert-card { padding:14px 20px; border-radius:var(--radius-md); margin-bottom:8px; font-size:0.88rem; display:flex; align-items:center; gap:10px; }
     .alert-card.warn { background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.18); color:#fbbf24; }
@@ -293,7 +296,7 @@
     </div><!-- end admin-section-entrenamiento -->
 
     <!-- ═══ SECTION: CONFIGURACION ═══ -->
-    <div id="admin-section-configuracion" class="page-section section-hidden">
+    <div id="admin-section-configuracion" class="page-section section-hidden" style="padding:28px 24px 60px;">
       <div style="margin-bottom:28px;">
         <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin-bottom:6px;display:flex;align-items:center;gap:10px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
