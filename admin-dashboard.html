@@ -814,6 +814,7 @@
     const trial = clients.filter(u => !u.plan || u.plan === 'trial').length;
     const pending = clients.filter(u => u.payment_status === 'pending_payment').length;
     const noKey = clients.filter(u => !u.gemini_api_key).length;
+    const noKeyPaid = users.filter(u => u.role !== 'admin' && !u.gemini_api_key && u.plan !== 'trial').length;
     document.getElementById('statTotal').textContent = total;
     document.getElementById('statActive').textContent = active;
     document.getElementById('statTrial').textContent = trial;
@@ -854,8 +855,7 @@
     // Alerts
     const alerts = [];
     if (pendingCount > 0) alerts.push({ type:'warn', text:`${pendingCount} usuario(s) con pago pendiente` });
-    const noKey = users.filter(u => u.role !== 'admin' && !u.gemini_api_key && u.plan !== 'trial').length;
-    if (noKey > 0) alerts.push({ type:'danger', text:`${noKey} usuario(s) de pago sin API Key configurada` });
+    if (noKeyPaid > 0) alerts.push({ type:'danger', text:`${noKeyPaid} usuario(s) de pago sin API Key configurada` });
     document.getElementById('alertsList').innerHTML = alerts.length === 0
       ? '<p style="color:var(--text-muted);font-size:0.9rem;">Sin alertas</p>'
       : alerts.map(a => `<div class="alert-card ${a.type}"><span class="${a.type==='warn'?'alert-icon-warn':'dot-danger'}"></span><span>${a.text}</span></div>`).join('');
