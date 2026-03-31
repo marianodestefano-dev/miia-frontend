@@ -549,6 +549,10 @@ a:hover { color: var(--cyan); text-decoration: none; }
 .sidebar.collapsed .sidebar-profile { justify-content: center; }
 .sidebar.collapsed .collapse-btn { transform: rotate(180deg); }
 
+/* Default hidden for elements that only show on mobile */
+.sidebar-toggle { display: none; }
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 199; }
+
 .collapse-btn {
   background: none;
   border: none;
@@ -986,17 +990,98 @@ select option { background: var(--surface); color: var(--tx-bright); }
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 768px) {
+  /* Sidebar: off-canvas en móvil */
   .sidebar {
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
     transform: translateX(-100%);
-    width: 240px !important;
+    width: 260px !important;
+    z-index: 200;
     transition: transform .3s cubic-bezier(.4,0,.2,1);
+    box-shadow: 4px 0 32px rgba(0,0,0,.5);
   }
   .sidebar.mobile-open { transform: translateX(0); }
+  .sidebar.collapsed { transform: translateX(-100%); width: 260px !important; }
+
+  /* Botón hamburguesa visible */
+  .sidebar-toggle { display: flex !important; }
+
+  /* Overlay oscuro detrás del sidebar en móvil */
+  .sidebar-overlay { display: block !important; }
+
+  /* Main content ocupa todo el ancho */
   .main-content { margin-left: 0 !important; }
-  .container { padding: 0 16px 40px; }
+  .container, .view-container { padding: 16px 14px 60px; }
+
+  /* Ocultar collapse-btn en móvil (no tiene sentido) */
+  .collapse-btn { display: none !important; }
+
+  /* Grids → 1 columna */
   .stats { grid-template-columns: 1fr 1fr; gap: 10px; }
   .main-grid { grid-template-columns: 1fr; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr !important; }
+  .settings-grid { grid-template-columns: 1fr !important; }
+  .agents-grid { grid-template-columns: 1fr !important; }
+  .contacts-stats { grid-template-columns: 1fr 1fr !important; }
+
+  /* Tablas: scroll horizontal */
+  .table-wrap, .data-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 520px; }
+
+  /* Cards y secciones */
+  .card { padding: 16px; }
+  .section-card { padding: 16px; }
+  .modal-card { margin: 16px; padding: 24px 18px; max-width: calc(100vw - 32px) !important; }
+
+  /* Tabs: scroll horizontal en móvil */
+  .tabs, .t-tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; flex-wrap: nowrap; }
+  .tab-btn, .t-tab { white-space: nowrap; flex-shrink: 0; }
+
+  /* Botones en fila → apilados */
+  .btn-row { flex-direction: column; gap: 8px; }
+  .btn-row .btn-primary,
+  .btn-row .btn-ghost { width: 100%; }
+
+  /* Headers de vista */
+  .view-header, .page-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .view-header .btn-primary,
+  .page-header .btn-primary { width: 100%; text-align: center; }
+
+  /* Bento grid collapsa */
+  .bento-grid { grid-template-columns: 1fr !important; }
+  .bento-hero, .bento-md, .bento-sm, .bento-wide, .bento-full { grid-column: span 1 !important; }
+
+  /* Training tabs: solo iconos en móvil */
+  .training-tab-label { display: none; }
+  .training-tab-icon { margin-right: 0; }
+
+  /* Paywall grid */
+  .paywall-plans { grid-template-columns: 1fr !important; }
+
+  /* Pipeline bars */
+  .pipeline-row { flex-direction: column; gap: 4px; }
+
+  /* Chat bubbles */
+  .chat-messages { padding: 12px; }
+
+  /* Page footer */
+  .page-footer { padding: 16px; font-size: 0.75rem; }
 }
+
 @media (max-width: 480px) {
   .stats { grid-template-columns: 1fr; }
+  .contacts-stats { grid-template-columns: 1fr 1fr !important; }
+
+  /* Topbar si existe */
+  .topbar-nav .nav-label { display: none; }
+
+  /* Inputs y botones más grandes para touch */
+  input, select, textarea { font-size: 16px !important; } /* evita zoom en iOS */
+  .btn-primary, .btn-ghost { padding: 12px 18px; }
+
+  /* Modal full-width en pantallas muy chicas */
+  .modal-card { margin: 8px; padding: 20px 14px; }
+
+  /* Tabla sin min-width en pantalla muy chica */
+  table { min-width: 420px; }
 }

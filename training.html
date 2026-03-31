@@ -517,11 +517,46 @@
 
 <!-- ═══ QR MODAL ═══ -->
 <div id="qrModal" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
-  <div class="modal-card">
+  <div class="modal-card" style="max-width:420px;width:100%">
     <h3>Conectar WhatsApp</h3>
-    <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;">Escanea el codigo QR con tu WhatsApp (Dispositivos vinculados)</p>
-    <div id="qrCode"><p style="color:var(--text-muted);">Generando QR...</p></div>
-    <button class="btn-sm btn-outline" style="margin-top:16px;" onclick="document.getElementById('qrModal').classList.add('hidden')">Cerrar</button>
+
+    <!-- Tabs QR / Código -->
+    <div style="display:flex;gap:0;border:1px solid var(--border-color);border-radius:8px;margin-bottom:20px;overflow:hidden;">
+      <button id="waTabQR" onclick="switchWaTab('qr')" style="flex:1;padding:9px;font-size:0.85rem;border:none;cursor:pointer;background:var(--accent-primary);color:white;font-weight:600;transition:background .2s;">
+        📷 Escanear QR
+      </button>
+      <button id="waTabCode" onclick="switchWaTab('code')" style="flex:1;padding:9px;font-size:0.85rem;border:none;cursor:pointer;background:transparent;color:var(--text-muted);font-weight:600;transition:background .2s;">
+        🔢 Código (móvil)
+      </button>
+    </div>
+
+    <!-- Panel QR -->
+    <div id="waPanelQR">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px;text-align:center;">Abrí WhatsApp → Dispositivos vinculados → Vincular dispositivo → escaneá</p>
+      <div id="qrCode"><p style="color:var(--text-muted);text-align:center;">Generando QR...</p></div>
+    </div>
+
+    <!-- Panel Código -->
+    <div id="waPanelCode" style="display:none;">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px;text-align:center;">
+        Ingresá tu número de WhatsApp en formato internacional (sin + ni espacios).<br>
+        Luego en tu celular: WhatsApp → Dispositivos vinculados → Vincular con número de teléfono → ingresá el código de 8 dígitos.
+      </p>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input id="pairingPhone" type="tel" placeholder="ej: 5491112345678" style="flex:1;padding:10px 12px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;color:var(--text-primary);font-size:0.9rem;outline:none;">
+        <button onclick="requestPairingCode()" style="padding:10px 16px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">
+          Generar código
+        </button>
+      </div>
+      <div id="pairingCodeDisplay" style="display:none;text-align:center;padding:20px;background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.2);border-radius:12px;">
+        <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:8px;">Tu código de vinculación (válido ~60s):</p>
+        <div id="pairingCodeValue" style="font-size:2.2rem;font-weight:800;letter-spacing:8px;color:#6366f1;font-family:monospace;"></div>
+        <p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;">Ingresalo en WhatsApp → Dispositivos vinculados → Vincular con número de teléfono</p>
+      </div>
+      <div id="pairingError" style="display:none;color:#f87171;font-size:0.82rem;text-align:center;margin-top:8px;"></div>
+    </div>
+
+    <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="document.getElementById('qrModal').classList.add('hidden')">Cerrar</button>
   </div>
 </div>
 
@@ -670,6 +705,52 @@
     } else {
       document.getElementById('qrModal').classList.remove('hidden');
       connectWhatsApp();
+    }
+  }
+
+  function switchWaTab(tab) {
+    const isQR = tab === 'qr';
+    document.getElementById('waPanelQR').style.display = isQR ? '' : 'none';
+    document.getElementById('waPanelCode').style.display = isQR ? 'none' : '';
+    document.getElementById('waTabQR').style.background = isQR ? 'var(--accent-primary)' : 'transparent';
+    document.getElementById('waTabQR').style.color = isQR ? 'white' : 'var(--text-muted)';
+    document.getElementById('waTabCode').style.background = isQR ? 'transparent' : 'var(--accent-primary)';
+    document.getElementById('waTabCode').style.color = isQR ? 'var(--text-muted)' : 'white';
+  }
+
+  async function requestPairingCode() {
+    const phone = document.getElementById('pairingPhone').value.replace(/\D/g, '');
+    if (!phone || phone.length < 10) {
+      document.getElementById('pairingError').style.display = '';
+      document.getElementById('pairingError').textContent = 'Ingresá un número válido (ej: 5491112345678)';
+      return;
+    }
+    document.getElementById('pairingError').style.display = 'none';
+    document.getElementById('pairingCodeDisplay').style.display = 'none';
+    document.getElementById('pairingCodeValue').textContent = '...';
+
+    try {
+      // Asegurar que WhatsApp esté inicializado primero
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/qr`);
+      // Esperar 2s para que arranque si estaba apagado
+      await new Promise(r => setTimeout(r, 2000));
+
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/request-pairing-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone })
+      });
+      const data = await res.json();
+      if (data.code) {
+        document.getElementById('pairingCodeDisplay').style.display = '';
+        document.getElementById('pairingCodeValue').textContent = data.code;
+      } else {
+        document.getElementById('pairingError').style.display = '';
+        document.getElementById('pairingError').textContent = data.error || 'Error generando código. Intentá con QR.';
+      }
+    } catch (e) {
+      document.getElementById('pairingError').style.display = '';
+      document.getElementById('pairingError').textContent = 'Error de conexión: ' + e.message;
     }
   }
 
