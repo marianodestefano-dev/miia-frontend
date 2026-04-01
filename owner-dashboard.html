@@ -255,6 +255,9 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- Socket.IO para notificaciones en tiempo real -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
   <!-- Mobile toggle -->
@@ -875,6 +878,33 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // ═══ Socket.IO initialization ═══
+    let socket = null;
+    let currentUserUid = null;
+
+    function initSocket() {
+      if (socket) return; // Already initialized
+      socket = io(window.location.origin, { reconnection: true, reconnectionDelay: 1000 });
+
+      // Detectar desincronización de sesión WhatsApp
+      socket.on(`tenant_recovery_needed_${currentUserUid}`, (data) => {
+        showToast(`⚠️ ${data.message}`, 'warning');
+        // Recargar QR modal
+        setTimeout(() => checkWhatsAppStatus(), 500);
+      });
+
+      // Otros listeners para futuros usos
+      socket.on('whatsapp_ready', (data) => {
+        updateSidebarWaStatus(true);
+      });
+
+      socket.on('whatsapp_disconnected', (data) => {
+        updateSidebarWaStatus(false);
+      });
+
+      console.log('[Socket.IO] Conectado al servidor en tiempo real');
+    }
+
     let clientSlug = ''; // URL param ?u=slug
 
     // Helper: convert email to slug
@@ -947,6 +977,10 @@
       }
 
       currentUser = user;
+      currentUserUid = user.uid;
+
+      // Inicializar Socket.IO para notificaciones en tiempo real
+      initSocket();
 
       // Leer perfil de Firestore (si adminView, carga el usuario target)
       const targetUid = (adminView && impersonateUid) ? impersonateUid : user.uid;
