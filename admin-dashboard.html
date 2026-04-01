@@ -878,14 +878,21 @@
       const dot = document.getElementById('adminStatusDot');
       const label = document.getElementById('adminStatusLabel');
       if (data.connected) {
+        adminWaConnected = true;
         if (dot) { dot.className = 'status-dot green pulse'; }
         if (label) label.textContent = 'WhatsApp activo';
       } else {
+        adminWaConnected = false;
         if (dot) { dot.className = 'status-dot red'; }
         if (label) label.textContent = 'WhatsApp desconectado';
       }
+      // Sincronizar la card de conexiones con el estado real
+      adminUpdateWaBanner();
     } catch (_) {}
   }
+
+  // Refrescar estado de WhatsApp cada 10s (sidebar + card de conexiones)
+  setInterval(() => checkAdminWaStatus(), 10000);
 
   // ═══ USERS ═══
   async function loadUsers() {
