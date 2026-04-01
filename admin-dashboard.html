@@ -1169,11 +1169,11 @@
       document.getElementById('serverInfo').innerHTML = `
         <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;">
           <span style="color:var(--text-body);">WhatsApp</span>
-          <span style="font-weight:700;color:${waOk ? '#16a34a' : '#ef4444'}">${waOk ? '✅ Conectado' : '❌ Desconectado'}</span>
+          <span id="sysWaStatus" style="font-weight:700;color:${waOk ? '#16a34a' : '#ef4444'}">${waOk ? '✅ Conectado' : '❌ Desconectado'}</span>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;">
           <span style="color:var(--text-body);">Conversaciones en memoria</span>
-          <span style="font-weight:600;color:var(--text-dark);">${data.conversationCount || 0}</span>
+          <span id="sysConvCount" style="font-weight:600;color:var(--text-dark);">${data.conversationCount || 0}</span>
         </div>
       `;
       document.getElementById('envGemini').textContent = '✅';
@@ -1186,6 +1186,19 @@
       document.getElementById('serverInfo').innerHTML = '<p style="color:var(--danger);">No se pudo conectar al backend</p>';
     }
   }
+
+  // Refrescar estado de WhatsApp en Variables del Sistema cada 15s
+  setInterval(async () => {
+    try {
+      const res = await fetch(`${BACKEND_URL}/health`);
+      const data = await res.json();
+      const waOk = data.whatsapp === 'connected' || data.whatsapp === true || data.whatsapp === 'true';
+      const el = document.getElementById('sysWaStatus');
+      if (el) { el.style.color = waOk ? '#16a34a' : '#ef4444'; el.textContent = waOk ? '✅ Conectado' : '❌ Desconectado'; }
+      const conv = document.getElementById('sysConvCount');
+      if (conv) conv.textContent = data.conversationCount || 0;
+    } catch (_) {}
+  }, 15000);
 
   function handleLogout() {
     if (confirm('Cerrar sesion?')) { auth.signOut(); window.location.href = 'login.html'; }
