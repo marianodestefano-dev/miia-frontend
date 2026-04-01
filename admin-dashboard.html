@@ -248,12 +248,62 @@
       </div>
 
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:8px;">
-        <div class="card">
+        <div class="card" style="grid-column:span 2;">
           <h4 class="section-title" style="margin-bottom:12px;">Alertas</h4>
           <div id="alertsList"><p style="color:var(--text-muted);font-size:0.9rem;">Cargando...</p></div>
+
+          <!-- Estado de Servicios -->
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border-glass);">
+            <h5 style="font-size:0.92rem;font-weight:700;color:var(--text-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              Estado de Servicios
+            </h5>
+            <div id="servicesStatus" style="display:flex;flex-wrap:wrap;gap:8px;">
+              <a href="https://railway.com/project/9ee59327-edf5-4e33-b6ac-96670bc9a2fe" target="_blank" rel="noopener" id="svc-railway" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1" fill="currentColor"/><circle cx="6" cy="18" r="1" fill="currentColor"/></svg>
+                Railway
+                <span id="svc-dot-railway" class="dot green" style="width:8px;height:8px;"></span>
+              </a>
+              <a href="https://vercel.com/dashboard" target="_blank" rel="noopener" id="svc-vercel" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l10 18H2z"/></svg>
+                Vercel
+                <span id="svc-dot-vercel" class="dot green" style="width:8px;height:8px;"></span>
+              </a>
+              <a href="https://console.firebase.google.com/u/0/project/miia-app-8cbd0" target="_blank" rel="noopener" id="svc-firebase" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
+                Firebase
+                <span id="svc-dot-firebase" class="dot green" style="width:8px;height:8px;"></span>
+              </a>
+              <a href="https://github.com/marianodestefano-dev" target="_blank" rel="noopener" id="svc-github" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                GitHub
+                <span id="svc-dot-github" class="dot green" style="width:8px;height:8px;"></span>
+              </a>
+              <a href="https://vendors.paddle.com/" target="_blank" rel="noopener" id="svc-paddle" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+                Paddle
+                <span id="svc-dot-paddle" class="dot green" style="width:8px;height:8px;"></span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Asistente IA -->
+          <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border-glass);">
+            <h5 style="font-size:0.92rem;font-weight:700;color:var(--text-dark);margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 3.2L17 7.5l-2.5 2.8.3 3.7L12 12.5 9.2 14l.3-3.7L7 7.5l3.5-1.3z"/><path d="M5 19l1 2.5L8.5 22l-1.5 1.5.2 2.5L5 24.5 2.8 26l.2-2.5L1.5 22 4 21.5z" transform="scale(0.6) translate(2,2)"/></svg>
+              Asistente IA — Soporte Tecnico
+            </h5>
+            <div id="supportChatMessages" style="max-height:300px;overflow-y:auto;background:rgba(0,0,0,0.2);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:14px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;">
+              <div class="message miia"><div class="message-bubble">Hola, soy el asistente tecnico de MIIA. Preguntame sobre problemas con Railway, Firebase, WhatsApp, Gemini o cualquier servicio.</div></div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="supportChatInput" placeholder="Pregunta sobre un problema tecnico..." style="flex:1;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.88rem;background:rgba(255,255,255,0.04);color:var(--text-dark);" onkeydown="if(event.key==='Enter')sendSupportChat()">
+              <button onclick="sendSupportChat()" class="btn-sm btn-primary" style="border-radius:var(--radius-full);padding:10px 18px;">Enviar</button>
+            </div>
+          </div>
         </div>
         <div class="card">
-          <h4 class="section-title" style="margin-bottom:12px;">Distribución por plan</h4>
+          <h4 class="section-title" style="margin-bottom:12px;">Distribucion por plan</h4>
           <div id="planBreakdownResumen"></div>
         </div>
       </div>
@@ -636,6 +686,29 @@
           <div id="serverInfo" style="font-size:0.82rem;padding-top:10px;border-top:1px solid var(--border-glass);display:flex;flex-direction:column;gap:6px;">Cargando...</div>
         </div>
 
+        <!-- Super Admin — Migracion de Cuenta -->
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(167,139,250,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+            <div>
+              <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0 0 4px;">Super Admin</h3>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Migracion de credenciales de la cuenta de administrador.</p>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;">
+              <span style="font-size:0.82rem;color:var(--text-muted);">Email actual</span>
+              <span id="adminCurrentEmail" style="font-size:0.82rem;font-weight:600;color:var(--text-dark);">—</span>
+            </div>
+            <input type="email" id="migrateNewEmail" placeholder="Nuevo email del super admin" style="width:100%;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.88rem;background:rgba(255,255,255,0.05);color:var(--text-dark);">
+            <p style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;">Esto migrara las credenciales de Firebase Auth, Firestore, y todas las configuraciones al nuevo correo.</p>
+            <button onclick="migrateAdminEmail()" class="btn-sm btn-danger" style="width:100%;">Migrar cuenta</button>
+            <div id="migrateResult" style="display:none;font-size:0.82rem;padding:8px 12px;border-radius:8px;"></div>
+          </div>
+        </div>
+
       </div>
     </div><!-- end admin-section-configuracion -->
 
@@ -778,6 +851,13 @@
     loadCerebroStatus();
     loadServerInfo();
     checkAdminWaStatus();
+    checkServicesHealth();
+    // Set current email in migration card
+    const cu = firebase.auth().currentUser;
+    if (cu) {
+      const el = document.getElementById('adminCurrentEmail');
+      if (el) el.textContent = cu.email;
+    }
   }
 
   async function checkAdminWaStatus() {
@@ -1458,7 +1538,7 @@
         const history = adminExpertSessionMessages.slice(-20);
         const res = await fetch(`${BACKEND_URL}/api/admin-chat`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message, history }) });
         const data = await res.json();
-        const reply = data.response || 'Sin respuesta.';
+        const reply = data.reply || data.response || 'Sin respuesta.';
         adminAddChatMsg('adminExpertMessages','miia',reply);
         adminExpertSessionMessages.push({ role:'assistant', content:reply });
         if (data.autoSaved) showToast('🧠 MIIA guardó automáticamente: "' + data.autoSaved.substring(0,60) + (data.autoSaved.length>60?'...':'') + '"', 'success');
@@ -1655,6 +1735,115 @@
   firebase.auth().onAuthStateChanged(function(u) {
     if (u) adminLoadCalendarStatus();
   });
+
+  // ═══ SERVICES HEALTH CHECK ═══
+  async function checkServicesHealth() {
+    const railwayDot = document.getElementById('svc-dot-railway');
+    try {
+      const res = await fetch(`${BACKEND_URL}/health`, { signal: AbortSignal.timeout(8000) });
+      if (res.ok) {
+        if (railwayDot) { railwayDot.className = 'dot green'; railwayDot.style.width = '8px'; railwayDot.style.height = '8px'; }
+      } else {
+        throw new Error('not ok');
+      }
+    } catch (e) {
+      if (railwayDot) { railwayDot.className = 'dot red'; railwayDot.style.width = '8px'; railwayDot.style.height = '8px'; }
+      // Add danger alert
+      const alertsList = document.getElementById('alertsList');
+      if (alertsList) {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert-card danger';
+        alertDiv.innerHTML = '<span class="dot-danger"></span> Backend (Railway) no responde. Verificar estado del servicio.';
+        alertsList.prepend(alertDiv);
+      }
+    }
+    // Others assumed green (no ping available from frontend)
+  }
+
+  // ═══ SUPPORT CHAT (Gemini AI) ═══
+  let supportChatHistory = [];
+
+  async function sendSupportChat() {
+    const input = document.getElementById('supportChatInput');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+
+    // Add user message
+    adminAddChatMsg('supportChatMessages', 'user', message);
+    supportChatHistory.push({ role: 'user', content: message });
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/admin/support-chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + currentIdToken
+        },
+        body: JSON.stringify({ message, history: supportChatHistory })
+      });
+      if (!res.ok) throw new Error('Backend error');
+      const data = await res.json();
+      const reply = data.reply || data.response || 'Sin respuesta.';
+      adminAddChatMsg('supportChatMessages', 'miia', reply);
+      supportChatHistory.push({ role: 'assistant', content: reply });
+    } catch (e) {
+      adminAddChatMsg('supportChatMessages', 'miia', 'Backend no disponible. Verifica que Railway este activo.');
+    }
+  }
+
+  // ═══ ADMIN EMAIL MIGRATION ═══
+  async function migrateAdminEmail() {
+    const newEmail = document.getElementById('migrateNewEmail').value.trim();
+    if (!newEmail) { showToast('Ingresa un email nuevo', 'warning'); return; }
+
+    const resultDiv = document.getElementById('migrateResult');
+
+    const confirmed = confirm(
+      '⚠️ ATENCION: Estas por migrar la cuenta de Super Admin.\n\n' +
+      'Esto cambiara:\n' +
+      '- Firebase Auth (email de login)\n' +
+      '- Firestore (documentos y configuraciones)\n' +
+      '- Todas las referencias al email actual\n\n' +
+      'Nuevo email: ' + newEmail + '\n\n' +
+      '¿Estas seguro? Esta accion no se puede deshacer facilmente.'
+    );
+    if (!confirmed) return;
+
+    const doubleConfirm = confirm('¿Realmente seguro? Escribi OK mentalmente y confirma.');
+    if (!doubleConfirm) return;
+
+    resultDiv.style.display = 'block';
+    resultDiv.style.background = 'rgba(59,91,255,0.08)';
+    resultDiv.style.color = 'var(--text-body)';
+    resultDiv.textContent = 'Migrando...';
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/admin/migrate-email`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + currentIdToken
+        },
+        body: JSON.stringify({ newEmail })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        resultDiv.style.background = 'rgba(37,211,102,0.08)';
+        resultDiv.style.color = '#16a34a';
+        resultDiv.textContent = 'Migracion exitosa. Cerra sesion e ingresa con el nuevo email.';
+        showToast('Migracion completada', 'success');
+      } else {
+        resultDiv.style.background = 'rgba(239,68,68,0.08)';
+        resultDiv.style.color = '#f87171';
+        resultDiv.textContent = 'Error: ' + (data.error || 'Error desconocido');
+      }
+    } catch (e) {
+      resultDiv.style.background = 'rgba(239,68,68,0.08)';
+      resultDiv.style.color = '#f87171';
+      resultDiv.textContent = 'Error de conexion: ' + e.message;
+    }
+  }
 </script>
 
     <footer class="page-footer">
