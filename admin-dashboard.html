@@ -703,14 +703,15 @@
               <span id="adminCurrentEmail" style="font-size:0.82rem;font-weight:600;color:var(--text-dark);">—</span>
             </div>
             <input type="email" id="migrateNewEmail" placeholder="Nuevo email del super admin" style="width:100%;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.88rem;background:rgba(255,255,255,0.05);color:var(--text-dark);">
-            <p style="font-size:0.72rem;color:var(--text-muted);line-height:1.5;">Esto migrara Firebase Auth y Firestore. Despues de migrar, actualizá <code style="color:#A78BFA;">ADMIN_EMAILS</code> en Railway:</p>
             <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.6;padding:8px 12px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);border-radius:8px;margin-bottom:4px;">
-              <strong style="color:var(--text-dark);">Pasos post-migración:</strong><br>
-              1. Ir a <a href="https://railway.com/project/9ee59327-edf5-4e33-b6ac-96670bc9a2fe" target="_blank" style="color:#A78BFA;">Railway → miia-backend</a><br>
-              2. Click en <strong>Variables</strong><br>
-              3. Buscar <code style="color:#A78BFA;">ADMIN_EMAILS</code><br>
-              4. Cambiar el email viejo por el nuevo<br>
-              5. Railway redeployará automáticamente
+              <strong style="color:var(--text-dark);">¿Que se migra automaticamente?</strong><br>
+              ✅ Login en lobsterscrm.com (Firebase Auth)<br>
+              ✅ Base de datos (Firestore)<br>
+              ✅ Deteccion automatica de admin al reiniciar<br><br>
+              <strong style="color:var(--text-dark);">¿Que NO cambia?</strong><br>
+              Las plataformas externas (GitHub, Railway, Vercel, Paddle) usan sus propias cuentas separadas. No dependen de este email.<br><br>
+              <strong style="color:var(--text-dark);">Unico paso manual post-migracion:</strong><br>
+              Ir a <a href="https://railway.com/project/9ee59327-edf5-4e33-b6ac-96670bc9a2fe" target="_blank" style="color:#A78BFA;">Railway → Variables</a> → actualizar <code style="color:#A78BFA;">ADMIN_EMAILS</code> con el nuevo email.
             </div>
             <button onclick="migrateAdminEmail()" class="btn-sm btn-danger" style="width:100%;">Migrar cuenta</button>
             <div id="migrateResult" style="display:none;font-size:0.82rem;padding:8px 12px;border-radius:8px;"></div>
