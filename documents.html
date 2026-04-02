@@ -661,7 +661,7 @@
         formData.append('file', file);
         const token = await firebase.auth().currentUser.getIdToken();
 
-        const res = await fetch('https://miia-backend-production.up.railway.app/api/documents/upload', {
+        const res = await fetch(`https://miia-backend-production.up.railway.app/api/tenant/${currentUser.uid}/documents/upload`, {
           method: 'POST',
           headers: { 'Authorization': 'Bearer ' + token },
           body: formData
