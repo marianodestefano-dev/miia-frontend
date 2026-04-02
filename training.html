@@ -201,6 +201,15 @@
       padding: 16px 0 6px; border-bottom: 1px solid rgba(59,91,255,0.08); margin-bottom: 4px;
     }
 
+    /* ═══ DAY CHIPS (Schedule) ═══ */
+    .day-chip {
+      display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:999px;
+      font-size:0.85rem;font-weight:600;cursor:pointer;
+      border:1px solid rgba(59,91,255,0.15);background:var(--bg-card);color:var(--text-muted);transition:all .2s;
+    }
+    .day-chip:has(input:checked) { background:var(--primary);color:white;border-color:var(--primary); }
+    .day-chip input { display:none; }
+
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 768px) {
       #navbar { padding: 0 16px; }
@@ -306,6 +315,7 @@
     <button class="tab-btn" onclick="switchTab('docs')">Documentos</button>
     <button class="tab-btn" onclick="switchTab('test')">Testear MIIA</button>
     <button class="tab-btn" onclick="switchTab('cobros')">Cobros</button>
+    <button class="tab-btn" onclick="switchTab('schedule')" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Horarios</button>
     <button class="tab-btn" onclick="switchTab('config')" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> Configuración</button>
   </div>
 
@@ -477,7 +487,155 @@
       </div>
     </div>
 
-    <!-- ════ TAB 7: CONFIGURACIÓN ════ -->
+    <!-- ════ TAB 7: HORARIOS Y SEGUIMIENTO ════ -->
+    <div id="tab-schedule" class="tab-panel">
+      <h3 class="section-title">Horarios y Seguimiento de Leads</h3>
+      <p class="section-desc">Configurá cuándo MIIA responde, cómo hace seguimiento y cómo detecta la intención del lead.</p>
+
+      <div style="max-width:720px;display:flex;flex-direction:column;gap:24px;">
+
+        <!-- A) DISPONIBILIDAD -->
+        <div class="payment-card" style="display:flex;flex-direction:column;gap:14px;">
+          <h4 style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">🕐</span> Disponibilidad
+          </h4>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:8px;">Días activos</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;" id="scheduleDays">
+              <label class="day-chip"><input type="checkbox" value="1" checked> Lun</label>
+              <label class="day-chip"><input type="checkbox" value="2" checked> Mar</label>
+              <label class="day-chip"><input type="checkbox" value="3" checked> Mié</label>
+              <label class="day-chip"><input type="checkbox" value="4" checked> Jue</label>
+              <label class="day-chip"><input type="checkbox" value="5" checked> Vie</label>
+              <label class="day-chip"><input type="checkbox" value="6"> Sáb</label>
+              <label class="day-chip"><input type="checkbox" value="0"> Dom</label>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;">
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Hora inicio</label>
+              <input type="time" id="scheduleStart" value="09:00" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+            </div>
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Hora fin</label>
+              <input type="time" id="scheduleEnd" value="21:00" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+            </div>
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Zona horaria</label>
+              <select id="scheduleTZ" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+                <option value="America/Argentina/Buenos_Aires">Argentina (GMT-3)</option>
+                <option value="America/Bogota">Colombia (GMT-5)</option>
+                <option value="America/Mexico_City">México (GMT-6)</option>
+                <option value="America/Santiago">Chile (GMT-4)</option>
+                <option value="America/Lima">Perú (GMT-5)</option>
+                <option value="America/Caracas">Venezuela (GMT-4)</option>
+                <option value="Europe/Madrid">España (GMT+1/+2)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje fuera de horario</label>
+            <input type="text" id="scheduleOffMsg" value="Gracias por escribir. Nuestro horario de atención es de lunes a viernes de 9:00 a 21:00. Te responderemos a primera hora." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);">¿Responder fuera de horario?</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="scheduleAutoReply">
+              <span class="toggle-track"></span>
+            </label>
+            <span style="font-size:0.8rem;color:var(--text-muted);">Si activo, envía el mensaje automáticamente</span>
+          </div>
+        </div>
+
+        <!-- B) SEGUIMIENTO DE LEADS -->
+        <div class="payment-card" style="display:flex;flex-direction:column;gap:14px;">
+          <h4 style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">🔄</span> Seguimiento de Leads
+          </h4>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:end;">
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Seguimiento cada</label>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input type="number" id="followupDays" value="3" min="1" max="30" style="width:60px;padding:8px 10px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
+                <span style="font-size:0.88rem;color:var(--text-muted);">días sin respuesta</span>
+              </div>
+            </div>
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Máx. seguimientos</label>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input type="number" id="followupMax" value="3" min="1" max="10" style="width:60px;padding:8px 10px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
+                <span style="font-size:0.88rem;color:var(--text-muted);">intentos antes de parar</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje 1er seguimiento</label>
+            <input type="text" id="followupMsg1" value="Hola, ¿pudiste revisar la información que te envié? Quedo atento a cualquier consulta." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje último seguimiento</label>
+            <input type="text" id="followupMsgLast" value="Solo quería saber si seguís interesado. Si no es el momento, no hay problema. ¡Éxitos!" style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Después del último intento sin respuesta</label>
+            <select id="followupFinal" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+              <option value="archive">Archivar lead (no contactar más)</option>
+              <option value="notify">Solo notificar al vendedor</option>
+              <option value="retry30">Reintentar en 30 días</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- C) DETECCIÓN DE INTENCIÓN -->
+        <div class="payment-card" style="display:flex;flex-direction:column;gap:14px;">
+          <h4 style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">🎯</span> Detección de Intención
+          </h4>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Señales de INTERÉS (lead caliente)</label>
+            <textarea id="intentHot" rows="3" placeholder="Ej: me interesa, quiero cotización, cuánto cuesta..." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;font-family:inherit;">me interesa, quiero cotización, cuánto cuesta, necesito información, agendemos, demo, presupuesto, precio</textarea>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Separadas por coma. MIIA etiqueta como HOT y notifica al vendedor.</p>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Señales de NO interés (lead frío)</label>
+            <textarea id="intentCold" rows="3" placeholder="Ej: no me interesa, ahora no, ya tengo proveedor..." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;font-family:inherit;">no me interesa, ahora no, ya tengo, no necesito, dejame en paz, no gracias, otro momento</textarea>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Separadas por coma. MIIA respeta el silencio y no vuelve a contactar.</p>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Si el lead dice que NO le interesa</label>
+            <select id="intentColdAction" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+              <option value="silence">Respetar silencio total (no contactar más)</option>
+              <option value="retry60">Reintentar en 60 días con mensaje suave</option>
+              <option value="notify_only">Solo notificar al vendedor, MIIA no responde</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- D) MODO SILENCIO -->
+        <div class="payment-card" style="display:flex;flex-direction:column;gap:14px;">
+          <h4 style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">🤫</span> Modo Silencio
+          </h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Cuando un lead o el vendedor dice "Chau MIIA", MIIA se retira de ese chat. No responde más hasta que el lead envíe un nuevo mensaje.</p>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);">Vendedor puede reactivar desde el dashboard</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="silenceBreak" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- GUARDAR -->
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn-sm btn-primary" onclick="saveScheduleConfig()" style="padding:10px 28px;font-size:0.95rem;">Guardar configuración</button>
+          <span id="scheduleStatus" style="font-size:0.85rem;color:var(--accent);font-weight:600;"></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════ TAB 8: CONFIGURACIÓN ════ -->
     <div id="tab-config" class="tab-panel">
       <h3 class="section-title">Configuración de MIIA</h3>
       <p class="section-desc">Ajustes avanzados del comportamiento de tu asistente.</p>
@@ -1485,6 +1643,83 @@
       showToast('Error al guardar preferencia', 'error');
     }
   }
+
+  // ═══ SCHEDULE CONFIG ═══
+  async function loadScheduleConfig() {
+    try {
+      const doc = await db.collection('users').doc(currentUser.uid).collection('settings').doc('schedule').get();
+      if (!doc.exists) return;
+      const c = doc.data();
+      // Días
+      if (c.activeDays) {
+        document.querySelectorAll('#scheduleDays input').forEach(cb => {
+          cb.checked = c.activeDays.includes(parseInt(cb.value));
+        });
+      }
+      if (c.startTime) document.getElementById('scheduleStart').value = c.startTime;
+      if (c.endTime) document.getElementById('scheduleEnd').value = c.endTime;
+      if (c.timezone) document.getElementById('scheduleTZ').value = c.timezone;
+      if (c.offHoursMessage) document.getElementById('scheduleOffMsg').value = c.offHoursMessage;
+      if (c.autoReplyOffHours) document.getElementById('scheduleAutoReply').checked = true;
+      // Seguimiento
+      if (c.followupDays) document.getElementById('followupDays').value = c.followupDays;
+      if (c.followupMax) document.getElementById('followupMax').value = c.followupMax;
+      if (c.followupMsg1) document.getElementById('followupMsg1').value = c.followupMsg1;
+      if (c.followupMsgLast) document.getElementById('followupMsgLast').value = c.followupMsgLast;
+      if (c.followupFinalAction) document.getElementById('followupFinal').value = c.followupFinalAction;
+      // Intención
+      if (c.hotKeywords) document.getElementById('intentHot').value = c.hotKeywords;
+      if (c.coldKeywords) document.getElementById('intentCold').value = c.coldKeywords;
+      if (c.coldAction) document.getElementById('intentColdAction').value = c.coldAction;
+      // Silencio
+      if (c.silenceBreakFromDashboard !== undefined) document.getElementById('silenceBreak').checked = c.silenceBreakFromDashboard;
+    } catch(e) {
+      console.error('Error loading schedule config:', e);
+    }
+  }
+
+  async function saveScheduleConfig() {
+    const statusEl = document.getElementById('scheduleStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      const activeDays = [];
+      document.querySelectorAll('#scheduleDays input:checked').forEach(cb => activeDays.push(parseInt(cb.value)));
+
+      const config = {
+        activeDays,
+        startTime: document.getElementById('scheduleStart').value,
+        endTime: document.getElementById('scheduleEnd').value,
+        timezone: document.getElementById('scheduleTZ').value,
+        offHoursMessage: document.getElementById('scheduleOffMsg').value,
+        autoReplyOffHours: document.getElementById('scheduleAutoReply').checked,
+        followupDays: parseInt(document.getElementById('followupDays').value) || 3,
+        followupMax: parseInt(document.getElementById('followupMax').value) || 3,
+        followupMsg1: document.getElementById('followupMsg1').value,
+        followupMsgLast: document.getElementById('followupMsgLast').value,
+        followupFinalAction: document.getElementById('followupFinal').value,
+        hotKeywords: document.getElementById('intentHot').value,
+        coldKeywords: document.getElementById('intentCold').value,
+        coldAction: document.getElementById('intentColdAction').value,
+        silenceBreakFromDashboard: document.getElementById('silenceBreak').checked,
+        updatedAt: new Date().toISOString()
+      };
+
+      await db.collection('users').doc(currentUser.uid).collection('settings').doc('schedule').set(config, { merge: true });
+      statusEl.textContent = '✅ Guardado';
+      showToast('Configuración de horarios guardada', 'success');
+      setTimeout(() => statusEl.textContent = '', 3000);
+    } catch(e) {
+      statusEl.textContent = '❌ Error';
+      showToast('Error al guardar: ' + e.message, 'error');
+    }
+  }
+
+  // Cargar schedule cuando se abre la tab
+  const origSwitchTab = switchTab;
+  switchTab = function(tabId) {
+    origSwitchTab(tabId);
+    if (tabId === 'schedule') loadScheduleConfig();
+  };
 </script>
 <script src="toast.js"></script>
 <script>
