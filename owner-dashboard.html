@@ -500,12 +500,20 @@
             <span class="account-value" id="accountExpiry">-</span>
           </div>
           <div class="account-item">
+            <span class="account-label">Fecha de alta</span>
+            <span class="account-value" id="accountRegistered">-</span>
+          </div>
+          <div class="account-item">
             <span class="account-label">WhatsApp</span>
             <span class="account-value" id="accountWhatsapp">No conectado</span>
           </div>
           <div class="account-item">
+            <span class="account-label">Motor IA</span>
+            <span class="account-value" id="accountAiProvider">Gemini</span>
+          </div>
+          <div class="account-item">
             <span class="account-label">API Key</span>
-            <span class="account-value" id="accountApiKey">❌ No configurada</span>
+            <span class="account-value" id="accountApiKey">&#x274C; No configurada</span>
           </div>
         </div>
 
@@ -1004,17 +1012,24 @@
           name: user.displayName || '',
           email: user.email,
           photo: user.photoURL || '',
-          role: 'client',
+          role: 'owner',
           plan: 'trial',
           plan_start_date: now,
           plan_end_date: trialEnd,
           payment_status: 'trial',
           approved: false,
+          ai_provider: 'gemini',
           gemini_api_key: '',
+          ai_api_key: '',
+          use_owner_key: false,
           agents_limit: 1,
           discount_percent: 0,
           parent_client_uid: '',
+          owner_uid: '',
           whatsapp: '',
+          whatsapp_number: '',
+          humanizer_enabled: false,
+          paddle_subscription_id: '',
           registered_at: now,
           last_login: now
         });
@@ -1141,12 +1156,23 @@
         document.getElementById('accountExpiry').textContent = endDate.toLocaleDateString('es-ES');
       }
 
-      if (userData.whatsapp) {
-        document.getElementById('accountWhatsapp').textContent = userData.whatsapp;
+      // Fecha de alta
+      const regDate = userData.registered_at || userData.plan_start_date;
+      if (regDate) {
+        const d = regDate.toDate ? regDate.toDate() : new Date(regDate);
+        document.getElementById('accountRegistered').textContent = d.toLocaleDateString('es-ES');
       }
 
-      if (userData.gemini_api_key) {
-        document.getElementById('accountApiKey').textContent = '✅ Configurada';
+      if (userData.whatsapp || userData.whatsapp_number) {
+        document.getElementById('accountWhatsapp').textContent = userData.whatsapp || userData.whatsapp_number;
+      }
+
+      // Motor IA
+      const providerNames = { gemini: 'Google Gemini', openai: 'OpenAI GPT', claude: 'Anthropic Claude' };
+      document.getElementById('accountAiProvider').textContent = providerNames[userData.ai_provider] || 'Gemini';
+
+      if (userData.gemini_api_key || userData.ai_api_key) {
+        document.getElementById('accountApiKey').textContent = '\u2705 Configurada';
       }
 
       // Agents counter

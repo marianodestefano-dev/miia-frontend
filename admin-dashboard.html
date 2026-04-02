@@ -405,25 +405,25 @@
           </div>
         </div>
 
-        <!-- 2. API KEY STATUS -->
+        <!-- 2. CONFIGURACION IA -->
         <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
           <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
             <span style="font-size:1.2rem;">&#x1F511;</span> Configuracion IA
           </h3>
-          <div style="display:flex;align-items:center;gap:12px;">
-            <span id="acApiKeyStatus" style="font-size:0.9rem;font-weight:600;">Verificando...</span>
-          </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">API Key del Owner</span><span id="acApiKeyStatus" style="font-size:0.9rem;font-weight:600;">Verificando...</span></div>
             <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Modelo IA</span><strong id="acModel">gemini-2.5-flash</strong></div>
             <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Humanizador</span><strong id="acHumanizer">&mdash;</strong></div>
           </div>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:4px 0 0;line-height:1.4;">El cliente configura su API Key desde su propio dashboard. Los agentes pueden usar la key del owner que los creo O configurar su propia key.</p>
         </div>
 
         <!-- 3. WHATSAPP -->
         <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
           <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
-            <span style="font-size:1.2rem;">&#x1F4F1;</span> WhatsApp
+            <span style="font-size:1.2rem;">&#x1F4F1;</span> WhatsApp del Cliente
           </h3>
+          <p style="font-size:0.75rem;color:var(--text-muted);margin:0;">Este es el estado del WhatsApp vinculado por el cliente, no el tuyo.</p>
           <div style="display:flex;align-items:center;gap:12px;">
             <span class="status-dot" id="acWaDot" style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
             <span id="acWaStatus" style="font-size:0.9rem;font-weight:600;">Desconectado</span>
@@ -444,9 +444,9 @@
             <span style="font-size:1.2rem;">&#x1F9E0;</span> Entrenamiento de su MIIA
           </h3>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
-            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Cerebro</span><strong id="acBrainSize">&mdash; chars</strong></div>
-            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Sesiones</span><strong id="acSessions">&mdash;</strong></div>
-            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Documentos</span><strong id="acDocs">&mdash;</strong></div>
+            <div style="cursor:pointer;" onclick="adminViewBrain()" title="Clic para ver detalle del cerebro"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Cerebro</span><strong id="acBrainSize" style="color:var(--primary);text-decoration:underline;">&mdash; chars</strong></div>
+            <div style="cursor:pointer;" onclick="adminViewSessions()" title="Clic para ver sesiones"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Sesiones</span><strong id="acSessions" style="color:var(--primary);text-decoration:underline;">&mdash;</strong></div>
+            <div style="cursor:pointer;" onclick="adminViewDocs()" title="Clic para ver documentos"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Documentos</span><strong id="acDocs" style="color:var(--primary);text-decoration:underline;">&mdash;</strong></div>
           </div>
           <a id="acTrainingLink" href="#" target="_blank" class="btn-sm btn-primary" style="text-decoration:none;text-align:center;display:inline-block;width:fit-content;">Abrir Entrenamiento Completo &rarr;</a>
         </div>
@@ -459,7 +459,7 @@
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
             <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Dias activos</span><strong id="acDays">&mdash;</strong></div>
             <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Horario</span><strong id="acHours">&mdash;</strong></div>
-            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Seguimiento</span><strong id="acFollowup">&mdash;</strong></div>
+            <div style="cursor:pointer;" onclick="adminViewFollowups()" title="Clic para ver seguimientos activos"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Seguimiento</span><strong id="acFollowup" style="color:var(--primary);text-decoration:underline;">&mdash;</strong></div>
           </div>
           <a id="acScheduleLink" href="#" target="_blank" class="btn-sm btn-outline" style="text-decoration:none;text-align:center;display:inline-block;width:fit-content;">Configurar Horarios &rarr;</a>
         </div>
@@ -1680,7 +1680,8 @@
     document.getElementById('acEmail').textContent = u.email || '—';
     document.getElementById('acPlan').textContent = u.plan || 'trial';
     document.getElementById('acStatus').textContent = u.payment_status || 'trial';
-    document.getElementById('acCreated').textContent = u.createdAt?.seconds ? new Date(u.createdAt.seconds*1000).toLocaleDateString('es') : '—';
+    const regDate = u.registered_at || u.createdAt || u.plan_start_date;
+    document.getElementById('acCreated').textContent = regDate?.seconds ? new Date(regDate.seconds*1000).toLocaleDateString('es') : '—';
     document.getElementById('acUid').textContent = uid;
 
     // 2. API Key
@@ -1773,6 +1774,10 @@
   function adminForceReconnect() { adminRequestReconnect(); }
   function adminRevokeSession() { if(confirm('REVOCAR sesion WhatsApp? El cliente debera escanear QR nuevamente.')) adminDisconnectClient(); }
   function adminDeleteClient() { if(confirm('ELIMINAR COMPLETAMENTE este cliente? Esto es IRREVERSIBLE.')) alert('Implementar eliminacion'); }
+  function adminViewBrain() { alert('Ver cerebro de: ' + selectedClientUid); }
+  function adminViewSessions() { alert('Ver sesiones de: ' + selectedClientUid); }
+  function adminViewDocs() { alert('Ver documentos de: ' + selectedClientUid); }
+  function adminViewFollowups() { alert('Ver seguimientos activos de: ' + selectedClientUid); }
 
   // Cerrar panel de cliente al cambiar de seccion
   const origShowSection = showAdminSection;
