@@ -197,10 +197,6 @@
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         Contactos
       </button>
-      <button class="sidebar-btn" onclick="showAdminSection('entrenamiento', this)">
-        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        Gestionar Cliente
-      </button>
       <button class="sidebar-btn" onclick="showAdminSection('pagos', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         Pagos
@@ -309,10 +305,32 @@
       </div>
     </div><!-- end admin-section-resumen -->
 
-    <!-- ═══ SECTION: CLIENTES ═══ -->
+    <!-- ═══ SECTION: CONTACTOS ═══ -->
+    <div id="admin-section-contactos" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
+      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Sesiones WhatsApp</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Sesiones de WhatsApp activas de tus clientes conectadas al servidor.</p>
+      <div id="tenantsList"><p style="color:var(--text-muted);">Cargando...</p></div>
+    </div><!-- end admin-section-contactos -->
+
+    <!-- ═══ SECTION: PAGOS ═══ -->
+    <div id="admin-section-pagos" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
+      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Facturación y Pagos</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Ingresos recurrentes y distribución por plan de suscripción.</p>
+      <div class="stats-grid" style="margin-bottom:24px;">
+        <div class="stat-card"><div class="value">$<span id="billingMRR">0</span></div><div class="label">MRR actual (USD)</div></div>
+        <div class="stat-card"><div class="value" id="billingPaid">0</div><div class="label">Clientes de pago</div></div>
+        <div class="stat-card"><div class="value" id="billingPending">0</div><div class="label">Pagos pendientes</div></div>
+      </div>
+      <div class="card">
+        <h4 class="section-title" style="margin-bottom:12px;">Clientes por plan</h4>
+        <div id="planBreakdown"></div>
+      </div>
+    </div><!-- end admin-section-pagos -->
+
+    <!-- ═══ SECTION: CLIENTES (unificado) ═══ -->
     <div id="admin-section-clientes" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
-      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Gestión de Clientes</h2>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Administrá planes, estados y configuración de cada cuenta.</p>
+      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Clientes</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Administra planes, estados y configuracion. Hace clic en un cliente para gestionar sus datos.</p>
 
       <div class="stats-grid" style="grid-template-columns:repeat(auto-fit,minmax(140px,1fr));margin-bottom:24px;">
         <div class="stat-card"><div class="value" id="statTotal2">0</div><div class="label">Total</div></div>
@@ -342,56 +360,31 @@
         <button class="btn-sm btn-primary" onclick="openCreateModal()">+ Crear usuario</button>
       </div>
 
-      <div style="overflow-x:auto;">
+      <div style="overflow-x:auto;margin-bottom:24px;">
         <table class="data-table">
           <thead>
             <tr>
-              <th>Usuario</th><th>UID</th><th>Role</th><th>Plan</th><th>Estado</th>
-              <th>Agentes</th><th>API Key</th><th>Descuento</th><th>Creado</th><th>Acciones</th>
+              <th>Usuario</th><th>Role</th><th>Plan</th><th>Estado</th>
+              <th>API Key</th><th>Creado</th><th>Gestionar</th>
             </tr>
           </thead>
           <tbody id="usersTableBody"></tbody>
         </table>
       </div>
-    </div><!-- end admin-section-clientes -->
 
-    <!-- ═══ SECTION: CONTACTOS ═══ -->
-    <div id="admin-section-contactos" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
-      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Sesiones WhatsApp</h2>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Sesiones de WhatsApp activas de tus clientes conectadas al servidor.</p>
-      <div id="tenantsList"><p style="color:var(--text-muted);">Cargando...</p></div>
-    </div><!-- end admin-section-contactos -->
+      <!-- Separador visual cuando se selecciona un cliente -->
+      <div id="adminClientPanelWrapper" style="display:none;">
+        <div style="border-top:2px solid rgba(59,91,255,0.15);padding-top:24px;margin-top:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <h3 id="adminClientPanelTitle" style="font-size:1.2rem;font-weight:800;color:var(--text-dark);display:flex;align-items:center;gap:8px;">
+              <span style="font-size:1.3rem;">&#x1F4CB;</span> <span id="acPanelName">—</span>
+            </h3>
+            <button class="btn-sm btn-outline" onclick="adminCloseClientPanel()" style="font-size:0.82rem;">Cerrar panel</button>
+          </div>
+        </div>
 
-    <!-- ═══ SECTION: PAGOS ═══ -->
-    <div id="admin-section-pagos" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
-      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Facturación y Pagos</h2>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Ingresos recurrentes y distribución por plan de suscripción.</p>
-      <div class="stats-grid" style="margin-bottom:24px;">
-        <div class="stat-card"><div class="value">$<span id="billingMRR">0</span></div><div class="label">MRR actual (USD)</div></div>
-        <div class="stat-card"><div class="value" id="billingPaid">0</div><div class="label">Clientes de pago</div></div>
-        <div class="stat-card"><div class="value" id="billingPending">0</div><div class="label">Pagos pendientes</div></div>
-      </div>
-      <div class="card">
-        <h4 class="section-title" style="margin-bottom:12px;">Clientes por plan</h4>
-        <div id="planBreakdown"></div>
-      </div>
-    </div><!-- end admin-section-pagos -->
-
-    <!-- ═══ SECTION: GESTIONAR CLIENTE ═══ -->
-    <div id="admin-section-entrenamiento" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
-      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Gestionar Cliente</h2>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Selecciona un cliente para ver y administrar todos sus datos, entrenamiento, horarios y conexiones.</p>
-
-      <!-- Selector de cliente -->
-      <div style="display:flex;gap:12px;align-items:center;margin-bottom:24px;flex-wrap:wrap;">
-        <select id="adminClientSelector" onchange="adminLoadClientPanel(this.value)" style="flex:1;max-width:400px;padding:12px 16px;border:1px solid rgba(59,91,255,0.15);border-radius:12px;font-size:0.95rem;font-weight:600;background:var(--bg-card);color:var(--text-dark);cursor:pointer;">
-          <option value="">-- Seleccionar cliente --</option>
-        </select>
-        <button class="btn-sm btn-primary" onclick="adminRefreshClientList()">Actualizar lista</button>
-      </div>
-
-      <!-- Panel del cliente seleccionado -->
-      <div id="adminClientPanel" style="display:none;">
+        <!-- Panel del cliente seleccionado -->
+        <div id="adminClientPanel" style="display:none;">
 
         <!-- 1. DATOS DEL CLIENTE -->
         <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:14px;">
@@ -528,8 +521,9 @@
           </div>
         </div>
 
-      </div><!-- end adminClientPanel -->
-    </div><!-- end admin-section-entrenamiento -->
+        </div><!-- end adminClientPanel -->
+      </div><!-- end adminClientPanelWrapper -->
+    </div><!-- end admin-section-clientes -->
 
     <!-- ═══ SECTION: CONEXIONES ═══ -->
     <div id="admin-section-conexiones" class="page-section section-hidden" style="padding:28px 24px 60px; max-width:1400px;">
@@ -853,24 +847,19 @@
     const myEmail = auth.currentUser?.email;
     const list = (filtered || users).filter(u => u.email !== myEmail);
     const planNames = { trial:'Trial', monthly:'Mensual', quarterly:'Trimestral', semestral:'Semestral', annual:'Anual' };
-    const statusBadge = s => s === 'active' ? 'badge-green' : s === 'pending_payment' ? 'badge-red' : 'badge-yellow';
     const tbody = document.getElementById('usersTableBody');
-    if (list.length === 0) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted);">No hay usuarios</td></tr>'; return; }
+    if (list.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted);">No hay usuarios</td></tr>'; return; }
     const fmtDate = ts => ts?.seconds ? new Date(ts.seconds*1000).toLocaleDateString('es',{day:'2-digit',month:'2-digit',year:'2-digit'}) : '—';
-    tbody.innerHTML = list.map(u => `<tr>
+    tbody.innerHTML = list.map(u => `<tr style="cursor:pointer;" onclick="adminLoadClientPanel('${u.uid}')">
       <td><div class="user-cell"><div class="user-avatar">${(u.name||'?').charAt(0).toUpperCase()}</div><div><div class="user-name">${esc(u.name||'Sin nombre')}</div><div class="user-email">${esc(u.email)}</div></div></div></td>
-      <td style="font-size:0.75rem;color:var(--text-muted);font-family:monospace;">${(u.uid||'').substring(0,12)}…</td>
       <td><span class="badge badge-blue">${u.role||'owner'}</span></td>
       <td><span class="badge badge-${u.plan==='trial'?'trial':'pro'}">${planNames[u.plan]||u.plan||'trial'}</span></td>
       <td>${u.payment_status==='active' ? '<span class="badge badge-active">Activo</span>' : u.payment_status==='pending_payment' ? '<span class="badge badge-pending">Pendiente</span>' : u.payment_status==='expired' ? '<span class="badge badge-red">Expirado</span>' : '<span class="badge badge-trial">Trial</span>'}</td>
-      <td>${u.agents_limit||1}</td>
-      <td>${u.role === 'admin' ? '—' : (u.gemini_api_key ? '✅' : '❌')}${u.imported_backup ? ' <span class="badge badge-red" title="Import">IMPORT</span>' : ''}</td>
-      <td>${u.discount_percent||0}%</td>
+      <td>${u.role === 'admin' ? '—' : (u.gemini_api_key ? '&#x2705;' : '&#x274C;')}</td>
       <td style="font-size:0.8rem;">${fmtDate(u.createdAt)}</td>
-      <td>
-        <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')">Editar</button>
-        <button class="btn-sm-inline" onclick="window.open('owner-dashboard.html?adminView=1&impersonateUid=${u.uid}','_blank')" title="Ver como usuario" style="margin-left:4px;"><svg style="width:13px;height:13px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
-        <button class="btn-sm-inline" onclick="resetUserPassword('${u.uid}','${esc(u.email||u.uid)}')" title="Resetear contraseña" style="margin-left:4px;color:#f59e0b;border-color:rgba(245,158,11,0.3);">🔑</button>
+      <td onclick="event.stopPropagation();">
+        <button class="btn-sm-inline" onclick="adminLoadClientPanel('${u.uid}')" style="background:var(--gradient-main);color:white;border:none;">Gestionar</button>
+        <button class="btn-sm-inline" onclick="openEditModal('${u.uid}')" style="margin-left:4px;">Editar</button>
       </td>
     </tr>`).join('');
   }
@@ -1644,7 +1633,7 @@
   // Restore section from hash
   window.addEventListener('DOMContentLoaded', function() {
     const hash = window.location.hash.replace('#', '');
-    const valid = ['resumen','clientes','contactos','entrenamiento','pagos','conexiones'];
+    const valid = ['resumen','clientes','contactos','pagos','conexiones'];
     if (hash && valid.includes(hash)) {
       const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
       showAdminSection(hash, btn);
@@ -1667,13 +1656,24 @@
     });
   }
 
+  function adminCloseClientPanel() {
+    document.getElementById('adminClientPanelWrapper').style.display = 'none';
+    document.getElementById('adminClientPanel').style.display = 'none';
+    selectedClientUid = null;
+  }
+
   async function adminLoadClientPanel(uid) {
-    if (!uid) { document.getElementById('adminClientPanel').style.display = 'none'; return; }
+    if (!uid) { adminCloseClientPanel(); return; }
     selectedClientUid = uid;
     const u = users.find(x => x.uid === uid);
     if (!u) return;
 
+    document.getElementById('adminClientPanelWrapper').style.display = 'block';
     document.getElementById('adminClientPanel').style.display = 'block';
+    document.getElementById('acPanelName').textContent = u.name || u.email || uid;
+
+    // Scroll suave al panel
+    document.getElementById('adminClientPanelWrapper').scrollIntoView({ behavior: 'smooth', block: 'start' });
 
     // 1. Datos
     document.getElementById('acName').textContent = u.name || 'Sin nombre';
@@ -1774,11 +1774,11 @@
   function adminRevokeSession() { if(confirm('REVOCAR sesion WhatsApp? El cliente debera escanear QR nuevamente.')) adminDisconnectClient(); }
   function adminDeleteClient() { if(confirm('ELIMINAR COMPLETAMENTE este cliente? Esto es IRREVERSIBLE.')) alert('Implementar eliminacion'); }
 
-  // Cargar lista de clientes cuando se muestra la seccion
+  // Cerrar panel de cliente al cambiar de seccion
   const origShowSection = showAdminSection;
   showAdminSection = function(name, btn) {
     origShowSection(name, btn);
-    if (name === 'entrenamiento' && users.length > 0) adminRefreshClientList();
+    if (name !== 'clientes') adminCloseClientPanel();
   };
 
   // Admin Google Calendar
