@@ -199,7 +199,7 @@
       </button>
       <button class="sidebar-btn" onclick="showAdminSection('entrenamiento', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-        Entrenamiento MIIA
+        Gestionar Cliente
       </button>
       <button class="sidebar-btn" onclick="showAdminSection('pagos', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
@@ -377,364 +377,158 @@
       </div>
     </div><!-- end admin-section-pagos -->
 
-    <!-- ═══ SECTION: ENTRENAMIENTO ═══ -->
+    <!-- ═══ SECTION: GESTIONAR CLIENTE ═══ -->
     <div id="admin-section-entrenamiento" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
-      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Entrenamiento de MIIA</h2>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Enseñá a MIIA sobre tu negocio: productos, palabras clave, respuestas y configuración avanzada.</p>
+      <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Gestionar Cliente</h2>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Selecciona un cliente para ver y administrar todos sus datos, entrenamiento, horarios y conexiones.</p>
 
-      <div class="stats-grid" style="margin-bottom:24px;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));">
-        <div class="stat-card"><div class="value" id="brainSize">—</div><div class="label">Cerebro (chars)</div></div>
-        <div class="stat-card"><div class="value" id="brainConvos">—</div><div class="label">Conversaciones</div></div>
+      <!-- Selector de cliente -->
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:24px;flex-wrap:wrap;">
+        <select id="adminClientSelector" onchange="adminLoadClientPanel(this.value)" style="flex:1;max-width:400px;padding:12px 16px;border:1px solid rgba(59,91,255,0.15);border-radius:12px;font-size:0.95rem;font-weight:600;background:var(--bg-card);color:var(--text-dark);cursor:pointer;">
+          <option value="">-- Seleccionar cliente --</option>
+        </select>
+        <button class="btn-sm btn-primary" onclick="adminRefreshClientList()">Actualizar lista</button>
       </div>
 
-      <!-- WA banner -->
-      <div id="adminWaBanner" style="padding:12px 18px;border-radius:12px;display:flex;align-items:center;justify-content:space-between;font-size:0.9rem;font-weight:600;margin-bottom:20px;background:rgba(239,68,68,0.08);color:#f87171;border:1px solid rgba(239,68,68,0.15);">
-        <span id="adminWaStatusText">Verificando WhatsApp...</span>
-        <button id="adminWaActionBtn" onclick="adminToggleWhatsApp()" style="padding:6px 16px;border-radius:99px;font-size:0.85rem;font-weight:600;cursor:pointer;border:none;background:linear-gradient(135deg,#FF1A8C,#A78BFA);color:white;">Conectar</button>
-      </div>
+      <!-- Panel del cliente seleccionado -->
+      <div id="adminClientPanel" style="display:none;">
 
-      <!-- Training tabs -->
-      <div style="margin-bottom:0;">
-        <div id="trainTabsNav" style="display:flex;gap:4px;background:var(--bg-card);border-radius:12px 12px 0 0;padding:8px 8px 0;border:1px solid rgba(59,91,255,0.08);border-bottom:none;overflow-x:auto;scrollbar-width:none;">
-          <button class="tab-btn active" onclick="switchTrainingTab('t-products',this)">Productos</button>
-          <button class="tab-btn" onclick="switchTrainingTab('t-recognize',this)">Como Reconocer</button>
-          <button class="tab-btn" onclick="switchTrainingTab('t-expert',this)">Chat Experto</button>
-          <button class="tab-btn" onclick="switchTrainingTab('t-docs',this)">Documentos</button>
-          <button class="tab-btn" onclick="switchTrainingTab('t-test',this)">Testear MIIA</button>
-          <button class="tab-btn" onclick="switchTrainingTab('t-schedule',this)" style="display:inline-flex;align-items:center;gap:6px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            Horarios
-          </button>
-          <button class="tab-btn" onclick="switchTrainingTab('t-config',this)" style="display:inline-flex;align-items:center;gap:6px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-            Configuración
-          </button>
+        <!-- 1. DATOS DEL CLIENTE -->
+        <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:14px;">
+          <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">&#x1F464;</span> Datos del Cliente
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Nombre</span><strong id="acName">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Email</span><strong id="acEmail">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Plan</span><strong id="acPlan">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Estado</span><strong id="acStatus">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Fecha alta</span><strong id="acCreated">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">UID</span><strong id="acUid" style="font-size:0.75rem;word-break:break-all;">&mdash;</strong></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-sm btn-outline" onclick="adminEditClient()">Editar datos</button>
+            <button class="btn-sm btn-outline" style="color:var(--danger);border-color:rgba(239,68,68,0.2);" onclick="adminSuspendClient()">Suspender</button>
+          </div>
         </div>
-        <div id="trainTabContent" style="background:var(--bg-card);border:1px solid rgba(59,91,255,0.08);border-radius:0 0 16px 16px;padding:28px;min-height:400px;">
 
-          <!-- TAB: PRODUCTOS -->
-          <div id="t-products" class="train-panel">
-            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Productos y Servicios</h3>
-            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Cargá tus productos para que MIIA sepa qué ofrecer. Cada línea guardada se incorpora al cerebro.</p>
-            <div style="overflow-x:auto;">
-              <table class="grid-table" id="adminProductsTable">
-                <thead><tr>
-                  <th>Nombre</th><th>Descripción</th><th>Precio base</th><th>Precio promo</th><th>Stock</th><th style="width:100px;">Acciones</th>
-                </tr></thead>
-                <tbody id="adminProductsBody"></tbody>
-              </table>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:14px;">
-              <button class="btn-sm btn-outline" onclick="adminAddProductRow()">+ Agregar línea</button>
-              <span id="adminProductStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
-            </div>
+        <!-- 2. API KEY STATUS -->
+        <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">&#x1F511;</span> Configuracion IA
+          </h3>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span id="acApiKeyStatus" style="font-size:0.9rem;font-weight:600;">Verificando...</span>
           </div>
-
-          <!-- TAB: COMO RECONOCER -->
-          <div id="t-recognize" class="train-panel" style="display:none;">
-            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Cómo MIIA reconoce a tus contactos</h3>
-            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Define palabras clave para clasificar contactos como Lead, Cliente u Otro.</p>
-            <div style="margin-bottom:28px;">
-              <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Leads (Potenciales Clientes)</h4>
-              <p style="font-size:0.83rem;color:var(--text-muted);margin-bottom:10px;">Palabras que indican interés de compra</p>
-              <table class="grid-table"><thead><tr><th>Palabra o frase clave</th><th>Ejemplo de contexto</th><th style="width:60px;"></th></tr></thead><tbody id="adminLeadKeywordsBody"></tbody></table>
-              <button class="btn-sm btn-outline" style="margin-top:8px;" onclick="adminAddKeywordRow('lead')">+ Agregar</button>
-            </div>
-            <div style="margin-bottom:28px;">
-              <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Clientes (Ya compraron)</h4>
-              <p style="font-size:0.83rem;color:var(--text-muted);margin-bottom:10px;">Palabras que indican que ya son clientes</p>
-              <table class="grid-table"><thead><tr><th>Palabra o frase clave</th><th>Ejemplo de contexto</th><th style="width:60px;"></th></tr></thead><tbody id="adminClientKeywordsBody"></tbody></table>
-              <button class="btn-sm btn-outline" style="margin-top:8px;" onclick="adminAddKeywordRow('client')">+ Agregar</button>
-            </div>
-            <div style="background:rgba(102,126,234,0.04);padding:16px;border-radius:12px;margin-bottom:20px;">
-              <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Otros</h4>
-              <p style="font-size:0.83rem;color:var(--text-muted);">Contactos que no activen ninguna palabra clave serán clasificados como "Otros". MIIA no los atenderá comercialmente.</p>
-            </div>
-            <div style="display:flex;gap:10px;margin-top:16px;">
-              <button class="btn-sm btn-primary" onclick="adminSaveContactRules()">Guardar reglas</button>
-              <span id="adminRulesStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
-            </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Modelo IA</span><strong id="acModel">gemini-2.5-flash</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Humanizador</span><strong id="acHumanizer">&mdash;</strong></div>
           </div>
+        </div>
 
-          <!-- TAB: CHAT EXPERTO -->
-          <div id="t-expert" class="train-panel" style="display:none;">
-            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Entrenamiento Experto</h3>
-            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Conversá con MIIA para enseñarle la lógica de tu negocio. Cada sesión se guarda con un resumen.</p>
-            <div style="display:flex;gap:0;height:520px;border:1px solid rgba(59,91,255,0.08);border-radius:12px;overflow:hidden;">
-              <!-- Sessions sidebar -->
-              <div style="width:240px;min-width:240px;background:var(--bg-surface);border-right:1px solid rgba(59,91,255,0.08);display:flex;flex-direction:column;">
-                <div style="padding:14px;border-bottom:1px solid rgba(59,91,255,0.08);">
-                  <h4 style="font-size:0.9rem;color:var(--text-dark);margin-bottom:8px;">Sesiones</h4>
-                  <button class="btn-sm btn-primary" style="width:100%;font-size:0.82rem;" onclick="adminStartNewSession()">+ Nueva sesión</button>
-                </div>
-                <div id="adminSessionsList" style="flex:1;overflow-y:auto;padding:8px;"></div>
-              </div>
-              <!-- Chat -->
-              <div style="flex:1;display:flex;flex-direction:column;">
-                <div style="padding:14px 18px;background:var(--gradient-main);color:white;display:flex;align-items:center;gap:10px;">
-                  <div style="width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🤖</div>
-                  <div><div style="font-size:0.95rem;font-weight:600;">MIIA — Modo Entrenamiento</div><div style="font-size:0.78rem;opacity:0.85;">Explicale todo sobre tu negocio</div></div>
-                </div>
-                <div id="adminExpertMessages" style="flex:1;overflow-y:auto;padding:16px;background:var(--bg-card);">
-                  <div class="message miia"><div class="message-bubble">¡Hola! Soy MIIA, tu asistente de ventas inteligente. 🎯<br><br>Acá podés enseñarme sobre tu negocio de <strong>dos formas</strong>:<br><br><strong>💬 Conversación libre</strong> — Contame sobre productos, precios, clientes, objeciones, cómo cerrar ventas. Yo <em>detecto automáticamente</em> qué información es importante y la guardo en mi memoria permanente sin que hagas nada extra. Un toast verde te avisa cuando guardo algo.<br><br><strong>🔄 Guardado explícito</strong> — Si querés forzar que recuerde algo puntual, usá el prefijo <strong>"APRENDE: [info]"</strong> y lo guardo directamente.<br><br><strong>📋 Historial de sesiones</strong> — En el panel izquierdo podés ver todas las sesiones anteriores con fecha y resumen. Cada sesión guarda el historial completo de la conversación.<br><br>Todo lo que aprendas acá lo usaré cuando atienda por WhatsApp.<br><br>¿Por dónde empezamos?</div></div>
-                </div>
-                <div style="display:flex;gap:8px;padding:12px;background:var(--bg-surface);border-top:1px solid rgba(59,91,255,0.08);">
-                  <input type="text" id="adminExpertInput" placeholder="Preguntale o conversá... Para guardar: 'APRENDE: [info]'" style="flex:1;padding:10px 14px;border:1px solid rgba(59,91,255,0.08);border-radius:99px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);" onkeypress="if(event.key==='Enter')adminSendExpertMessage()">
-                  <button onclick="adminSendExpertMessage()" style="padding:10px 20px;background:var(--gradient-main);color:white;border:none;border-radius:99px;font-weight:600;cursor:pointer;">Enviar</button>
-                </div>
-              </div>
-            </div>
-            <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
-              <button class="btn-sm btn-primary" onclick="adminSaveCurrentSession()">Guardar sesión de hoy</button>
-              <span id="adminSessionSaveStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
-            </div>
+        <!-- 3. WHATSAPP -->
+        <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">&#x1F4F1;</span> WhatsApp
+          </h3>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <span class="status-dot" id="acWaDot" style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
+            <span id="acWaStatus" style="font-size:0.9rem;font-weight:600;">Desconectado</span>
           </div>
-
-          <!-- TAB: DOCUMENTOS -->
-          <div id="t-docs" class="train-panel" style="display:none;">
-            <div style="text-align:center;padding:48px 32px;border:2px dashed rgba(59,91,255,0.15);border-radius:16px;">
-              <div style="font-size:3rem;margin-bottom:14px;">📂</div>
-              <h3 style="color:var(--text-dark);margin-bottom:8px;">Documentos de Conocimiento</h3>
-              <p style="color:var(--text-muted);margin-bottom:20px;font-size:0.9rem;">Subí PDFs, Word, Excel o TXT con información de tu negocio. MIIA los estudiará y los incorporará a su cerebro.</p>
-              <input type="file" id="adminDocFileInput" accept=".pdf,.txt,.docx,.xlsx,.csv" multiple style="display:none;" onchange="adminUploadTrainingDocs(event)">
-              <button class="btn-sm btn-primary" onclick="document.getElementById('adminDocFileInput').click()">📂 Seleccionar archivos</button>
-              <div id="adminDocUploadStatus" style="margin-top:12px;font-size:0.85rem;color:var(--accent);"></div>
-            </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Numero</span><strong id="acWaNumber">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Mensajes hoy</span><strong id="acWaMsgs">&mdash;</strong></div>
           </div>
-
-          <!-- TAB: TESTEAR MIIA -->
-          <div id="t-test" class="train-panel" style="display:none;">
-            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Testear MIIA</h3>
-            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Hablá con tu MIIA como si fueras un cliente con todo el conocimiento que le enseñaste. La conversación de prueba NO se guarda como lead real.</p>
-            <div style="height:460px;border:1px solid rgba(59,91,255,0.08);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;">
-              <div style="padding:12px 18px;background:linear-gradient(135deg,#f59e0b,#d97706);color:white;display:flex;align-items:center;gap:10px;">
-                <div style="width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">🧪</div>
-                <div style="flex:1;"><div style="font-size:0.95rem;font-weight:600;">Modo Prueba</div><div style="font-size:0.78rem;opacity:0.85;">Hablás con MIIA como si fueras un cliente</div></div>
-                <button onclick="adminResetTest()" style="padding:5px 12px;background:rgba(255,255,255,0.2);color:white;border:none;border-radius:8px;cursor:pointer;font-size:0.8rem;font-weight:600;">Reiniciar</button>
-              </div>
-              <div id="adminTestMessages" style="flex:1;overflow-y:auto;padding:14px;background:var(--bg-card);">
-                <div class="message miia"><div class="message-bubble">¡Hola! Bienvenido. ¿En qué puedo ayudarte hoy?</div></div>
-              </div>
-              <div style="display:flex;gap:8px;padding:10px 14px;background:var(--bg-surface);border-top:1px solid rgba(59,91,255,0.08);">
-                <input type="text" id="adminTestInput" placeholder="Escribí como si fueras un cliente..." style="flex:1;padding:10px 14px;border:1px solid rgba(59,91,255,0.08);border-radius:99px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);" onkeypress="if(event.key==='Enter')adminSendTestMessage()">
-                <button onclick="adminSendTestMessage()" style="padding:10px 20px;background:var(--gradient-main);color:white;border:none;border-radius:99px;font-weight:600;cursor:pointer;">Enviar</button>
-              </div>
-            </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-sm btn-outline" onclick="adminRequestReconnect()">Solicitar Reconexion</button>
+            <button class="btn-sm btn-outline" style="color:var(--danger);border-color:rgba(239,68,68,0.2);" onclick="adminDisconnectClient()">Desconectar</button>
           </div>
+        </div>
 
-          <!-- TAB: HORARIOS Y SEGUIMIENTO -->
-          <div id="t-schedule" class="train-panel" style="display:none;">
-            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Horarios y Seguimiento de Leads</h3>
-            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Configurá cuándo MIIA responde, cómo hace seguimiento y cómo detecta intención del lead.</p>
-
-            <div style="max-width:720px;display:flex;flex-direction:column;gap:20px;">
-
-              <!-- A) DISPONIBILIDAD -->
-              <div class="card" style="display:flex;flex-direction:column;gap:14px;">
-                <div style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
-                  <span style="font-size:1.2rem;">🕐</span> Disponibilidad
-                </div>
-                <div>
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:8px;">Días activos</label>
-                  <div style="display:flex;gap:6px;flex-wrap:wrap;" id="scheduleDays">
-                    <label class="day-chip"><input type="checkbox" value="1" checked> Lun</label>
-                    <label class="day-chip"><input type="checkbox" value="2" checked> Mar</label>
-                    <label class="day-chip"><input type="checkbox" value="3" checked> Mié</label>
-                    <label class="day-chip"><input type="checkbox" value="4" checked> Jue</label>
-                    <label class="day-chip"><input type="checkbox" value="5" checked> Vie</label>
-                    <label class="day-chip"><input type="checkbox" value="6"> Sáb</label>
-                    <label class="day-chip"><input type="checkbox" value="0"> Dom</label>
-                  </div>
-                </div>
-                <div style="display:flex;gap:16px;flex-wrap:wrap;">
-                  <div>
-                    <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Hora inicio</label>
-                    <input type="time" id="scheduleStart" value="09:00" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
-                  </div>
-                  <div>
-                    <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Hora fin</label>
-                    <input type="time" id="scheduleEnd" value="21:00" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
-                  </div>
-                  <div>
-                    <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Zona horaria</label>
-                    <select id="scheduleTZ" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
-                      <option value="America/Argentina/Buenos_Aires">Argentina (GMT-3)</option>
-                      <option value="America/Bogota">Colombia (GMT-5)</option>
-                      <option value="America/Mexico_City">México (GMT-6)</option>
-                      <option value="America/Santiago">Chile (GMT-4)</option>
-                      <option value="America/Lima">Perú (GMT-5)</option>
-                      <option value="America/Caracas">Venezuela (GMT-4)</option>
-                      <option value="Europe/Madrid">España (GMT+1/+2)</option>
-                    </select>
-                  </div>
-                </div>
-                <div>
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje fuera de horario</label>
-                  <input type="text" id="scheduleOffMsg" value="Gracias por escribir. Nuestro horario de atención es de lunes a viernes de 9:00 a 21:00. Te responderemos a primera hora." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
-                </div>
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);">¿Responder fuera de horario?</label>
-                  <label style="position:relative;width:44px;height:24px;flex-shrink:0;">
-                    <input type="checkbox" id="scheduleAutoReply" style="opacity:0;width:0;height:0;">
-                    <span style="position:absolute;inset:0;background:rgba(100,116,139,0.3);border-radius:999px;cursor:pointer;transition:background .3s;" onclick="this.previousElementSibling.click()"></span>
-                  </label>
-                  <span style="font-size:0.8rem;color:var(--text-muted);">Si activo, envía el mensaje de arriba automáticamente</span>
-                </div>
-              </div>
-
-              <!-- B) SEGUIMIENTO DE LEADS -->
-              <div class="card" style="display:flex;flex-direction:column;gap:14px;">
-                <div style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
-                  <span style="font-size:1.2rem;">🔄</span> Seguimiento de Leads
-                </div>
-                <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:end;">
-                  <div>
-                    <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Seguimiento cada</label>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <input type="number" id="followupDays" value="3" min="1" max="30" style="width:60px;padding:8px 10px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
-                      <span style="font-size:0.88rem;color:var(--text-muted);">días sin respuesta</span>
-                    </div>
-                  </div>
-                  <div>
-                    <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Máx. seguimientos</label>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                      <input type="number" id="followupMax" value="3" min="1" max="10" style="width:60px;padding:8px 10px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
-                      <span style="font-size:0.88rem;color:var(--text-muted);">intentos antes de parar</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje de seguimiento (1er intento)</label>
-                  <input type="text" id="followupMsg1" value="Hola, ¿pudiste revisar la información que te envié? Quedo atento a cualquier consulta." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
-                </div>
-                <div>
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje de seguimiento (último intento)</label>
-                  <input type="text" id="followupMsgLast" value="Solo quería saber si seguís interesado. Si no es el momento, no hay problema. Éxitos!" style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
-                </div>
-                <div>
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Después del último intento sin respuesta</label>
-                  <select id="followupFinal" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
-                    <option value="archive">Archivar lead (no contactar más)</option>
-                    <option value="notify">Solo notificar al vendedor</option>
-                    <option value="retry30">Reintentar en 30 días</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- C) DETECCIÓN DE INTENCIÓN -->
-              <div class="card" style="display:flex;flex-direction:column;gap:14px;">
-                <div style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
-                  <span style="font-size:1.2rem;">🎯</span> Detección de Intención
-                </div>
-                <div>
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Señales de INTERÉS (lead caliente)</label>
-                  <textarea id="intentHot" rows="3" placeholder="Ej: me interesa, quiero cotización, cuánto cuesta, necesito información, agendemos una reunión..." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;">me interesa, quiero cotización, cuánto cuesta, necesito información, agendemos, demo, presupuesto, precio</textarea>
-                  <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Separadas por coma. MIIA etiqueta como HOT_LEAD y notifica al vendedor.</p>
-                </div>
-                <div>
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Señales de NO interés (lead frío)</label>
-                  <textarea id="intentCold" rows="3" placeholder="Ej: no me interesa, ahora no, ya tengo proveedor, no necesito..." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;">no me interesa, ahora no, ya tengo, no necesito, dejame en paz, no gracias, otro momento</textarea>
-                  <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Separadas por coma. MIIA respeta el silencio y no vuelve a contactar hasta nuevo mensaje del lead.</p>
-                </div>
-                <div>
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Si el lead dice que NO le interesa</label>
-                  <select id="intentColdAction" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
-                    <option value="silence">Respetar silencio total (no contactar más)</option>
-                    <option value="retry60">Reintentar en 60 días con mensaje suave</option>
-                    <option value="notify_only">Solo notificar al vendedor, MIIA no responde</option>
-                  </select>
-                </div>
-              </div>
-
-              <!-- D) MODO SILENCIO -->
-              <div class="card" style="display:flex;flex-direction:column;gap:14px;">
-                <div style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
-                  <span style="font-size:1.2rem;">🤫</span> Modo Silencio
-                </div>
-                <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Cuando un lead o el vendedor dice "Chau MIIA", MIIA se retira de ese chat. No responde más hasta que el lead inicie un nuevo mensaje.</p>
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);">Vendedor puede romper silencio desde admin</label>
-                  <label style="position:relative;width:44px;height:24px;flex-shrink:0;">
-                    <input type="checkbox" id="silenceBreak" checked style="opacity:0;width:0;height:0;">
-                    <span style="position:absolute;inset:0;background:rgba(100,116,139,0.3);border-radius:999px;cursor:pointer;transition:background .3s;" onclick="this.previousElementSibling.click()"></span>
-                  </label>
-                </div>
-              </div>
-
-              <!-- GUARDAR -->
-              <div style="display:flex;gap:10px;align-items:center;">
-                <button class="btn-sm btn-primary" onclick="adminSaveScheduleConfig()" style="padding:10px 28px;font-size:0.95rem;">Guardar configuración de horarios</button>
-                <span id="scheduleStatus" style="font-size:0.85rem;color:var(--accent);font-weight:600;"></span>
-              </div>
-
-            </div>
+        <!-- 4. ENTRENAMIENTO -->
+        <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">&#x1F9E0;</span> Entrenamiento de su MIIA
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Cerebro</span><strong id="acBrainSize">&mdash; chars</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Sesiones</span><strong id="acSessions">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Documentos</span><strong id="acDocs">&mdash;</strong></div>
           </div>
+          <a id="acTrainingLink" href="#" target="_blank" class="btn-sm btn-primary" style="text-decoration:none;text-align:center;display:inline-block;width:fit-content;">Abrir Entrenamiento Completo &rarr;</a>
+        </div>
 
-          <!-- TAB: CONFIGURACIÓN -->
-          <div id="t-config" class="train-panel" style="display:none;">
-            <h3 style="font-size:1.15rem;font-weight:700;color:var(--text-dark);margin-bottom:6px;">Configuración de MIIA</h3>
-            <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Ajustes avanzados del comportamiento de tu asistente.</p>
-            <div style="max-width:640px;display:flex;flex-direction:column;gap:16px;">
-
-              <!-- Humanizador -->
-              <div class="card" style="display:flex;flex-direction:column;gap:12px;">
-                <div style="display:flex;align-items:center;gap:14px;">
-                  <div style="width:42px;height:42px;border-radius:10px;background:rgba(99,102,241,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="9" cy="16" r="1"/><circle cx="15" cy="16" r="1"/><path d="M12 2v4M8 11V7a4 4 0 0 1 8 0v4"/></svg>
-                  </div>
-                  <div style="flex:1;">
-                    <div style="font-weight:700;color:var(--text-dark);font-size:0.95rem;">Humanizador de respuestas</div>
-                    <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-top:2px;">Introduce pequeños errores tipográficos y pausas variables para que WhatsApp no detecte comportamiento automático.</div>
-                  </div>
-                  <label style="position:relative;width:44px;height:24px;flex-shrink:0;">
-                    <input type="checkbox" id="adminHumanizerToggle" onchange="adminSaveHumanizerPref(this.checked)" style="opacity:0;width:0;height:0;">
-                    <span id="adminHumanizerTrack" style="position:absolute;inset:0;background:rgba(100,116,139,0.3);border-radius:999px;cursor:pointer;transition:background .3s;" onclick="document.getElementById('adminHumanizerToggle').click()"></span>
-                  </label>
-                </div>
-                <div style="font-size:0.82rem;color:var(--text-muted);padding:8px 12px;background:rgba(59,91,255,0.06);border-radius:8px;">Estado: <strong id="adminHumanizerLabel" style="color:var(--primary);">Cargando...</strong></div>
-              </div>
-
-              <!-- ADN Mining -->
-              <div class="card" style="display:flex;flex-direction:column;gap:12px;">
-                <div style="display:flex;align-items:center;gap:14px;">
-                  <div style="width:42px;height:42px;border-radius:10px;background:rgba(16,185,129,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><path d="M2 12h4M6 12c0-3.3 2.7-6 6-6s6 2.7 6 6-2.7 6-6 6"/><path d="M18 12h4M12 2v4M12 18v4"/></svg>
-                  </div>
-                  <div style="flex:1;">
-                    <div style="font-weight:700;color:var(--text-dark);font-size:0.95rem;">Forzar ADN Mining</div>
-                    <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-top:2px;">Analiza las conversaciones de WhatsApp para extraer patrones, intereses y comportamiento de tus clientes. MIIA aprende automáticamente de cada interacción.</div>
-                  </div>
-                </div>
-                <div style="display:flex;gap:8px;">
-                  <button class="btn-sm btn-primary" style="flex:1;" onclick="forceADNMining()">Activar ADN Mining</button>
-                  <button class="btn-sm btn-outline" onclick="window.open('reportesadn.html','_blank')">Reportes</button>
-                </div>
-              </div>
-
-              <!-- Scraper -->
-              <div class="card" style="display:flex;flex-direction:column;gap:12px;">
-                <div style="display:flex;align-items:center;gap:14px;">
-                  <div style="width:42px;height:42px;border-radius:10px;background:rgba(245,158,11,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v3M11 14h.01"/></svg>
-                  </div>
-                  <div style="flex:1;">
-                    <div style="font-weight:700;color:var(--text-dark);font-size:0.95rem;">Ejecutar Scraper</div>
-                    <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5;margin-top:2px;">Busca y captura novedades regulatorias, noticias del sector y actualizaciones relevantes para que MIIA esté siempre informada.</div>
-                  </div>
-                </div>
-                <div style="display:flex;gap:8px;">
-                  <button class="btn-sm btn-primary" style="flex:1;" onclick="forceScraperRun()">Activar Scraper</button>
-                  <button class="btn-sm btn-outline" onclick="window.open('reportesscrap.html','_blank')">Reportes</button>
-                </div>
-              </div>
-
-            </div>
+        <!-- 5. HORARIOS Y SEGUIMIENTO -->
+        <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">&#x1F550;</span> Horarios y Seguimiento
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Dias activos</span><strong id="acDays">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Horario</span><strong id="acHours">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Seguimiento</span><strong id="acFollowup">&mdash;</strong></div>
           </div>
+          <a id="acScheduleLink" href="#" target="_blank" class="btn-sm btn-outline" style="text-decoration:none;text-align:center;display:inline-block;width:fit-content;">Configurar Horarios &rarr;</a>
+        </div>
 
-        </div><!-- end trainTabContent -->
-      </div>
+        <!-- 6. AGENTES -->
+        <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">&#x1F465;</span> Agentes de este Cliente
+          </h3>
+          <div id="acAgentsList" style="font-size:0.88rem;color:var(--text-muted);">Selecciona un cliente para ver sus agentes</div>
+          <button class="btn-sm btn-outline" onclick="adminCreateAgent()" style="width:fit-content;">+ Crear agente</button>
+        </div>
 
-      <div id="cerebroStatus" style="margin-top:20px;"></div>
+        <!-- 7. FACTURACION -->
+        <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">&#x1F4B0;</span> Facturacion
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Plan</span><strong id="acBillPlan">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Paddle ID</span><strong id="acPaddleId">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Proximo cobro</span><strong id="acNextBill">&mdash;</strong></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-sm btn-outline" onclick="adminChangePlan()">Cambiar plan</button>
+            <button class="btn-sm btn-outline" onclick="adminViewPaymentHistory()">Ver historial</button>
+          </div>
+        </div>
+
+        <!-- 8. METRICAS -->
+        <div class="card" style="margin-bottom:20px;display:flex;flex-direction:column;gap:12px;">
+          <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">&#x1F4CA;</span> Metricas y Leads
+          </h3>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Leads totales</span><strong id="acLeadsTotal">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Hot</span><strong id="acLeadsHot" style="color:#34D399;">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Cold</span><strong id="acLeadsCold" style="color:#f87171;">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Tasa respuesta MIIA</span><strong id="acResponseRate">&mdash;</strong></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-sm btn-outline" onclick="adminViewLeads()">Ver todos los leads</button>
+            <button class="btn-sm btn-outline" onclick="adminExportCSV()">Exportar CSV</button>
+          </div>
+        </div>
+
+        <!-- 9. EMERGENCIA -->
+        <div class="card" style="display:flex;flex-direction:column;gap:12px;border:1px solid rgba(239,68,68,0.15);">
+          <h3 style="font-weight:700;color:#f87171;font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">&#x26A0;&#xFE0F;</span> Acciones de Emergencia
+          </h3>
+          <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Estas acciones son irreversibles o de alto impacto. Usa con precaucion.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-sm btn-outline" style="color:var(--danger);border-color:rgba(239,68,68,0.2);" onclick="adminResetMiia()">Resetear MIIA</button>
+            <button class="btn-sm btn-outline" style="color:var(--danger);border-color:rgba(239,68,68,0.2);" onclick="adminClearBrain()">Borrar cerebro</button>
+            <button class="btn-sm btn-outline" style="color:var(--danger);border-color:rgba(239,68,68,0.2);" onclick="adminForceReconnect()">Forzar reconexion WA</button>
+            <button class="btn-sm btn-outline" style="color:var(--danger);border-color:rgba(239,68,68,0.2);" onclick="adminRevokeSession()">Revocar sesion</button>
+            <button class="btn-sm btn-outline" style="color:var(--danger);border-color:rgba(239,68,68,0.2);" onclick="adminDeleteClient()">Eliminar cliente</button>
+          </div>
+        </div>
+
+      </div><!-- end adminClientPanel -->
     </div><!-- end admin-section-entrenamiento -->
 
     <!-- ═══ SECTION: CONEXIONES ═══ -->
@@ -1856,6 +1650,136 @@
       showAdminSection(hash, btn);
     }
   });
+
+  // ═══ GESTIONAR CLIENTE — Panel Functions ═══
+  let selectedClientUid = null;
+
+  function adminRefreshClientList() {
+    const sel = document.getElementById('adminClientSelector');
+    sel.innerHTML = '<option value="">-- Seleccionar cliente --</option>';
+    const clients = users.filter(u => u.role !== 'admin');
+    clients.sort((a,b) => (a.name||a.email||'').localeCompare(b.name||b.email||''));
+    clients.forEach(u => {
+      const opt = document.createElement('option');
+      opt.value = u.uid;
+      opt.textContent = `${u.name || 'Sin nombre'} — ${u.email || u.uid}`;
+      sel.appendChild(opt);
+    });
+  }
+
+  async function adminLoadClientPanel(uid) {
+    if (!uid) { document.getElementById('adminClientPanel').style.display = 'none'; return; }
+    selectedClientUid = uid;
+    const u = users.find(x => x.uid === uid);
+    if (!u) return;
+
+    document.getElementById('adminClientPanel').style.display = 'block';
+
+    // 1. Datos
+    document.getElementById('acName').textContent = u.name || 'Sin nombre';
+    document.getElementById('acEmail').textContent = u.email || '—';
+    document.getElementById('acPlan').textContent = u.plan || 'trial';
+    document.getElementById('acStatus').textContent = u.payment_status || 'trial';
+    document.getElementById('acCreated').textContent = u.createdAt?.seconds ? new Date(u.createdAt.seconds*1000).toLocaleDateString('es') : '—';
+    document.getElementById('acUid').textContent = uid;
+
+    // 2. API Key
+    document.getElementById('acApiKeyStatus').innerHTML = u.gemini_api_key
+      ? '<span style="color:#34D399;">&#x2705; Configurada</span>'
+      : '<span style="color:#f87171;">&#x274C; Sin configurar</span>';
+    document.getElementById('acHumanizer').textContent = u.humanizer_enabled ? 'Activo' : 'Inactivo';
+
+    // 3. WhatsApp
+    try {
+      const res = await fetch(`${ADMIN_API}/api/tenant/${uid}/status`);
+      const data = await res.json();
+      document.getElementById('acWaDot').style.background = data.isReady ? '#34D399' : '#ef4444';
+      document.getElementById('acWaStatus').textContent = data.isReady ? 'Conectado' : 'Desconectado';
+      document.getElementById('acWaNumber').textContent = u.whatsapp_number ? u.whatsapp_number.replace(/(\d{2})(\d{3})(\d{3})(\d+)/, '$1 *** ***$4') : '—';
+      document.getElementById('acWaMsgs').textContent = data.conversationCount || '0';
+    } catch(e) {
+      document.getElementById('acWaStatus').textContent = 'Error verificando';
+    }
+
+    // 4. Entrenamiento link
+    document.getElementById('acTrainingLink').href = `training.html?uid=${uid}`;
+
+    // 5. Horarios
+    try {
+      const schedDoc = await dbFs.collection('users').doc(uid).collection('settings').doc('schedule').get();
+      if (schedDoc.exists) {
+        const s = schedDoc.data();
+        const dayNames = ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'];
+        document.getElementById('acDays').textContent = (s.activeDays||[]).map(d => dayNames[d]).join(', ') || '—';
+        document.getElementById('acHours').textContent = `${s.startTime||'09:00'} - ${s.endTime||'21:00'}`;
+        document.getElementById('acFollowup').textContent = `Cada ${s.followupDays||3} dias, max ${s.followupMax||3}`;
+      } else {
+        document.getElementById('acDays').textContent = 'No configurado';
+        document.getElementById('acHours').textContent = '—';
+        document.getElementById('acFollowup').textContent = '—';
+      }
+    } catch(e) {}
+    document.getElementById('acScheduleLink').href = `training.html?uid=${uid}#schedule`;
+
+    // 6. Agentes
+    try {
+      const agentsSnap = await dbFs.collection('users').where('owner_uid', '==', uid).where('role', '==', 'agent').get();
+      const agentsList = document.getElementById('acAgentsList');
+      if (agentsSnap.empty) {
+        agentsList.innerHTML = '<span style="color:var(--text-muted);">Sin agentes</span>';
+      } else {
+        agentsList.innerHTML = agentsSnap.docs.map(d => {
+          const a = d.data();
+          return `<div style="display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid rgba(59,91,255,0.06);">
+            <span style="font-weight:600;color:var(--text-dark);">${esc(a.name||a.email)}</span>
+            <span class="badge badge-blue" style="font-size:0.72rem;">agente</span>
+            <span style="font-size:0.8rem;color:var(--text-muted);margin-left:auto;">${a.email||''}</span>
+          </div>`;
+        }).join('');
+      }
+    } catch(e) {}
+
+    // 7. Facturacion
+    document.getElementById('acBillPlan').textContent = u.plan || 'trial';
+    document.getElementById('acPaddleId').textContent = u.paddle_subscription_id || '—';
+    document.getElementById('acNextBill').textContent = u.next_billing_date?.seconds ? new Date(u.next_billing_date.seconds*1000).toLocaleDateString('es') : '—';
+
+    // 8. Metricas (placeholder — se llena con datos reales cuando existan)
+    document.getElementById('acLeadsTotal').textContent = '—';
+    document.getElementById('acLeadsHot').textContent = '—';
+    document.getElementById('acLeadsCold').textContent = '—';
+    document.getElementById('acResponseRate').textContent = '—';
+  }
+
+  // Placeholder functions para botones (se implementan despues)
+  function adminEditClient() { alert('Editar cliente: ' + selectedClientUid); }
+  function adminSuspendClient() { if(confirm('Suspender este cliente?')) alert('Implementar suspension'); }
+  function adminRequestReconnect() { alert('Se enviara notificacion al cliente para reconectar WhatsApp'); }
+  async function adminDisconnectClient() {
+    if (!selectedClientUid || !confirm('Desconectar WhatsApp de este cliente?')) return;
+    try {
+      await fetch(`${ADMIN_API}/api/tenant/${selectedClientUid}/destroy`, { method: 'POST' });
+      alert('Cliente desconectado');
+      adminLoadClientPanel(selectedClientUid);
+    } catch(e) { alert('Error: ' + e.message); }
+  }
+  function adminCreateAgent() { alert('Crear agente para: ' + selectedClientUid); }
+  function adminChangePlan() { alert('Cambiar plan de: ' + selectedClientUid); }
+  function adminViewPaymentHistory() { alert('Historial de pagos: ' + selectedClientUid); }
+  function adminViewLeads() { alert('Ver leads de: ' + selectedClientUid); }
+  function adminExportCSV() { alert('Exportar CSV de: ' + selectedClientUid); }
+  function adminResetMiia() { if(confirm('RESETEAR MIIA de este cliente? Esto borra conversaciones en memoria.')) alert('Implementar reset'); }
+  function adminClearBrain() { if(confirm('BORRAR TODO EL CEREBRO de este cliente? Esto es IRREVERSIBLE.')) alert('Implementar borrado'); }
+  function adminForceReconnect() { adminRequestReconnect(); }
+  function adminRevokeSession() { if(confirm('REVOCAR sesion WhatsApp? El cliente debera escanear QR nuevamente.')) adminDisconnectClient(); }
+  function adminDeleteClient() { if(confirm('ELIMINAR COMPLETAMENTE este cliente? Esto es IRREVERSIBLE.')) alert('Implementar eliminacion'); }
+
+  // Cargar lista de clientes cuando se muestra la seccion
+  const origShowSection = showAdminSection;
+  showAdminSection = function(name, btn) {
+    origShowSection(name, btn);
+    if (name === 'entrenamiento' && users.length > 0) adminRefreshClientList();
+  };
 
   // Admin Google Calendar
   const ADMIN_API = 'https://miia-backend-production.up.railway.app';
