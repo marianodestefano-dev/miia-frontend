@@ -760,7 +760,7 @@
       <div class="form-group"><label>Email</label><input type="email" id="createEmail" required></div>
       <div class="form-group"><label>Nombre</label><input type="text" id="createName"></div>
       <div class="form-group"><label>Plan inicial</label>
-        <select id="createPlan"><option value="trial">Trial</option><option value="monthly">Mensual</option><option value="quarterly">Trimestral</option></select>
+        <select id="createPlan"><option value="trial">Trial</option><option value="monthly">Mensual</option><option value="quarterly">Trimestral</option><option value="semestral">Semestral</option><option value="annual">Anual</option></select>
       </div>
       <div class="modal-actions">
         <button type="submit" class="btn-sm btn-primary">Crear</button>
@@ -793,11 +793,12 @@
   let currentEditUid = null;
   let currentIdToken = null;
 
-  // Helper: obtener token de Firebase
+  // Helper: obtener token FRESCO de Firebase (auto-refresh si expiró)
   async function getIdToken() {
     const user = auth.currentUser;
     if (!user) throw new Error('No user logged in');
-    return await user.getIdToken();
+    currentIdToken = await user.getIdToken(true); // force refresh
+    return currentIdToken;
   }
 
   async function checkIsAdmin(token) {
@@ -1040,9 +1041,10 @@
     const name = document.getElementById('createName').value;
     const plan = document.getElementById('createPlan').value;
     try {
+      const token = await getIdToken();
       const res = await fetch(`${BACKEND_URL}/api/admin/user`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentIdToken}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({ email, name, plan })
       });
       const data = await res.json();
