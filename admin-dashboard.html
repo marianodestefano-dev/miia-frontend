@@ -633,14 +633,35 @@
               <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Estado de las variables de entorno configuradas en Railway.</p>
             </div>
           </div>
-          <div id="envList" style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">GEMINI_API_KEY</span><span id="envGemini" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">STRIPE_SECRET_KEY</span><span id="envStripe" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">STRIPE_WEBHOOK_SECRET</span><span id="envWebhook" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">FRONTEND_URL</span><span id="envFrontend" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">ADMIN_API_KEY</span><span id="envAdmin" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">SKIP_WA_INIT <span style="color:var(--text-muted);font-size:0.72rem;">(no configurar = WhatsApp activo)</span></span><span id="envSkipWA" style="font-weight:600;">—</span></div>
-          </div>
+          <div id="envList" style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;"></div>
+          <script>
+          (function(){
+            const envVars = [
+              { key: 'GEMINI_API_KEY', id: 'envGemini', desc: 'Key de Google Gemini para que MIIA piense y responda mensajes automáticamente.' },
+              { key: 'GOOGLE_CLIENT_ID', id: 'envGoogleId', desc: 'Credencial OAuth para conectar Google Calendar de los usuarios.' },
+              { key: 'GOOGLE_CLIENT_SECRET', id: 'envGoogleSecret', desc: 'Secreto OAuth que valida la identidad de MIIA ante Google.' },
+              { key: 'STRIPE_SECRET_KEY', id: 'envStripe', desc: 'Key de Stripe/Paddle para cobrar suscripciones a clientes.' },
+              { key: 'STRIPE_WEBHOOK_SECRET', id: 'envWebhook', desc: 'Valida que las notificaciones de pago sean legítimas y no falsificadas.' },
+              { key: 'FRONTEND_URL', id: 'envFrontend', desc: 'URL del frontend (lobsterscrm.com) para redirecciones y permisos CORS.' },
+              { key: 'ADMIN_API_KEY', id: 'envAdmin', desc: 'Key interna para proteger endpoints sensibles del panel de administración.' },
+              { key: 'SKIP_WA_INIT', id: 'envSkipWA', desc: 'Si existe, MIIA NO conecta WhatsApp al iniciar. Útil para mantenimiento.' }
+            ];
+            const list = document.getElementById('envList');
+            envVars.forEach(v => {
+              const row = document.createElement('div');
+              row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;cursor:help;position:relative;transition:border-color .2s;';
+              row.innerHTML = `<span style="color:var(--text-body);">${v.key}</span><span id="${v.id}" style="font-weight:600;">—</span>`;
+              // Tooltip
+              const tip = document.createElement('div');
+              tip.style.cssText = 'position:absolute;bottom:calc(100% + 8px);left:0;right:0;background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:8px;padding:10px 14px;font-size:0.78rem;color:var(--text-body);line-height:1.5;box-shadow:0 8px 24px rgba(0,0,0,.15);z-index:10;opacity:0;pointer-events:none;transition:opacity .2s;';
+              tip.textContent = v.desc;
+              row.appendChild(tip);
+              row.addEventListener('mouseenter', () => { tip.style.opacity = '1'; row.style.borderColor = 'var(--primary)'; });
+              row.addEventListener('mouseleave', () => { tip.style.opacity = '0'; row.style.borderColor = 'var(--border-glass)'; });
+              list.appendChild(row);
+            });
+          })();
+          </script>
           <div id="serverInfo" style="font-size:0.82rem;padding-top:10px;border-top:1px solid var(--border-glass);display:flex;flex-direction:column;gap:6px;">Cargando...</div>
         </div>
 
@@ -1139,12 +1160,20 @@
       `;
       const env = data.env || {};
       const ok = v => v ? '✅' : '❌';
-      document.getElementById('envGemini').innerHTML = `<span style="color:${env.GEMINI_API_KEY ? '#16a34a' : '#ef4444'}">${ok(env.GEMINI_API_KEY)}</span>`;
-      document.getElementById('envStripe').innerHTML = `<span style="color:${env.STRIPE_SECRET_KEY ? '#16a34a' : '#ef4444'}">${ok(env.STRIPE_SECRET_KEY)}</span>`;
-      document.getElementById('envWebhook').innerHTML = `<span style="color:${env.STRIPE_WEBHOOK_SECRET ? '#16a34a' : '#ef4444'}">${ok(env.STRIPE_WEBHOOK_SECRET)}</span>`;
-      document.getElementById('envFrontend').innerHTML = `<span style="color:${env.FRONTEND_URL ? '#16a34a' : '#ef4444'}">${ok(env.FRONTEND_URL)}</span>`;
-      document.getElementById('envAdmin').innerHTML = `<span style="color:${env.ADMIN_API_KEY ? '#16a34a' : '#ef4444'}">${ok(env.ADMIN_API_KEY)}</span>`;
-      document.getElementById('envSkipWA').innerHTML = env.SKIP_WA_INIT ? `<span style="color:#f59e0b;">⚠️ ${env.SKIP_WA_INIT}</span>` : '<span style="color:var(--text-muted);">—</span>';
+      const setEnv = (id, val, special) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (special) { el.innerHTML = special; return; }
+        el.innerHTML = `<span style="color:${val ? '#16a34a' : '#ef4444'}">${ok(val)}</span>`;
+      };
+      setEnv('envGemini', env.GEMINI_API_KEY);
+      setEnv('envGoogleId', env.GOOGLE_CLIENT_ID);
+      setEnv('envGoogleSecret', env.GOOGLE_CLIENT_SECRET);
+      setEnv('envStripe', env.STRIPE_SECRET_KEY);
+      setEnv('envWebhook', env.STRIPE_WEBHOOK_SECRET);
+      setEnv('envFrontend', env.FRONTEND_URL);
+      setEnv('envAdmin', env.ADMIN_API_KEY);
+      setEnv('envSkipWA', null, env.SKIP_WA_INIT ? `<span style="color:#f59e0b;">⚠️ ${env.SKIP_WA_INIT}</span>` : '<span style="color:var(--text-muted);">—</span>');
     } catch (e) {
       document.getElementById('serverInfo').innerHTML = '<p style="color:var(--danger);">No se pudo conectar al backend</p>';
     }
