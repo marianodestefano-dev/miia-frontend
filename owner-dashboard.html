@@ -1,6 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
+  <script>
+    // Apply saved theme BEFORE paint to prevent flash
+    (function(){var t=localStorage.getItem('miia-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MIIA - Dashboard</title>
@@ -316,8 +320,13 @@
         </button>
       </nav>
 
-      <!-- Footer: WA status + profile -->
+      <!-- Footer: Theme toggle + WA status + profile -->
       <div class="sidebar-footer">
+        <!-- Theme Toggle -->
+        <button class="theme-toggle" onclick="toggleTheme()" id="themeToggleBtn">
+          <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+          <span class="sidebar-label" id="themeLabel">Tema oscuro</span>
+        </button>
         <!-- WhatsApp Status -->
         <div class="sidebar-wa-status" id="sidebarWaStatus">
           <span class="status-dot red" id="sidebarWaDot"></span>
@@ -1575,11 +1584,11 @@
         banner.style.cssText = `position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
           background:rgba(20,20,20,0.95);border:1px solid rgba(59,91,255,0.3);
           border-radius:12px;padding:14px 24px;display:flex;align-items:center;gap:12px;
-          z-index:999;color:#94A3B8;font-size:0.85rem;box-shadow:0 8px 30px rgba(0,0,0,0.4);`;
+          z-index:999;color:var(--text-body);font-size:0.85rem;box-shadow:0 8px 30px rgba(0,0,0,0.4);`;
         banner.innerHTML = `
           <div style="width:10px;height:10px;border-radius:50%;background:#3B5BFF;animation:pulse-glow 1.5s infinite;flex-shrink:0"></div>
           <span id="wa-reconnect-text">MIIA está restaurando la sesión de WhatsApp...</span>
-          <span style="color:#64748B;font-size:0.75rem" id="wa-reconnect-timer"></span>`;
+          <span style="color:var(--text-muted);font-size:0.75rem" id="wa-reconnect-timer"></span>`;
         document.body.appendChild(banner);
       }
       const remaining = Math.max(0, 90 - attempt * 5);
@@ -2011,6 +2020,30 @@
       } catch (e) { showToast('Error: ' + e.message, 'error'); }
     }
 
+    // ═══ THEME TOGGLE ═══
+    function toggleTheme() {
+      const html = document.documentElement;
+      html.classList.add('theme-transitioning');
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('miia-theme', next);
+      updateThemeUI(next);
+      setTimeout(() => html.classList.remove('theme-transitioning'), 350);
+      // Save to Firestore if logged in
+      if (typeof db !== 'undefined' && currentUser) {
+        db.collection('users').doc(currentUser.uid).update({ themePreference: next }).catch(() => {});
+      }
+    }
+    function updateThemeUI(theme) {
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (icon) icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+      if (label) label.textContent = theme === 'dark' ? 'Tema oscuro' : 'Tema claro';
+    }
+    // Init theme UI on load
+    updateThemeUI(document.documentElement.getAttribute('data-theme') || 'dark');
+
     // ═══ LOGOUT ═══
     function handleLogout() {
       if (confirm('¿Cerrar sesión?')) {
@@ -2041,10 +2074,16 @@
     function showSection(name, btn) {
       document.querySelectorAll('.page-section').forEach(s => s.classList.add('section-hidden'));
       const target = document.getElementById('section-' + name);
-      if (target) target.classList.remove('section-hidden');
+      if (target) {
+        target.classList.remove('section-hidden');
+        // Forzar visibilidad de fade-in que el IntersectionObserver no detectó
+        target.querySelectorAll('.fade-in:not(.visible)').forEach((el, i) => {
+          setTimeout(() => el.classList.add('visible'), i * 80);
+        });
+      }
       document.querySelectorAll('.sidebar-nav .sidebar-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
       if (btn) btn.classList.add('active');
-      // Handle hash for direct links
       history.replaceState(null, '', '#' + name);
     }
 
@@ -2085,7 +2124,7 @@
     // Restore section from hash on load
     window.addEventListener('DOMContentLoaded', function() {
       const hash = window.location.hash.replace('#', '');
-      const validSections = ['inicio', 'agentes', 'planes', 'config'];
+      const validSections = ['inicio', 'agentes', 'planes', 'conexiones'];
       if (hash && validSections.includes(hash)) {
         const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
         showSection(hash, btn);

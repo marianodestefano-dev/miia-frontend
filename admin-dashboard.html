@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <!-- v2 -->
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
+  <script>(function(){var t=localStorage.getItem('miia-theme');if(t)document.documentElement.setAttribute('data-theme',t);})()</script>
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
@@ -10,25 +11,16 @@
   <title>MIIA - Admin</title>
   <style>
     :root {
-      --primary: #3B5BFF; --primary-dark: #2A45DB; --secondary: #FF1A8C;
-      --accent: #A78BFA; --accent-dark: #9061F9; --danger: #ef4444; --warning: #f59e0b;
-      --bg-deep: #0F0F0F; --bg-light: #0F0F0F; --bg-panel: #141414; --bg-white: #0F0F0F;
-      --bg-surface: #1A1A1A; --bg-card: #141414;
-      --text-dark: #F1F5F9; --text-body: #94A3B8; --text-muted: #64748B;
-      --border-glass: rgba(255,255,255,0.06);
-      --gradient-main: linear-gradient(135deg, #3B5BFF 0%, #8B30E0 50%, #FF1A8C 100%);
-      --shadow-sm: 0 2px 8px rgba(59,91,255,0.08);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
-      --radius-sm: 8px; --radius-md: 16px; --radius-lg: 24px; --radius-full: 100px;
+      /* Theme variables inherited from styles.css */
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color:var(--text-body); background:var(--bg-deep); min-height:100vh; -webkit-font-smoothing: antialiased; }
 
     /* Navbar */
-    #navbar { position:fixed; top:0; left:0; right:0; height:64px; background:rgba(3,5,8,0.8); backdrop-filter:blur(16px); border-bottom:1px solid var(--border-glass); display:flex; justify-content:space-between; align-items:center; padding:0 40px; z-index:100; }
+    #navbar { position:fixed; top:0; left:0; right:0; height:64px; background:var(--navbar-bg); backdrop-filter:blur(16px); border-bottom:1px solid var(--border-glass); display:flex; justify-content:space-between; align-items:center; padding:0 40px; z-index:100; }
     .nav-logo { font-size:1.5rem; font-weight:800; letter-spacing:-0.03em; background:var(--gradient-main); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .nav-right { display:flex; align-items:center; gap:16px; }
-    .nav-email { font-size:0.82rem; color:var(--text-muted); padding:6px 14px; background:rgba(255,255,255,0.04); border:1px solid var(--border-glass); border-radius:var(--radius-full); }
+    .nav-email { font-size:0.82rem; color:var(--text-muted); padding:6px 14px; background:var(--bg-surface); border:1px solid var(--border-glass); border-radius:var(--radius-full); }
     .nav-btn { padding:8px 18px; border-radius:var(--radius-sm); font-size:0.85rem; font-weight:600; cursor:pointer; border:none; transition:all 0.3s; }
     .nav-btn.logout { background:transparent; border:1px solid rgba(239,68,68,0.4); color:#f87171; }
     .nav-btn.logout:hover { background:rgba(239,68,68,0.12); }
@@ -46,7 +38,7 @@
 
     /* Stats */
     .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
-    .stat-card { background:linear-gradient(145deg,#0d1117 0%,#07090d 100%); border:1px solid rgba(255,255,255,0.05); border-radius:var(--radius-md); padding:28px 24px; text-align:center; transition:transform 0.3s, border-color 0.3s; }
+    .stat-card { background:var(--bg-card); border:1px solid var(--border-glass); border-radius:var(--radius-md); padding:28px 24px; text-align:center; transition:transform 0.3s, border-color 0.3s; }
     .stat-card:hover { border-color:var(--primary); transform:translateY(-4px); }
     .stat-card .value { font-size:2.5rem; font-weight:800; color:#ffffff; display:block; letter-spacing:-0.05em; text-shadow:0 0 20px rgba(59,91,255,0.2); }
     .stat-card .label { font-size:0.72rem; color:var(--text-muted); margin-top:8px; text-transform:uppercase; letter-spacing:0.1em; }
@@ -97,23 +89,23 @@
 
     /* Env vars list */
     .env-list { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
-    .env-item { display:flex; align-items:center; gap:8px; padding:8px 14px; background:rgba(255,255,255,0.03); border:1px solid var(--border-glass); border-radius:var(--radius-sm); font-size:0.85rem; color:var(--text-body); }
+    .env-item { display:flex; align-items:center; gap:8px; padding:8px 14px; background:var(--bg-surface); border:1px solid var(--border-glass); border-radius:var(--radius-sm); font-size:0.85rem; color:var(--text-body); }
 
     /* Toolbar */
     .toolbar { display:flex; gap:12px; align-items:center; margin-bottom:20px; flex-wrap:wrap; }
-    .toolbar input { padding:8px 16px; border:1px solid var(--border-glass); border-radius:var(--radius-full); font-size:0.88rem; width:260px; background:rgba(255,255,255,0.04); color:var(--text-dark); }
+    .toolbar input { padding:8px 16px; border:1px solid var(--border-glass); border-radius:var(--radius-full); font-size:0.88rem; width:260px; background:var(--bg-surface); color:var(--text-dark); }
     .toolbar input:focus { outline:none; border-color:var(--primary); }
     .toolbar input::placeholder { color:var(--text-muted); }
-    .toolbar select { padding:8px 14px; border:1px solid var(--border-glass); border-radius:var(--radius-sm); font-size:0.85rem; background:rgba(255,255,255,0.04); color:var(--text-body); }
+    .toolbar select { padding:8px 14px; border:1px solid var(--border-glass); border-radius:var(--radius-sm); font-size:0.85rem; background:var(--bg-surface); color:var(--text-body); }
 
     /* Modal */
-    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.65); display:none; align-items:center; justify-content:center; z-index:200; backdrop-filter:blur(4px); }
+    .modal-overlay { position:fixed; inset:0; background:var(--overlay-bg); display:none; align-items:center; justify-content:center; z-index:200; backdrop-filter:blur(4px); }
     .modal-overlay.active { display:flex; }
     .modal { background:var(--bg-panel); border:1px solid var(--border-glass); border-radius:var(--radius-lg); padding:32px; max-width:500px; width:90%; }
     .modal h3 { margin-bottom:20px; color:var(--text-dark); font-size:1.1rem; }
     .form-group { margin-bottom:16px; }
     .form-group label { display:block; font-size:0.83rem; font-weight:600; color:var(--text-muted); margin-bottom:6px; text-transform:uppercase; letter-spacing:0.05em; }
-    .form-group input, .form-group select { width:100%; padding:10px 14px; border:1px solid var(--border-glass); border-radius:var(--radius-sm); font-size:0.9rem; background:rgba(255,255,255,0.05); color:var(--text-dark); }
+    .form-group input, .form-group select { width:100%; padding:10px 14px; border:1px solid var(--border-glass); border-radius:var(--radius-sm); font-size:0.9rem; background:var(--bg-surface); color:var(--text-dark); }
     .form-group input:focus, .form-group select:focus { outline:none; border-color:var(--primary); }
     .modal-actions { display:flex; gap:10px; margin-top:20px; }
 
@@ -208,6 +200,10 @@
     </nav>
 
     <div class="sidebar-footer">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggleBtn" title="Cambiar tema">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Modo oscuro</span>
+      </button>
       <div class="sidebar-wa-status" id="adminSidebarStatus">
         <span class="status-dot red" id="adminStatusDot"></span>
         <span class="wa-label" id="adminStatusLabel">WhatsApp desconectado</span>
@@ -255,27 +251,27 @@
               Estado de Servicios
             </h5>
             <div id="servicesStatus" style="display:flex;flex-wrap:wrap;gap:8px;">
-              <a href="https://railway.com/project/9ee59327-edf5-4e33-b6ac-96670bc9a2fe" target="_blank" rel="noopener" id="svc-railway" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+              <a href="https://railway.com/project/9ee59327-edf5-4e33-b6ac-96670bc9a2fe" target="_blank" rel="noopener" id="svc-railway" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1" fill="currentColor"/><circle cx="6" cy="18" r="1" fill="currentColor"/></svg>
                 Railway
                 <span id="svc-dot-railway" class="dot green" style="width:8px;height:8px;"></span>
               </a>
-              <a href="https://vercel.com/dashboard" target="_blank" rel="noopener" id="svc-vercel" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+              <a href="https://vercel.com/dashboard" target="_blank" rel="noopener" id="svc-vercel" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l10 18H2z"/></svg>
                 Vercel
                 <span id="svc-dot-vercel" class="dot green" style="width:8px;height:8px;"></span>
               </a>
-              <a href="https://console.firebase.google.com/u/0/project/miia-app-8cbd0" target="_blank" rel="noopener" id="svc-firebase" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+              <a href="https://console.firebase.google.com/u/0/project/miia-app-8cbd0" target="_blank" rel="noopener" id="svc-firebase" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8.5 14.5A2.5 2.5 0 0011 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 11-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 002.5 2.5z"/></svg>
                 Firebase
                 <span id="svc-dot-firebase" class="dot green" style="width:8px;height:8px;"></span>
               </a>
-              <a href="https://github.com/marianodestefano-dev" target="_blank" rel="noopener" id="svc-github" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+              <a href="https://github.com/marianodestefano-dev" target="_blank" rel="noopener" id="svc-github" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
                 GitHub
                 <span id="svc-dot-github" class="dot green" style="width:8px;height:8px;"></span>
               </a>
-              <a href="https://vendors.paddle.com/" target="_blank" rel="noopener" id="svc-paddle" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(255,255,255,0.04);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
+              <a href="https://vendors.paddle.com/" target="_blank" rel="noopener" id="svc-paddle" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
                 Paddle
                 <span id="svc-dot-paddle" class="dot green" style="width:8px;height:8px;"></span>
@@ -289,11 +285,11 @@
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3l1.5 3.2L17 7.5l-2.5 2.8.3 3.7L12 12.5 9.2 14l.3-3.7L7 7.5l3.5-1.3z"/><path d="M5 19l1 2.5L8.5 22l-1.5 1.5.2 2.5L5 24.5 2.8 26l.2-2.5L1.5 22 4 21.5z" transform="scale(0.6) translate(2,2)"/></svg>
               Asistente IA — Soporte Tecnico
             </h5>
-            <div id="supportChatMessages" style="max-height:300px;overflow-y:auto;background:rgba(0,0,0,0.2);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:14px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;">
+            <div id="supportChatMessages" style="max-height:300px;overflow-y:auto;background:var(--bg-deep);border:1px solid var(--border-glass);border-radius:var(--radius-md);padding:14px;margin-bottom:10px;display:flex;flex-direction:column;gap:8px;">
               <div class="message miia"><div class="message-bubble">Hola, soy el asistente tecnico de MIIA. Preguntame sobre problemas con Railway, Firebase, WhatsApp, Gemini o cualquier servicio.</div></div>
             </div>
             <div style="display:flex;gap:8px;">
-              <input type="text" id="supportChatInput" placeholder="Pregunta sobre un problema tecnico..." style="flex:1;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.88rem;background:rgba(255,255,255,0.04);color:var(--text-dark);" onkeydown="if(event.key==='Enter')sendSupportChat()">
+              <input type="text" id="supportChatInput" placeholder="Pregunta sobre un problema tecnico..." style="flex:1;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.88rem;background:var(--bg-surface);color:var(--text-dark);" onkeydown="if(event.key==='Enter')sendSupportChat()">
               <button onclick="sendSupportChat()" class="btn-sm btn-primary" style="border-radius:var(--radius-full);padding:10px 18px;">Enviar</button>
             </div>
           </div>
@@ -581,7 +577,7 @@
               <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Número de WhatsApp principal de MIIA para responder a los mensajes de tus clientes.</p>
             </div>
           </div>
-          <div id="adminWaStatusConexiones" style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;">Verificando estado...</div>
+          <div id="adminWaStatusConexiones" style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-surface);border-radius:8px;">Verificando estado...</div>
           <button onclick="document.getElementById('qrModal').classList.remove('hidden');adminOpenQrModal()" style="width:100%;padding:9px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">Conectar WhatsApp</button>
         </div>
 
@@ -599,7 +595,7 @@
               <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Clave de la IA de Google Gemini. Se configura en las variables de Railway.</p>
             </div>
           </div>
-          <div style="font-size:0.78rem;color:var(--text-muted);padding:8px 12px;background:rgba(255,255,255,0.03);border-radius:8px;">
+          <div style="font-size:0.78rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-surface);border-radius:8px;">
             Configurada como variable de entorno <code style="color:#3B5BFF;">GEMINI_API_KEY</code> en Railway. Los clientes configuran su propia key en su dashboard.
           </div>
         </div>
@@ -616,12 +612,12 @@
             </div>
           </div>
           <div id="envList" style="display:flex;flex-direction:column;gap:6px;font-size:0.82rem;">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">GEMINI_API_KEY</span><span id="envGemini" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">STRIPE_SECRET_KEY</span><span id="envStripe" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">STRIPE_WEBHOOK_SECRET</span><span id="envWebhook" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">FRONTEND_URL</span><span id="envFrontend" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">ADMIN_API_KEY</span><span id="envAdmin" style="font-weight:600;">—</span></div>
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">SKIP_WA_INIT <span style="color:var(--text-muted);font-size:0.72rem;">(no configurar = WhatsApp activo)</span></span><span id="envSkipWA" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">GEMINI_API_KEY</span><span id="envGemini" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">STRIPE_SECRET_KEY</span><span id="envStripe" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">STRIPE_WEBHOOK_SECRET</span><span id="envWebhook" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">FRONTEND_URL</span><span id="envFrontend" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">ADMIN_API_KEY</span><span id="envAdmin" style="font-weight:600;">—</span></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;"><span style="color:var(--text-body);">SKIP_WA_INIT <span style="color:var(--text-muted);font-size:0.72rem;">(no configurar = WhatsApp activo)</span></span><span id="envSkipWA" style="font-weight:600;">—</span></div>
           </div>
           <div id="serverInfo" style="font-size:0.82rem;padding-top:10px;border-top:1px solid var(--border-glass);display:flex;flex-direction:column;gap:6px;">Cargando...</div>
         </div>
@@ -638,11 +634,11 @@
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:10px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;">
               <span style="font-size:0.82rem;color:var(--text-muted);">Email actual</span>
               <span id="adminCurrentEmail" style="font-size:0.82rem;font-weight:600;color:var(--text-dark);">—</span>
             </div>
-            <input type="email" id="migrateNewEmail" placeholder="Nuevo email del super admin" style="width:100%;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.88rem;background:rgba(255,255,255,0.05);color:var(--text-dark);">
+            <input type="email" id="migrateNewEmail" placeholder="Nuevo email del super admin" style="width:100%;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.88rem;background:var(--bg-surface);color:var(--text-dark);">
             <div style="font-size:0.72rem;color:var(--text-muted);line-height:1.6;padding:8px 12px;background:rgba(167,139,250,0.06);border:1px solid rgba(167,139,250,0.15);border-radius:8px;margin-bottom:4px;">
               <strong style="color:var(--text-dark);">¿Que se migra automaticamente?</strong><br>
               ✅ Login en lobsterscrm.com (Firebase Auth)<br>
@@ -662,7 +658,7 @@
     </div><!-- end admin-section-configuracion -->
 
 <!-- ═══ QR MODAL ═══ -->
-<div id="qrModal" style="position:fixed;inset:0;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;z-index:300;backdrop-filter:blur(4px);" onclick="if(event.target===this)document.getElementById('qrModal').classList.add('hidden')" class="hidden">
+<div id="qrModal" style="position:fixed;inset:0;background:var(--overlay-bg);display:flex;align-items:center;justify-content:center;z-index:300;backdrop-filter:blur(4px);" onclick="if(event.target===this)document.getElementById('qrModal').classList.add('hidden')" class="hidden">
   <div style="background:var(--bg-panel);border:1px solid var(--border-glass);border-radius:24px;padding:36px;max-width:440px;width:90%;text-align:center;">
     <h3 style="color:var(--text-dark);margin-bottom:16px;">Conectar WhatsApp</h3>
     <div style="display:flex;border:1px solid var(--border-glass);border-radius:8px;margin-bottom:20px;overflow:hidden;">
@@ -707,7 +703,7 @@
         <div class="form-group"><label>Limite de agentes</label><input type="number" id="editAgentsLimit" min="1" max="100"></div>
         <div class="form-group"><label>Descuento (%)</label><input type="number" id="editDiscount" min="0" max="100"></div>
       </div>
-      <div class="form-group"><label>Notas internas</label><textarea id="editNotes" rows="2" style="width:100%;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.88rem;background:rgba(255,255,255,0.05);color:var(--text-body);font-family:inherit;resize:vertical;" placeholder="Notas visibles solo para admin..."></textarea></div>
+      <div class="form-group"><label>Notas internas</label><textarea id="editNotes" rows="2" style="width:100%;padding:10px 14px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.88rem;background:var(--bg-surface);color:var(--text-body);font-family:inherit;resize:vertical;" placeholder="Notas visibles solo para admin..."></textarea></div>
       <div class="modal-actions">
         <button type="submit" class="btn-sm btn-primary">Guardar</button>
         <button type="button" class="btn-sm btn-outline" onclick="closeEditModal()">Cancelar</button>
@@ -1109,11 +1105,11 @@
       const data = await res.json();
       const waOk = data.whatsapp === 'connected' || data.whatsapp === true || data.whatsapp === 'true';
       document.getElementById('serverInfo').innerHTML = `
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;">
           <span style="color:var(--text-body);">WhatsApp</span>
           <span id="sysWaStatus" style="font-weight:700;color:${waOk ? '#16a34a' : '#ef4444'}">${waOk ? '✅ Conectado' : '❌ Desconectado'}</span>
         </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:rgba(255,255,255,0.03);border:1px solid var(--border-glass);border-radius:8px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;">
           <span style="color:var(--text-body);">Conversaciones en memoria</span>
           <span id="sysConvCount" style="font-weight:600;color:var(--text-dark);">${data.conversationCount || 0}</span>
         </div>
@@ -1141,6 +1137,31 @@
       if (conv) conv.textContent = data.conversationCount || 0;
     } catch (_) {}
   }, 15000);
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme') || 'dark';
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.classList.add('theme-transitioning');
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('miia-theme', next);
+    updateThemeUI(next);
+    setTimeout(() => html.classList.remove('theme-transitioning'), 400);
+    const user = auth.currentUser;
+    if (user) {
+      db.collection('users').doc(user.uid).update({ themePreference: next }).catch(() => {});
+    }
+  }
+
+  function updateThemeUI(theme) {
+    const icon = document.getElementById('themeIcon');
+    const label = document.getElementById('themeLabel');
+    if (icon) icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+    if (label) label.textContent = theme === 'dark' ? 'Modo oscuro' : 'Modo claro';
+  }
+
+  // Init theme UI on load
+  updateThemeUI(document.documentElement.getAttribute('data-theme') || 'dark');
 
   function handleLogout() {
     if (confirm('Cerrar sesion?')) { auth.signOut(); window.location.href = 'login.html'; }
@@ -1275,7 +1296,7 @@
     const errEl = document.getElementById('adminPairingError');
     if (!phone || phone.length < 10) { errEl.style.display=''; errEl.style.color='#f87171'; errEl.textContent='Ingresá número con código de país (ej: 5491112345678)'; return; }
     errEl.style.display = '';
-    errEl.style.color = '#94A3B8';
+    errEl.style.color = 'var(--text-body)';
     errEl.textContent = '⏳ Inicializando cliente WhatsApp...';
     document.getElementById('adminPairingCodeDisplay').style.display = 'none';
     try {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,28 +7,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <script>(function(){var t=localStorage.getItem('miia-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();</script>
   <style>
     :root {
-      --primary: #3B5BFF;
-      --primary-dark: #2A45DB;
-      --secondary: #FF1A8C;
-      --accent: #34D399;
-      --bg-light: #0F0F0F;
-      --bg-white: #0F0F0F;
-      --bg-card: #141414;
-      --bg-surface: #1A1A1A;
-      --text-dark: #F1F5F9;
-      --text-body: #94A3B8;
-      --text-muted: #64748B;
-      --gradient-main: linear-gradient(135deg, #3B5BFF 0%, #8B30E0 50%, #FF1A8C 100%);
-      --shadow-sm: 0 2px 8px rgba(59,91,255,0.08);
-      --shadow-md: 0 8px 30px rgba(59,91,255,0.12);
-      --shadow-lg: 0 20px 60px rgba(59,91,255,0.15);
-      --shadow-card: 0 4px 20px rgba(0,0,0,0.3);
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-      --radius-full: 100px;
+      /* Theme variables inherited from styles.css */
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -275,6 +257,10 @@
     </nav>
 
     <div class="sidebar-footer">
+      <button class="theme-toggle" onclick="toggleTheme()" id="themeToggleBtn" title="Cambiar tema">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Modo oscuro</span>
+      </button>
       <div class="sidebar-wa-status" id="sidebarWaStatus">
         <span class="status-dot red" id="sidebarWaDot"></span>
         <span class="wa-label" id="sidebarWaLabel">WhatsApp</span>
@@ -614,6 +600,26 @@
 
       document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.classList.add('theme-transitioning');
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('miia-theme', next);
+      updateThemeUI(next);
+      setTimeout(() => html.classList.remove('theme-transitioning'), 400);
+      const user = auth.currentUser;
+      if (user) db.collection('users').doc(user.uid).update({ themePreference: next }).catch(() => {});
+    }
+    function updateThemeUI(theme) {
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+      if (icon) icon.textContent = theme === 'dark' ? '🌙' : '☀️';
+      if (label) label.textContent = theme === 'dark' ? 'Modo oscuro' : 'Modo claro';
+    }
+    updateThemeUI(document.documentElement.getAttribute('data-theme') || 'dark');
 
     function handleLogout() {
       if (confirm('¿Cerrar sesión?')) {
