@@ -298,9 +298,9 @@
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
           <span class="sidebar-label">Contactos</span>
         </a>
-        <a href="training.html">
+        <a href="businesses.html">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
-          <span class="sidebar-label">Entrenamiento MIIA</span>
+          <span class="sidebar-label">Mis Negocios</span>
         </a>
         <a href="documents.html">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
@@ -342,9 +342,9 @@
           </div>
           <!-- Profile dropdown menu -->
           <div class="profile-menu" id="profileMenu">
-            <a href="training.html">
+            <a href="businesses.html">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
-              Entrenar MIIA
+              Mis Negocios
             </a>
             <a href="documents.html">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16h16V8z"/></svg>
@@ -413,7 +413,7 @@
               <span class="action-icon"><svg style="width:20px;height:20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></span> Conexiones
             </button>
             <button class="action-btn" onclick="showFeature('train')">
-              <span class="action-icon"><svg style="width:20px;height:20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4.5 4.5 0 0 0-3.6 7.2L12 14l3.6-4.8A4.5 4.5 0 0 0 12 2z"/><path d="M12 14v8"/></svg></span> Entrenar MIIA
+              <span class="action-icon"><svg style="width:20px;height:20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4.5 4.5 0 0 0-3.6 7.2L12 14l3.6-4.8A4.5 4.5 0 0 0 12 2z"/><path d="M12 14v8"/></svg></span> Mis Negocios
             </button>
             <button class="action-btn" onclick="showFeature('contacts')">
               <span class="action-icon"><svg style="width:20px;height:20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></span> Contactos
@@ -1213,7 +1213,7 @@
         planSectionExpiry.textContent = endDate.toLocaleDateString('es-ES');
       }
 
-      // Also update localStorage for backward compatibility with training.html
+      // Also update localStorage for backward compatibility with businesses.html
       localStorage.setItem('miia_user', JSON.stringify({
         uid: userData.uid,
         name: userData.name,
@@ -1526,7 +1526,7 @@
 
     function showFeature(feature) {
       if (feature === 'train') {
-        window.location.href = getSubpageUrl('training.html');
+        window.location.href = getSubpageUrl('businesses.html');
         return;
       }
 
@@ -1563,7 +1563,7 @@
             setTimeout(checkWhatsAppStatus, 5000);
           } else {
             // Después de 90s sin conectar → redirigir a QR
-            window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
+            window.location.href = 'businesses.html' + (clientSlug ? '?u=' + clientSlug : '');
           }
         }
       } catch (error) {
@@ -1571,7 +1571,7 @@
         if (_waReconnectAttempts <= 18) {
           setTimeout(checkWhatsAppStatus, 5000);
         } else {
-          window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : '');
+          window.location.href = 'businesses.html' + (clientSlug ? '?u=' + clientSlug : '');
         }
       }
     }
@@ -1625,7 +1625,7 @@
 
         if (data.success) {
           showToast('WhatsApp desvinculado correctamente', 'success');
-          setTimeout(() => window.location.href = 'training.html' + (clientSlug ? '?u=' + clientSlug : ''), 1200);
+          setTimeout(() => window.location.href = 'businesses.html' + (clientSlug ? '?u=' + clientSlug : ''), 1200);
         }
       } catch (error) {
         showToast('Error al desvincular: ' + error.message, 'error');

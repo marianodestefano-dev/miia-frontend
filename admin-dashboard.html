@@ -230,7 +230,9 @@
     <!-- ═══ SECTION: RESUMEN ═══ -->
     <div id="admin-section-resumen" class="page-section" style="padding:28px 24px 60px;max-width:1400px;">
       <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Resumen de Plataforma</h2>
-      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Vista general de clientes, ingresos y alertas del sistema.</p>
+      <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Vista general de clientes, ingresos y alertas del sistema.</p>
+
+      <button onclick="document.getElementById('qrModal').classList.remove('hidden');adminOpenQrModal()" style="width:100%;padding:9px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;margin-bottom:20px;">Conectar WhatsApp</button>
 
       <div class="stats-grid">
         <div class="stat-card"><div class="value" id="statTotal">0</div><div class="label">Total clientes</div></div>
@@ -1724,7 +1726,7 @@
     }
 
     // 4. Entrenamiento link
-    document.getElementById('acTrainingLink').href = `training.html?uid=${uid}`;
+    document.getElementById('acTrainingLink').href = `businesses.html?uid=${uid}`;
 
     // 5. Horarios
     try {
@@ -1741,7 +1743,7 @@
         document.getElementById('acFollowup').textContent = '—';
       }
     } catch(e) {}
-    document.getElementById('acScheduleLink').href = `training.html?uid=${uid}#schedule`;
+    document.getElementById('acScheduleLink').href = `businesses.html?uid=${uid}#schedule`;
 
     // 6. Agentes
     try {
