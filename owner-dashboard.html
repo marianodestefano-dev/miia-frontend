@@ -988,10 +988,7 @@
       const adminView = params.get('adminView') === '1';
       const impersonateUid = params.get('impersonateUid');
 
-      if (!adminView) {
-        const _tok = await user.getIdToken();
-        try { const _r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin-dashboard.html';return;} } catch(_){}
-      }
+      // Admin can access owner pages (admin is also an owner)
 
       currentUser = user;
       currentUserUid = user.uid;
