@@ -519,11 +519,11 @@
           <div style="display:flex;gap:16px;flex-wrap:wrap;">
             <div>
               <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Hora inicio</label>
-              <input type="time" id="scheduleStart" value="09:00" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+              <input type="time" id="scheduleStart" value="09:00" placeholder="09:00" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
             </div>
             <div>
               <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Hora fin</label>
-              <input type="time" id="scheduleEnd" value="21:00" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+              <input type="time" id="scheduleEnd" value="21:00" placeholder="21:00" style="padding:8px 12px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
             </div>
             <div>
               <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Zona horaria</label>
@@ -540,7 +540,7 @@
           </div>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje fuera de horario</label>
-            <input type="text" id="scheduleOffMsg" value="Gracias por escribir. Nuestro horario de atención es de lunes a viernes de 9:00 a 21:00. Te responderemos a primera hora." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+            <input type="text" id="scheduleOffMsg" placeholder="Mensaje fuera de horario" value="Gracias por escribir. Nuestro horario de atención es de lunes a viernes de 9:00 a 21:00. Te responderemos a primera hora." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
           </div>
           <div style="display:flex;align-items:center;gap:10px;">
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);">¿Responder fuera de horario?</label>
@@ -561,25 +561,25 @@
             <div>
               <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Seguimiento cada</label>
               <div style="display:flex;align-items:center;gap:6px;">
-                <input type="number" id="followupDays" value="3" min="1" max="30" style="width:60px;padding:8px 10px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
+                <input type="number" id="followupDays" value="3" placeholder="3" min="1" max="30" style="width:60px;padding:8px 10px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
                 <span style="font-size:0.88rem;color:var(--text-muted);">días sin respuesta</span>
               </div>
             </div>
             <div>
               <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Máx. seguimientos</label>
               <div style="display:flex;align-items:center;gap:6px;">
-                <input type="number" id="followupMax" value="3" min="1" max="10" style="width:60px;padding:8px 10px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
+                <input type="number" id="followupMax" value="3" placeholder="3" min="1" max="10" style="width:60px;padding:8px 10px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
                 <span style="font-size:0.88rem;color:var(--text-muted);">intentos antes de parar</span>
               </div>
             </div>
           </div>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje 1er seguimiento</label>
-            <input type="text" id="followupMsg1" value="Hola, ¿pudiste revisar la información que te envié? Quedo atento a cualquier consulta." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+            <input type="text" id="followupMsg1" placeholder="Primer mensaje de seguimiento" value="Hola, ¿pudiste revisar la información que te envié? Quedo atento a cualquier consulta." style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
           </div>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje último seguimiento</label>
-            <input type="text" id="followupMsgLast" value="Solo quería saber si seguís interesado. Si no es el momento, no hay problema. ¡Éxitos!" style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+            <input type="text" id="followupMsgLast" placeholder="Último mensaje de seguimiento" value="Solo quería saber si seguís interesado. Si no es el momento, no hay problema. ¡Éxitos!" style="width:100%;padding:10px 14px;border:1px solid rgba(59,91,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
           </div>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Después del último intento sin respuesta</label>
