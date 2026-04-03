@@ -40,7 +40,7 @@
     .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:28px; }
     .stat-card { background:var(--bg-card); border:1px solid var(--border-glass); border-radius:var(--radius-md); padding:28px 24px; text-align:center; transition:transform 0.3s, border-color 0.3s; }
     .stat-card:hover { border-color:var(--primary); transform:translateY(-4px); }
-    .stat-card .value { font-size:2.5rem; font-weight:800; color:#ffffff; display:block; letter-spacing:-0.05em; text-shadow:0 0 20px rgba(59,91,255,0.2); }
+    .stat-card .value { font-size:2.5rem; font-weight:800; color:var(--text-dark); display:block; letter-spacing:-0.05em; text-shadow:0 0 20px rgba(59,91,255,0.2); }
     .stat-card .label { font-size:0.72rem; color:var(--text-muted); margin-top:8px; text-transform:uppercase; letter-spacing:0.1em; }
 
     /* Tables */
@@ -535,8 +535,26 @@
 
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:18px;">
 
+        <!-- WhatsApp Admin -->
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.989.574 3.842 1.567 5.406L2.046 22l4.733-1.497A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 11.999 2zm.001 18.18a8.178 8.178 0 01-4.164-1.132l-.299-.177-3.098.98.912-3.02-.195-.31A8.173 8.173 0 013.82 12c0-4.51 3.67-8.18 8.18-8.18 4.51 0 8.18 3.67 8.18 8.18 0 4.51-3.67 8.18-8.18 8.18z"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp Admin</h3>
+                <span id="adminWaBadgeConexiones" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">Desconectado</span>
+              </div>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Número de WhatsApp principal de MIIA para responder a los mensajes de tus clientes.</p>
+            </div>
+          </div>
+          <div id="adminWaStatusConexiones" style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-surface);border-radius:8px;">Verificando estado...</div>
+          <button onclick="document.getElementById('qrModal').classList.remove('hidden');adminOpenQrModal()" style="width:100%;padding:9px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">Conectar WhatsApp</button>
+        </div>
+
         <!-- Google Calendar -->
-        <div class="card fade-in" style="display:flex;flex-direction:column;gap:14px;">
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="width:42px;height:42px;border-radius:10px;background:rgba(66,133,244,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -563,24 +581,6 @@
             </div>
             <button onclick="adminDisconnectCalendar()" style="width:100%;background:none;border:1px solid rgba(239,68,68,.3);color:#EF4444;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Desconectar Calendar</button>
           </div>
-        </div>
-
-        <!-- WhatsApp Admin -->
-        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
-          <div style="display:flex;align-items:flex-start;gap:12px;">
-            <div style="width:42px;height:42px;border-radius:10px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.989.574 3.842 1.567 5.406L2.046 22l4.733-1.497A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 11.999 2zm.001 18.18a8.178 8.178 0 01-4.164-1.132l-.299-.177-3.098.98.912-3.02-.195-.31A8.173 8.173 0 013.82 12c0-4.51 3.67-8.18 8.18-8.18 4.51 0 8.18 3.67 8.18 8.18 0 4.51-3.67 8.18-8.18 8.18z"/></svg>
-            </div>
-            <div style="flex:1;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp Admin</h3>
-                <span id="adminWaBadgeConexiones" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">Desconectado</span>
-              </div>
-              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Número de WhatsApp principal de MIIA para responder a los mensajes de tus clientes.</p>
-            </div>
-          </div>
-          <div id="adminWaStatusConexiones" style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-surface);border-radius:8px;">Verificando estado...</div>
-          <button onclick="document.getElementById('qrModal').classList.remove('hidden');adminOpenQrModal()" style="width:100%;padding:9px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">Conectar WhatsApp</button>
         </div>
 
         <!-- Gemini API Key -->
@@ -1863,10 +1863,10 @@
       const res = await fetch(`${ADMIN_API}/api/tenant/${user.uid}/ai-config`);
       if (res.ok) {
         const data = await res.json();
-        document.getElementById('adminAiProvider').value = data.aiProvider || 'gemini';
-        document.getElementById('adminAiApiKey').value = data.aiApiKey || '';
+        document.getElementById('adminAiProvider').value = data.provider || 'gemini';
+        // API key no se devuelve por seguridad — solo indicar si tiene una
         const badge = document.getElementById('adminAiBadge');
-        badge.textContent = data.aiApiKey ? 'Key propia' : 'Key global';
+        badge.textContent = data.hasCustomKey ? 'Key propia' : 'Key global';
         badge.style.background = 'rgba(37,211,102,.1)';
         badge.style.color = '#16a34a';
       }
@@ -1898,7 +1898,7 @@
       const res = await fetch(`${ADMIN_API}/api/tenant/${user.uid}/ai-config`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ aiProvider: provider, aiApiKey: apiKey })
+        body: JSON.stringify({ provider, apiKey })
       });
       if (res.ok) {
         result.style.background = 'rgba(37,211,102,.1)';
@@ -1931,7 +1931,7 @@
       const res = await fetch(`${ADMIN_API}/api/tenant/${user.uid}/ai-test`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ aiProvider: provider, aiApiKey: apiKey })
+        body: JSON.stringify({ provider, apiKey })
       });
       const data = await res.json();
       if (res.ok && data.success) {
