@@ -602,6 +602,48 @@
           </div>
         </div>
 
+        <!-- Configuración IA -->
+        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
+          <div style="display:flex;align-items:flex-start;gap:12px;">
+            <div style="width:42px;height:42px;border-radius:10px;background:rgba(139,92,246,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><path d="M12 2a4 4 0 014 4c0 1.1-.9 2-2 2h-4a2 2 0 01-2-2 4 4 0 014-4z"/><path d="M8 8v8a4 4 0 008 0V8"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">Configuración IA</h3>
+                <span id="adminAiBadge" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(37,211,102,.1);color:#16a34a;font-weight:600;">Activa</span>
+              </div>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Proveedor de IA y API key para tu cuenta de Super Admin.</p>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div>
+              <label style="font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:4px;display:block;">Proveedor principal</label>
+              <select id="adminAiProvider" onchange="adminAiProviderChanged()" style="width:100%;padding:9px 12px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.85rem;background:var(--bg-surface);color:var(--text-dark);cursor:pointer;">
+                <option value="gemini">Google Gemini (recomendado)</option>
+                <option value="openai">OpenAI (GPT)</option>
+                <option value="claude">Anthropic (Claude)</option>
+              </select>
+            </div>
+
+            <div>
+              <label style="font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:4px;display:block;">API Key</label>
+              <div style="display:flex;gap:8px;">
+                <input type="password" id="adminAiApiKey" placeholder="Tu API key..." style="flex:1;padding:9px 12px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.85rem;background:var(--bg-surface);color:var(--text-dark);">
+                <button onclick="toggleAiKeyVisibility()" style="padding:6px 10px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-muted);font-size:0.8rem;" title="Mostrar/ocultar">👁</button>
+              </div>
+              <p style="font-size:0.7rem;color:var(--text-muted);margin:4px 0 0;">Si está vacío, usa la key global de Railway (<code style="color:#8B5CF6;">GEMINI_API_KEY</code>).</p>
+            </div>
+
+            <div style="display:flex;gap:8px;">
+              <button onclick="adminSaveAiConfig()" style="flex:1;padding:9px;background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">Guardar</button>
+              <button onclick="adminTestAiConnection()" style="flex:1;padding:9px;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">🧪 Test</button>
+            </div>
+            <div id="adminAiResult" style="display:none;font-size:0.82rem;padding:8px 12px;border-radius:8px;line-height:1.5;"></div>
+          </div>
+        </div>
+
         <!-- Sistema / Variables de entorno -->
         <div class="card" style="display:flex;flex-direction:column;gap:14px;grid-column: span 1;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
@@ -799,6 +841,7 @@
     loadServerInfo();
     checkAdminWaStatus();
     checkServicesHealth();
+    adminLoadAiConfig();
     // Set current email in migration card
     const cu = firebase.auth().currentUser;
     if (cu) {
@@ -1811,6 +1854,100 @@
 
   // Admin Google Calendar
   const ADMIN_API = 'https://miia-backend-production.up.railway.app';
+
+  // ── Configuración IA ──
+  async function adminLoadAiConfig() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+    try {
+      const res = await fetch(`${ADMIN_API}/api/tenant/${user.uid}/ai-config`);
+      if (res.ok) {
+        const data = await res.json();
+        document.getElementById('adminAiProvider').value = data.aiProvider || 'gemini';
+        document.getElementById('adminAiApiKey').value = data.aiApiKey || '';
+        const badge = document.getElementById('adminAiBadge');
+        badge.textContent = data.aiApiKey ? 'Key propia' : 'Key global';
+        badge.style.background = 'rgba(37,211,102,.1)';
+        badge.style.color = '#16a34a';
+      }
+    } catch (e) { console.error('Error loading AI config:', e); }
+  }
+
+  function adminAiProviderChanged() {
+    const provider = document.getElementById('adminAiProvider').value;
+    const keyInput = document.getElementById('adminAiApiKey');
+    keyInput.placeholder = provider === 'gemini' ? 'AIza...' : provider === 'openai' ? 'sk-...' : 'sk-ant-...';
+  }
+
+  function toggleAiKeyVisibility() {
+    const inp = document.getElementById('adminAiApiKey');
+    inp.type = inp.type === 'password' ? 'text' : 'password';
+  }
+
+  async function adminSaveAiConfig() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+    const provider = document.getElementById('adminAiProvider').value;
+    const apiKey = document.getElementById('adminAiApiKey').value.trim();
+    const result = document.getElementById('adminAiResult');
+    result.style.display = 'block';
+    result.style.background = 'rgba(59,91,255,.08)';
+    result.style.color = 'var(--text-body)';
+    result.textContent = 'Guardando...';
+    try {
+      const res = await fetch(`${ADMIN_API}/api/tenant/${user.uid}/ai-config`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ aiProvider: provider, aiApiKey: apiKey })
+      });
+      if (res.ok) {
+        result.style.background = 'rgba(37,211,102,.1)';
+        result.style.color = '#16a34a';
+        result.textContent = '✅ Configuración guardada correctamente';
+        adminLoadAiConfig();
+      } else {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || `HTTP ${res.status}`);
+      }
+    } catch (e) {
+      result.style.background = 'rgba(239,68,68,.1)';
+      result.style.color = '#EF4444';
+      result.textContent = '❌ Error: ' + e.message;
+    }
+    setTimeout(() => { result.style.display = 'none'; }, 5000);
+  }
+
+  async function adminTestAiConnection() {
+    const user = firebase.auth().currentUser;
+    if (!user) return;
+    const provider = document.getElementById('adminAiProvider').value;
+    const apiKey = document.getElementById('adminAiApiKey').value.trim();
+    const result = document.getElementById('adminAiResult');
+    result.style.display = 'block';
+    result.style.background = 'rgba(59,91,255,.08)';
+    result.style.color = 'var(--text-body)';
+    result.textContent = '🧪 Probando conexión con ' + provider + '...';
+    try {
+      const res = await fetch(`${ADMIN_API}/api/tenant/${user.uid}/ai-test`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ aiProvider: provider, aiApiKey: apiKey })
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        result.style.background = 'rgba(37,211,102,.1)';
+        result.style.color = '#16a34a';
+        result.innerHTML = '✅ Conexión exitosa<br><span style="font-size:0.75rem;color:var(--text-muted);">Respuesta: "' + (data.response || '').substring(0, 100) + '"</span>';
+      } else {
+        throw new Error(data.error || 'Test falló');
+      }
+    } catch (e) {
+      result.style.background = 'rgba(239,68,68,.1)';
+      result.style.color = '#EF4444';
+      result.textContent = '❌ Error: ' + e.message;
+    }
+    setTimeout(() => { result.style.display = 'none'; }, 8000);
+  }
 
   async function adminConnectCalendar(e) {
     e.preventDefault();
