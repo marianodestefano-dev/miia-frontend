@@ -583,43 +583,24 @@
           </div>
         </div>
 
-        <!-- Gemini API Key -->
+        <!-- Configuración IA (unificada) -->
         <div class="card" style="display:flex;flex-direction:column;gap:14px;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
-            <div style="width:42px;height:42px;border-radius:10px;background:rgba(59,91,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <div id="adminAiIcon" style="width:42px;height:42px;border-radius:10px;background:rgba(59,91,255,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B5BFF" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
             </div>
             <div style="flex:1;">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">Gemini API Key</h3>
-                <span id="adminGeminiBadge" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(37,211,102,.1);color:#16a34a;font-weight:600;">Configurada</span>
-              </div>
-              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Clave de la IA de Google Gemini. Se configura en las variables de Railway.</p>
-            </div>
-          </div>
-          <div style="font-size:0.78rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-surface);border-radius:8px;">
-            Configurada como variable de entorno <code style="color:#3B5BFF;">GEMINI_API_KEY</code> en Railway. Los clientes configuran su propia key en su dashboard.
-          </div>
-        </div>
-
-        <!-- Configuración IA -->
-        <div class="card" style="display:flex;flex-direction:column;gap:14px;">
-          <div style="display:flex;align-items:flex-start;gap:12px;">
-            <div style="width:42px;height:42px;border-radius:10px;background:rgba(139,92,246,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><path d="M12 2a4 4 0 014 4c0 1.1-.9 2-2 2h-4a2 2 0 01-2-2 4 4 0 014-4z"/><path d="M8 8v8a4 4 0 008 0V8"/><circle cx="9" cy="13" r="1"/><circle cx="15" cy="13" r="1"/></svg>
-            </div>
-            <div style="flex:1;">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">Configuración IA</h3>
+                <h3 id="adminAiTitle" style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">Inteligencia Artificial</h3>
                 <span id="adminAiBadge" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(37,211,102,.1);color:#16a34a;font-weight:600;">Activa</span>
               </div>
-              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Proveedor de IA y API key para tu cuenta de Super Admin.</p>
+              <p id="adminAiDesc" style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Motor de IA que MIIA usa para responder mensajes. Configura el proveedor y tu API key.</p>
             </div>
           </div>
 
           <div style="display:flex;flex-direction:column;gap:10px;">
             <div>
-              <label style="font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:4px;display:block;">Proveedor principal</label>
+              <label style="font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:4px;display:block;">Proveedor</label>
               <select id="adminAiProvider" onchange="adminAiProviderChanged()" style="width:100%;padding:9px 12px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.85rem;background:var(--bg-surface);color:var(--text-dark);cursor:pointer;">
                 <option value="gemini">Google Gemini (recomendado)</option>
                 <option value="openai">OpenAI (GPT)</option>
@@ -627,13 +608,16 @@
               </select>
             </div>
 
+            <div id="adminAiInfo" style="font-size:0.78rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-surface);border-radius:8px;line-height:1.5;">
+              Usando la key global de Railway (<code style="color:#3B5BFF;">GEMINI_API_KEY</code>). Podés configurar una key propia abajo.
+            </div>
+
             <div>
-              <label style="font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:4px;display:block;">API Key</label>
+              <label style="font-size:0.78rem;font-weight:600;color:var(--text-body);margin-bottom:4px;display:block;">API Key personalizada <span style="font-weight:400;color:var(--text-muted);">(opcional)</span></label>
               <div style="display:flex;gap:8px;">
-                <input type="password" id="adminAiApiKey" placeholder="Tu API key..." style="flex:1;padding:9px 12px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.85rem;background:var(--bg-surface);color:var(--text-dark);">
+                <input type="password" id="adminAiApiKey" placeholder="AIza..." style="flex:1;padding:9px 12px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-size:0.85rem;background:var(--bg-surface);color:var(--text-dark);">
                 <button onclick="toggleAiKeyVisibility()" style="padding:6px 10px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-muted);font-size:0.8rem;" title="Mostrar/ocultar">👁</button>
               </div>
-              <p style="font-size:0.7rem;color:var(--text-muted);margin:4px 0 0;">Si está vacío, usa la key global de Railway (<code style="color:#8B5CF6;">GEMINI_API_KEY</code>).</p>
             </div>
 
             <div style="display:flex;gap:8px;">
@@ -1159,12 +1143,14 @@
           <span id="sysConvCount" style="font-weight:600;color:var(--text-dark);">${data.conversationCount || 0}</span>
         </div>
       `;
-      document.getElementById('envGemini').textContent = '✅';
-      document.getElementById('envStripe').textContent = '✅';
-      document.getElementById('envWebhook').textContent = '✅';
-      document.getElementById('envFrontend').textContent = '✅';
-      document.getElementById('envAdmin').textContent = '✅';
-      document.getElementById('envSkipWA').textContent = '—';
+      const env = data.env || {};
+      const ok = v => v ? '✅' : '❌';
+      document.getElementById('envGemini').innerHTML = `<span style="color:${env.GEMINI_API_KEY ? '#16a34a' : '#ef4444'}">${ok(env.GEMINI_API_KEY)}</span>`;
+      document.getElementById('envStripe').innerHTML = `<span style="color:${env.STRIPE_SECRET_KEY ? '#16a34a' : '#ef4444'}">${ok(env.STRIPE_SECRET_KEY)}</span>`;
+      document.getElementById('envWebhook').innerHTML = `<span style="color:${env.STRIPE_WEBHOOK_SECRET ? '#16a34a' : '#ef4444'}">${ok(env.STRIPE_WEBHOOK_SECRET)}</span>`;
+      document.getElementById('envFrontend').innerHTML = `<span style="color:${env.FRONTEND_URL ? '#16a34a' : '#ef4444'}">${ok(env.FRONTEND_URL)}</span>`;
+      document.getElementById('envAdmin').innerHTML = `<span style="color:${env.ADMIN_API_KEY ? '#16a34a' : '#ef4444'}">${ok(env.ADMIN_API_KEY)}</span>`;
+      document.getElementById('envSkipWA').innerHTML = env.SKIP_WA_INIT ? `<span style="color:#f59e0b;">⚠️ ${env.SKIP_WA_INIT}</span>` : '<span style="color:var(--text-muted);">—</span>';
     } catch (e) {
       document.getElementById('serverInfo').innerHTML = '<p style="color:var(--danger);">No se pudo conectar al backend</p>';
     }
@@ -1864,7 +1850,7 @@
       if (res.ok) {
         const data = await res.json();
         document.getElementById('adminAiProvider').value = data.provider || 'gemini';
-        // API key no se devuelve por seguridad — solo indicar si tiene una
+        adminAiProviderChanged(); // Update icon/info/placeholder
         const badge = document.getElementById('adminAiBadge');
         badge.textContent = data.hasCustomKey ? 'Key propia' : 'Key global';
         badge.style.background = 'rgba(37,211,102,.1)';
@@ -1876,7 +1862,25 @@
   function adminAiProviderChanged() {
     const provider = document.getElementById('adminAiProvider').value;
     const keyInput = document.getElementById('adminAiApiKey');
-    keyInput.placeholder = provider === 'gemini' ? 'AIza...' : provider === 'openai' ? 'sk-...' : 'sk-ant-...';
+    const icon = document.getElementById('adminAiIcon');
+    const info = document.getElementById('adminAiInfo');
+
+    const providerMeta = {
+      gemini: { placeholder: 'AIza...', color: '#3B5BFF', bg: 'rgba(59,91,255,.12)',
+        svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3B5BFF" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>',
+        info: 'Usando la key global de Railway (<code style="color:#3B5BFF;">GEMINI_API_KEY</code>). Podés configurar una key propia abajo.' },
+      openai: { placeholder: 'sk-...', color: '#10a37f', bg: 'rgba(16,163,127,.12)',
+        svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10a37f" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>',
+        info: 'Necesitás una API key de <strong>OpenAI</strong>. Obtenela en <code style="color:#10a37f;">platform.openai.com/api-keys</code>.' },
+      claude: { placeholder: 'sk-ant-api03-...', color: '#D97706', bg: 'rgba(217,119,6,.12)',
+        svg: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>',
+        info: 'Necesitás una API key de <strong>Anthropic</strong>. Obtenela en <code style="color:#D97706;">console.anthropic.com/settings/keys</code>.' }
+    };
+    const m = providerMeta[provider] || providerMeta.gemini;
+    keyInput.placeholder = m.placeholder;
+    icon.style.background = m.bg;
+    icon.innerHTML = m.svg;
+    info.innerHTML = m.info;
   }
 
   function toggleAiKeyVisibility() {
