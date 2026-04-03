@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA — Reportes</title>
+  <link rel="stylesheet" href="../styles.css">
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <style>
+    .report-tabs { display:flex; gap:4px; background:var(--bg-surface); border-radius:var(--r-md); padding:4px; margin-bottom:24px; }
+    .report-tab { flex:1; padding:10px 16px; border:none; border-radius:var(--r-sm); font-size:0.88rem; font-weight:600; cursor:pointer; background:transparent; color:var(--tx-dim); transition:all .2s; font-family:inherit; }
+    .report-tab.active { background:var(--indigo); color:#fff; }
+    .report-tab:hover:not(.active) { color:var(--tx-body); }
+    .cards-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px; }
+    .report-card { background:var(--surface); border:1px solid var(--bd-1); border-radius:var(--r-md); padding:20px; transition:border-color .2s; }
+    .report-card:hover { border-color:var(--bd-indigo); }
+    .card-date { font-size:0.75rem; color:var(--tx-dim); font-weight:600; text-transform:uppercase; letter-spacing:.05em; margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+    .card-text { font-size:0.88rem; color:var(--tx-body); line-height:1.6; }
+    .card-title { font-size:0.9rem; font-weight:700; color:var(--tx-bright); margin-bottom:6px; }
+    .card-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+    .tag { padding:3px 10px; border-radius:99px; font-size:0.74rem; font-weight:600; background:var(--indigo-lo); color:var(--indigo); }
+    .card-source { margin-top:10px; font-size:0.75rem; color:var(--tx-dim); }
+    .card-source a { color:var(--indigo); }
+    .empty-state { text-align:center; padding:80px 24px; }
+    .empty-state .icon { font-size:3rem; margin-bottom:16px; }
+    .empty-state h3 { color:var(--tx-bright); margin-bottom:8px; }
+    .empty-state p { color:var(--tx-dim); font-size:0.9rem; }
+    #loadingEl { text-align:center; padding:60px; color:var(--tx-dim); }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+
+<div style="max-width:1100px;margin:0 auto;padding:32px 24px 60px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+    <div>
+      <h1 style="font-size:1.5rem;font-weight:800;color:var(--tx-bright);display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></svg>
+        Reportes
+      </h1>
+      <p style="color:var(--tx-dim);font-size:0.88rem;">Reportes automáticos generados por los motores de MIIA.</p>
+    </div>
+    <button onclick="window.location.href='../admin-dashboard.html'" style="padding:8px 16px;border-radius:var(--r-sm);font-size:0.85rem;font-weight:600;cursor:pointer;border:1px solid var(--bd-1);background:var(--surface);color:var(--tx-body);font-family:inherit;">← Volver al Admin</button>
+  </div>
+
+  <div class="report-tabs">
+    <button class="report-tab active" onclick="switchReportTab('adn')">🧬 ADN Mining</button>
+    <button class="report-tab" onclick="switchReportTab('scraper')">🔍 Scraper</button>
+  </div>
+
+  <div id="loadingEl">Cargando reportes...</div>
+  <div id="adnGrid" class="cards-grid" style="display:none;"></div>
+  <div id="scraperGrid" class="cards-grid" style="display:none;"></div>
+  <div id="emptyEl" class="empty-state" style="display:none;">
+    <div class="icon" id="emptyIcon">🧬</div>
+    <h3>Sin reportes aún</h3>
+    <p id="emptyText">El motor no se ha ejecutado todavía, o aún no ha generado reportes.</p>
+  </div>
+</div>
+
+<script>
+  const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+  const firebaseConfig = {
+    apiKey:"AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+    authDomain:"miia-app-8cbd0.firebaseapp.com",
+    projectId:"miia-app-8cbd0",
+    storageBucket:"miia-app-8cbd0.firebasestorage.app",
+    messagingSenderId:"481282126913",
+    appId:"1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  // Theme
+  const saved = localStorage.getItem('theme');
+  if (saved) document.documentElement.setAttribute('data-theme', saved);
+
+  let currentTab = 'adn';
+  let adnLoaded = false, scraperLoaded = false;
+  let currentUid = null;
+
+  auth.onAuthStateChanged(async user => {
+    if (!user) { window.location.href = '../login.html'; return; }
+    currentUid = user.uid;
+    loadAdn(user.uid);
+  });
+
+  function switchReportTab(tab) {
+    currentTab = tab;
+    document.querySelectorAll('.report-tab').forEach((b, i) => {
+      b.classList.toggle('active', (i === 0 && tab === 'adn') || (i === 1 && tab === 'scraper'));
+    });
+    document.getElementById('adnGrid').style.display = tab === 'adn' && adnLoaded ? 'grid' : 'none';
+    document.getElementById('scraperGrid').style.display = tab === 'scraper' && scraperLoaded ? 'grid' : 'none';
+    document.getElementById('emptyEl').style.display = 'none';
+    document.getElementById('loadingEl').style.display = 'none';
+
+    if (tab === 'adn' && !adnLoaded) loadAdn(currentUid);
+    if (tab === 'scraper' && !scraperLoaded) loadScraper(currentUid);
+
+    // Show empty if loaded but no data
+    if (tab === 'adn' && adnLoaded && !document.getElementById('adnGrid').innerHTML) showEmpty('adn');
+    if (tab === 'scraper' && scraperLoaded && !document.getElementById('scraperGrid').innerHTML) showEmpty('scraper');
+  }
+
+  function showEmpty(type) {
+    document.getElementById('emptyIcon').textContent = type === 'adn' ? '🧬' : '🔍';
+    document.getElementById('emptyText').textContent = type === 'adn'
+      ? 'El ADN Mining no se ha ejecutado todavía, o aún no ha generado reportes.'
+      : 'El Scraper no se ha ejecutado todavía, o aún no ha generado reportes.';
+    document.getElementById('emptyEl').style.display = 'block';
+  }
+
+  async function loadAdn(uid) {
+    const loading = document.getElementById('loadingEl');
+    const grid = document.getElementById('adnGrid');
+    loading.style.display = 'block';
+    let reports = [];
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${uid}/reports/adn`);
+      if (res.ok) reports = await res.json();
+    } catch (e) {}
+    if (!reports.length) {
+      try {
+        const snap = await db.collection('users').doc(uid).collection('adn_reports').orderBy('date','desc').limit(60).get();
+        snap.forEach(doc => reports.push({ date: doc.data().date || doc.id, summary: doc.data().summary || '', insights: doc.data().insights || [] }));
+      } catch (e) {}
+    }
+    adnLoaded = true;
+    loading.style.display = 'none';
+    if (reports.length) {
+      grid.innerHTML = reports.map(r => `
+        <div class="report-card">
+          <div class="card-date" style="--dot:#10b981;">📅 ${r.date || '—'}</div>
+          <div class="card-text">${esc(r.summary || 'Sin resumen.')}</div>
+          ${r.insights?.length ? `<div class="card-tags">${r.insights.slice(0,4).map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>` : ''}
+        </div>`).join('');
+      if (currentTab === 'adn') grid.style.display = 'grid';
+    } else if (currentTab === 'adn') showEmpty('adn');
+  }
+
+  async function loadScraper(uid) {
+    const loading = document.getElementById('loadingEl');
+    const grid = document.getElementById('scraperGrid');
+    loading.style.display = 'block';
+    let reports = [];
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/scraper/reports`);
+      if (res.ok) reports = await res.json();
+    } catch (e) {}
+    if (!reports.length) {
+      try {
+        const snap = await db.collection('scraper_reports').orderBy('date','desc').limit(60).get();
+        snap.forEach(doc => reports.push({ date: doc.data().date || doc.id, title: doc.data().title || '', summary: doc.data().summary || '', url: doc.data().url || '' }));
+      } catch (e) {}
+    }
+    scraperLoaded = true;
+    loading.style.display = 'none';
+    if (reports.length) {
+      grid.innerHTML = reports.map(r => `
+        <div class="report-card">
+          <div class="card-date">📅 ${r.date || '—'}</div>
+          ${r.title ? `<div class="card-title">${esc(r.title)}</div>` : ''}
+          <div class="card-text">${esc(r.summary || 'Sin resumen.')}</div>
+          ${r.url ? `<div class="card-source">Fuente: <a href="${esc(r.url)}" target="_blank" rel="noopener">Ver artículo</a></div>` : ''}
+        </div>`).join('');
+      if (currentTab === 'scraper') grid.style.display = 'grid';
+    } else if (currentTab === 'scraper') showEmpty('scraper');
+  }
+
+  function esc(s) { const d=document.createElement('div'); d.textContent=s||''; return d.innerHTML; }
+</script>
+</body>
+</html>
