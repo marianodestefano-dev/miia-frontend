@@ -22,8 +22,8 @@
       --tx-1:      #f5f5f7;
       --tx-2:      #a1a1a6;
       --tx-3:      #6e6e73;
-      --accent:    #6366f1;
-      --accent-2:  #818cf8;
+      --accent:    #7C3AED;
+      --accent-2:  #9F67FF;
       --green:     #34d399;
       --border:    rgba(255,255,255,0.06);
       --border-h:  rgba(255,255,255,0.10);
@@ -32,7 +32,7 @@
       --r-full:    200px;
       --blur:      blur(40px);
       --max:       1120px;
-      --glow:      radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.08) 0%, transparent 60%);
+      --glow:      radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.08) 0%, transparent 60%);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,7 +55,7 @@
     /* ═══ UTILITIES ═══ */
     .container { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
     .text-gradient {
-      background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 50%, #f472b6 100%);
+      background: linear-gradient(135deg, #00E5FF 0%, #7C3AED 50%, #FF1744 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
@@ -201,7 +201,7 @@
     }
     .chat-av {
       width: 32px; height: 32px; border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), #f472b6);
+      background: linear-gradient(135deg, #00E5FF, #7C3AED, #FF1744);
       display: flex; align-items: center; justify-content: center;
       font-size: 0.7rem; font-weight: 700; color: white;
     }
@@ -217,9 +217,9 @@
       align-self: flex-start; border-bottom-left-radius: 4px;
     }
     .m-out {
-      background: rgba(99,102,241,0.12); color: var(--tx-2);
+      background: rgba(124,58,237,0.12); color: var(--tx-2);
       align-self: flex-end; border-bottom-right-radius: 4px;
-      border: 1px solid rgba(99,102,241,0.08);
+      border: 1px solid rgba(124,58,237,0.08);
     }
     .m-t { font-size: 0.6rem; color: var(--tx-3); margin-top: 3px; text-align: right; }
     .m-typing {
@@ -291,7 +291,7 @@
     .feat:hover { background: var(--card-h); }
     .feat-ico {
       width: 40px; height: 40px; border-radius: 10px;
-      background: rgba(99,102,241,0.08);
+      background: rgba(124,58,237,0.08);
       display: flex; align-items: center; justify-content: center;
       margin-bottom: 20px;
     }
@@ -309,7 +309,7 @@
     .step {}
     .step-n {
       font-size: 3.5rem; font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), #f472b6);
+      background: linear-gradient(135deg, #00E5FF, #7C3AED, #FF1744);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       line-height: 1; margin-bottom: 14px;
@@ -341,9 +341,9 @@
       text-transform: uppercase; letter-spacing: 1px;
       margin-bottom: 16px;
     }
-    .cap-tag-perf { background: rgba(99,102,241,0.1); color: var(--accent-2); }
+    .cap-tag-perf { background: rgba(124,58,237,0.1); color: var(--accent-2); }
     .cap-tag-agent { background: rgba(52,211,153,0.1); color: var(--green); }
-    .cap-tag-audio { background: rgba(244,114,182,0.1); color: #f472b6; }
+    .cap-tag-audio { background: rgba(255,23,68,0.1); color: #FF1744; }
     .cap-tag-commerce { background: rgba(251,191,36,0.1); color: #fbbf24; }
     .cap h3 { font-size: 1.05rem; font-weight: 700; color: var(--tx-1); margin-bottom: 8px; }
     .cap p { font-size: 0.85rem; color: var(--tx-3); line-height: 1.7; }
@@ -367,12 +367,12 @@
     .price-card:hover { border-color: var(--border-h); }
     .price-card.pop {
       border-color: var(--accent);
-      background: linear-gradient(180deg, rgba(99,102,241,0.06) 0%, var(--glass) 100%);
+      background: linear-gradient(180deg, rgba(124,58,237,0.06) 0%, var(--glass) 100%);
     }
     .price-badge {
       position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
       padding: 4px 14px;
-      background: linear-gradient(135deg, var(--accent), #f472b6);
+      background: linear-gradient(135deg, #00E5FF, #7C3AED, #FF1744);
       color: white; font-size: 0.65rem; font-weight: 700;
       border-radius: var(--r-full);
       text-transform: uppercase; letter-spacing: 0.5px;
@@ -422,7 +422,7 @@
     .test-who { display: flex; align-items: center; gap: 10px; }
     .test-av {
       width: 36px; height: 36px; border-radius: 50%;
-      background: rgba(99,102,241,0.08);
+      background: rgba(124,58,237,0.08);
       display: flex; align-items: center; justify-content: center;
       color: var(--accent-2); font-weight: 700; font-size: 0.75rem;
     }
@@ -497,7 +497,7 @@
       display: block; margin-top: 20px;
       padding: 16px 20px;
       border-left: 2px solid var(--accent);
-      background: rgba(99,102,241,0.04);
+      background: rgba(124,58,237,0.04);
       border-radius: 0 var(--r) var(--r) 0;
       font-weight: 700; font-size: 1rem;
       color: var(--tx-1); letter-spacing: -0.01em;
@@ -574,7 +574,7 @@
   <!-- ═══ NAV ═══ -->
   <nav id="navbar">
     <a href="index.html" class="nav-logo">
-      <svg viewBox="0 0 36 36" fill="none" style="width:26px;height:26px"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f472b6"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#lg)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>
+      <svg viewBox="85 115 230 180" fill="none" style="width:26px;height:26px"><defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs><path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#lg)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/></svg>
       MIIA
     </a>
     <ul class="nav-links" id="navLinks">
@@ -916,7 +916,7 @@
     <div class="ft-inner">
       <div class="ft-brand">
         <a href="index.html" class="nav-logo" style="margin-bottom:0;">
-          <svg viewBox="0 0 36 36" fill="none" style="width:26px;height:26px"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f472b6"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#lg2)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>
+          <svg viewBox="85 115 230 180" fill="none" style="width:26px;height:26px"><defs><linearGradient id="lg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs><path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#lg2)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/></svg>
           MIIA
         </a>
         <p>Tu asistente de ventas con IA que trabaja 24/7 en WhatsApp para hacer crecer tu negocio.</p>
