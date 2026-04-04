@@ -204,7 +204,7 @@
 
     /* ═══ VIEW TABS ═══ */
     .view-tabs { display:flex; gap:8px; margin-bottom:20px; }
-    .view-tab { padding:10px 24px; border:1px solid rgba(59,91,255,0.15); border-radius:var(--radius-full); background:transparent; color:var(--text-muted); font-size:0.9rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .view-tab { padding:10px 24px; border:1px solid rgba(0,229,255,0.15); border-radius:var(--radius-full); background:transparent; color:var(--text-muted); font-size:0.9rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
     .view-tab:hover { border-color:var(--primary); color:var(--primary); }
     .view-tab.active { background:var(--gradient-main); color:white; border-color:transparent; }
 
@@ -212,7 +212,7 @@
     .groups-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
     .groups-header h2 { color:var(--text-dark); font-size:1.3rem; font-weight:700; }
     .groups-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:16px; }
-    .group-card { background:var(--bg-card); border:1px solid rgba(59,91,255,0.08); border-radius:var(--radius-md); padding:20px; cursor:pointer; transition:all 0.2s; }
+    .group-card { background:var(--bg-card); border:1px solid rgba(0,229,255,0.08); border-radius:var(--radius-md); padding:20px; cursor:pointer; transition:all 0.2s; }
     .group-card:hover { border-color:var(--primary); transform:translateY(-2px); }
     .group-card-icon { font-size:2rem; margin-bottom:8px; }
     .group-card h3 { color:var(--text-dark); font-size:1rem; margin-bottom:4px; }
@@ -225,8 +225,8 @@
     .group-detail-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
     .group-detail-header h2 { color:var(--text-dark); font-size:1.3rem; font-weight:700; flex:1; }
 
-    .group-config { background:var(--bg-card); border:1px solid rgba(59,91,255,0.08); border-radius:var(--radius-md); padding:20px; margin-bottom:20px; }
-    .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(59,91,255,0.06); }
+    .group-config { background:var(--bg-card); border:1px solid rgba(0,229,255,0.08); border-radius:var(--radius-md); padding:20px; margin-bottom:20px; }
+    .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(0,229,255,0.06); }
     .toggle-row:last-child { border-bottom:none; }
     .toggle-switch { position:relative; width:44px; height:24px; }
     .toggle-switch input { opacity:0; width:0; height:0; }
@@ -236,11 +236,11 @@
     .toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); }
 
     .contacts-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
-    .contacts-table th { text-align:left; padding:10px 8px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; border-bottom:2px solid rgba(59,91,255,0.08); }
-    .contacts-table td { padding:8px; border-bottom:1px solid rgba(59,91,255,0.04); vertical-align:middle; color:var(--text-dark); }
+    .contacts-table th { text-align:left; padding:10px 8px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; border-bottom:2px solid rgba(0,229,255,0.08); }
+    .contacts-table td { padding:8px; border-bottom:1px solid rgba(0,229,255,0.04); vertical-align:middle; color:var(--text-dark); }
     .contacts-table .actions { display:flex; gap:4px; }
     .contacts-table .btn-icon { width:30px; height:30px; border:none; border-radius:6px; cursor:pointer; font-size:0.85rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; background:transparent; }
-    .contacts-table .btn-icon:hover { background:rgba(59,91,255,0.08); }
+    .contacts-table .btn-icon:hover { background:rgba(0,229,255,0.08); }
     .contacts-table .btn-icon.danger:hover { background:rgba(239,68,68,0.1); color:var(--danger); }
 
     /* ═══ MODAL ═══ */
@@ -249,7 +249,7 @@
     .modal-box { background:var(--bg-white); border-radius:var(--radius-md); padding:28px; width:100%; max-width:460px; box-shadow:var(--shadow-lg); }
     .modal-box h3 { color:var(--text-dark); font-size:1.15rem; font-weight:700; margin-bottom:18px; }
     .modal-footer { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
-    .btn-secondary { padding:10px 20px; border:1px solid rgba(59,91,255,0.2); border-radius:var(--radius-sm); background:transparent; color:var(--text-muted); font-size:0.9rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .btn-secondary { padding:10px 20px; border:1px solid rgba(0,229,255,0.2); border-radius:var(--radius-sm); background:transparent; color:var(--text-muted); font-size:0.9rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
     .btn-secondary:hover { border-color:var(--primary); color:var(--primary); }
     .btn-primary { padding:10px 20px; background:var(--gradient-main); color:white; border:none; border-radius:var(--radius-sm); font-size:0.9rem; font-weight:600; cursor:pointer; transition:transform 0.2s; }
     .btn-primary:hover { transform:translateY(-1px); }
@@ -257,7 +257,7 @@
     .btn-danger:hover { transform:translateY(-1px); }
 
     /* ═══ ADD CONTACT FORM ═══ */
-    .add-contact-form { background:var(--bg-card); border:1px solid rgba(59,91,255,0.08); border-radius:var(--radius-md); padding:20px; margin-top:16px; display:none; }
+    .add-contact-form { background:var(--bg-card); border:1px solid rgba(0,229,255,0.08); border-radius:var(--radius-md); padding:20px; margin-top:16px; display:none; }
     .add-contact-form.open { display:block; }
     .add-contact-form h4 { color:var(--text-dark); font-weight:700; margin-bottom:14px; font-size:0.95rem; }
     .inline-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px; }
@@ -397,7 +397,7 @@
           </div>
           <div class="toggle-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
             <span style="font-weight:600;color:var(--text-dark);font-size:0.9rem;">Tono / Instrucciones</span>
-            <textarea id="cfgTone" rows="3" style="width:100%;padding:8px 10px;border:1px solid rgba(59,91,255,0.2);border-radius:var(--radius-sm);font-family:inherit;font-size:0.88rem;resize:vertical;" placeholder="Ej: Habla de forma profesional y cordial..."></textarea>
+            <textarea id="cfgTone" rows="3" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:var(--radius-sm);font-family:inherit;font-size:0.88rem;resize:vertical;" placeholder="Ej: Habla de forma profesional y cordial..."></textarea>
           </div>
           <div style="margin-top:14px;">
             <button class="btn-primary" onclick="updateGroupConfig(currentGroupId)">Guardar configuración</button>
@@ -1022,7 +1022,7 @@
             </label>
           </td>
           <td>
-            ${otherGroups.length > 0 ? `<select style="font-size:0.8rem;padding:4px 6px;border:1px solid rgba(59,91,255,0.2);border-radius:6px;background:transparent;color:var(--text-dark);" onchange="moveContact('${c.phone}', this.value); this.value=''">
+            ${otherGroups.length > 0 ? `<select style="font-size:0.8rem;padding:4px 6px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:transparent;color:var(--text-dark);" onchange="moveContact('${c.phone}', this.value); this.value=''">
               <option value="">Mover a...</option>${moveOptions}
             </select>` : '<span style="color:var(--text-muted);font-size:0.8rem;">—</span>'}
           </td>
