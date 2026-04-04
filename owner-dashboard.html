@@ -1546,7 +1546,7 @@
     let _waReconnectAttempts = 0;
     async function checkWhatsAppStatus() {
       try {
-        const res = await fetch('https://miia-backend-production.up.railway.app/api/status');
+        const res = await fetch('https://api.miia-app.com/api/status');
         const data = await res.json();
 
         if (data.connected) {
@@ -1617,7 +1617,7 @@
       if (!confirm('¿Desvincular WhatsApp? Tendrás que escanear el código QR nuevamente.')) return;
 
       try {
-        const res = await fetch('https://miia-backend-production.up.railway.app/api/logout', { method: 'POST' });
+        const res = await fetch('https://api.miia-app.com/api/logout', { method: 'POST' });
         const data = await res.json();
 
         if (data.success) {
@@ -1734,7 +1734,7 @@
       btn.disabled = true;
       btn.textContent = 'Exportando...';
       try {
-        const res = await fetch(`https://miia-backend-production.up.railway.app/api/tenant/${user.uid}/export`, { method: 'POST' });
+        const res = await fetch(`https://api.miia-app.com/api/tenant/${user.uid}/export`, { method: 'POST' });
         const data = await res.json();
         if (!res.ok) { showToast(data.error || 'Error al exportar', 'error'); btn.disabled = false; btn.textContent = 'Exportar MIIA'; return; }
         // Download as .miia file
@@ -1756,7 +1756,7 @@
     }
 
     // ═══ AI PROVIDER CONFIG ═══
-    const BACKEND = 'https://miia-backend-production.up.railway.app';
+    const BACKEND = 'https://api.miia-app.com';
     const aiProviderSelect = document.getElementById('aiProviderSelect');
     const aiKeyContainer = document.getElementById('aiKeyContainer');
     const aiResetBtn = document.getElementById('aiResetBtn');
@@ -1879,7 +1879,7 @@
     }
 
     // ═══ EMAIL CONFIG ═══
-    const API = 'https://miia-backend-production.up.railway.app';
+    const API = 'https://api.miia-app.com';
 
     async function loadEmailConfig() {
       try {

@@ -776,7 +776,7 @@
 </div>
 
 <script>
-  const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+  const BACKEND_URL = 'https://api.miia-app.com';
   const firebaseConfig = {
     apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
     authDomain: "miia-app-8cbd0.firebaseapp.com",
@@ -803,7 +803,7 @@
 
   async function checkIsAdmin(token) {
     try {
-      const r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin', { headers: { Authorization: 'Bearer ' + token } });
+      const r = await fetch('https://api.miia-app.com/api/is-admin', { headers: { Authorization: 'Bearer ' + token } });
       const d = await r.json();
       return d.isAdmin === true;
     } catch (_) { return false; }
@@ -1856,7 +1856,7 @@
   };
 
   // Admin Google Calendar
-  const ADMIN_API = 'https://miia-backend-production.up.railway.app';
+  const ADMIN_API = 'https://api.miia-app.com';
 
   // ── Configuración IA — Multi-provider ──
   const AI_PROVIDER_META = {

@@ -608,7 +608,7 @@
       // Ajustar link Inicio según rol
       try {
         const _tok2 = await user.getIdToken();
-        const _rr = await fetch('https://miia-backend-production.up.railway.app/api/user/role', { headers: { Authorization: 'Bearer ' + _tok2 } });
+        const _rr = await fetch('https://api.miia-app.com/api/user/role', { headers: { Authorization: 'Bearer ' + _tok2 } });
         if (_rr.ok) { const _rd = await _rr.json(); const hl = document.getElementById('sidebarHomeLink'); if (hl && _rd.role === 'agent') hl.href = 'agent-dashboard.html'; }
       } catch (_) {}
 
@@ -645,7 +645,7 @@
 
     async function loadConversations() {
       try {
-        const res = await fetch('https://miia-backend-production.up.railway.app/api/conversations');
+        const res = await fetch('https://api.miia-app.com/api/conversations');
         const data = await res.json();
 
         if (!data || !Array.isArray(data)) {
@@ -797,7 +797,7 @@
     // ═══════════════════════════════════════════════
     // GROUPS MANAGEMENT (FASE 3)
     // ═══════════════════════════════════════════════
-    const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+    const BACKEND_URL = 'https://api.miia-app.com';
     let groups = [];
     let currentGroupId = null;
     let groupContacts = [];

@@ -4,888 +4,586 @@
   <meta charset="UTF-8">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIIA - Tu Asistente IA que Vende por WhatsApp 24/7</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <title>MIIA — Asistente IA que Vende, Aprende y Conecta por WhatsApp</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    /* ═══════════════════════════════════════
+       MIIA Landing — Apple/Mac Aesthetic
+       Glassmorphism · Negative space · Layering
+       ═══════════════════════════════════════ */
+
     :root {
-      --primary: #3B5BFF;
-      --primary-dark: #2A45DB;
-      --secondary: #FF1A8C;
-      --accent: #A78BFA;
-      --green: #34D399;
-      --bg-deep: #0F0F0F;
-      --bg-card: #141414;
-      --bg-surface: #1A1A1A;
-      --bg-elevated: #222222;
-      --border: rgba(59,91,255,0.08);
-      --border-hover: rgba(59,91,255,0.2);
-      --text-white: #F1F5F9;
-      --text-primary: #E2E8F0;
-      --text-secondary: #94A3B8;
-      --text-muted: #64748B;
-      --gradient-main: linear-gradient(135deg, #3B5BFF 0%, #8B30E0 50%, #FF1A8C 100%);
-      --gradient-subtle: linear-gradient(135deg, rgba(59,91,255,0.12) 0%, rgba(139,48,224,0.12) 100%);
-      --radius: 12px;
-      --radius-lg: 20px;
-      --radius-full: 100px;
+      --bg:        #050505;
+      --surface:   #0a0a0a;
+      --card:      rgba(255,255,255,0.03);
+      --card-h:    rgba(255,255,255,0.05);
+      --glass:     rgba(255,255,255,0.04);
+      --glass-b:   rgba(255,255,255,0.06);
+      --tx-1:      #f5f5f7;
+      --tx-2:      #a1a1a6;
+      --tx-3:      #6e6e73;
+      --accent:    #6366f1;
+      --accent-2:  #818cf8;
+      --green:     #34d399;
+      --border:    rgba(255,255,255,0.06);
+      --border-h:  rgba(255,255,255,0.10);
+      --r:         16px;
+      --r-lg:      24px;
+      --r-full:    200px;
+      --blur:      blur(40px);
+      --max:       1120px;
+      --glow:      radial-gradient(ellipse at 50% 0%, rgba(99,102,241,0.08) 0%, transparent 60%);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      color: var(--text-secondary);
-      background: var(--bg-deep);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      color: var(--tx-2);
+      background: var(--bg);
       line-height: 1.6;
-      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
     }
 
+    a { color: var(--accent-2); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--tx-1); }
+    .hidden { display: none !important; }
+
     /* ═══ UTILITIES ═══ */
-    .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
     .text-gradient {
-      background: var(--gradient-main);
+      background: linear-gradient(135deg, var(--accent) 0%, #a78bfa 50%, #f472b6 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
     }
     .fade-in {
       opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transform: translateY(20px);
+      transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
     }
-    .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-    /* ═══ NAVBAR ═══ */
-    .navbar {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 1000;
-      padding: 0 32px;
-      height: 64px;
-      display: flex;
+    .fade-in.visible { opacity: 1; transform: none; }
+    .badge {
+      display: inline-flex;
       align-items: center;
-      justify-content: space-between;
-      background: rgba(3,5,8,0.8);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      transition: all 0.3s;
-    }
-    .navbar.scrolled { background: rgba(3,5,8,0.95); }
-    .nav-logo {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      text-decoration: none;
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--text-white);
-      letter-spacing: -0.5px;
-    }
-    .nav-logo svg { height: 24px; width: 24px; }
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-      list-style: none;
-    }
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-size: 0.875rem;
+      gap: 6px;
+      padding: 5px 14px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--r-full);
+      font-size: 0.75rem;
       font-weight: 500;
-      transition: color 0.2s;
+      color: var(--tx-3);
+      letter-spacing: 0.5px;
     }
-    .nav-links a:hover { color: var(--text-white); }
-    .btn-nav {
-      padding: 8px 20px;
-      background: var(--gradient-main);
-      color: white !important;
-      -webkit-text-fill-color: white !important;
-      border-radius: var(--radius-full);
-      font-weight: 600 !important;
-      font-size: 0.875rem !important;
-      transition: opacity 0.2s, transform 0.2s !important;
+    .badge .pulse {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
     }
-    .btn-nav:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-nav-ghost {
-      padding: 8px 20px;
-      background: transparent;
-      color: var(--text-secondary) !important;
-      -webkit-text-fill-color: var(--text-secondary) !important;
-      border-radius: var(--radius-full);
-      font-weight: 600 !important;
-      font-size: 0.875rem !important;
-      border: 1px solid rgba(255,255,255,0.1);
-      transition: all 0.2s !important;
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+
+    /* ═══ NAV ═══ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 56px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(5,5,5,0.7);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
     }
-    .btn-nav-ghost:hover { color: var(--text-white) !important; -webkit-text-fill-color: var(--text-white) !important; border-color: rgba(255,255,255,0.25); }
-    .nav-toggle {
-      display: none;
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
+    nav.scrolled { background: rgba(5,5,5,0.9); }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 1.1rem; font-weight: 700;
+      color: var(--tx-1); letter-spacing: -0.3px;
     }
-    .nav-toggle span {
-      display: block;
-      width: 20px;
-      height: 2px;
-      background: var(--text-secondary);
-      margin: 4px 0;
-      border-radius: 1px;
-      transition: all 0.3s;
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { color: var(--tx-3); font-size: 0.8rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--tx-1); }
+    .btn-sm {
+      padding: 6px 18px;
+      border-radius: var(--r-full);
+      font-size: 0.8rem; font-weight: 600;
+      border: none; cursor: pointer;
+      transition: all 0.2s;
     }
+    .btn-sm-fill { background: var(--tx-1); color: var(--bg); }
+    .btn-sm-fill:hover { opacity: 0.85; }
+    .btn-sm-ghost {
+      background: transparent; color: var(--tx-3);
+      border: 1px solid var(--border);
+    }
+    .btn-sm-ghost:hover { color: var(--tx-1); border-color: var(--border-h); }
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle span { display: block; width: 18px; height: 1.5px; background: var(--tx-2); margin: 4px 0; border-radius: 1px; }
 
     /* ═══ HERO ═══ */
     .hero {
-      padding: 160px 24px 120px;
+      padding: 160px 32px 140px;
       text-align: center;
       position: relative;
-      overflow: hidden;
     }
     .hero::before {
       content: '';
-      position: absolute;
-      top: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 800px;
-      height: 600px;
-      background: radial-gradient(ellipse, rgba(59,91,255,0.08) 0%, transparent 70%);
+      position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 600px;
+      background: var(--glow);
       pointer-events: none;
     }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 6px 16px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-full);
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 32px;
-    }
-    .hero-badge .dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--green);
-      animation: pulse-dot 2s infinite;
-    }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.4; }
-    }
     .hero h1 {
-      font-size: 4.5rem;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
       font-weight: 800;
-      color: var(--text-white);
+      color: var(--tx-1);
       line-height: 1.05;
-      letter-spacing: -2px;
-      margin-bottom: 24px;
-      max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      letter-spacing: -2.5px;
+      max-width: 780px;
+      margin: 0 auto 24px;
     }
-    .hero .subtitle {
-      font-size: 1.2rem;
-      color: var(--text-secondary);
-      max-width: 560px;
-      margin: 0 auto 48px;
-      line-height: 1.7;
+    .hero .sub {
+      font-size: 1.15rem;
+      color: var(--tx-3);
+      max-width: 540px;
+      margin: 0 auto 52px;
+      line-height: 1.75;
+      font-weight: 400;
     }
-    .hero-buttons {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
+    .hero-btns {
+      display: flex; gap: 12px;
+      justify-content: center; flex-wrap: wrap;
     }
     .btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 14px 32px;
-      border-radius: var(--radius-full);
-      font-size: 0.95rem;
-      font-weight: 600;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 36px;
+      border-radius: var(--r-full);
+      font-size: 0.95rem; font-weight: 600;
       text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s;
+      border: none; cursor: pointer;
+      transition: all 0.25s;
     }
-    .btn-primary {
-      background: var(--text-white);
-      color: var(--bg-deep);
-    }
-    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
-    .btn-ghost {
+    .btn-w { background: var(--tx-1); color: var(--bg); }
+    .btn-w:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-o {
       background: transparent;
-      color: var(--text-secondary);
+      color: var(--tx-3);
       border: 1px solid var(--border);
     }
-    .btn-ghost:hover { border-color: var(--border-hover); color: var(--text-white); }
+    .btn-o:hover { border-color: var(--border-h); color: var(--tx-1); }
     .btn svg { width: 16px; height: 16px; }
 
-    /* Hero Visual */
-    .hero-visual {
-      margin-top: 72px;
+    /* ═══ HERO CHAT PREVIEW ═══ */
+    .hero-preview {
+      margin: 72px auto 0;
+      max-width: 620px;
       position: relative;
-      max-width: 680px;
-      margin-left: auto;
-      margin-right: auto;
     }
-    .hero-chat {
-      background: var(--bg-card);
+    .chat-box {
+      background: var(--glass);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      border-radius: var(--r-lg);
       overflow: hidden;
-      box-shadow: 0 32px 64px rgba(0,0,0,0.4);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      box-shadow: 0 40px 80px rgba(0,0,0,0.5);
     }
-    .chat-header {
-      padding: 16px 20px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+    .chat-head {
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 10px;
       border-bottom: 1px solid var(--border);
-      background: var(--bg-surface);
+      background: rgba(255,255,255,0.02);
     }
-    .chat-header-avatar {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: var(--gradient-main);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .chat-av {
+      width: 32px; height: 32px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), #f472b6);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700; color: white;
     }
-    .chat-header-avatar svg { width: 18px; height: 18px; color: white; }
-    .chat-header-info h4 {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-white);
+    .chat-name { font-size: 0.8rem; font-weight: 600; color: var(--tx-1); }
+    .chat-status { font-size: 0.65rem; color: var(--green); }
+    .chat-msgs { padding: 24px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .m {
+      max-width: 72%; padding: 10px 14px;
+      border-radius: 14px; font-size: 0.82rem; line-height: 1.55;
     }
-    .chat-header-info span {
-      font-size: 0.75rem;
-      color: var(--green);
-      display: flex;
-      align-items: center;
-      gap: 4px;
+    .m-in {
+      background: rgba(255,255,255,0.05); color: var(--tx-2);
+      align-self: flex-start; border-bottom-left-radius: 4px;
     }
-    .chat-header-info span::before {
-      content: '';
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--green);
+    .m-out {
+      background: rgba(99,102,241,0.12); color: var(--tx-2);
+      align-self: flex-end; border-bottom-right-radius: 4px;
+      border: 1px solid rgba(99,102,241,0.08);
     }
-    .chat-messages {
-      padding: 24px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      min-height: 280px;
+    .m-t { font-size: 0.6rem; color: var(--tx-3); margin-top: 3px; text-align: right; }
+    .m-typing {
+      display: flex; gap: 4px; padding: 12px 16px; align-self: flex-end;
     }
-    .msg {
-      max-width: 75%;
-      padding: 12px 16px;
-      border-radius: 16px;
-      font-size: 0.875rem;
-      line-height: 1.5;
+    .m-typing span {
+      width: 5px; height: 5px; border-radius: 50%; background: var(--accent);
+      animation: typ 1.4s infinite;
     }
-    .msg-in {
-      background: var(--bg-elevated);
-      color: var(--text-primary);
-      align-self: flex-start;
-      border-bottom-left-radius: 4px;
-    }
-    .msg-out {
-      background: rgba(59,91,255,0.15);
-      color: var(--text-primary);
-      align-self: flex-end;
-      border-bottom-right-radius: 4px;
-      border: 1px solid rgba(59,91,255,0.1);
-    }
-    .msg-time {
-      font-size: 0.65rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-      text-align: right;
-    }
-    .msg-typing {
-      display: flex;
-      gap: 4px;
-      padding: 14px 18px;
-      align-self: flex-end;
-    }
-    .msg-typing span {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--primary);
-      animation: typing 1.4s infinite;
-    }
-    .msg-typing span:nth-child(2) { animation-delay: 0.2s; }
-    .msg-typing span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes typing {
-      0%, 100% { opacity: 0.3; transform: translateY(0); }
-      50% { opacity: 1; transform: translateY(-3px); }
-    }
+    .m-typing span:nth-child(2) { animation-delay: 0.2s; }
+    .m-typing span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typ { 0%,100%{opacity:.3;transform:translateY(0)} 50%{opacity:1;transform:translateY(-3px)} }
 
-    /* ═══ LOGOS ═══ */
-    .logos-section {
-      padding: 64px 24px;
+    /* ═══ TRUST BAR ═══ */
+    .trust {
+      padding: 56px 32px;
       border-top: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
     }
-    .logos-section p {
-      text-align: center;
-      font-size: 0.75rem;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-bottom: 32px;
+    .trust p {
+      text-align: center; font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 3px;
+      color: var(--tx-3); font-weight: 600; margin-bottom: 24px;
     }
-    .logos-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 48px;
-      flex-wrap: wrap;
-      opacity: 0.3;
+    .trust-row {
+      display: flex; justify-content: center; align-items: center;
+      gap: 48px; flex-wrap: wrap; opacity: 0.25;
     }
-    .logos-row span {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      letter-spacing: 1px;
-    }
+    .trust-row span { font-size: 1rem; font-weight: 700; color: var(--tx-2); letter-spacing: 1px; }
 
     /* ═══ SECTION ═══ */
-    .section {
-      padding: 120px 24px;
+    .s {
+      padding: 140px 32px;
+      position: relative;
     }
-    .section-label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--primary);
-      margin-bottom: 16px;
+    .s-label {
+      font-size: 0.7rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 3px;
+      color: var(--accent-2); margin-bottom: 14px;
     }
-    .section-title {
-      font-size: 2.75rem;
-      font-weight: 800;
-      color: var(--text-white);
-      letter-spacing: -1px;
-      line-height: 1.15;
-      margin-bottom: 16px;
+    .s-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800; color: var(--tx-1);
+      letter-spacing: -1.5px; line-height: 1.12;
+      margin-bottom: 14px;
     }
-    .section-desc {
-      font-size: 1.05rem;
-      color: var(--text-secondary);
-      max-width: 520px;
-      line-height: 1.7;
-      margin-bottom: 64px;
+    .s-desc {
+      font-size: 1rem; color: var(--tx-3);
+      max-width: 480px; line-height: 1.75; margin-bottom: 72px;
     }
-    .section-center { text-align: center; }
-    .section-center .section-desc { margin-left: auto; margin-right: auto; }
+    .s-center { text-align: center; }
+    .s-center .s-desc { margin-left: auto; margin-right: auto; }
 
-    /* ═══ FEATURES ═══ */
-    .features-grid {
+    /* ═══ PATTERNS: FEATURES (Performance + Outputs) ═══ */
+    .feat-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 1px;
       background: var(--border);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      border-radius: var(--r-lg);
       overflow: hidden;
     }
-    .feature-card {
-      background: var(--bg-deep);
-      padding: 40px 32px;
+    .feat {
+      background: var(--bg);
+      padding: 44px 36px;
       transition: background 0.3s;
     }
-    .feature-card:hover { background: var(--bg-card); }
-    .feature-icon {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      background: var(--gradient-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .feat:hover { background: var(--card-h); }
+    .feat-ico {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: rgba(99,102,241,0.08);
+      display: flex; align-items: center; justify-content: center;
       margin-bottom: 20px;
     }
-    .feature-icon svg { width: 20px; height: 20px; color: var(--primary); stroke: var(--primary); }
-    .feature-card h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: var(--text-white);
-      margin-bottom: 8px;
-    }
-    .feature-card p {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
+    .feat-ico svg { width: 18px; height: 18px; stroke: var(--accent-2); }
+    .feat h3 { font-size: 0.95rem; font-weight: 700; color: var(--tx-1); margin-bottom: 8px; }
+    .feat p { font-size: 0.82rem; color: var(--tx-3); line-height: 1.65; }
 
-    /* ═══ HOW IT WORKS ═══ */
-    .steps-section { background: var(--bg-card); }
-    .steps-grid {
+    /* ═══ PATTERNS: ONBOARDING (How it works) ═══ */
+    .onb-bg { background: var(--surface); }
+    .steps {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 48px;
+      gap: 56px;
     }
-    .step {
-      position: relative;
-    }
-    .step-num {
-      font-size: 4rem;
-      font-weight: 900;
-      background: var(--gradient-main);
+    .step {}
+    .step-n {
+      font-size: 3.5rem; font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), #f472b6);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1;
-      margin-bottom: 16px;
+      line-height: 1; margin-bottom: 14px;
     }
-    .step h3 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-white);
-      margin-bottom: 8px;
-    }
-    .step p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-    }
+    .step h3 { font-size: 1rem; font-weight: 700; color: var(--tx-1); margin-bottom: 8px; }
+    .step p { font-size: 0.85rem; color: var(--tx-3); line-height: 1.7; }
 
-    /* ═══ PRICING ═══ */
-    .pricing-grid {
+    /* ═══ PATTERNS: AGENTS (AI Capabilities) ═══ */
+    .caps-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 16px;
     }
-    .pricing-card {
-      background: var(--bg-card);
+    .cap {
+      background: var(--glass);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      padding: 36px 28px;
+      border-radius: var(--r);
+      padding: 36px 32px;
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .cap:hover { border-color: var(--border-h); background: var(--card-h); }
+    .cap-tag {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: var(--r-full);
+      font-size: 0.65rem; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 16px;
+    }
+    .cap-tag-perf { background: rgba(99,102,241,0.1); color: var(--accent-2); }
+    .cap-tag-agent { background: rgba(52,211,153,0.1); color: var(--green); }
+    .cap-tag-audio { background: rgba(244,114,182,0.1); color: #f472b6; }
+    .cap-tag-commerce { background: rgba(251,191,36,0.1); color: #fbbf24; }
+    .cap h3 { font-size: 1.05rem; font-weight: 700; color: var(--tx-1); margin-bottom: 8px; }
+    .cap p { font-size: 0.85rem; color: var(--tx-3); line-height: 1.7; }
+
+    /* ═══ PATTERNS: COMMERCE (Pricing) ═══ */
+    .price-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    .price-card {
+      background: var(--glass);
+      border: 1px solid var(--border);
+      border-radius: var(--r-lg);
+      padding: 40px 28px;
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
       transition: border-color 0.3s;
       position: relative;
     }
-    .pricing-card:hover { border-color: var(--border-hover); }
-    .pricing-card.featured {
-      border-color: var(--primary);
-      background: linear-gradient(180deg, rgba(59,91,255,0.06) 0%, var(--bg-card) 100%);
+    .price-card:hover { border-color: var(--border-h); }
+    .price-card.pop {
+      border-color: var(--accent);
+      background: linear-gradient(180deg, rgba(99,102,241,0.06) 0%, var(--glass) 100%);
     }
-    .pricing-badge {
-      position: absolute;
-      top: -12px;
-      left: 50%;
-      transform: translateX(-50%);
+    .price-badge {
+      position: absolute; top: -11px; left: 50%; transform: translateX(-50%);
       padding: 4px 14px;
-      background: var(--gradient-main);
-      color: white;
-      font-size: 0.7rem;
-      font-weight: 700;
-      border-radius: var(--radius-full);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+      background: linear-gradient(135deg, var(--accent), #f472b6);
+      color: white; font-size: 0.65rem; font-weight: 700;
+      border-radius: var(--r-full);
+      text-transform: uppercase; letter-spacing: 0.5px;
     }
-    .pricing-name {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-secondary);
-      margin-bottom: 12px;
+    .price-name { font-size: 0.8rem; font-weight: 600; color: var(--tx-3); margin-bottom: 12px; }
+    .price-val { font-size: 2.5rem; font-weight: 800; color: var(--tx-1); line-height: 1; margin-bottom: 4px; }
+    .price-val span { font-size: 0.8rem; font-weight: 500; color: var(--tx-3); }
+    .price-per { font-size: 0.75rem; color: var(--tx-3); margin-bottom: 28px; }
+    .price-list { list-style: none; margin-bottom: 32px; }
+    .price-list li {
+      font-size: 0.8rem; color: var(--tx-2); padding: 7px 0;
+      display: flex; align-items: center; gap: 8px;
     }
-    .pricing-price {
-      font-size: 2.5rem;
-      font-weight: 800;
-      color: var(--text-white);
-      line-height: 1;
-      margin-bottom: 4px;
+    .price-list li svg { width: 14px; height: 14px; color: var(--green); flex-shrink: 0; }
+    .btn-price {
+      display: block; width: 100%; padding: 11px;
+      border-radius: var(--r-full); text-align: center;
+      font-weight: 600; font-size: 0.82rem;
+      text-decoration: none; cursor: pointer;
+      border: none; transition: all 0.2s;
     }
-    .pricing-price span {
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-muted);
-    }
-    .pricing-period {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 28px;
-    }
-    .pricing-list {
-      list-style: none;
-      margin-bottom: 32px;
-    }
-    .pricing-list li {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      padding: 8px 0;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .pricing-list li svg { width: 16px; height: 16px; color: var(--green); flex-shrink: 0; }
-    .btn-pricing {
-      display: block;
-      width: 100%;
-      padding: 12px;
-      border-radius: var(--radius-full);
-      text-align: center;
-      font-weight: 600;
-      font-size: 0.875rem;
-      text-decoration: none;
-      cursor: pointer;
-      border: none;
-      transition: all 0.2s;
-    }
-    .btn-pricing-outline {
-      background: transparent;
-      color: var(--text-secondary);
+    .btn-price-o {
+      background: transparent; color: var(--tx-3);
       border: 1px solid var(--border);
     }
-    .btn-pricing-outline:hover { border-color: var(--border-hover); color: var(--text-white); }
-    .btn-pricing-solid {
-      background: var(--text-white);
-      color: var(--bg-deep);
-    }
-    .btn-pricing-solid:hover { opacity: 0.9; }
+    .btn-price-o:hover { border-color: var(--border-h); color: var(--tx-1); }
+    .btn-price-f { background: var(--tx-1); color: var(--bg); }
+    .btn-price-f:hover { opacity: 0.85; }
 
-    /* ═══ TESTIMONIALS ═══ */
-    .testimonials-section { background: var(--bg-card); }
-    .testimonials-grid {
+    /* ═══ PATTERNS: TRUST (Testimonials) ═══ */
+    .test-bg { background: var(--surface); }
+    .test-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      gap: 16px;
     }
-    .testimonial {
-      background: var(--bg-deep);
+    .test {
+      background: var(--glass);
       border: 1px solid var(--border);
-      border-radius: var(--radius);
+      border-radius: var(--r);
       padding: 32px 28px;
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
     }
-    .testimonial-stars {
-      color: #FBBF24;
-      font-size: 0.875rem;
-      letter-spacing: 2px;
-      margin-bottom: 16px;
+    .test-stars { color: #fbbf24; font-size: 0.8rem; letter-spacing: 2px; margin-bottom: 16px; }
+    .test-text { font-size: 0.85rem; color: var(--tx-2); line-height: 1.7; margin-bottom: 20px; }
+    .test-who { display: flex; align-items: center; gap: 10px; }
+    .test-av {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: rgba(99,102,241,0.08);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent-2); font-weight: 700; font-size: 0.75rem;
     }
-    .testimonial-text {
-      font-size: 0.9rem;
-      color: var(--text-secondary);
-      line-height: 1.7;
-      margin-bottom: 24px;
-    }
-    .testimonial-author {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    .testimonial-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background: var(--gradient-subtle);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--primary);
-      font-weight: 700;
-      font-size: 0.85rem;
-    }
-    .testimonial-name {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: var(--text-white);
-    }
-    .testimonial-role {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-    }
+    .test-name { font-size: 0.8rem; font-weight: 600; color: var(--tx-1); }
+    .test-role { font-size: 0.7rem; color: var(--tx-3); }
 
-    /* ═══ FAQ ═══ */
-    .faq-list { max-width: 680px; margin: 0 auto; }
-    .faq-item {
-      border-bottom: 1px solid var(--border);
+    /* ═══ PATTERNS: INPUTS (FAQ) ═══ */
+    .faq-list { max-width: 640px; margin: 0 auto; }
+    .faq-i { border-bottom: 1px solid var(--border); }
+    .faq-q {
+      width: 100%; padding: 22px 0;
+      background: none; border: none;
+      text-align: left; font-size: 0.95rem;
+      font-weight: 600; color: var(--tx-2);
+      cursor: pointer; display: flex;
+      justify-content: space-between; align-items: center;
+      font-family: inherit; transition: color 0.2s;
     }
-    .faq-question {
-      width: 100%;
-      padding: 24px 0;
-      background: none;
-      border: none;
-      text-align: left;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-family: inherit;
-      transition: color 0.2s;
-    }
-    .faq-question:hover { color: var(--text-white); }
-    .faq-icon {
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      transition: transform 0.3s;
-    }
-    .faq-item.open .faq-icon { transform: rotate(45deg); }
-    .faq-answer {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-    }
-    .faq-item.open .faq-answer { max-height: 200px; }
-    .faq-answer p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      padding-bottom: 24px;
-    }
+    .faq-q:hover { color: var(--tx-1); }
+    .faq-ic { font-size: 1.1rem; color: var(--tx-3); transition: transform 0.3s; }
+    .faq-i.open .faq-ic { transform: rotate(45deg); }
+    .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+    .faq-i.open .faq-a { max-height: 200px; }
+    .faq-a p { font-size: 0.85rem; color: var(--tx-3); line-height: 1.7; padding-bottom: 22px; }
 
-    /* ═══ CTA ═══ */
-    .cta-section {
-      padding: 120px 24px;
-      text-align: center;
-      position: relative;
+    /* ═══ PATTERNS: NAVIGATION (CTA) ═══ */
+    .cta {
+      padding: 140px 32px; text-align: center; position: relative;
     }
-    .cta-section::before {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 400px;
-      background: radial-gradient(ellipse, rgba(59,91,255,0.06) 0%, transparent 70%);
-      pointer-events: none;
+    .cta::before {
+      content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 400px;
+      background: var(--glow); pointer-events: none;
     }
-    .cta-section h2 {
-      font-size: 3rem;
-      font-weight: 800;
-      color: var(--text-white);
-      letter-spacing: -1px;
-      margin-bottom: 16px;
+    .cta h2 {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 800; color: var(--tx-1);
+      letter-spacing: -1px; margin-bottom: 16px;
     }
-    .cta-section p {
-      font-size: 1.1rem;
-      color: var(--text-secondary);
-      margin-bottom: 40px;
-      max-width: 480px;
-      margin-left: auto;
-      margin-right: auto;
-      line-height: 1.7;
+    .cta p {
+      font-size: 1.05rem; color: var(--tx-3);
+      max-width: 440px; margin: 0 auto 44px; line-height: 1.7;
     }
 
     /* ═══ MANIFESTO ═══ */
     .manifesto {
-      padding: 80px 24px;
-      background: var(--bg-card);
-      display: flex;
-      justify-content: center;
+      padding: 80px 32px; background: var(--surface);
+      display: flex; justify-content: center;
     }
     .manifesto-card {
-      max-width: 680px;
-      width: 100%;
-      background: var(--bg-deep);
+      max-width: 640px; width: 100%;
+      background: var(--glass);
       border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
+      border-radius: var(--r-lg);
       padding: 48px 44px;
-      position: relative;
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
     }
     .manifesto-label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 3px;
+      color: var(--tx-3); margin-bottom: 24px;
+      display: flex; align-items: center; gap: 12px;
     }
-    .manifesto-label::before {
-      content: '';
-      width: 24px;
-      height: 1px;
-      background: var(--text-muted);
-    }
+    .manifesto-label::before { content: ''; width: 24px; height: 1px; background: var(--tx-3); }
     .manifesto-text {
-      font-size: 1rem;
-      color: var(--text-secondary);
-      line-height: 1.9;
-      font-style: italic;
+      font-size: 0.95rem; color: var(--tx-2);
+      line-height: 1.9; font-style: italic;
     }
-    .manifesto-text strong {
-      color: var(--text-white);
-      font-weight: 700;
-    }
-    .manifesto-text .highlight {
-      display: block;
-      margin-top: 20px;
+    .manifesto-text strong { color: var(--tx-1); font-weight: 700; }
+    .manifesto-hl {
+      display: block; margin-top: 20px;
       padding: 16px 20px;
-      border-left: 2px solid var(--primary);
-      background: rgba(59,91,255,0.04);
-      border-radius: 0 var(--radius) var(--radius) 0;
-      font-weight: 700;
-      font-size: 1.05rem;
-      color: var(--text-white);
-      letter-spacing: -0.01em;
-      line-height: 1.5;
-      font-style: normal;
+      border-left: 2px solid var(--accent);
+      background: rgba(99,102,241,0.04);
+      border-radius: 0 var(--r) var(--r) 0;
+      font-weight: 700; font-size: 1rem;
+      color: var(--tx-1); letter-spacing: -0.01em;
+      line-height: 1.5; font-style: normal;
       text-transform: uppercase;
-    }
-    .manifesto-accent {
-      color: var(--primary);
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      font-style: normal;
-    }
-    .manifesto-footer {
-      margin-top: 28px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .manifesto-footer span {
-      font-size: 0.7rem;
-      color: var(--text-muted);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 2px;
     }
 
     /* ═══ FOOTER ═══ */
-    .footer {
-      background: var(--bg-deep);
+    footer {
+      background: var(--bg);
       border-top: 1px solid var(--border);
-      padding: 64px 24px 32px;
+      padding: 64px 32px 32px;
     }
-    .footer-inner {
-      max-width: 1140px;
-      margin: 0 auto;
+    .ft-inner {
+      max-width: var(--max); margin: 0 auto;
       display: grid;
       grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 48px;
+      gap: 40px; margin-bottom: 48px;
     }
-    .footer-brand p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      max-width: 260px;
-      margin-top: 12px;
+    .ft-brand p { font-size: 0.8rem; color: var(--tx-3); line-height: 1.7; max-width: 240px; margin-top: 12px; }
+    .ft-contact { margin-top: 14px; display: flex; flex-direction: column; gap: 5px; }
+    .ft-contact a { color: var(--tx-3); font-size: 0.75rem; }
+    .ft-contact a:hover { color: var(--tx-1); }
+    .ft-col h4 {
+      font-size: 0.7rem; font-weight: 700; color: var(--tx-2);
+      text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px;
     }
-    .footer-brand .footer-contact {
-      margin-top: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .footer-brand .footer-contact a {
-      color: var(--text-muted);
-      font-size: 0.8rem;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-brand .footer-contact a:hover { color: var(--text-white); }
-    .footer-col h4 {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-bottom: 16px;
-    }
-    .footer-col a {
-      display: block;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.85rem;
-      padding: 4px 0;
-      transition: color 0.2s;
-    }
-    .footer-col a:hover { color: var(--text-white); }
-    .footer-bottom {
-      max-width: 1140px;
-      margin: 0 auto;
+    .ft-col a { display: block; color: var(--tx-3); font-size: 0.8rem; padding: 3px 0; }
+    .ft-col a:hover { color: var(--tx-1); }
+    .ft-bottom {
+      max-width: var(--max); margin: 0 auto;
       padding-top: 24px;
       border-top: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.8rem;
-      color: var(--text-muted);
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; color: var(--tx-3);
     }
 
     /* ═══ RESPONSIVE ═══ */
     @media (max-width: 1024px) {
-      .hero h1 { font-size: 3.2rem; }
-      .features-grid { grid-template-columns: repeat(2, 1fr); }
-      .steps-grid { grid-template-columns: repeat(2, 1fr); gap: 32px; }
-      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
-      .testimonials-grid { grid-template-columns: repeat(2, 1fr); }
-      .footer-inner { grid-template-columns: 1fr 1fr; }
+      .feat-grid { grid-template-columns: repeat(2, 1fr); }
+      .steps { grid-template-columns: repeat(2, 1fr); gap: 36px; }
+      .caps-grid { grid-template-columns: 1fr; }
+      .price-grid { grid-template-columns: repeat(2, 1fr); }
+      .test-grid { grid-template-columns: repeat(2, 1fr); }
+      .ft-inner { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 768px) {
-      .navbar { padding: 0 16px; }
+      nav { padding: 0 16px; }
       .nav-links {
         display: none;
-        position: absolute;
-        top: 100%;
-        left: 0; right: 0;
-        background: var(--bg-card);
+        position: absolute; top: 100%; left: 0; right: 0;
+        background: rgba(5,5,5,0.95);
+        backdrop-filter: var(--blur);
         border-bottom: 1px solid var(--border);
-        flex-direction: column;
-        padding: 16px;
-        gap: 12px;
+        flex-direction: column; padding: 16px; gap: 10px;
       }
       .nav-links.active { display: flex; }
       .nav-toggle { display: block; }
       .hero { padding: 120px 20px 80px; }
-      .hero h1 { font-size: 2.4rem; letter-spacing: -1px; }
-      .hero .subtitle { font-size: 1rem; }
-      .section { padding: 80px 20px; }
-      .section-title { font-size: 2rem; }
-      .features-grid, .steps-grid, .pricing-grid, .testimonials-grid {
-        grid-template-columns: 1fr;
-      }
-      .cta-section h2 { font-size: 2rem; }
-      .footer-inner { grid-template-columns: 1fr; }
-      .footer-bottom { flex-direction: column; gap: 12px; text-align: center; }
+      .hero h1 { letter-spacing: -1.5px; }
+      .hero .sub { font-size: 1rem; }
+      .s { padding: 100px 20px; }
+      .feat-grid, .steps, .caps-grid, .price-grid, .test-grid { grid-template-columns: 1fr; }
+      .cta h2 { font-size: 1.8rem; }
+      .ft-inner { grid-template-columns: 1fr; }
+      .ft-bottom { flex-direction: column; gap: 10px; text-align: center; }
       .manifesto-card { padding: 32px 24px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ═══ NAVBAR ═══ -->
-  <nav class="navbar" id="navbar">
+  <!-- ═══ NAV ═══ -->
+  <nav id="navbar">
     <a href="index.html" class="nav-logo">
-      <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;flex-shrink:0"><defs><linearGradient id="miia_g0" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#miia_g0)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>
+      <svg viewBox="0 0 36 36" fill="none" style="width:26px;height:26px"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f472b6"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#lg)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>
       MIIA
     </a>
     <ul class="nav-links" id="navLinks">
       <li><a href="#features">Funciones</a></li>
-      <li><a href="#how">Cómo funciona</a></li>
+      <li><a href="#how">Proceso</a></li>
+      <li><a href="#ai">Inteligencia</a></li>
       <li><a href="#pricing">Precios</a></li>
-      <li><a href="#faq">FAQ</a></li>
-      <li><a href="login.html" class="btn-nav-ghost">Ingresar</a></li>
-      <li><a href="login.html?tab=register" class="btn-nav">Empezar gratis</a></li>
+      <li><a href="login.html" class="btn-sm btn-sm-ghost">Ingresar</a></li>
+      <li><a href="login.html?tab=register" class="btn-sm btn-sm-fill">Empezar gratis</a></li>
     </ul>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">
       <span></span><span></span><span></span>
@@ -894,257 +592,254 @@
 
   <!-- ═══ HERO ═══ -->
   <section class="hero">
-    <div class="hero-badge">
-      <span class="dot"></span>
-      Inteligencia Artificial + WhatsApp
-    </div>
-    <h1>Tu vendedora IA que <span class="text-gradient">nunca duerme</span></h1>
-    <p class="subtitle">MIIA se conecta a tu WhatsApp y atiende, cotiza y cierra ventas con tus clientes las 24 horas. Sin bots genéricos. Con tu estilo.</p>
-    <div class="hero-buttons">
-      <a href="login.html" class="btn btn-primary">
+    <div class="badge fade-in"><span class="pulse"></span> Inteligencia Artificial + WhatsApp</div>
+    <h1 class="fade-in">Tu asistente IA que <span class="text-gradient">vende, aprende y conecta</span></h1>
+    <p class="sub fade-in">MIIA se conecta a tu WhatsApp y atiende leads, genera cotizaciones, aprende de tu negocio y cuida tus relaciones. Todo con tu estilo.</p>
+    <div class="hero-btns fade-in">
+      <a href="login.html" class="btn btn-w">
         Empezar gratis
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
-      <a href="#how" class="btn btn-ghost">Ver cómo funciona</a>
+      <a href="#how" class="btn btn-o">Ver proceso</a>
     </div>
 
-    <!-- Chat Preview -->
-    <div class="hero-visual fade-in">
-      <div class="hero-chat">
-        <div class="chat-header">
-          <div class="chat-header-avatar">
-            <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;flex-shrink:0"><defs><linearGradient id="miia_g0" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#miia_g0)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>
-          </div>
-          <div class="chat-header-info">
-            <h4>MIIA</h4>
-            <span>En línea</span>
+    <div class="hero-preview fade-in">
+      <div class="chat-box">
+        <div class="chat-head">
+          <div class="chat-av">M</div>
+          <div>
+            <div class="chat-name">MIIA</div>
+            <div class="chat-status">En linea</div>
           </div>
         </div>
-        <div class="chat-messages">
-          <div class="msg msg-in">
-            Hola, me interesa el software para mi clínica. ¿Cuánto cuesta?
-            <div class="msg-time">10:32</div>
-          </div>
-          <div class="msg msg-out">
-            ¡Hola Doctor! Con gusto lo asesoro. Para armarle la mejor propuesta: ¿cuántos profesionales usarían el sistema?
-            <div class="msg-time">10:32</div>
-          </div>
-          <div class="msg msg-in">
-            Somos 3 médicos y 1 secretaria
-            <div class="msg-time">10:33</div>
-          </div>
-          <div class="msg msg-out">
-            ¡Perfecto! Le preparo una cotización personalizada. Aquí tiene su PDF con los 3 planes y un 30% de descuento por tiempo limitado.
-            <div class="msg-time">10:34</div>
-          </div>
-          <div class="msg msg-out msg-typing">
-            <span></span><span></span><span></span>
-          </div>
+        <div class="chat-msgs">
+          <div class="m m-in">Hola, me interesa el servicio. ¿Tienen disponibilidad?<div class="m-t">10:32</div></div>
+          <div class="m m-out">¡Hola! Con gusto. Para armarle la mejor propuesta: ¿para cuántas personas sería?<div class="m-t">10:32</div></div>
+          <div class="m m-in">Somos un equipo de 4<div class="m-t">10:33</div></div>
+          <div class="m m-out">Perfecto. Le preparo una cotización personalizada en PDF con nuestros planes.<div class="m-t">10:34</div></div>
+          <div class="m m-typing"><span></span><span></span><span></span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ LOGOS ═══ -->
-  <div class="logos-section">
-    <p>Empresas que confían en MIIA</p>
-    <div class="logos-row">
-      <span>Clínica Norte</span>
+  <!-- ═══ TRUST BAR ═══ -->
+  <div class="trust">
+    <p>Confian en MIIA</p>
+    <div class="trust-row">
       <span>MediCenter</span>
-      <span>SaludPro</span>
+      <span>StudioArq</span>
+      <span>GrowLab</span>
       <span>VitalCare</span>
-      <span>DentalPlus</span>
+      <span>DigitalPro</span>
     </div>
   </div>
 
   <!-- ═══ FEATURES ═══ -->
-  <section class="section" id="features">
+  <section class="s" id="features">
     <div class="container">
       <div class="fade-in">
-        <div class="section-label">Funciones</div>
-        <h2 class="section-title">Todo lo que necesitas<br>para vender más</h2>
-        <p class="section-desc">MIIA no es un chatbot genérico. Es una vendedora experta que aprende tu negocio y lo representa con tu estilo.</p>
+        <div class="s-label">Funciones</div>
+        <h2 class="s-title">Todo lo que necesitas<br>para vender mas</h2>
+        <p class="s-desc">No es un chatbot generico. Es una asistente que aprende tu negocio, adopta tu estilo y evoluciona sola.</p>
       </div>
-      <div class="features-grid fade-in">
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          </div>
-          <h3>Conversa como tú</h3>
-          <p>MIIA aprende tu tono, tu estilo y tu forma de vender. Responde en WhatsApp como si fueras tú.</p>
+      <div class="feat-grid fade-in">
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+          <h3>Conversa como tu</h3>
+          <p>Aprende tu tono, tu estilo y tu forma de vender. Responde en WhatsApp como si fueras tu.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          </div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
           <h3>Cotizaciones en PDF</h3>
-          <p>Genera propuestas profesionales personalizadas y las envía automáticamente al lead.</p>
+          <p>Genera propuestas profesionales personalizadas y las envia al lead en segundos.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
-          </div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg></div>
           <h3>Aprende sola</h3>
-          <p>Cada noche analiza las conversaciones y mejora su estrategia de ventas autónomamente.</p>
+          <p>Analiza conversaciones, detecta patrones y mejora su estrategia de forma autonoma.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
-          </div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
           <h3>Clasifica contactos</h3>
           <p>Distingue leads, clientes, familia y equipo. Cada uno recibe el trato adecuado.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-          </div>
-          <h3>Multi-IA Único</h3>
-          <p>La única plataforma en LATAM que combina Gemini, GPT-4 y Claude en un solo asistente de ventas.</p>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div>
+          <h3>Multi-IA</h3>
+          <p>Combina Gemini, GPT-4 y Claude en un solo asistente. Elige o deja que MIIA decida.</p>
         </div>
-        <div class="feature-card">
-          <div class="feature-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-          </div>
+        <div class="feat">
+          <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
           <h3>Pipeline de ventas</h3>
-          <p>Rastrea cada lead desde el primer contacto hasta la conversión. Sin perder oportunidades.</p>
+          <p>Rastrea cada lead desde el primer contacto hasta la conversion. Sin perder oportunidades.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ HOW IT WORKS ═══ -->
-  <section class="section steps-section" id="how">
+  <!-- ═══ ONBOARDING — How it works ═══ -->
+  <section class="s onb-bg" id="how">
     <div class="container">
-      <div class="section-center fade-in">
-        <div class="section-label">Cómo funciona</div>
-        <h2 class="section-title">Tres pasos y MIIA vende por ti</h2>
-        <p class="section-desc">Sin configuración compleja. Sin necesidad de WhatsApp Business. Conecta tu WhatsApp personal y listo.</p>
+      <div class="s-center fade-in">
+        <div class="s-label">Proceso</div>
+        <h2 class="s-title">Tres pasos. MIIA vende por ti.</h2>
+        <p class="s-desc">Sin configuracion compleja. Sin WhatsApp Business. Conecta tu WhatsApp personal y listo.</p>
       </div>
-      <div class="steps-grid">
+      <div class="steps">
         <div class="step fade-in">
-          <div class="step-num">01</div>
+          <div class="step-n">01</div>
           <h3>Conecta tu WhatsApp</h3>
-          <p>Escanea un código QR y MIIA se conecta a tu cuenta de WhatsApp en segundos.</p>
+          <p>Escanea un codigo QR desde el dashboard y MIIA se conecta a tu cuenta en segundos.</p>
         </div>
         <div class="step fade-in">
-          <div class="step-num">02</div>
+          <div class="step-n">02</div>
           <h3>Entrena con tu negocio</h3>
-          <p>Dile "Aprende:" seguido de cualquier información sobre tus productos, precios o servicios.</p>
+          <p>Escribile "Aprende:" seguido de cualquier informacion: productos, precios, servicios, reglas.</p>
         </div>
         <div class="step fade-in">
-          <div class="step-num">03</div>
+          <div class="step-n">03</div>
           <h3>Ella vende por ti</h3>
-          <p>MIIA atiende leads, genera cotizaciones y cierra ventas las 24 horas. Tú solo apruebas.</p>
+          <p>MIIA atiende leads, genera cotizaciones, agenda recordatorios y cierra ventas 24/7.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ AGENTS — AI Capabilities ═══ -->
+  <section class="s" id="ai">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Inteligencia</div>
+        <h2 class="s-title">Mas que un chatbot.<br>Un sistema que evoluciona.</h2>
+        <p class="s-desc">MIIA no solo responde. Aprende, analiza patrones, cuida relaciones y genera informes de inteligencia.</p>
+      </div>
+      <div class="caps-grid fade-in">
+        <div class="cap">
+          <span class="cap-tag cap-tag-perf">Performance</span>
+          <h3>Motor de aprendizaje autonomo</h3>
+          <p>Cada conversacion entrena a MIIA: aprende tu negocio, tu publico y tu estilo de venta. Tres capas: negocio, owner y contacto.</p>
+        </div>
+        <div class="cap">
+          <span class="cap-tag cap-tag-agent">Agentes</span>
+          <h3>Sistema proactivo inteligente</h3>
+          <p>MIIA escribe primero. Segun el nivel de confianza del contacto, inicia conversaciones con frecuencia y tono adaptados.</p>
+        </div>
+        <div class="cap">
+          <span class="cap-tag cap-tag-audio">Audio</span>
+          <h3>Procesamiento de audio y multimedia</h3>
+          <p>Transcribe audios, analiza imagenes y documentos. Entiende lo que te envian sin que tengas que leerlo.</p>
+        </div>
+        <div class="cap">
+          <span class="cap-tag cap-tag-commerce">Comercio</span>
+          <h3>Informes de inteligencia quincenal</h3>
+          <p>Recibe un email con analisis de patrones, ADN vendedor, coaching y sugerencias de mejora basados en datos reales.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══ PRICING ═══ -->
-  <section class="section" id="pricing">
+  <section class="s" id="pricing">
     <div class="container">
-      <div class="section-center fade-in">
-        <div class="section-label">Precios</div>
-        <h2 class="section-title">Planes que se adaptan a tu negocio</h2>
-        <p class="section-desc">Sin contratos. Cancela cuando quieras. Comienza con 7 días gratis.</p>
+      <div class="s-center fade-in">
+        <div class="s-label">Precios</div>
+        <h2 class="s-title">Planes simples. Sin contratos.</h2>
+        <p class="s-desc">Cancela cuando quieras. Comienza con 7 dias gratis.</p>
       </div>
-      <div class="pricing-grid fade-in">
-        <!-- Monthly -->
-        <div class="pricing-card">
-          <div class="pricing-name">Mensual</div>
-          <div class="pricing-price">$12 <span>USD</span></div>
-          <div class="pricing-period">por mes</div>
-          <ul class="pricing-list">
+      <div class="price-grid fade-in">
+        <div class="price-card">
+          <div class="price-name">Mensual</div>
+          <div class="price-val">$12 <span>USD</span></div>
+          <div class="price-per">por mes</div>
+          <ul class="price-list">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>500 leads activos</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 agente incluido · <em>+$3 USD c/agente extra</em></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1 agente · +$3 c/extra</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-IA</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte por Email o WhatsApp</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte email + WhatsApp</li>
           </ul>
-          <button onclick="buyPlan('monthly')" class="btn-pricing btn-pricing-outline">Contratar</button>
+          <button onclick="buyPlan('monthly')" class="btn-price btn-price-o">Contratar</button>
         </div>
-        <!-- Quarterly -->
-        <div class="pricing-card">
-          <div class="pricing-name">Trimestral</div>
-          <div class="pricing-price">$30 <span>USD</span></div>
-          <div class="pricing-period">por trimestre (17% OFF)</div>
-          <ul class="pricing-list">
+        <div class="price-card">
+          <div class="price-name">Trimestral</div>
+          <div class="price-val">$30 <span>USD</span></div>
+          <div class="price-per">por trimestre (17% OFF)</div>
+          <ul class="price-list">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>1.500 leads activos</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>2 agentes · <em>+$3 USD c/agente extra</em></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>2 agentes · +$3 c/extra</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-IA</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte por Email o WhatsApp</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte email + WhatsApp</li>
           </ul>
-          <button onclick="buyPlan('quarterly')" class="btn-pricing btn-pricing-outline">Contratar</button>
+          <button onclick="buyPlan('quarterly')" class="btn-price btn-price-o">Contratar</button>
         </div>
-        <!-- Semestral -->
-        <div class="pricing-card featured">
-          <div class="pricing-badge">Recomendado</div>
-          <div class="pricing-name">Semestral</div>
-          <div class="pricing-price">$55 <span>USD</span></div>
-          <div class="pricing-period">por semestre (24% OFF)</div>
-          <ul class="pricing-list">
+        <div class="price-card pop">
+          <div class="price-badge">Recomendado</div>
+          <div class="price-name">Semestral</div>
+          <div class="price-val">$55 <span>USD</span></div>
+          <div class="price-per">por semestre (24% OFF)</div>
+          <ul class="price-list">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>5.000 leads activos</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>3 agentes · <em>+$3 USD c/agente extra</em></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>3 agentes · +$3 c/extra</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-IA</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte por Email o WhatsApp</li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte email + WhatsApp</li>
           </ul>
-          <button onclick="buyPlan('semestral')" class="btn-pricing btn-pricing-solid">Contratar</button>
+          <button onclick="buyPlan('semestral')" class="btn-price btn-price-f">Contratar</button>
         </div>
-        <!-- Annual -->
-        <div class="pricing-card">
-          <div class="pricing-name">Anual</div>
-          <div class="pricing-price">$75 <span>USD</span></div>
-          <div class="pricing-period">por año (48% OFF)</div>
-          <ul class="pricing-list">
+        <div class="price-card">
+          <div class="price-name">Anual</div>
+          <div class="price-val">$75 <span>USD</span></div>
+          <div class="price-per">por anio (48% OFF)</div>
+          <ul class="price-list">
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Leads ilimitados</li>
-            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>5 agentes · <em>+$3 USD c/u (6+ Gratis)</em></li>
+            <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>5 agentes · +$3 (6+ gratis)</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Multi-IA + APIs</li>
             <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>Soporte dedicado 24/7</li>
           </ul>
-          <button onclick="buyPlan('annual')" class="btn-pricing btn-pricing-solid">Contratar</button>
+          <button onclick="buyPlan('annual')" class="btn-price btn-price-f">Contratar</button>
         </div>
       </div>
     </div>
   </section>
 
   <!-- ═══ TESTIMONIALS ═══ -->
-  <section class="section testimonials-section">
+  <section class="s test-bg">
     <div class="container">
-      <div class="section-center fade-in">
-        <div class="section-label">Testimonios</div>
-        <h2 class="section-title">Lo que dicen nuestros clientes</h2>
-        <p class="section-desc">Profesionales de salud en toda Latinoamérica confían en MIIA para hacer crecer su negocio.</p>
+      <div class="s-center fade-in">
+        <div class="s-label">Testimonios</div>
+        <h2 class="s-title">Lo que dicen nuestros usuarios</h2>
+        <p class="s-desc">Emprendedores y profesionales en toda Latinoamerica confian en MIIA.</p>
       </div>
-      <div class="testimonials-grid fade-in">
-        <div class="testimonial">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="testimonial-text">"MIIA contesta mis WhatsApp cuando estoy en consulta. Ya cerré 3 ventas que hubiera perdido por no responder a tiempo."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">DC</div>
+      <div class="test-grid fade-in">
+        <div class="test">
+          <div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="test-text">"MIIA contesta mis WhatsApp cuando estoy ocupado. Ya cerre 3 ventas que hubiera perdido por no responder a tiempo."</p>
+          <div class="test-who">
+            <div class="test-av">CM</div>
             <div>
-              <div class="testimonial-name">Dr. Carlos M.</div>
-              <div class="testimonial-role">Clínica General - Bogotá</div>
+              <div class="test-name">Carlos M.</div>
+              <div class="test-role">Consultorio medico - Bogota</div>
             </div>
           </div>
         </div>
-        <div class="testimonial">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="testimonial-text">"La cotización en PDF es increíble. Se la envía al paciente en segundos y se ve super profesional."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">LP</div>
+        <div class="test">
+          <div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="test-text">"La cotizacion en PDF se envia al cliente en segundos y se ve super profesional. Mis pacientes quedan impresionados."</p>
+          <div class="test-who">
+            <div class="test-av">LP</div>
             <div>
-              <div class="testimonial-name">Dra. Laura P.</div>
-              <div class="testimonial-role">Dermatóloga - Santiago</div>
+              <div class="test-name">Laura P.</div>
+              <div class="test-role">Estudio de arquitectura - Santiago</div>
             </div>
           </div>
         </div>
-        <div class="testimonial">
-          <div class="testimonial-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
-          <p class="testimonial-text">"Pensé que sería otro chatbot aburrido. MIIA habla como yo hablo. Mis pacientes no notan la diferencia."</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">RM</div>
+        <div class="test">
+          <div class="test-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>
+          <p class="test-text">"Pense que seria otro chatbot. MIIA habla como yo hablo. Mis clientes no notan la diferencia."</p>
+          <div class="test-who">
+            <div class="test-av">RM</div>
             <div>
-              <div class="testimonial-name">Dr. Ricardo M.</div>
-              <div class="testimonial-role">Traumatólogo - CDMX</div>
+              <div class="test-name">Ricardo M.</div>
+              <div class="test-role">Agencia de marketing - CDMX</div>
             </div>
           </div>
         </div>
@@ -1153,86 +848,106 @@
   </section>
 
   <!-- ═══ FAQ ═══ -->
-  <section class="section" id="faq">
+  <section class="s" id="faq">
     <div class="container">
-      <div class="section-center fade-in">
-        <div class="section-label">Preguntas frecuentes</div>
-        <h2 class="section-title">Resolvemos tus dudas</h2>
-        <p class="section-desc"></p>
+      <div class="s-center fade-in">
+        <div class="s-label">Preguntas frecuentes</div>
+        <h2 class="s-title">Resolvemos tus dudas</h2>
       </div>
       <div class="faq-list">
-        <div class="faq-item fade-in">
-          <button class="faq-question">¿Necesito WhatsApp Business? <span class="faq-icon">+</span></button>
-          <div class="faq-answer"><p>No. MIIA se conecta a tu WhatsApp personal. No necesitas crear una cuenta de Business ni cambiar de número.</p></div>
+        <div class="faq-i fade-in">
+          <button class="faq-q">¿Necesito WhatsApp Business? <span class="faq-ic">+</span></button>
+          <div class="faq-a"><p>No. MIIA se conecta a tu WhatsApp personal. No necesitas crear cuenta Business ni cambiar de numero.</p></div>
         </div>
-        <div class="faq-item fade-in">
-          <button class="faq-question">¿Mis clientes sabrán que hablan con una IA? <span class="faq-icon">+</span></button>
-          <div class="faq-answer"><p>No. MIIA aprende tu estilo de comunicación y responde como si fueras tú. Usa tu nombre, tu tono y tu forma de vender.</p></div>
+        <div class="faq-i fade-in">
+          <button class="faq-q">¿Mis clientes sabran que hablan con una IA? <span class="faq-ic">+</span></button>
+          <div class="faq-a"><p>No. MIIA aprende tu estilo y responde como si fueras tu. Usa tu nombre, tu tono y tu forma de comunicar.</p></div>
         </div>
-        <div class="faq-item fade-in">
-          <button class="faq-question">¿Puedo entrenarla con información de mi negocio? <span class="faq-icon">+</span></button>
-          <div class="faq-answer"><p>¡Sí! Solo escríbele "Aprende:" seguido de cualquier dato. MIIA lo guarda y lo usa en futuras conversaciones con tus leads.</p></div>
+        <div class="faq-i fade-in">
+          <button class="faq-q">¿Puedo entrenarla con mi negocio? <span class="faq-ic">+</span></button>
+          <div class="faq-a"><p>Si. Escribele "Aprende:" seguido de cualquier dato. MIIA lo guarda y lo usa en futuras conversaciones.</p></div>
         </div>
-        <div class="faq-item fade-in">
-          <button class="faq-question">¿Qué pasa si un lead quiere hablar conmigo directamente? <span class="faq-icon">+</span></button>
-          <div class="faq-answer"><p>Cuando tú respondes un chat, MIIA se retira automáticamente por 90 minutos para no interferir. Ella sabe cuándo darte espacio.</p></div>
+        <div class="faq-i fade-in">
+          <button class="faq-q">¿Que pasa si quiero responder yo directamente? <span class="faq-ic">+</span></button>
+          <div class="faq-a"><p>Cuando tu respondes, MIIA se retira automaticamente por 90 minutos. Sabe cuando darte espacio.</p></div>
         </div>
-        <div class="faq-item fade-in">
-          <button class="faq-question">¿Es seguro? ¿Mis datos están protegidos? <span class="faq-icon">+</span></button>
-          <div class="faq-answer"><p>Absolutamente. Todos los datos se almacenan encriptados con AES-256 en Google Cloud Firestore. Cada cuenta está completamente aislada. No entrenamos modelos con tus datos — cumplimos con GDPR y Ley de Habeas Data de Colombia.</p></div>
+        <div class="faq-i fade-in">
+          <button class="faq-q">¿Es seguro? <span class="faq-ic">+</span></button>
+          <div class="faq-a"><p>Todos los datos se almacenan encriptados (AES-256) en Google Cloud. Cada cuenta esta aislada. Cumplimos GDPR y Ley de Habeas Data.</p></div>
+        </div>
+        <div class="faq-i fade-in">
+          <button class="faq-q">¿Para que tipo de negocio sirve? <span class="faq-ic">+</span></button>
+          <div class="faq-a"><p>Para cualquier negocio que venda por WhatsApp: consultorios, agencias, estudios, tiendas, freelancers, coaches y mas.</p></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ═══ FINAL CTA ═══ -->
-  <section class="cta-section">
+  <!-- ═══ CTA ═══ -->
+  <section class="cta">
     <div class="fade-in">
-      <h2>Deja que MIIA venda<br>mientras tú atiendes</h2>
-      <p>Únete a cientos de profesionales de salud que ya automatizaron sus ventas con inteligencia artificial.</p>
-      <a href="login.html" class="btn btn-primary">
+      <h2>Deja que MIIA venda<br>mientras tu trabajas</h2>
+      <p>Unete a cientos de emprendedores que ya automatizaron sus ventas con inteligencia artificial.</p>
+      <a href="login.html" class="btn btn-w">
         Empezar gratis ahora
-        <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;flex-shrink:0"><defs><linearGradient id="miia_g0" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#miia_g0)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
     </div>
   </section>
 
+  <!-- ═══ MANIFESTO ═══ -->
+  <div class="manifesto">
+    <div class="manifesto-card fade-in">
+      <div class="manifesto-label">Manifiesto MIIA</div>
+      <p class="manifesto-text">
+        <strong>No somos un chatbot mas.</strong> MIIA nacio de una frustracion real: negocios que pierden ventas
+        porque no pueden responder a tiempo. Creemos que la inteligencia artificial no deberia reemplazarte,
+        sino <strong>amplificarte</strong>.
+        <br><br>
+        Cada conversacion que MIIA tiene, la hace mejor. Cada patron que detecta, te lo comparte.
+        Cada relacion que cuida, es una relacion que tu no pierdes.
+        <span class="manifesto-hl">MIIA no es tu empleada. Es tu socia digital.</span>
+      </p>
+    </div>
+  </div>
+
   <!-- ═══ FOOTER ═══ -->
-  <footer class="footer">
-    <div class="footer-inner">
-      <div class="footer-brand">
+  <footer>
+    <div class="ft-inner">
+      <div class="ft-brand">
         <a href="index.html" class="nav-logo" style="margin-bottom:0;">
-          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;flex-shrink:0"><defs><linearGradient id="miia_g0" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3B5BFF"/><stop offset="50%" stop-color="#8B30E0"/><stop offset="100%" stop-color="#FF1A8C"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#miia_g0)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>
+          <svg viewBox="0 0 36 36" fill="none" style="width:26px;height:26px"><defs><linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#f472b6"/></linearGradient></defs><circle cx="18" cy="18" r="17" fill="url(#lg2)"/><path d="M11 13h14a1 1 0 011 1v9a1 1 0 01-1 1H13l-4 3V14a1 1 0 011-1z" stroke="white" stroke-width="1.8" stroke-linejoin="round" fill="none"/></svg>
           MIIA
         </a>
-        <p>Tu asistente de ventas con IA que trabaja las 24 horas en WhatsApp para hacer crecer tu negocio.</p>
-        <div class="footer-contact">
+        <p>Tu asistente de ventas con IA que trabaja 24/7 en WhatsApp para hacer crecer tu negocio.</p>
+        <div class="ft-contact">
           <a href="mailto:lobsterscrm@gmail.com">lobsterscrm@gmail.com</a>
           <a href="tel:+573054169969">+57 305 416 9969</a>
         </div>
       </div>
-      <div class="footer-col">
+      <div class="ft-col">
         <h4>Producto</h4>
         <a href="#features">Funciones</a>
         <a href="#pricing">Precios</a>
-        <a href="#how">Cómo funciona</a>
-        <a href="#faq">Preguntas frecuentes</a>
-        <a href="login.html">Iniciar sesión</a>
+        <a href="#how">Proceso</a>
+        <a href="#faq">FAQ</a>
+        <a href="login.html">Iniciar sesion</a>
       </div>
-      <div class="footer-col">
+      <div class="ft-col">
         <h4>Empresa</h4>
         <a href="mailto:lobsterscrm@gmail.com">Contacto</a>
         <a href="terms.html">Sobre MIIA</a>
       </div>
-      <div class="footer-col">
+      <div class="ft-col">
         <h4>Legal</h4>
-        <a href="terms.html">Términos y condiciones</a>
-        <a href="terms.html#2">Política de privacidad</a>
-        <a href="cookies.html">Política de cookies</a>
+        <a href="terms.html">Terminos y condiciones</a>
+        <a href="terms.html#2">Politica de privacidad</a>
+        <a href="cookies.html">Politica de cookies</a>
       </div>
     </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 MIIA. Todos los derechos reservados. Desarrollado con IA por <strong>Lobsters CRM</strong>.</p>
+    <div class="ft-bottom">
+      <p>&copy; 2026 MIIA. Todos los derechos reservados.</p>
+      <p>Desarrollado con IA por <strong>Lobsters CRM</strong></p>
     </div>
   </footer>
 
@@ -1242,7 +957,6 @@
   <script src="toast.js"></script>
 
   <script>
-    // Firebase Config
     const firebaseConfig = {
       apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
       authDomain: "miia-app-8cbd0.firebaseapp.com",
@@ -1253,63 +967,48 @@
     };
     firebase.initializeApp(firebaseConfig);
 
-    // Stripe checkout
     async function buyPlan(plan) {
       const user = firebase.auth().currentUser;
-      if (!user) {
-        window.location.href = 'login.html?plan=' + plan;
-        return;
-      }
+      if (!user) { window.location.href = 'login.html?plan=' + plan; return; }
       try {
-        const res = await fetch('https://miia-backend-production.up.railway.app/api/stripe/subscribe', {
+        const res = await fetch('https://api.miia-app.com/api/stripe/subscribe', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ uid: user.uid, plan: plan })
+          body: JSON.stringify({ uid: user.uid, plan })
         });
         const data = await res.json();
-        if (data.url) {
-          window.location.href = data.url;
-        } else {
-          showToast('Error al procesar: ' + (data.error || 'Desconocido'), 'error');
-        }
-      } catch (error) {
-        showToast('Error de conexión: ' + error.message, 'error');
-      }
+        if (data.url) window.location.href = data.url;
+        else showToast('Error: ' + (data.error || 'Desconocido'), 'error');
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
     }
 
-    // Navbar
-    const navbar = document.getElementById('navbar');
-    window.addEventListener('scroll', () => {
-      navbar.classList.toggle('scrolled', window.scrollY > 50);
-    });
+    // Navbar scroll
+    const nb = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nb.classList.toggle('scrolled', scrollY > 50));
 
     // Mobile menu
-    document.getElementById('navToggle').addEventListener('click', () => {
-      document.getElementById('navLinks').classList.toggle('active');
-    });
-    document.querySelectorAll('.nav-links a').forEach(link => {
-      link.addEventListener('click', () => {
-        document.getElementById('navLinks').classList.remove('active');
-      });
-    });
+    document.getElementById('navToggle').addEventListener('click', () =>
+      document.getElementById('navLinks').classList.toggle('active'));
+    document.querySelectorAll('.nav-links a').forEach(a =>
+      a.addEventListener('click', () => document.getElementById('navLinks').classList.remove('active')));
 
     // Scroll animations
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry, i) => {
-        if (entry.isIntersecting) {
-          setTimeout(() => entry.target.classList.add('visible'), i * 80);
-          observer.unobserve(entry.target);
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 60);
+          obs.unobserve(e.target);
         }
       });
-    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-    document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
 
     // FAQ
-    document.querySelectorAll('.faq-question').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const item = btn.parentElement;
+    document.querySelectorAll('.faq-q').forEach(b => {
+      b.addEventListener('click', () => {
+        const item = b.parentElement;
         const wasOpen = item.classList.contains('open');
-        document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+        document.querySelectorAll('.faq-i.open').forEach(i => i.classList.remove('open'));
         if (!wasOpen) item.classList.add('open');
       });
     });

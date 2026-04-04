@@ -232,7 +232,7 @@
 </div>
 
 <script>
-  const BACKEND_URL = 'https://miia-backend-production.up.railway.app';
+  const BACKEND_URL = 'https://api.miia-app.com';
   const firebaseConfig = {
     apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
     authDomain: "miia-app-8cbd0.firebaseapp.com",
@@ -262,7 +262,7 @@
     if (!user) { window.location.href = '../login.html'; return; }
     const token = await user.getIdToken();
     try {
-      const r = await fetch('https://miia-backend-production.up.railway.app/api/is-admin', { headers: { Authorization: 'Bearer ' + token } });
+      const r = await fetch('https://api.miia-app.com/api/is-admin', { headers: { Authorization: 'Bearer ' + token } });
       const d = await r.json();
       if (!d.isAdmin) { window.location.href = '../owner-dashboard.html'; return; }
     } catch(_) { window.location.href = '../owner-dashboard.html'; return; }
