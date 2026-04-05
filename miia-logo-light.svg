@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="85 115 230 175" fill="none">
+  <defs>
+    <linearGradient id="brand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="50%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#FF1744"/>
+    </linearGradient>
+  </defs>
+  <!-- Bubble -->
+  <path d="M 132,129 Q 100,129 100,157 L 100,229 Q 100,257 132,257 L 150,257 L 138,282 L 172,257 L 268,257 Q 300,257 300,229 L 300,157 Q 300,129 268,129 Z"
+    fill="none" stroke="url(#brand)" stroke-width="13" stroke-linejoin="round" stroke-linecap="round"/>
+  <!-- M -->
+  <path d="M140 218 L140 175 L156 200 L172 175 L172 218" stroke="#1a1a1a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- I -->
+  <path d="M188 175 L188 218" stroke="#1a1a1a" stroke-width="9" stroke-linecap="round"/>
+  <!-- I -->
+  <path d="M204 175 L204 218" stroke="#1a1a1a" stroke-width="9" stroke-linecap="round"/>
+  <!-- A -->
+  <path d="M220 218 L236 175 L252 218 M226 205 L246 205" stroke="#1a1a1a" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+</svg>
