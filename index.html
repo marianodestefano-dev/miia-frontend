@@ -71,7 +71,7 @@
       align-items: center;
       gap: 8px;
       padding: 7px 20px;
-      margin-bottom: 10px;
+      margin-bottom: 40px;
       background: rgba(124,58,237,0.10);
       border: 1px solid rgba(124,58,237,0.35);
       border-radius: var(--r-full);
@@ -183,7 +183,10 @@
     /* ═══ HERO CHAT PREVIEW ═══ */
     .hero-preview {
       margin: 72px auto 0;
-      max-width: 620px;
+      max-width: 960px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
       position: relative;
     }
     .chat-box {
@@ -194,6 +197,15 @@
       backdrop-filter: var(--blur);
       -webkit-backdrop-filter: var(--blur);
       box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+    }
+    .chat-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--tx-3);
+      text-align: center;
+      margin-bottom: 10px;
     }
     .chat-head {
       padding: 14px 20px;
@@ -552,6 +564,7 @@
       .hero h1 { letter-spacing: -1.5px; }
       .hero .sub { font-size: 1rem; }
       .s { padding: 100px 20px; }
+      .hero-preview { grid-template-columns: 1fr; max-width: 480px; }
       .feat-grid, .steps, .caps-grid, .price-grid, .test-grid { grid-template-columns: 1fr; }
       .cta h2 { font-size: 1.8rem; }
       .ft-inner { grid-template-columns: 1fr; }
@@ -595,20 +608,56 @@
     </div>
 
     <div class="hero-preview fade-in">
-      <div class="chat-box">
-        <div class="chat-head">
-          <div class="chat-av">M</div>
-          <div>
-            <div class="chat-name">MIIA</div>
-            <div class="chat-status">En linea</div>
+      <!-- Chat 1: Venta con cotización PDF -->
+      <div>
+        <div class="chat-label">Venta automatizada</div>
+        <div class="chat-box">
+          <div class="chat-head">
+            <div class="chat-av">M</div>
+            <div>
+              <div class="chat-name">MIIA · Lead</div>
+              <div class="chat-status">En linea</div>
+            </div>
+          </div>
+          <div class="chat-msgs">
+            <div class="m m-in">Hola, me interesa el servicio para mi empresa<div class="m-t">10:32</div></div>
+            <div class="m m-out">¡Hola! Con gusto te ayudo. ¿Para cuántas personas sería?<div class="m-t">10:32</div></div>
+            <div class="m m-in">Somos un equipo de 4<div class="m-t">10:33</div></div>
+            <div class="m m-out">Perfecto. Te preparé una cotización personalizada 👇<div class="m-t">10:34</div></div>
+            <div class="m m-out" style="padding:0; overflow:hidden; border-radius:12px; max-width:78%;">
+              <div style="background:rgba(124,58,237,0.18); padding:10px 14px; display:flex; align-items:center; gap:10px;">
+                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#ef4444" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+                <div>
+                  <div style="font-size:0.78rem;color:var(--tx-1);font-weight:600;">Cotización_MedLink_Team4.pdf</div>
+                  <div style="font-size:0.6rem;color:var(--tx-3);">3 páginas · 142 KB</div>
+                </div>
+              </div>
+              <div class="m-t" style="padding:6px 14px;">10:34</div>
+            </div>
+            <div class="m m-in">Impecable, lo reviso y te confirmo<div class="m-t">10:35</div></div>
           </div>
         </div>
-        <div class="chat-msgs">
-          <div class="m m-in">Hola, me interesa el servicio. ¿Tienen disponibilidad?<div class="m-t">10:32</div></div>
-          <div class="m m-out">¡Hola! Con gusto. Para armarle la mejor propuesta: ¿para cuántas personas sería?<div class="m-t">10:32</div></div>
-          <div class="m m-in">Somos un equipo de 4<div class="m-t">10:33</div></div>
-          <div class="m m-out">Perfecto. Le preparo una cotización personalizada en PDF con nuestros planes.<div class="m-t">10:34</div></div>
-          <div class="m m-typing"><span></span><span></span><span></span></div>
+      </div>
+
+      <!-- Chat 2: Self-chat con recordatorio -->
+      <div>
+        <div class="chat-label">Tu asistente personal</div>
+        <div class="chat-box">
+          <div class="chat-head">
+            <div class="chat-av">M</div>
+            <div>
+              <div class="chat-name">MIIA · Yo</div>
+              <div class="chat-status">Self-chat</div>
+            </div>
+          </div>
+          <div class="chat-msgs">
+            <div class="m m-out">🎂 Mañana es el cumpleaños de tu mamá, Susana. ¿Querés que le mande un saludo a las 8am?<div class="m-t">09:00</div></div>
+            <div class="m m-in">Sí, mandále algo lindo de mi parte<div class="m-t">09:01</div></div>
+            <div class="m m-out">Listo, mañana a las 8am le envío un mensaje cariñoso en tu estilo. También te recuerdo: tenés reunión con el equipo de diseño a las 11am.<div class="m-t">09:01</div></div>
+            <div class="m m-in">Genial, ¿algo más para hoy?<div class="m-t">09:02</div></div>
+            <div class="m m-out">Tenés 3 leads sin responder y una cotización pendiente de MedLink. ¿Arranco con las respuestas?<div class="m-t">09:02</div></div>
+            <div class="m m-typing"><span></span><span></span><span></span></div>
+          </div>
         </div>
       </div>
     </div>
