@@ -1102,8 +1102,8 @@
         return;
       }
 
-      // Check consent (saltar si admin está viendo)
-      if (!currentUserData.terms_accepted && !adminView) {
+      // Check consent (saltar si admin está viendo o si es admin propio)
+      if (!currentUserData.terms_accepted && !adminView && currentUserData.role !== 'admin') {
         showConsentOverlay();
         return; // Block until consent given
       }
