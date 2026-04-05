@@ -2110,18 +2110,11 @@
 
     // ═══ UI ═══
     function setupScrollAndAnimations() {
-      // navbar removed; sidebar handles navigation
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry, i) => {
-          if (entry.isIntersecting) {
-            setTimeout(() => entry.target.classList.add('visible'), i * 100);
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-
-      document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+      // Force all fade-in elements to be visible immediately
+      // IntersectionObserver doesn't work with display:none sections
+      document.querySelectorAll('.fade-in').forEach((el, i) => {
+        setTimeout(() => el.classList.add('visible'), i * 80);
+      });
     }
   </script>
   <script>
