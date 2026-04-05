@@ -1126,6 +1126,14 @@
 
       // Setup UI
       setupScrollAndAnimations();
+
+      // Restore section from hash AFTER render is complete
+      const hash = window.location.hash.replace('#', '');
+      const validSections = ['inicio', 'agentes', 'planes', 'conexiones'];
+      if (hash && validSections.includes(hash)) {
+        const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
+        showSection(hash, btn);
+      }
     });
 
     // ═══ CONSENT ═══
