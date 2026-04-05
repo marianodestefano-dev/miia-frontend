@@ -180,130 +180,154 @@
     .btn-o:hover { border-color: var(--border-h); color: var(--tx-1); }
     .btn svg { width: 16px; height: 16px; }
 
-    /* ═══ HERO CHAT PREVIEW ═══ */
+    /* ═══ HERO CHAT CAROUSEL ═══ */
     .hero-preview {
       margin: 72px auto 0;
-      max-width: 960px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
+      max-width: 520px;
       position: relative;
-      align-items: stretch;
     }
-    .hero-preview > div {
-      display: flex; flex-direction: column;
+    .chat-carousel {
+      position: relative; overflow: hidden;
     }
-    .hero-preview > div > .chat-box {
-      flex: 1;
+    .chat-slide {
+      position: absolute; top: 0; left: 0; width: 100%;
+      opacity: 0; transform: translateX(40px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      pointer-events: none;
+    }
+    .chat-slide.active {
+      position: relative; opacity: 1; transform: translateX(0);
+      pointer-events: auto;
+    }
+    .chat-slide.exit {
+      opacity: 0; transform: translateX(-40px);
+    }
+    .chat-feature-title {
+      text-align: center; margin-bottom: 14px;
+      font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 3px;
+      background: linear-gradient(90deg, #00E5FF, #7C3AED, #FF1744);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
     .chat-box {
-      border-radius: var(--r-lg);
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.5);
+      box-shadow: 0 30px 70px rgba(0,0,0,0.5);
       display: flex; flex-direction: column;
       border: 1px solid rgba(255,255,255,0.06);
     }
-    .chat-label {
-      font-size: 0.65rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      color: var(--tx-3);
-      text-align: center;
-      margin-bottom: 10px;
-    }
-    /* ═══ WhatsApp-style header ═══ */
+    /* ═══ WhatsApp header ═══ */
     .chat-head {
-      padding: 10px 16px;
+      padding: 8px 12px;
       display: flex; align-items: center; gap: 10px;
-      background: #1F2C33;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
+      background: #202C33;
     }
     .chat-head-actions {
-      margin-left: auto; display: flex; gap: 14px; opacity: 0.5;
+      margin-left: auto; display: flex; gap: 16px;
     }
-    .chat-head-actions svg { width: 16px; height: 16px; stroke: #aebac1; fill: none; stroke-width: 2; }
+    .chat-head-actions svg { width: 18px; height: 18px; fill: #AEBAC1; }
     .chat-av {
       width: 36px; height: 36px; border-radius: 50%;
       background: linear-gradient(135deg, #00E5FF, #7C3AED, #FF1744);
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem; font-weight: 700; color: white;
+      font-size: 0.72rem; font-weight: 700; color: white;
     }
-    .chat-name { font-size: 0.85rem; font-weight: 500; color: #e9edef; }
-    .chat-status { font-size: 0.65rem; color: #8696a0; }
-    /* ═══ WhatsApp doodle background ═══ */
+    .chat-name { font-size: 0.88rem; font-weight: 500; color: #E9EDEF; }
+    .chat-status { font-size: 0.62rem; color: #8696A0; }
+    /* ═══ WhatsApp doodle background — real pattern ═══ */
     .chat-msgs {
-      padding: 20px 16px; display: flex; flex-direction: column; gap: 6px; flex: 1;
+      padding: 16px 14px; display: flex; flex-direction: column; gap: 4px;
+      min-height: 320px;
       background-color: #0B141A;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300' opacity='0.04'%3E%3Cdefs%3E%3Cstyle%3Epath%7Bfill:%23fff;%7D%3C/style%3E%3C/defs%3E%3Cpath d='M30 10c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z'/%3E%3Cpath d='M60 25l-5 8h10z'/%3E%3Cpath d='M100 15c0 3.3-2.7 6-6 6s-6-2.7-6-6 2.7-6 6-6 6 2.7 6 6z'/%3E%3Cpath d='M150 20l3-8 3 8-8-5h10z'/%3E%3Cpath d='M200 12h8v8h-8z'/%3E%3Cpath d='M250 18c0 2.8-2.2 5-5 5s-5-2.2-5-5 2.2-5 5-5 5 2.2 5 5z'/%3E%3Cpath d='M40 60l-4 6h8z'/%3E%3Cpath d='M80 55h6v6h-6z'/%3E%3Cpath d='M130 50c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z'/%3E%3Cpath d='M170 58l2-6 2 6-6-4h8z'/%3E%3Cpath d='M220 52c0 3-2.5 5.5-5.5 5.5S209 55 209 52s2.5-5.5 5.5-5.5S220 49 220 52z'/%3E%3Cpath d='M270 55l-3 5h6z'/%3E%3Cpath d='M20 100h5v5h-5z'/%3E%3Cpath d='M70 95c0 2.8-2.2 5-5 5s-5-2.2-5-5 2.2-5 5-5 5 2.2 5 5z'/%3E%3Cpath d='M110 100l-4 7h8z'/%3E%3Cpath d='M160 92c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z'/%3E%3Cpath d='M210 98h6v6h-6z'/%3E%3Cpath d='M260 95l2-6 2 6-6-4h8z'/%3E%3Cpath d='M35 140c0 3-2.5 5.5-5.5 5.5S24 143 24 140s2.5-5.5 5.5-5.5 5.5 2.5 5.5 5.5z'/%3E%3Cpath d='M90 135l-3 5h6z'/%3E%3Cpath d='M140 140h5v5h-5z'/%3E%3Cpath d='M190 138c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z'/%3E%3Cpath d='M240 135l2-5 2 5-5-3.5h7z'/%3E%3Cpath d='M280 142l-4 6h8z'/%3E%3Cpath d='M50 180h6v6h-6z'/%3E%3Cpath d='M100 175c0 2.8-2.2 5-5 5s-5-2.2-5-5 2.2-5 5-5 5 2.2 5 5z'/%3E%3Cpath d='M150 180l-3 5h6z'/%3E%3Cpath d='M200 178c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z'/%3E%3Cpath d='M250 182h5v5h-5z'/%3E%3Cpath d='M15 220l2-6 2 6-6-4h8z'/%3E%3Cpath d='M70 215c0 3-2.5 5.5-5.5 5.5S59 218 59 215s2.5-5.5 5.5-5.5 5.5 2.5 5.5 5.5z'/%3E%3Cpath d='M120 220l-4 6h8z'/%3E%3Cpath d='M175 218h6v6h-6z'/%3E%3Cpath d='M225 215c0 2.2-1.8 4-4 4s-4-1.8-4-4 1.8-4 4-4 4 1.8 4 4z'/%3E%3Cpath d='M275 220l-3 5h6z'/%3E%3Cpath d='M40 260c0 2.8-2.2 5-5 5s-5-2.2-5-5 2.2-5 5-5 5 2.2 5 5z'/%3E%3Cpath d='M95 255h5v5h-5z'/%3E%3Cpath d='M145 260l2-6 2 6-6-4h8z'/%3E%3Cpath d='M195 258c0 3-2.5 5.5-5.5 5.5S184 261 184 258s2.5-5.5 5.5-5.5 5.5 2.5 5.5 5.5z'/%3E%3Cpath d='M245 260l-4 7h8z'/%3E%3C/svg%3E");
-      background-repeat: repeat;
+      background-image: url('https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png');
+      background-repeat: repeat; background-size: 412px;
       position: relative;
     }
-    /* ═══ WhatsApp-style bubbles ═══ */
+    /* ═══ WhatsApp bubbles ═══ */
     .m {
-      max-width: 78%; padding: 6px 8px 2px 8px;
-      border-radius: 8px; font-size: 0.82rem; line-height: 1.45;
+      max-width: 82%; padding: 5px 7px 1px 7px;
+      border-radius: 7.5px; font-size: 0.82rem; line-height: 1.4;
       text-align: left; position: relative;
-      opacity: 0; transform: translateY(12px) scale(0.95);
-      animation: msgAppear 0.4s ease forwards;
+      opacity: 0; transform: translateY(10px) scale(0.97);
+      animation: msgIn 0.35s ease forwards;
     }
+    /* Normal chat: incoming left, outgoing right */
     .m-in {
-      background: #1F2C33; color: #e9edef;
-      align-self: flex-start; border-top-left-radius: 2px;
-      box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+      background: #202C33; color: #E9EDEF;
+      align-self: flex-start; border-top-left-radius: 0;
+      box-shadow: 0 1px 0.5px rgba(11,20,26,0.13);
     }
     .m-out {
-      background: #005C4B; color: #e9edef;
-      align-self: flex-end; border-top-right-radius: 2px;
-      box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+      background: #005C4B; color: #E9EDEF;
+      align-self: flex-end; border-top-right-radius: 0;
+      box-shadow: 0 1px 0.5px rgba(11,20,26,0.13);
     }
-    /* Self-chat: MIIA messages (green-dark), owner messages (slightly different) */
-    .chat-self .m-in {
-      align-self: flex-end; border-top-left-radius: 8px; border-top-right-radius: 2px;
-      background: #005C4B;
+    /* Self-chat: MIIA = m-miia (left, green), owner = m-owner (right, dark) */
+    .m-miia {
+      background: #005C4B; color: #E9EDEF;
+      align-self: flex-start; border-top-left-radius: 0;
+      box-shadow: 0 1px 0.5px rgba(11,20,26,0.13);
     }
-    .chat-self .m-out {
-      background: #1F2C33; border-top-right-radius: 8px; border-top-left-radius: 2px;
-      align-self: flex-end;
+    .m-owner {
+      background: #202C33; color: #E9EDEF;
+      align-self: flex-end; border-top-right-radius: 0;
+      box-shadow: 0 1px 0.5px rgba(11,20,26,0.13);
     }
-    .m-t { font-size: 0.58rem; color: rgba(255,255,255,0.45); margin-top: 2px; text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 3px; }
-    .m-t::after { content: ''; display: inline-block; width: 14px; height: 9px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 11' width='16' height='11'%3E%3Cpath d='M11.071.653a.457.457 0 00-.304-.102.493.493 0 00-.381.178l-6.19 7.636-2.011-2.095a.46.46 0 00-.327-.145.458.458 0 00-.326.145.368.368 0 000 .502l2.35 2.449a.468.468 0 00.326.134c.123 0 .246-.057.345-.168l6.533-8.058a.372.372 0 00-.015-.476z' fill='%2353bdeb'/%3E%3Cpath d='M15.071.653a.457.457 0 00-.304-.102.493.493 0 00-.381.178l-6.19 7.636-1.2-1.25-.327.4 1.54 1.605a.468.468 0 00.326.134c.123 0 .246-.057.345-.168l6.533-8.058a.372.372 0 00-.015-.476z' fill='%2353bdeb'/%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; }
-    /* Incoming messages don't show read ticks */
-    .m-in .m-t::after { display: none; }
-    .chat-self .m-out .m-t::after { display: none; }
+    .m-t { font-size: 0.58rem; color: rgba(255,255,255,0.45); margin-top: 1px; text-align: right; display: flex; justify-content: flex-end; align-items: center; gap: 3px; padding-bottom: 2px; }
+    /* Double check SVG for sent messages */
+    .m-out .m-t::after, .m-owner .m-t::after { content: ''; display: inline-block; width: 16px; height: 11px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 11' width='16' height='11'%3E%3Cpath d='M11.071.653a.457.457 0 00-.304-.102.493.493 0 00-.381.178l-6.19 7.636-2.011-2.095a.46.46 0 00-.327-.145.458.458 0 00-.326.145.368.368 0 000 .502l2.35 2.449a.468.468 0 00.326.134c.123 0 .246-.057.345-.168l6.533-8.058a.372.372 0 00-.015-.476z' fill='%2353bdeb'/%3E%3Cpath d='M15.071.653a.457.457 0 00-.304-.102.493.493 0 00-.381.178l-6.19 7.636-1.2-1.25-.327.4 1.54 1.605a.468.468 0 00.326.134c.123 0 .246-.057.345-.168l6.533-8.058a.372.372 0 00-.015-.476z' fill='%2353bdeb'/%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; }
+    .m-in .m-t::after, .m-miia .m-t::after { display: none; }
+    /* PDF document bubble */
+    .m-doc { padding: 0; overflow: hidden; border-radius: 7.5px; }
+    .m-doc-inner { background: rgba(0,92,75,0.35); padding: 8px 10px; display: flex; align-items: center; gap: 10px; }
+    .m-doc-icon { width: 32px; height: 40px; background: #E8453C; border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .m-doc-icon span { color: white; font-size: 0.55rem; font-weight: 700; }
+    .m-doc-name { font-size: 0.78rem; color: #E9EDEF; font-weight: 500; }
+    .m-doc-size { font-size: 0.6rem; color: #8696A0; }
     .m-typing {
-      display: flex; gap: 4px; padding: 10px 14px; align-self: flex-end;
-      background: #005C4B; border-radius: 8px; border-top-right-radius: 2px;
-      opacity: 0; animation: msgAppear 0.4s ease forwards;
-      box-shadow: 0 1px 1px rgba(0,0,0,0.15);
+      display: flex; gap: 4px; padding: 8px 14px; align-self: flex-start;
+      background: #005C4B; border-radius: 7.5px; border-top-left-radius: 0;
+      opacity: 0; animation: msgIn 0.35s ease forwards;
+      box-shadow: 0 1px 0.5px rgba(11,20,26,0.13);
     }
     .m-typing span {
-      width: 5px; height: 5px; border-radius: 50%; background: #8696a0;
+      width: 5px; height: 5px; border-radius: 50%; background: #8696A0;
       animation: typ 1.4s infinite;
     }
     .m-typing span:nth-child(2) { animation-delay: 0.2s; }
     .m-typing span:nth-child(3) { animation-delay: 0.4s; }
     @keyframes typ { 0%,100%{opacity:.3;transform:translateY(0)} 50%{opacity:1;transform:translateY(-3px)} }
-    /* ═══ Message appear animation (staggered) ═══ */
-    @keyframes msgAppear {
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .chat-msgs .m:nth-child(1) { animation-delay: 0.3s; }
-    .chat-msgs .m:nth-child(2) { animation-delay: 1.0s; }
-    .chat-msgs .m:nth-child(3) { animation-delay: 2.0s; }
-    .chat-msgs .m:nth-child(4) { animation-delay: 2.8s; }
-    .chat-msgs .m:nth-child(5) { animation-delay: 3.8s; }
-    .chat-msgs .m:nth-child(6) { animation-delay: 4.8s; }
-    .chat-msgs .m-typing { animation-delay: 5.6s; }
-    /* ═══ WhatsApp bottom input bar ═══ */
+    @keyframes msgIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+    .chat-msgs .m:nth-child(1) { animation-delay: 0.2s; }
+    .chat-msgs .m:nth-child(2) { animation-delay: 0.9s; }
+    .chat-msgs .m:nth-child(3) { animation-delay: 1.8s; }
+    .chat-msgs .m:nth-child(4) { animation-delay: 2.6s; }
+    .chat-msgs .m:nth-child(5) { animation-delay: 3.5s; }
+    .chat-msgs .m:nth-child(6) { animation-delay: 4.3s; }
+    .chat-msgs .m-typing { animation-delay: 5.0s; }
+    /* WhatsApp input bar */
     .chat-input-bar {
-      padding: 6px 10px; display: flex; align-items: center; gap: 8px;
-      background: #1F2C33; border-top: 1px solid rgba(255,255,255,0.04);
+      padding: 5px 8px; display: flex; align-items: center; gap: 6px;
+      background: #202C33;
     }
-    .chat-input-bar svg { width: 20px; height: 20px; stroke: #8696a0; fill: none; stroke-width: 1.8; flex-shrink: 0; opacity: 0.7; }
+    .chat-input-bar svg { width: 22px; height: 22px; fill: #8696A0; flex-shrink: 0; }
     .chat-input-field {
       flex: 1; background: #2A3942; border: none; border-radius: 8px;
-      padding: 8px 12px; font-size: 0.75rem; color: #8696a0;
+      padding: 8px 12px; font-size: 0.75rem; color: #8696A0;
+    }
+    /* Carousel dots */
+    .chat-dots {
+      display: flex; justify-content: center; gap: 8px; margin-top: 18px;
+    }
+    .chat-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); cursor: pointer;
+      transition: all 0.3s;
+    }
+    .chat-dot.active {
+      background: var(--primary);
+      width: 24px; border-radius: 4px;
     }
 
     /* ═══ TRUST BAR ═══ */
@@ -623,7 +647,7 @@
       .hero h1 { letter-spacing: -1.5px; }
       .hero .sub { font-size: 1rem; }
       .s { padding: 100px 20px; }
-      .hero-preview { grid-template-columns: 1fr; max-width: 480px; }
+      .hero-preview { max-width: 100%; }
       .feat-grid, .steps, .caps-grid, .price-grid, .test-grid { grid-template-columns: 1fr; }
       .cta h2 { font-size: 1.8rem; }
       .ft-inner { grid-template-columns: 1fr; }
@@ -667,75 +691,121 @@
     </div>
 
     <div class="hero-preview fade-in">
-      <!-- Chat 1: Conversación con cliente -->
-      <div>
-        <div class="chat-label">Conversación con cliente</div>
-        <div class="chat-box">
-          <div class="chat-head">
-            <div class="chat-av">M</div>
-            <div>
-              <div class="chat-name">Mariano · Cliente</div>
-              <div class="chat-status">en línea</div>
-            </div>
-            <div class="chat-head-actions">
-              <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg>
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
-            </div>
-          </div>
-          <div class="chat-msgs">
-            <div class="m m-in">Hola, me interesa el servicio para mi empresa<div class="m-t">10:32</div></div>
-            <div class="m m-out">¡Hola! Con gusto te ayudo. ¿Para cuántas personas sería?<div class="m-t">10:32</div></div>
-            <div class="m m-in">Somos un equipo de 4<div class="m-t">10:33</div></div>
-            <div class="m m-out">Perfecto. Te preparé una cotización personalizada 👇<div class="m-t">10:34</div></div>
-            <div class="m m-out" style="padding:0; overflow:hidden; border-radius:8px; max-width:82%;">
-              <div style="background:rgba(0,92,75,0.6); padding:10px 14px; display:flex; align-items:center; gap:10px;">
-                <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#ef4444" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-                <div>
-                  <div style="font-size:0.78rem;color:#e9edef;font-weight:600;">Cotización_MedLink_Team4.pdf</div>
-                  <div style="font-size:0.6rem;color:#8696a0;">3 páginas · 142 KB</div>
-                </div>
-              </div>
-              <div class="m-t" style="padding:4px 10px;">10:34</div>
-            </div>
-            <div class="m m-in">Impecable, lo reviso y te confirmo<div class="m-t">10:35</div></div>
-          </div>
-          <div class="chat-input-bar">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-            <div class="chat-input-field">Mensaje</div>
-            <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
-          </div>
-        </div>
-      </div>
+      <div class="chat-carousel" id="chatCarousel">
 
-      <!-- Chat 2: Self-chat — Tu MIIA -->
-      <div>
-        <div class="chat-label">Tu asistente personal</div>
-        <div class="chat-box">
-          <div class="chat-head">
-            <div class="chat-av">M</div>
-            <div>
-              <div class="chat-name">Tu MIIA</div>
-              <div class="chat-status">Enviá un mensaje a este mismo número</div>
+        <!-- SLIDE 1: Cotización automática (Lead → PDF) -->
+        <div class="chat-slide active" data-slide="0">
+          <div class="chat-feature-title">Cotizaciones automáticas en PDF</div>
+          <div class="chat-box">
+            <div class="chat-head">
+              <div class="chat-av">A</div>
+              <div><div class="chat-name">Alejandra</div><div class="chat-status">en línea</div></div>
+              <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
-            <div class="chat-head-actions">
-              <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg>
-              <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg>
+            <div class="chat-msgs">
+              <div class="m m-in">Hola, me interesa el servicio para mi empresa<div class="m-t">10:32</div></div>
+              <div class="m m-out">Hola Alejandra! Con gusto te ayudo. ¿Para cuántas personas sería?<div class="m-t">10:32</div></div>
+              <div class="m m-in">Somos un equipo de 4<div class="m-t">10:33</div></div>
+              <div class="m m-out">Perfecto. Te preparé una cotización personalizada 👇<div class="m-t">10:34</div></div>
+              <div class="m m-out m-doc">
+                <div class="m-doc-inner">
+                  <div class="m-doc-icon"><span>PDF</span></div>
+                  <div><div class="m-doc-name">Cotización_Team4.pdf</div><div class="m-doc-size">3 páginas · 142 KB</div></div>
+                </div>
+                <div class="m-t" style="padding:3px 8px;">10:34</div>
+              </div>
+              <div class="m m-in">Impecable, lo reviso y te confirmo<div class="m-t">10:35</div></div>
             </div>
-          </div>
-          <div class="chat-msgs chat-self">
-            <div class="m m-out">🙍‍♀️ Mañana es el cumpleaños de tu mamá, Susana. ¿Querés que le mande un saludo a las 8am?<div class="m-t">09:00</div></div>
-            <div class="m m-in">Sí, mandále algo lindo de mi parte<div class="m-t">09:01</div></div>
-            <div class="m m-out">🦸‍♀️ ¡Listo! Mañana a las 8am le envío un mensaje cariñoso en tu estilo. También te recuerdo: tenés reunión con el equipo de diseño a las 11am.<div class="m-t">09:01</div></div>
-            <div class="m m-in">Genial, ¿algo más para hoy?<div class="m-t">09:02</div></div>
-            <div class="m m-out">🙍‍♀️ Tenés 3 leads sin responder y una cotización pendiente de MedLink. ¿Arranco con las respuestas?<div class="m-t">09:02</div></div>
-            <div class="m m-typing"><span></span><span></span><span></span></div>
-          </div>
-          <div class="chat-input-bar">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-            <div class="chat-input-field">Mensaje</div>
-            <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+            <div class="chat-input-bar">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+              <div class="chat-input-field">Mensaje</div>
+              <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </div>
           </div>
         </div>
+
+        <!-- SLIDE 2: Agenda & recordatorios (Self-chat) -->
+        <div class="chat-slide" data-slide="1">
+          <div class="chat-feature-title">Agenda inteligente y recordatorios</div>
+          <div class="chat-box">
+            <div class="chat-head">
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
+              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Enviá un mensaje a este mismo número</div></div>
+              <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+            </div>
+            <div class="chat-msgs">
+              <div class="m m-miia">🙍‍♀️ Mañana es el cumpleaños de Mamá Silvia. ¿Querés que le mande un saludo a las 8am?<div class="m-t">09:00</div></div>
+              <div class="m m-owner">Sí, mandále algo lindo de mi parte<div class="m-t">09:01</div></div>
+              <div class="m m-miia">🦸‍♀️ ¡Listo! Mañana a las 8am le envío un mensaje cariñoso en tu estilo. También te recuerdo: tenés reunión con Dr. Mario a las 11am.<div class="m-t">09:01</div></div>
+              <div class="m m-owner">Genial, ¿algo más para hoy?<div class="m-t">09:02</div></div>
+              <div class="m m-miia">🙍‍♀️ Tenés 3 leads sin responder y una cotización pendiente. ¿Arranco con las respuestas?<div class="m-t">09:02</div></div>
+              <div class="m m-typing"><span></span><span></span><span></span></div>
+            </div>
+            <div class="chat-input-bar">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+              <div class="chat-input-field">Mensaje</div>
+              <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: Modo Deporte en vivo -->
+        <div class="chat-slide" data-slide="2">
+          <div class="chat-feature-title">Modo deporte en vivo</div>
+          <div class="chat-box">
+            <div class="chat-head">
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
+              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Enviá un mensaje a este mismo número</div></div>
+              <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+            </div>
+            <div class="chat-msgs">
+              <div class="m m-miia">⚽ ¡GOOOL DE BOCA! Cavani la clavó de zurda al minuto 34. Van 1-0 contra River 🔥🔥🔥<div class="m-t">21:34</div></div>
+              <div class="m m-owner">VAMOOOOO 🎉🎉<div class="m-t">21:34</div></div>
+              <div class="m m-miia">🏟️ River empata 1-1 al minuto 67. Borja de cabeza. Todavía queda partido...<div class="m-t">22:07</div></div>
+              <div class="m m-owner">Uff, contame todo<div class="m-t">22:07</div></div>
+              <div class="m m-miia">⚽ ¡¡GOOOL!! 2-1 Boca, minuto 89! Medina de contra. Se viene el final... 💛💙<div class="m-t">22:29</div></div>
+              <div class="m m-typing"><span></span><span></span><span></span></div>
+            </div>
+            <div class="chat-input-bar">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+              <div class="chat-input-field">Mensaje</div>
+              <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 4: Inter-MIIA (coordinación entre MIIAs) -->
+        <div class="chat-slide" data-slide="3">
+          <div class="chat-feature-title">Coordinación entre asistentes</div>
+          <div class="chat-box">
+            <div class="chat-head">
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
+              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Enviá un mensaje a este mismo número</div></div>
+              <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+            </div>
+            <div class="chat-msgs">
+              <div class="m m-owner">Decile a la MIIA de Anabella que me agende una reunión el viernes<div class="m-t">14:20</div></div>
+              <div class="m m-miia">🙍‍♀️ Ya le avisé a Anabella. Te cuento cuando me responda.<div class="m-t">14:20</div></div>
+              <div class="m m-miia">🙍‍♀️ La MIIA de Anabella confirmó: reunión agendada para el viernes a las 10am. Te mando recordatorio ese día.<div class="m-t">14:22</div></div>
+              <div class="m m-owner">Genial. Mandále un mail a Dr. Mario con el resumen del proyecto<div class="m-t">14:23</div></div>
+              <div class="m m-miia">📧 ¡Listo! Email enviado a Dr. Mario. Asunto: "Resumen del proyecto — Mariano"<div class="m-t">14:24</div></div>
+              <div class="m m-typing"><span></span><span></span><span></span></div>
+            </div>
+            <div class="chat-input-bar">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+              <div class="chat-input-field">Mensaje</div>
+              <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- Carousel dots -->
+      <div class="chat-dots">
+        <div class="chat-dot active" data-dot="0"></div>
+        <div class="chat-dot" data-dot="1"></div>
+        <div class="chat-dot" data-dot="2"></div>
+        <div class="chat-dot" data-dot="3"></div>
       </div>
     </div>
   </section>
@@ -1119,6 +1189,50 @@
         if (!wasOpen) item.classList.add('open');
       });
     });
+
+    // ═══ CHAT CAROUSEL — 4 slides, auto-rotate every 7s ═══
+    (function() {
+      const slides = document.querySelectorAll('.chat-slide');
+      const dots = document.querySelectorAll('.chat-dot');
+      let current = 0;
+      let timer;
+
+      function goTo(idx) {
+        // Reset animations on current slide messages
+        slides[current].classList.remove('active');
+        slides[current].classList.add('exit');
+
+        current = idx % slides.length;
+
+        // Remove exit from all, set active
+        slides.forEach(s => s.classList.remove('exit', 'active'));
+
+        // Re-trigger message animations by cloning
+        const msgs = slides[current].querySelector('.chat-msgs');
+        const clone = msgs.cloneNode(true);
+        msgs.parentNode.replaceChild(clone, msgs);
+
+        slides[current].classList.add('active');
+        dots.forEach(d => d.classList.remove('active'));
+        dots[current].classList.add('active');
+      }
+
+      function next() { goTo(current + 1); }
+
+      function startTimer() {
+        clearInterval(timer);
+        timer = setInterval(next, 7000);
+      }
+
+      dots.forEach(d => {
+        d.addEventListener('click', () => {
+          goTo(parseInt(d.dataset.dot));
+          startTimer();
+        });
+      });
+
+      startTimer();
+    })();
   </script>
 </body>
 </html>
