@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="88 118 224 172" fill="none">
+  <defs>
+    <linearGradient id="brand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="50%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#FF1744"/>
+    </linearGradient>
+  </defs>
+  <path d="M 132,129 Q 100,129 100,157 L 100,229 Q 100,257 132,257 L 150,257 L 138,282 L 172,257 L 268,257 Q 300,257 300,229 L 300,157 Q 300,129 268,129 Z"
+    fill="none" stroke="url(#brand)" stroke-width="14" stroke-linejoin="round" stroke-linecap="round"/>
+  <text x="200" y="207" text-anchor="middle" font-family="'Inter','Arial Black',Arial,Helvetica,sans-serif" font-size="58" font-weight="900" fill="white" letter-spacing="2">MIIA</text>
+</svg>
