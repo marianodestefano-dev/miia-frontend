@@ -486,7 +486,7 @@
     .inline-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px; }
     @media(max-width:768px) { .inline-grid { grid-template-columns:1fr; } }
   </style>
-
+  <style>
     /* ═══ BUSINESSES STYLES ═══ */
     :root { --gradient-accent: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%); }
     /* ═══ WA STATUS BANNER ═══ */
@@ -758,7 +758,7 @@
       #businessDetailHeader { padding: 0 12px; }
     }
   </style>
-
+  <style>
     /* ═══ DOCUMENTS STYLES ═══ */
     /* ═══ CONTAINER ═══ */
     .container {
@@ -980,8 +980,6 @@
       .container { padding: 20px 16px 60px; }
       #section-documents .tabs { flex-wrap: wrap; }
     }
-  </style>
-
   </style>
 
   <!-- Firebase SDK -->
@@ -3616,7 +3614,7 @@
       btn.textContent = 'Conectar';
       btn.className = 'wa-btn-connect';
     }
-    updateSidebarWaDot(waConnected);
+    updateSidebarWaStatus(waConnected);
   }
 
   function toggleWhatsApp() {
@@ -4430,7 +4428,7 @@
     }
   }
 </script>
-
+  <script>
 
     // ═══ DOCUMENTS SECTION JS ═══
     let documentsLoaded = false;
