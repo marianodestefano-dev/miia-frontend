@@ -987,7 +987,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
-  <!-- Socket.IO para notificaciones en tiempo real -->
+  <!-- Socket.IO para notificaciónes en tiempo real -->
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 </head>
 <body>
@@ -1136,7 +1136,7 @@
         <div class="card fade-in">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 10 10-12h-9l1-10z"/></svg> Acciones Rápidas</h2>
           <div class="quick-actions">
-            <button class="action-btn" onclick="showSection('connections', document.querySelector('.sidebar-btn[onclick*=conexiones]'))">
+            <button class="action-btn" onclick="showSection('connections', document.querySelector('.sidebar-btn[onclick*=conexiónes]'))">
               <span class="action-icon"><svg style="width:20px;height:20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></span> Conexiones
             </button>
             <button class="action-btn" onclick="showFeature('train')">
@@ -1404,7 +1404,7 @@
                 <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp</h3>
                 <span id="connWaStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">No conectado</span>
               </div>
-              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA responderá automáticamente tus conversaciones de WhatsApp, clasificará leads y cerrará ventas 24/7 sin que intervengas.</p>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA responderá automáticamente tus conversaciónes de WhatsApp, clasificará leads y cerrará ventas 24/7 sin que intervengas.</p>
             </div>
           </div>
           <button onclick="showFeature('whatsapp')" style="width:100%;padding:10px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.18)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
@@ -1491,7 +1491,7 @@
                 <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">Correo Electrónico</h3>
                 <span style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(245,158,11,.1);color:#f59e0b;font-weight:600;">SMTP / IMAP</span>
               </div>
-              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA enviará cotizaciones, respuestas y confirmaciones por email en tu nombre. Con IMAP también aprende del contenido de tu bandeja.</p>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA enviará cotizaciónes, respuestas y confirmaciones por email en tu nombre. Con IMAP también aprende del contenido de tu bandeja.</p>
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:8px;">
@@ -1647,7 +1647,7 @@
         <div class="consent-check-item" onclick="document.getElementById('checkDna').click()">
           <input type="checkbox" id="checkDna" onclick="event.stopPropagation(); updateConsentBtn()">
           <label for="checkDna" onclick="event.stopPropagation()">
-            Autorizo la <a href="terms.html#dna" target="_blank">Extracción de ADN Comercial</a>: MIIA analizará mis conversaciones de WhatsApp para aprender mi estilo de venta y mejorar las respuestas de IA.
+            Autorizo la <a href="terms.html#dna" target="_blank">Extracción de ADN Comercial</a>: MIIA analizará mis conversaciónes de WhatsApp para aprender mi estilo de venta y mejorar las respuestas de IA.
           </label>
         </div>
       </div>
@@ -1770,7 +1770,7 @@
       currentUser = user;
       currentUserUid = user.uid;
 
-      // Inicializar Socket.IO para notificaciones en tiempo real
+      // Inicializar Socket.IO para notificaciónes en tiempo real
       initSocket();
 
       // Leer perfil de Firestore (si adminView, carga el usuario target)
@@ -1833,8 +1833,18 @@
         } catch (tzErr) { console.warn('Timezone auto-detect failed:', tzErr); }
         doc = await db.collection('users').doc(user.uid).get();
       } else if (!adminView) {
-        // Actualizar last_login (no actualizar si es admin viendo otro usuario)
-        await db.collection('users').doc(user.uid).update({ last_login: new Date() });
+        // Actualizar last_login + timezone en CADA visita (detecta cambio de país)
+        const currentTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const updateData = { last_login: new Date() };
+        if (currentTz) updateData.timezone = currentTz;
+        await db.collection('users').doc(user.uid).update(updateData);
+        // También actualizar en settings/schedule
+        if (currentTz) {
+          await db.collection('users').doc(user.uid).collection('settings').doc('schedule').set(
+            { timezone: currentTz, _lastUpdated: new Date() },
+            { merge: true }
+          );
+        }
       }
 
       currentUserData = doc.data();
@@ -2702,7 +2712,7 @@
       if (!email) { showToast('Primero guarda tu email', 'warning'); return; }
       document.getElementById('emailTestBtn').textContent = 'Enviando...';
       try {
-        const res = await fetch(API + '/api/email/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ to: email, subject: 'Test MIIA ✅', body: 'Este es un email de prueba enviado por MIIA. ¡Todo funciona correctamente!' }) });
+        const res = await fetch(API + '/api/email/send', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ to: email, subject: 'Test MIIA ✅', body: 'Este es un email de prueba enviado por MIIA. ¡Todo funcióna correctamente!' }) });
         const data = await res.json();
         if (data.ok) showToast('✅ Email de prueba enviado a ' + email, 'success');
         else showToast('Error: ' + data.error, 'error');
@@ -2885,7 +2895,7 @@
         const res = await fetch('https://api.miia-app.com/api/conversations');
         const data = await res.json();
         if (!data || !Array.isArray(data)) {
-          document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><p>Sin conversaciones aún</p></div>';
+          document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><p>Sin conversaciónes aún</p></div>';
           return;
         }
         allConversations = data;
@@ -2893,8 +2903,8 @@
         updateCounts();
         applyContactFilter();
       } catch (error) {
-        console.error('Error cargando conversaciones:', error);
-        document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><p>Error al cargar conversaciones</p></div>';
+        console.error('Error cargando conversaciónes:', error);
+        document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><p>Error al cargar conversaciónes</p></div>';
       }
     }
 
@@ -3392,7 +3402,7 @@
         <p>${esc((biz.description || 'Sin descripción').substring(0, 100))}${(biz.description || '').length > 100 ? '…' : ''}</p>
         <div class="biz-card-badges">
           ${biz.productCount !== undefined ? `<span class="biz-badge">📦 ${biz.productCount} productos</span>` : ''}
-          ${biz.sessionCount !== undefined ? `<span class="biz-badge">💬 ${biz.sessionCount} sesiones</span>` : ''}
+          ${biz.sessionCount !== undefined ? `<span class="biz-badge">💬 ${biz.sessionCount} sesiónes</span>` : ''}
         </div>
       </div>
     `).join('');
@@ -3543,7 +3553,7 @@
     if (!currentBizId) return;
     const biz = businesses.find(b => b.id === currentBizId);
     const name = biz ? biz.name : 'este negocio';
-    if (!confirm(`¿Eliminar "${name}"? Esta acción es irreversible y eliminará todos los productos, sesiones y datos asociados.`)) return;
+    if (!confirm(`¿Eliminar "${name}"? Esta acción es irreversible y eliminará todos los productos, sesiónes y datos asociados.`)) return;
     deleteBusiness(currentBizId);
   }
 
@@ -3773,7 +3783,7 @@
   // ═══ TAB: PRODUCTS ═══
   const PRODUCT_EXAMPLES = [
     { name: 'Consulta medica inicial', description: 'Primera consulta con medico general', price: '50000', pricePromo: '45000', stock: 'Disponible' },
-    { name: 'Plan premium mensual', description: 'Acceso completo a todas las funciones', price: '29.99', pricePromo: '24.99', stock: 'Ilimitado' },
+    { name: 'Plan premium mensual', description: 'Acceso completo a todas las funciónes', price: '29.99', pricePromo: '24.99', stock: 'Ilimitado' },
     { name: 'Curso de marketing digital', description: 'Curso de 8 semanas online', price: '199', pricePromo: '149', stock: '20 cupos' },
     { name: 'Servicio de diseno web', description: 'Landing page profesional', price: '500', pricePromo: '400', stock: '5 proyectos/mes' },
     { name: 'Asesoria legal empresarial', description: 'Consultoria por hora', price: '80', pricePromo: '', stock: 'Agenda abierta' }
@@ -3856,7 +3866,7 @@
     if (!currentBizId) return;
     const p = products[index];
     if (p.id) {
-      if (!confirm('Eliminar este producto? MIIA olvidara esta informacion permanentemente.')) return;
+      if (!confirm('Eliminar este producto? MIIA olvidara esta información permanentemente.')) return;
       await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/products/${p.id}`, { method: 'DELETE' });
     }
     products.splice(index, 1);
@@ -3871,13 +3881,13 @@
     { keyword: 'precio', context: 'Cuando preguntan cuanto cuesta algo' },
     { keyword: 'cuanto cuesta', context: 'Consulta directa de precio' },
     { keyword: 'tienen disponible', context: 'Pregunta por disponibilidad' },
-    { keyword: 'me pueden cotizar', context: 'Solicitud de cotizacion' },
-    { keyword: 'quisiera informacion', context: 'Interes general en productos' }
+    { keyword: 'me pueden cotizar', context: 'Solicitud de cotización' },
+    { keyword: 'quisiera información', context: 'Interes general en productos' }
   ];
   const CLIENT_EXAMPLES = [
     { keyword: 'mi cuenta', context: 'Ya tiene una cuenta activa' },
     { keyword: 'ya soy cliente', context: 'Se identifica como cliente existente' },
-    { keyword: 'numero de factura', context: 'Tiene transacciones previas' },
+    { keyword: 'número de factura', context: 'Tiene transacciónes previas' },
     { keyword: 'renovar', context: 'Quiere renovar su plan' },
     { keyword: 'soporte', context: 'Necesita ayuda con servicio existente' }
   ];
@@ -3958,7 +3968,7 @@
           client_keywords: parseKeywords(clientKeywords)
         })
       });
-      statusEl.textContent = 'Reglas guardadas - MIIA clasificara contactos automaticamente';
+      statusEl.textContent = 'Reglas guardadas - MIIA clasificara contactos automáticamente';
       setTimeout(() => statusEl.textContent = '', 4000);
     } catch (e) {
       statusEl.textContent = 'Error al guardar';
@@ -4001,7 +4011,7 @@
     currentSessionDate = new Date().toISOString().split('T')[0];
     expertSessionMessages = [];
     document.getElementById('expertMessages').innerHTML =
-      '<div class="message miia"><div class="message-bubble">Nueva sesion iniciada! Explicame lo que necesites sobre tu negocio.</div></div>';
+      '<div class="message miia"><div class="message-bubble">Nueva sesión iniciada! Explicame lo que necesites sobre tu negocio.</div></div>';
   }
 
   function viewSession(date) {
@@ -4062,7 +4072,7 @@
     if (!currentBizId) { showToast('Selecciona un negocio primero', 'warning'); return; }
     if (expertSessionMessages.length === 0) { showToast('No hay mensajes en la sesión actual', 'warning'); return; }
     const statusEl = document.getElementById('sessionSaveStatus');
-    statusEl.textContent = 'Guardando sesion...';
+    statusEl.textContent = 'Guardando sesión...';
 
     const trainingBlock = expertSessionMessages
       .filter(m => m.role === 'user')
@@ -4080,13 +4090,13 @@
       setTimeout(() => statusEl.textContent = '', 4000);
       loadSessions();
     } catch (e) {
-      statusEl.textContent = 'Error al guardar sesion';
+      statusEl.textContent = 'Error al guardar sesión';
     }
   }
 
   async function updateSession(date) {
     if (!currentBizId) return;
-    const text = prompt('Agrega informacion adicional para esta sesion:');
+    const text = prompt('Agrega información adicional para esta sesión:');
     if (!text || !text.trim()) return;
     try {
       await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/sessions/${date}`, {
@@ -4103,7 +4113,7 @@
 
   async function deleteSession(date) {
     if (!currentBizId) return;
-    if (!confirm(`Eliminar sesion del ${date}? MIIA olvidara permanentemente todo lo aprendido en esa sesion.`)) return;
+    if (!confirm(`Eliminar sesión del ${date}? MIIA olvidara permanentemente todo lo aprendido en esa sesión.`)) return;
     try {
       await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/sessions/${date}`, { method: 'DELETE' });
       sessions = sessions.filter(s => s.date !== date);
@@ -4131,7 +4141,7 @@
       const data = await res.json();
       addChatMessage('testMessages', 'miia', data.response || 'No pude responder. Entrena a MIIA primero.');
     } catch (e) {
-      addChatMessage('testMessages', 'miia', 'Error de conexion. Intenta de nuevo.');
+      addChatMessage('testMessages', 'miia', 'Error de conexión. Intenta de nuevo.');
     }
   }
 
@@ -4862,7 +4872,7 @@
           <div class="conversations-list" id="conversationsList">
             <div class="empty-state">
               <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
-              <p>Cargando conversaciones...</p>
+              <p>Cargando conversaciónes...</p>
             </div>
           </div>
         </div>
@@ -5066,7 +5076,7 @@
     <!-- ════ TAB 2: COMO RECONOCER ════ -->
     <div id="tab-recognize" class="tab-panel">
       <h3 class="section-title">Como MIIA reconoce a tus contactos</h3>
-      <p class="section-desc">Define palabras clave para que MIIA clasifique automaticamente a cada contacto como Lead, Cliente o descartado.</p>
+      <p class="section-desc">Define palabras clave para que MIIA clasifique automáticamente a cada contacto como Lead, Cliente o descartado.</p>
 
       <!-- Leads -->
       <div style="margin-bottom:32px;">
@@ -5105,14 +5115,14 @@
     <!-- ════ TAB 3: CHAT EXPERTO ════ -->
     <div id="tab-expert" class="tab-panel">
       <h3 class="section-title">Entrenamiento Experto</h3>
-      <p class="section-desc">Conversa con MIIA para ensenarle la logica de tu negocio. Cada sesion se guarda por dia con un resumen.</p>
+      <p class="section-desc">Conversa con MIIA para ensenarle la lógica de tu negocio. Cada sesión se guarda por dia con un resumen.</p>
 
       <div class="chat-layout">
         <!-- Sessions sidebar -->
         <div class="sessions-panel">
           <div class="sessions-header">
             <h3>Sesiones</h3>
-            <button class="btn-sm btn-primary" style="width:100%;" onclick="startNewSession()">+ Nueva sesion</button>
+            <button class="btn-sm btn-primary" style="width:100%;" onclick="startNewSession()">+ Nueva sesión</button>
           </div>
           <div class="sessions-list" id="sessionsList">
             <!-- Fixed tags -->
@@ -5143,7 +5153,7 @@
         </div>
       </div>
       <div style="margin-top:12px;display:flex;gap:10px;">
-        <button class="btn-sm btn-primary" onclick="saveCurrentSession()">Guardar sesion de hoy</button>
+        <button class="btn-sm btn-primary" onclick="saveCurrentSession()">Guardar sesión de hoy</button>
         <span id="sessionSaveStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
       </div>
     </div>
@@ -5153,7 +5163,7 @@
       <div class="docs-link-card">
         <div class="icon"><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></div>
         <h3>Documentos y Archivos de Conocimiento</h3>
-        <p>Los archivos que subas aqui seran estudiados por MIIA y formaran parte de su cerebro. Incluye cotizaciones, templates y archivos de referencia.</p>
+        <p>Los archivos que subas aqui seran estudiados por MIIA y formaran parte de su cerebro. Incluye cotizaciónes, templates y archivos de referencia.</p>
         <a href="#" id="docsLink" onclick="showSection('documents')">Gestionar Documentos</a>
       </div>
     </div>
@@ -5161,7 +5171,7 @@
     <!-- ════ TAB 5: TESTEAR MIIA ════ -->
     <div id="tab-test" class="tab-panel">
       <h3 class="section-title">Testear MIIA</h3>
-      <p class="section-desc">Habla con tu MIIA como si fueras un cliente. La conversacion de prueba NO se guarda como lead real.</p>
+      <p class="section-desc">Habla con tu MIIA como si fueras un cliente. La conversación de prueba NO se guarda como lead real.</p>
 
       <div class="test-chat">
         <div class="test-header">
@@ -5567,7 +5577,7 @@
           <div class="item-list" id="quotesListItems">
             <div class="empty-state">
               <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></div>
-              <p>Sin cotizaciones aún</p>
+              <p>Sin cotizaciónes aún</p>
             </div>
           </div>
         </div>

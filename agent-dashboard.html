@@ -429,7 +429,7 @@
         <div class="consent-check-item" onclick="document.getElementById('checkDna').click()">
           <input type="checkbox" id="checkDna" onclick="event.stopPropagation(); updateConsentBtn()">
           <label for="checkDna" onclick="event.stopPropagation()">
-            Autorizo la <a href="terms.html" target="_blank">Extracción de ADN Comercial</a>: MIIA analizará conversaciones de WhatsApp para mejorar las respuestas de IA.
+            Autorizo la <a href="terms.html" target="_blank">Extracción de ADN Comercial</a>: MIIA analizará conversaciónes de WhatsApp para mejorar las respuestas de IA.
           </label>
         </div>
       </div>
@@ -464,7 +464,7 @@
                 <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp</h3>
                 <span id="agentWaBadge" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">No conectado</span>
               </div>
-              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA responderá tus conversaciones de WhatsApp, clasificará leads y cerrará ventas 24/7 en tu nombre.</p>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA responderá tus conversaciónes de WhatsApp, clasificará leads y cerrará ventas 24/7 en tu nombre.</p>
             </div>
           </div>
           <a href="businesses.html" style="display:block;text-align:center;padding:10px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;font-weight:600;font-size:0.85rem;text-decoration:none;">
@@ -498,7 +498,7 @@
                 <option value="claude">Anthropic Claude</option>
               </select>
               <input type="password" id="agentAiKey" placeholder="Tu API Key personal" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;width:100%;box-sizing:border-box;">
-              <button onclick="agentSaveAiConfig()" style="width:100%;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar configuracion IA</button>
+              <button onclick="agentSaveAiConfig()" style="width:100%;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar configuración IA</button>
             </div>
             <div id="agentAiStatus" style="font-size:0.78rem;color:var(--text-muted);"></div>
           </div>
@@ -544,7 +544,7 @@
             </div>
             <div>
               <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0 0 4px;">Correo Electrónico</h3>
-              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA enviará cotizaciones y respuestas por email en tu nombre a tus leads y clientes.</p>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA enviará cotizaciónes y respuestas por email en tu nombre a tus leads y clientes.</p>
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:7px;">
@@ -765,7 +765,7 @@
               user_agent: navigator.userAgent,
               screen: `${screen.width}x${screen.height}`,
               language: navigator.language,
-              consent_text: 'Autorizo la Extracción de ADN Comercial: MIIA analizará conversaciones de WhatsApp para mejorar las respuestas de IA.'
+              consent_text: 'Autorizo la Extracción de ADN Comercial: MIIA analizará conversaciónes de WhatsApp para mejorar las respuestas de IA.'
             })
           });
         } catch (_) {}
@@ -832,7 +832,7 @@
         // Render conversations table
         const tbody = document.getElementById('myDealsBody');
         if (deals.length === 0) {
-          tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">Sin conversaciones asignadas</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">Sin conversaciónes asignadas</td></tr>';
           return;
         }
 
@@ -853,7 +853,7 @@
 
       } catch (err) {
         console.error('[AGENT] Error loading conversations:', err);
-        document.getElementById('myDealsBody').innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--danger);">Error cargando conversaciones: ' + err.message + '</td></tr>';
+        document.getElementById('myDealsBody').innerHTML = '<tr><td colspan="3" style="text-align: center; padding: 30px; color: var(--danger);">Error cargando conversaciónes: ' + err.message + '</td></tr>';
       }
     }
 
@@ -896,7 +896,7 @@
       if (sec) sec.classList.remove('section-hidden');
       document.querySelectorAll('.sidebar-nav .sidebar-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
-      if (name === 'conexiones') { agentLoadCalendarStatus(); agentLoadAiConfig(); }
+      if (name === 'conexiónes') { agentLoadCalendarStatus(); agentLoadAiConfig(); }
     }
 
     // ── Google Calendar del agente ──
