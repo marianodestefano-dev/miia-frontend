@@ -278,6 +278,15 @@
     /* Double check SVG for sent messages */
     .m-out .m-t::after, .m-owner .m-t::after { content: ''; display: inline-block; width: 16px; height: 11px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 11' width='16' height='11'%3E%3Cpath d='M11.071.653a.457.457 0 00-.304-.102.493.493 0 00-.381.178l-6.19 7.636-2.011-2.095a.46.46 0 00-.327-.145.458.458 0 00-.326.145.368.368 0 000 .502l2.35 2.449a.468.468 0 00.326.134c.123 0 .246-.057.345-.168l6.533-8.058a.372.372 0 00-.015-.476z' fill='%2353bdeb'/%3E%3Cpath d='M15.071.653a.457.457 0 00-.304-.102.493.493 0 00-.381.178l-6.19 7.636-1.2-1.25-.327.4 1.54 1.605a.468.468 0 00.326.134c.123 0 .246-.057.345-.168l6.533-8.058a.372.372 0 00-.015-.476z' fill='%2353bdeb'/%3E%3C/svg%3E"); background-size: contain; background-repeat: no-repeat; }
     .m-in .m-t::after, .m-miia .m-t::after { display: none; }
+    /* Emoji prefix — bigger */
+    .m-emoji { font-size: 1.3em; margin-right: 2px; }
+    /* Voice note bubble */
+    .m-voice { display: flex; align-items: center; gap: 8px; min-width: 200px; }
+    .m-voice-btn { width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .m-voice-btn svg { width: 14px; height: 14px; fill: #E9EDEF; }
+    .m-voice-wave { flex: 1; height: 20px; display: flex; align-items: center; gap: 1.5px; }
+    .m-voice-wave span { display: inline-block; width: 2.5px; border-radius: 2px; background: rgba(255,255,255,0.5); }
+    .m-voice-dur { font-size: 0.6rem; color: rgba(255,255,255,0.5); white-space: nowrap; }
     /* PDF document bubble */
     .m-doc { padding: 0; overflow: hidden; border-radius: 7.5px; }
     .m-doc-inner { background: rgba(0,92,75,0.35); padding: 8px 10px; display: flex; align-items: center; gap: 10px; }
@@ -734,11 +743,11 @@
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-miia">🙍‍♀️ Mañana es el cumpleaños de Mamá Silvia. ¿Querés que le mande un saludo a las 8am?<div class="m-t">09:00</div></div>
+              <div class="m m-miia"><span class="m-emoji">🙍‍♀️</span> Mañana es el cumpleaños de Mamá Silvia. ¿Querés que le mande un saludo a las 8am?<div class="m-t">09:00</div></div>
               <div class="m m-owner">Sí, mandále algo lindo de mi parte<div class="m-t">09:01</div></div>
-              <div class="m m-miia">🦸‍♀️ ¡Listo! Mañana a las 8am le envío un mensaje cariñoso en tu estilo. También te recuerdo: tenés reunión con Dr. Mario a las 11am.<div class="m-t">09:01</div></div>
+              <div class="m m-miia"><span class="m-emoji">🦸‍♀️</span> ¡Listo! Mañana a las 8am le envío un mensaje cariñoso en tu estilo. También te recuerdo: tenés reunión con Dr. Mario a las 11am.<div class="m-t">09:01</div></div>
               <div class="m m-owner">Genial, ¿algo más para hoy?<div class="m-t">09:02</div></div>
-              <div class="m m-miia">🙍‍♀️ Tenés 3 leads sin responder y una cotización pendiente. ¿Arranco con las respuestas?<div class="m-t">09:02</div></div>
+              <div class="m m-miia"><span class="m-emoji">🙍‍♀️</span> Tenés 3 leads sin responder y una cotización pendiente. ¿Arranco con las respuestas?<div class="m-t">09:02</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -759,11 +768,11 @@
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-miia">⚽ ¡GOOOL DE BOCA! Cavani la clavó de zurda al minuto 34. Van 1-0 contra River 🔥🔥🔥<div class="m-t">21:34</div></div>
+              <div class="m m-miia"><span class="m-emoji">⚽</span> ¡GOOOL DE BOCA! Cavani la clavó de zurda al minuto 34. Van 1-0 contra River 🔥🔥🔥<div class="m-t">21:34</div></div>
               <div class="m m-owner">VAMOOOOO 🎉🎉<div class="m-t">21:34</div></div>
-              <div class="m m-miia">🏟️ River empata 1-1 al minuto 67. Borja de cabeza. Todavía queda partido...<div class="m-t">22:07</div></div>
+              <div class="m m-miia"><span class="m-emoji">🏟️</span> River empata 1-1 al minuto 67. Borja de cabeza. Todavía queda partido...<div class="m-t">22:07</div></div>
               <div class="m m-owner">Uff, contame todo<div class="m-t">22:07</div></div>
-              <div class="m m-miia">⚽ ¡¡GOOOL!! 2-1 Boca, minuto 89! Medina de contra. Se viene el final... 💛💙<div class="m-t">22:29</div></div>
+              <div class="m m-miia"><span class="m-emoji">⚽</span> ¡¡GOOOL!! 2-1 Boca, minuto 89! Medina de contra. Se viene el final... 💛💙<div class="m-t">22:29</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -785,10 +794,49 @@
             </div>
             <div class="chat-msgs">
               <div class="m m-owner">Decile a la MIIA de Anabella que me agende una reunión el viernes<div class="m-t">14:20</div></div>
-              <div class="m m-miia">🙍‍♀️ Ya le avisé a Anabella. Te cuento cuando me responda.<div class="m-t">14:20</div></div>
-              <div class="m m-miia">🙍‍♀️ La MIIA de Anabella confirmó: reunión agendada para el viernes a las 10am. Te mando recordatorio ese día.<div class="m-t">14:22</div></div>
+              <div class="m m-miia"><span class="m-emoji">🙍‍♀️</span> Ya le avisé a Anabella. Te cuento cuando me responda.<div class="m-t">14:20</div></div>
+              <div class="m m-miia"><span class="m-emoji">🙍‍♀️</span> La MIIA de Anabella confirmó: reunión agendada para el viernes a las 10am. Te mando recordatorio ese día.<div class="m-t">14:22</div></div>
               <div class="m m-owner">Genial. Mandále un mail a Dr. Mario con el resumen del proyecto<div class="m-t">14:23</div></div>
-              <div class="m m-miia">📧 ¡Listo! Email enviado a Dr. Mario. Asunto: "Resumen del proyecto — Mariano"<div class="m-t">14:24</div></div>
+              <div class="m m-miia"><span class="m-emoji">📧</span> ¡Listo! Email enviado a Dr. Mario. Asunto: "Resumen del proyecto — Mariano"<div class="m-t">14:24</div></div>
+              <div class="m m-typing"><span></span><span></span><span></span></div>
+            </div>
+            <div class="chat-input-bar">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+              <div class="chat-input-field">Mensaje</div>
+              <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 5: Notas de voz (Self-chat) -->
+        <div class="chat-slide" data-slide="4">
+          <div class="chat-feature-title">Notas de voz inteligentes</div>
+          <div class="chat-box">
+            <div class="chat-head">
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
+              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Enviá un mensaje a este mismo número</div></div>
+              <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+            </div>
+            <div class="chat-msgs">
+              <div class="m m-owner">
+                <div class="m-voice">
+                  <div class="m-voice-btn"><svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg></div>
+                  <div class="m-voice-wave"><span style="height:4px"></span><span style="height:10px"></span><span style="height:16px"></span><span style="height:8px"></span><span style="height:14px"></span><span style="height:6px"></span><span style="height:12px"></span><span style="height:18px"></span><span style="height:10px"></span><span style="height:5px"></span><span style="height:13px"></span><span style="height:7px"></span><span style="height:15px"></span><span style="height:9px"></span><span style="height:4px"></span><span style="height:11px"></span><span style="height:6px"></span><span style="height:14px"></span><span style="height:8px"></span><span style="height:3px"></span></div>
+                  <div class="m-voice-dur">0:12</div>
+                </div>
+                <div class="m-t">16:40</div>
+              </div>
+              <div class="m m-miia"><span class="m-emoji">🎧</span> Escuché tu audio. Querés que cancele la reunión de mañana y la reagende para el jueves. ¿Confirmo?<div class="m-t">16:40</div></div>
+              <div class="m m-owner">Sí, confirmá<div class="m-t">16:41</div></div>
+              <div class="m m-miia">
+                <div class="m-voice">
+                  <div class="m-voice-btn"><svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg></div>
+                  <div class="m-voice-wave"><span style="height:6px"></span><span style="height:12px"></span><span style="height:8px"></span><span style="height:15px"></span><span style="height:10px"></span><span style="height:5px"></span><span style="height:13px"></span><span style="height:7px"></span><span style="height:11px"></span><span style="height:4px"></span><span style="height:9px"></span><span style="height:14px"></span><span style="height:6px"></span><span style="height:10px"></span><span style="height:3px"></span></div>
+                  <div class="m-voice-dur">0:08</div>
+                </div>
+                <div class="m-t">16:41</div>
+              </div>
+              <div class="m m-miia"><span class="m-emoji">✅</span> Listo, reagendé con Dr. Mario para el jueves 10am. Ya le avisé por WhatsApp.<div class="m-t">16:41</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -806,6 +854,7 @@
         <div class="chat-dot" data-dot="1"></div>
         <div class="chat-dot" data-dot="2"></div>
         <div class="chat-dot" data-dot="3"></div>
+        <div class="chat-dot" data-dot="4"></div>
       </div>
     </div>
   </section>
@@ -1221,7 +1270,7 @@
 
       function startTimer() {
         clearInterval(timer);
-        timer = setInterval(next, 7000);
+        timer = setInterval(next, 4000);
       }
 
       dots.forEach(d => {
