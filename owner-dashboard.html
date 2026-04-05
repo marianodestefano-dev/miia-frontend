@@ -1816,6 +1816,21 @@
           registered_at: now,
           last_login: now
         });
+        // Auto-detectar timezone del dispositivo y guardar como default
+        try {
+          const deviceTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          if (deviceTz) {
+            await db.collection('users').doc(user.uid).collection('settings').doc('schedule').set({
+              timezone: deviceTz,
+              activeDays: [1, 2, 3, 4, 5],
+              startTime: '09:00',
+              endTime: '21:00',
+              autoReplyOffHours: false,
+              _autoDetected: true
+            });
+            console.log('[MIIA] Timezone auto-detectado:', deviceTz);
+          }
+        } catch (tzErr) { console.warn('Timezone auto-detect failed:', tzErr); }
         doc = await db.collection('users').doc(user.uid).get();
       } else if (!adminView) {
         // Actualizar last_login (no actualizar si es admin viendo otro usuario)
