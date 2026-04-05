@@ -577,7 +577,8 @@
   <!-- SECTION: PLANES -->
   <div id="section-planes" class="page-section section-hidden">
     <div class="container">
-      <div class="card fade-in">
+      <!-- Plan actual -->
+      <div class="card fade-in" style="margin-bottom:20px;">
         <h2>Mi Plan</h2>
         <div class="account-item">
           <span class="account-label">Plan actual</span>
@@ -591,9 +592,58 @@
           <span class="account-label">Vence</span>
           <span class="account-value" id="planSectionExpiry">—</span>
         </div>
-        <div style="margin-top:20px;padding:20px;background:rgba(0,229,255,0.05);border-radius:var(--radius-md);">
-          <p style="color:var(--text-body);font-size:0.9rem;margin-bottom:8px;">Para cambiar tu plan, contacta al equipo:</p>
-          <p style="color:var(--primary);font-weight:600;">hola@miia-app.com</p>
+      </div>
+
+      <!-- Medios de Pago -->
+      <div class="card fade-in" style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:44px;height:44px;border-radius:12px;background:rgba(16,185,129,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div>
+            <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0 0 4px;">Elegí tu plan</h3>
+            <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">Activá tu plan de MIIA usando el procesador de tu preferencia. Paddle es el método principal recomendado; PayPal es una alternativa disponible para toda Latinoamérica.</p>
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
+          <!-- Paddle -->
+          <div style="background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#0fa;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1rem;color:#000;">P</div>
+              <div>
+                <div style="font-weight:700;font-size:0.9rem;color:var(--text-dark);">Paddle</div>
+                <div style="font-size:0.72rem;color:var(--text-muted);">Recomendado · Acepta tarjetas internacionales</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <button onclick="subscribePaddle('monthly')"   style="width:100%;padding:8px;background:rgba(0,250,163,.08);color:#0fa;border:1px solid rgba(0,250,163,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $12 USD/mes</button>
+              <button onclick="subscribePaddle('quarterly')" style="width:100%;padding:8px;background:rgba(0,250,163,.08);color:#0fa;border:1px solid rgba(0,250,163,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $30 USD / 3 meses</button>
+              <button onclick="subscribePaddle('semestral')" style="width:100%;padding:8px;background:rgba(0,250,163,.08);color:#0fa;border:1px solid rgba(0,250,163,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $55 USD / 6 meses</button>
+              <button onclick="subscribePaddle('annual')"    style="width:100%;padding:8px;background:rgba(0,250,163,.08);color:#0fa;border:1px solid rgba(0,250,163,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $75 USD / año</button>
+            </div>
+          </div>
+
+          <!-- PayPal -->
+          <div style="background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;border-radius:8px;background:#003087;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#fff;">PP</div>
+              <div>
+                <div style="font-weight:700;font-size:0.9rem;color:var(--text-dark);">PayPal</div>
+                <div style="font-size:0.72rem;color:var(--text-muted);">Alternativa · Disponible en toda Latinoamérica</div>
+              </div>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <button onclick="subscribePayPal('monthly')"   style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $12 USD/mes</button>
+              <button onclick="subscribePayPal('quarterly')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $30 USD / 3 meses</button>
+              <button onclick="subscribePayPal('semestral')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $55 USD / 6 meses</button>
+              <button onclick="subscribePayPal('annual')"    style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $75 USD / año</button>
+            </div>
+          </div>
+        </div>
+
+        <div style="padding:14px;background:rgba(0,229,255,0.05);border-radius:var(--radius-md);margin-top:8px;">
+          <p style="color:var(--text-muted);font-size:0.82rem;margin:0;">¿Dudas? Escribinos a <a href="mailto:hola@miia-app.com" style="color:var(--primary);font-weight:600;">hola@miia-app.com</a> o al <a href="https://wa.me/573054169969?text=Hola%20MIIA" style="color:#25D366;font-weight:600;">WhatsApp</a></p>
         </div>
       </div>
     </div>
