@@ -253,6 +253,735 @@
 
     .paywall-contact strong { color: var(--primary); }
 
+
+    /* ═══ CONTACTS STYLES ═══ */
+    /* ═══ CONTAINER ═══ */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .contacts-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: 24px;
+    }
+
+    .card h2 {
+      color: var(--text-dark);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid rgba(102,126,234,0.1);
+    }
+
+    /* Conversations List */
+    .conversations-list {
+      max-height: 600px;
+      overflow-y: auto;
+    }
+
+    .conversation-item {
+      padding: 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      margin-bottom: 8px;
+    }
+
+    .conversation-item:hover {
+      background: var(--bg-light);
+      border-color: rgba(102,126,234,0.2);
+    }
+
+    .conversation-item.active {
+      background: rgba(102,126,234,0.1);
+      border-color: var(--primary);
+    }
+
+    .conversation-name {
+      font-weight: 600;
+      color: var(--text-dark);
+      font-size: 0.95rem;
+    }
+
+    .conversation-phone {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .conversation-preview {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* CRM Form */
+    .crm-form {
+      display: none;
+    }
+
+    .crm-form.active {
+      display: block;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(102,126,234,0.2);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .btn-save {
+      width: 100%;
+      padding: 12px;
+      background: var(--gradient-main);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .btn-save:hover {
+      transform: translateY(-2px);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    /* Filter tabs */
+    .filter-tabs { display:flex; gap:4px; margin-bottom:16px; }
+    .filter-tab { padding:8px 16px; border:1px solid rgba(102,126,234,0.15); border-radius:var(--radius-full); background:transparent; color:var(--text-muted); font-size:0.85rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .filter-tab:hover { border-color:var(--primary); color:var(--primary); }
+    .filter-tab.active { background:var(--gradient-main); color:white; border-color:transparent; }
+    .filter-tab .count { display:inline-block; background:rgba(255,255,255,0.25); padding:1px 7px; border-radius:10px; font-size:0.75rem; margin-left:4px; }
+    .filter-tab.active .count { background:rgba(255,255,255,0.3); }
+
+    .search-bar { width:100%; padding:8px 14px; border:1px solid rgba(102,126,234,0.15); border-radius:var(--radius-full); font-size:0.88rem; margin-bottom:12px; }
+    .search-bar:focus { outline:none; border-color:var(--primary); }
+
+    .contact-type-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; margin-left:6px; }
+    .type-lead { background:rgba(245,158,11,0.12); color:#d97706; }
+    .type-cliente { background:rgba(37,211,102,0.12); color:#16a34a; }
+    .type-otro { background:rgba(136,136,164,0.12); color:var(--text-muted); }
+
+    @media (max-width: 768px) {
+      .contacts-layout { grid-template-columns: 1fr; }
+      #navbar { padding: 0 20px; }
+      .container { padding: 20px 16px 60px; }
+    }
+
+    /* ═══ VIEW TABS ═══ */
+    .view-tabs { display:flex; gap:8px; margin-bottom:20px; }
+    .view-tab { padding:10px 24px; border:1px solid rgba(0,229,255,0.15); border-radius:var(--radius-full); background:transparent; color:var(--text-muted); font-size:0.9rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .view-tab:hover { border-color:var(--primary); color:var(--primary); }
+    .view-tab.active { background:var(--gradient-main); color:white; border-color:transparent; }
+
+    /* ═══ GROUPS ═══ */
+    .groups-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
+    .groups-header h2 { color:var(--text-dark); font-size:1.3rem; font-weight:700; }
+    .groups-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:16px; }
+    .group-card { background:var(--bg-card); border:1px solid rgba(0,229,255,0.08); border-radius:var(--radius-md); padding:20px; cursor:pointer; transition:all 0.2s; }
+    .group-card:hover { border-color:var(--primary); transform:translateY(-2px); }
+    .group-card-icon { font-size:2rem; margin-bottom:8px; }
+    .group-card h3 { color:var(--text-dark); font-size:1rem; margin-bottom:4px; }
+    .group-card-meta { color:var(--text-muted); font-size:0.82rem; }
+    .group-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:var(--radius-full); font-size:0.72rem; font-weight:600; margin-right:4px; }
+    .group-badge.on { background:rgba(52,211,153,0.12); color:#16a34a; }
+    .group-badge.off { background:rgba(136,136,164,0.08); color:var(--text-muted); }
+
+    /* ═══ GROUP DETAIL ═══ */
+    .group-detail-header { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+    .group-detail-header h2 { color:var(--text-dark); font-size:1.3rem; font-weight:700; flex:1; }
+
+    .group-config { background:var(--bg-card); border:1px solid rgba(0,229,255,0.08); border-radius:var(--radius-md); padding:20px; margin-bottom:20px; }
+    .toggle-row { display:flex; align-items:center; justify-content:space-between; padding:10px 0; border-bottom:1px solid rgba(0,229,255,0.06); }
+    .toggle-row:last-child { border-bottom:none; }
+    .toggle-switch { position:relative; width:44px; height:24px; }
+    .toggle-switch input { opacity:0; width:0; height:0; }
+    .toggle-slider { position:absolute; inset:0; background:var(--bg-surface); border-radius:12px; cursor:pointer; transition:background 0.3s; }
+    .toggle-slider:before { content:''; position:absolute; width:18px; height:18px; left:3px; bottom:3px; background:white; border-radius:50%; transition:transform 0.3s; }
+    .toggle-switch input:checked + .toggle-slider { background:var(--primary); }
+    .toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); }
+
+    .contacts-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
+    .contacts-table th { text-align:left; padding:10px 8px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; border-bottom:2px solid rgba(0,229,255,0.08); }
+    .contacts-table td { padding:8px; border-bottom:1px solid rgba(0,229,255,0.04); vertical-align:middle; color:var(--text-dark); }
+    .contacts-table .actions { display:flex; gap:4px; }
+    .contacts-table .btn-icon { width:30px; height:30px; border:none; border-radius:6px; cursor:pointer; font-size:0.85rem; display:flex; align-items:center; justify-content:center; transition:all 0.2s; background:transparent; }
+    .contacts-table .btn-icon:hover { background:rgba(0,229,255,0.08); }
+    .contacts-table .btn-icon.danger:hover { background:rgba(239,68,68,0.1); color:var(--danger); }
+
+    /* ═══ MODAL ═══ */
+    .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.55); z-index:1000; align-items:center; justify-content:center; }
+    .modal-overlay.open { display:flex; }
+    .modal-box { background:var(--bg-white); border-radius:var(--radius-md); padding:28px; width:100%; max-width:460px; box-shadow:var(--shadow-lg); }
+    .modal-box h3 { color:var(--text-dark); font-size:1.15rem; font-weight:700; margin-bottom:18px; }
+    .modal-footer { display:flex; gap:10px; justify-content:flex-end; margin-top:20px; }
+    .btn-secondary { padding:10px 20px; border:1px solid rgba(0,229,255,0.2); border-radius:var(--radius-sm); background:transparent; color:var(--text-muted); font-size:0.9rem; font-weight:600; cursor:pointer; transition:all 0.2s; }
+    .btn-secondary:hover { border-color:var(--primary); color:var(--primary); }
+    .btn-primary { padding:10px 20px; background:var(--gradient-main); color:white; border:none; border-radius:var(--radius-sm); font-size:0.9rem; font-weight:600; cursor:pointer; transition:transform 0.2s; }
+    .btn-primary:hover { transform:translateY(-1px); }
+    .btn-danger { padding:10px 20px; background:var(--danger,#ef4444); color:white; border:none; border-radius:var(--radius-sm); font-size:0.9rem; font-weight:600; cursor:pointer; transition:transform 0.2s; }
+    .btn-danger:hover { transform:translateY(-1px); }
+
+    /* ═══ ADD CONTACT FORM ═══ */
+    .add-contact-form { background:var(--bg-card); border:1px solid rgba(0,229,255,0.08); border-radius:var(--radius-md); padding:20px; margin-top:16px; display:none; }
+    .add-contact-form.open { display:block; }
+    .add-contact-form h4 { color:var(--text-dark); font-weight:700; margin-bottom:14px; font-size:0.95rem; }
+    .inline-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px; }
+    @media(max-width:768px) { .inline-grid { grid-template-columns:1fr; } }
+  </style>
+
+    /* ═══ BUSINESSES STYLES ═══ */
+    :root { --gradient-accent: linear-gradient(135deg, var(--secondary) 0%, var(--accent) 100%); }
+    /* ═══ WA STATUS BANNER ═══ */
+    .wa-banner {
+      max-width: 1100px; margin: 20px auto 0; padding: 12px 24px;
+      border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between;
+      font-size: 0.9rem; font-weight: 600;
+    }
+    .wa-banner.connected { background: rgba(52, 211, 153, 0.1); color: #34D399; border: 1px solid rgba(52, 211, 153, 0.2); }
+    .wa-banner.disconnected { background: rgba(239, 68, 68, 0.08); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.15); }
+    .wa-banner button { padding: 6px 16px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; }
+    .wa-btn-connect { background: var(--gradient-accent); color: white; }
+    .wa-btn-disconnect { background: transparent; border: 1px solid var(--danger) !important; color: var(--danger); }
+    .wa-btn-disconnect:hover { background: var(--danger); color: white; }
+
+    /* ═══ BUSINESS LIST VIEW ═══ */
+    #businessListView { max-width: 1100px; margin: 20px auto 0; padding: 0 20px; }
+    .biz-list-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+    .biz-list-header h2 { font-size: 1.5rem; font-weight: 700; color: var(--text-dark); }
+
+    /* ═══ BUSINESS CARDS ═══ */
+    .biz-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .biz-card { background: var(--bg-card); border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-md); padding: 24px; cursor: pointer; transition: all 0.2s; }
+    .biz-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .biz-card h3 { color: var(--text-dark); font-size: 1.1rem; margin-bottom: 8px; }
+    .biz-card p { color: var(--text-muted); font-size: 0.85rem; line-height: 1.4; margin-bottom: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .biz-badge { display: inline-flex; align-items: center; gap: 4px; padding: 4px 10px; background: rgba(0,229,255,0.08); border-radius: var(--radius-full); font-size: 0.75rem; color: var(--primary); font-weight: 600; }
+    .biz-card-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .biz-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .biz-empty .biz-empty-icon { font-size: 3rem; margin-bottom: 16px; }
+    .biz-empty h3 { font-size: 1.1rem; color: var(--text-dark); margin-bottom: 8px; }
+    .biz-empty p { font-size: 0.9rem; }
+
+    /* ═══ BUSINESS DETAIL HEADER ═══ */
+    #businessDetailHeader {
+      max-width: 1100px; margin: 20px auto 0; padding: 0 20px;
+      display: none; align-items: center; gap: 16px;
+    }
+    #businessDetailHeader.visible { display: flex; }
+    .biz-back-btn {
+      width: 40px; height: 40px; border: 1px solid rgba(0,229,255,0.15); border-radius: var(--radius-sm);
+      background: var(--bg-card); color: var(--text-muted); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+    .biz-back-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .biz-detail-name { font-size: 1.2rem; font-weight: 700; color: var(--text-dark); flex: 1; }
+    .biz-edit-btn {
+      padding: 8px 18px; border: 1px solid rgba(0,229,255,0.15); border-radius: var(--radius-full);
+      background: transparent; color: var(--primary); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .biz-edit-btn:hover { background: var(--primary); color: white; border-color: var(--primary); }
+    .biz-delete-btn {
+      padding: 8px 18px; border: 1px solid rgba(239,68,68,0.2); border-radius: var(--radius-full);
+      background: transparent; color: var(--danger); font-size: 0.85rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .biz-delete-btn:hover { background: var(--danger); color: white; }
+
+    /* ═══ TABS ═══ */
+    .tabs-container { max-width: 1100px; margin: 20px auto 0; padding: 0 20px; display: none; }
+    .tabs-container.visible { display: block; }
+    .tabs-nav {
+      display: flex; gap: 4px; background: var(--bg-card); border-radius: var(--radius-md) var(--radius-md) 0 0;
+      padding: 8px 8px 0; border: 1px solid rgba(0,229,255,0.08); border-bottom: none;
+      overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none;
+    }
+    .tabs-nav::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 12px 20px; border: none; background: transparent; color: var(--text-muted);
+      font-weight: 600; font-size: 0.9rem; cursor: pointer; border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+      white-space: nowrap; transition: all 0.3s;
+    }
+    .tab-btn:hover { color: var(--primary); background: rgba(0,229,255,0.05); }
+    .tab-btn.active { color: var(--primary); background: var(--bg-light); border-bottom: 3px solid var(--primary); }
+    .tab-content {
+      background: var(--bg-white); border: 1px solid rgba(0,229,255,0.08);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      padding: 32px; min-height: 500px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ═══ SECTION TITLES ═══ */
+    .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
+    .section-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px; }
+
+    /* ═══ GRILLA (Products + Keywords) ═══ */
+    .grid-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    .grid-table th {
+      background: rgba(0,229,255,0.06); color: var(--text-dark); font-weight: 600;
+      padding: 10px 12px; text-align: left; border-bottom: 2px solid rgba(0,229,255,0.08);
+      font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.3px;
+    }
+    .grid-table td { padding: 6px 4px; border-bottom: 1px solid rgba(0,229,255,0.04); vertical-align: middle; }
+    .grid-table input[type="text"], .grid-table input[type="number"] {
+      width: 100%; padding: 8px 10px; border: 1px solid rgba(0,229,255,0.08);
+      border-radius: var(--radius-sm); font-size: 0.88rem; color: var(--text-dark);
+      background: var(--bg-card); transition: border-color 0.3s;
+    }
+    .grid-table input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,229,255,0.1); }
+    .grid-table input::placeholder { color: var(--text-muted); font-style: italic; }
+    .row-actions { display: flex; gap: 4px; }
+    .row-btn {
+      width: 32px; height: 32px; border: none; border-radius: var(--radius-sm);
+      cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+    .row-btn.save { background: rgba(52, 211, 153, 0.1); color: #34D399; }
+    .row-btn.save:hover { background: #34D399; color: white; }
+    .row-btn.add { background: rgba(0,229,255,0.1); color: var(--primary); }
+    .row-btn.add:hover { background: var(--primary); color: white; }
+    .row-btn.delete { background: rgba(239, 68, 68, 0.08); color: var(--danger); }
+    .row-btn.delete:hover { background: var(--danger); color: white; }
+    .grid-toolbar { display: flex; gap: 10px; margin-top: 16px; }
+    .btn-sm {
+      padding: 8px 18px; border-radius: var(--radius-full); font-size: 0.85rem;
+      font-weight: 600; cursor: pointer; border: none; transition: all 0.3s;
+    }
+    .btn-primary { background: var(--gradient-main); color: white; }
+    .btn-outline { background: transparent; border: 1px solid rgba(0,229,255,0.08); color: var(--primary); }
+    .btn-outline:hover { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* ═══ CHAT (Expert + Test) ═══ */
+    .chat-layout { display: flex; gap: 0; height: 560px; border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-md); overflow: hidden; }
+    .sessions-panel {
+      width: 280px; min-width: 280px; background: var(--bg-card); border-right: 1px solid rgba(0,229,255,0.08);
+      display: flex; flex-direction: column;
+    }
+    .sessions-header { padding: 16px; border-bottom: 1px solid rgba(0,229,255,0.08); }
+    .sessions-header h3 { font-size: 0.95rem; color: var(--text-dark); margin-bottom: 8px; }
+    .sessions-list { flex: 1; overflow-y: auto; padding: 8px; }
+    .session-tag {
+      display: flex; align-items: center; justify-content: space-between; padding: 10px 12px;
+      margin-bottom: 4px; border-radius: var(--radius-sm); cursor: pointer;
+      font-size: 0.82rem; color: var(--text-body); transition: all 0.2s;
+      border: 1px solid transparent;
+    }
+    .session-tag:hover { background: rgba(0,229,255,0.06); }
+    .session-tag.active { background: rgba(0,229,255,0.1); border-color: rgba(0,229,255,0.08); color: var(--primary); font-weight: 600; }
+    .session-tag.fixed { color: var(--primary); font-weight: 600; }
+    .session-tag .tag-date { font-size: 0.75rem; color: var(--text-muted); }
+    .session-tag .tag-actions { display: flex; gap: 2px; }
+    .session-tag .tag-actions button { background: none; border: none; cursor: pointer; font-size: 0.8rem; padding: 2px 4px; border-radius: 4px; transition: background 0.2s; }
+    .session-tag .tag-actions button:hover { background: rgba(0,229,255,0.08); }
+
+    .chat-panel { flex: 1; display: flex; flex-direction: column; }
+    .chat-header { padding: 16px 20px; background: var(--gradient-main); color: white; display: flex; align-items: center; gap: 12px; }
+    .chat-header .avatar { width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+    .chat-header h3 { font-size: 1rem; font-weight: 600; }
+    .chat-header p { font-size: 0.8rem; opacity: 0.85; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 20px; background: var(--bg-card); }
+    .message { margin-bottom: 12px; display: flex; }
+    .message.user { justify-content: flex-end; }
+    .message-bubble {
+      max-width: 75%; padding: 10px 14px; border-radius: 12px;
+      font-size: 0.9rem; line-height: 1.5; animation: fadeInUp 0.3s ease;
+    }
+    .message.miia .message-bubble { background: var(--bg-surface); color: var(--text-dark); border-bottom-left-radius: 4px; }
+    .message.user .message-bubble { background: var(--gradient-main); color: white; border-bottom-right-radius: 4px; }
+    .chat-input { display: flex; gap: 8px; padding: 12px 16px; background: var(--bg-surface); border-top: 1px solid rgba(0,229,255,0.08); }
+    .chat-input input { flex: 1; padding: 10px 16px; border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-full); font-size: 0.9rem; background: var(--bg-card); color: var(--text-dark); }
+    .chat-input input:focus { outline: none; border-color: var(--primary); }
+    .chat-input button { padding: 10px 24px; background: var(--gradient-main); color: white; border: none; border-radius: var(--radius-full); font-weight: 600; cursor: pointer; }
+
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ═══ TEST CHAT (simpler, no sessions) ═══ */
+    .test-chat { height: 500px; border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; }
+    .test-header { padding: 14px 20px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; display: flex; align-items: center; gap: 12px; }
+    .test-header .avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; }
+    .test-reset { margin-left: auto; padding: 6px 14px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.82rem; font-weight: 600; }
+
+    /* ═══ DOCS TAB ═══ */
+    .docs-link-card {
+      text-align: center; padding: 60px 40px; border: 2px dashed rgba(0,229,255,0.15);
+      border-radius: var(--radius-lg);
+    }
+    .docs-link-card .icon { font-size: 3rem; margin-bottom: 16px; }
+    .docs-link-card h3 { color: var(--text-dark); margin-bottom: 8px; }
+    .docs-link-card p { color: var(--text-muted); margin-bottom: 20px; font-size: 0.9rem; }
+    .docs-link-card a {
+      display: inline-block; padding: 12px 32px; background: var(--gradient-main);
+      color: white; border-radius: var(--radius-full); text-decoration: none; font-weight: 600;
+    }
+
+    /* ═══ QR MODAL ═══ */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 200; }
+    .modal-card { background: var(--bg-card); border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-lg); padding: 40px; max-width: 420px; width: 90%; text-align: center; }
+    .modal-card h3 { margin-bottom: 16px; color: var(--text-dark); }
+    .modal-card #qrCode img { max-width: 260px; margin: 16px auto; }
+    .hidden { display: none !important; }
+
+    /* ═══ BIZ MODAL ═══ */
+    .biz-modal-card {
+      background: var(--bg-card); border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-lg);
+      padding: 36px; max-width: 540px; width: 94%; text-align: left; max-height: 90vh; overflow-y: auto;
+    }
+    .biz-modal-card h3 { margin-bottom: 20px; color: var(--text-dark); font-size: 1.2rem; font-weight: 700; }
+    .form-row { margin-bottom: 16px; }
+    .form-row label { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-dark); margin-bottom: 6px; }
+    .form-row input, .form-row textarea, .form-row select {
+      width: 100%; padding: 10px 14px; border: 1px solid rgba(0,229,255,0.12); border-radius: var(--radius-sm);
+      background: var(--bg-surface); color: var(--text-dark); font-size: 0.9rem; font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .form-row input:focus, .form-row textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,229,255,0.1); }
+    .form-row textarea { resize: vertical; min-height: 80px; }
+    .form-row input::placeholder, .form-row textarea::placeholder { color: var(--text-muted); }
+    .form-actions { display: flex; gap: 10px; margin-top: 24px; }
+
+    /* ═══ PROFILE TAB FORM ═══ */
+    .profile-form { max-width: 600px; display: flex; flex-direction: column; gap: 16px; }
+
+    /* ═══ COBROS (Payment Methods) ═══ */
+    .payment-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .payment-card {
+      background: var(--bg-card); border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-md);
+      padding: 20px; transition: border-color 0.3s;
+    }
+    .payment-card.enabled { border-color: rgba(0,229,255,0.2); }
+    .payment-card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+    .payment-icon { font-size: 1.8rem; width: 44px; text-align: center; }
+    .payment-card-header h4 { flex: 1; color: var(--text-dark); font-weight: 700; font-size: 1rem; }
+    .toggle-switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; }
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+    .toggle-track {
+      position: absolute; inset: 0; background: rgba(100,116,139,0.3); border-radius: 999px; cursor: pointer; transition: background 0.3s;
+    }
+    .toggle-track::after { content: ''; position: absolute; left: 3px; top: 3px; width: 18px; height: 18px; background: white; border-radius: 50%; transition: transform 0.3s; }
+    .toggle-switch input:checked + .toggle-track { background: var(--primary); }
+    .toggle-switch input:checked + .toggle-track::after { transform: translateX(20px); }
+    .payment-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 6px; }
+    .payment-card textarea {
+      width: 100%; padding: 10px 12px; border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-sm);
+      background: var(--bg-surface); color: var(--text-body); font-size: 0.85rem; resize: vertical; min-height: 80px;
+      font-family: inherit; transition: border-color 0.3s;
+    }
+    .payment-card textarea:focus { outline: none; border-color: var(--primary); }
+    .payment-card textarea:disabled { opacity: 0.4; cursor: not-allowed; }
+    .payment-card textarea::placeholder { color: var(--text-muted); font-style: italic; }
+    .payment-group-header {
+      grid-column: 1 / -1; font-size: 0.8rem; font-weight: 700; color: var(--text-muted);
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 16px 0 6px; border-bottom: 1px solid rgba(0,229,255,0.08); margin-bottom: 4px;
+    }
+
+    /* ═══ DAY CHIPS (Schedule) ═══ */
+    .day-chip {
+      display:inline-flex;align-items:center;gap:4px;padding:6px 14px;border-radius:999px;
+      font-size:0.85rem;font-weight:600;cursor:pointer;
+      border:1px solid rgba(0,229,255,0.15);background:var(--bg-card);color:var(--text-muted);transition:all .2s;
+    }
+    .day-chip:has(input:checked) { background:var(--primary);color:white;border-color:var(--primary); }
+    .day-chip input { display:none; }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 768px) {
+      #navbar { padding: 0 16px; }
+      .tabs-container { padding: 0 12px; }
+      .tab-content { padding: 20px 16px; }
+      .tab-btn { padding: 10px 14px; font-size: 0.82rem; }
+      .chat-layout { flex-direction: column; height: auto; }
+      .sessions-panel { width: 100%; min-width: 100%; max-height: 200px; border-right: none; border-bottom: 1px solid rgba(0,229,255,0.08); }
+      .chat-panel { height: 400px; }
+      .grid-table { font-size: 0.8rem; }
+      #businessListView { padding: 0 12px; }
+      #businessDetailHeader { padding: 0 12px; }
+    }
+  </style>
+
+    /* ═══ DOCUMENTS STYLES ═══ */
+    /* ═══ CONTAINER ═══ */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    .card {
+      background: var(--bg-white);
+      border-radius: var(--radius-md);
+      box-shadow: var(--shadow-md);
+      padding: 24px;
+    }
+
+    .card h2 {
+      color: var(--text-dark);
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    /* ═══ TABS ═══ */
+    #section-documents .tabs {
+      display: flex;
+      gap: 12px;
+      border-bottom: 2px solid rgba(102,126,234,0.1);
+      margin-bottom: 24px;
+    }
+
+    #section-documents .tab {
+      padding: 12px 20px;
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: all 0.2s;
+      font-size: 0.95rem;
+    }
+
+    #section-documents .tab:hover {
+      color: var(--primary);
+    }
+
+    #section-documents .tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* ═══ FORMS ═══ */
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid rgba(102,126,234,0.2);
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .btn {
+      padding: 12px 20px;
+      background: var(--gradient-main);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+      font-size: 0.95rem;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--bg-light);
+      color: var(--primary);
+    }
+
+    /* ═══ LISTS ═══ */
+    .item-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .item {
+      padding: 16px;
+      border: 1px solid rgba(102,126,234,0.1);
+      border-radius: var(--radius-sm);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .item-title {
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    .item-desc {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 4px;
+    }
+
+    .item-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      padding: 6px 12px;
+      background: var(--bg-light);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: rgba(102,126,234,0.2);
+    }
+
+    .btn-delete {
+      color: #e74c3c;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .file-input-label {
+      display: inline-block;
+      padding: 12px 20px;
+      background: var(--gradient-main);
+      color: white;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 600;
+      transition: transform 0.2s;
+    }
+
+    .file-input-label:hover {
+      transform: translateY(-2px);
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+
+    /* PDF Preview */
+    .pdf-preview {
+      border: 1px solid rgba(102,126,234,0.2);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      background: var(--bg-light);
+      margin-top: 16px;
+      max-height: 400px;
+      overflow: auto;
+    }
+
+    @media (max-width: 768px) {
+      .form-row { grid-template-columns: 1fr; }
+      #navbar { padding: 0 20px; }
+      .container { padding: 20px 16px 60px; }
+      #section-documents .tabs { flex-wrap: wrap; }
+    }
+  </style>
+
   </style>
 
   <!-- Firebase SDK -->
@@ -290,31 +1019,31 @@
 
       <!-- Nav links -->
       <nav class="sidebar-nav">
-        <button class="sidebar-btn active" onclick="showSection('inicio', this)">
+        <button class="sidebar-btn active" onclick="showSection('home', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
           <span class="sidebar-label">Inicio</span>
         </button>
-        <a href="contacts.html">
+        <button class="sidebar-btn" onclick="showSection('contacts', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
           <span class="sidebar-label">Contactos</span>
-        </a>
-        <a href="businesses.html">
+        </button>
+        <button class="sidebar-btn" onclick="showSection('businesses', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
           <span class="sidebar-label">Mis Negocios</span>
-        </a>
-        <a href="documents.html">
+        </button>
+        <button class="sidebar-btn" onclick="showSection('documents', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="sidebar-label">Documentos</span>
-        </a>
-        <button class="sidebar-btn" onclick="showSection('agentes', this)">
+        </button>
+        <button class="sidebar-btn" onclick="showSection('agents', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
           <span class="sidebar-label">Agentes</span>
         </button>
-        <button class="sidebar-btn" onclick="showSection('planes', this)">
+        <button class="sidebar-btn" onclick="showSection('plans', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           <span class="sidebar-label">Mi Plan</span>
         </button>
-        <button class="sidebar-btn" onclick="showSection('conexiones', this)">
+        <button class="sidebar-btn" onclick="showSection('connections', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
           <span class="sidebar-label">Conexiones</span>
         </button>
@@ -342,18 +1071,18 @@
           </div>
           <!-- Profile dropdown menu -->
           <div class="profile-menu" id="profileMenu">
-            <a href="businesses.html">
+            <button onclick="showSection('businesses'); toggleProfileMenu();">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>
               Mis Negocios
-            </a>
-            <a href="documents.html">
+            </button>
+            <button onclick="showSection('documents'); toggleProfileMenu();">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16h16V8z"/></svg>
               Documentos
-            </a>
-            <a href="contacts.html">
+            </button>
+            <button onclick="showSection('contacts'); toggleProfileMenu();">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
               Contactos
-            </a>
+            </button>
             <hr>
             <button onclick="handleLogout()">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -367,7 +1096,7 @@
     <!-- MAIN CONTENT -->
     <div class="main-content">
 
-  <div id="section-inicio" class="page-section">
+  <div id="section-home" class="page-section">
   <!-- Hero Band -->
   <div class="hero-band">
     <h1>Bienvenido, <span id="userName">Usuario</span></h1>
@@ -409,7 +1138,7 @@
         <div class="card fade-in">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 10 10-12h-9l1-10z"/></svg> Acciones Rápidas</h2>
           <div class="quick-actions">
-            <button class="action-btn" onclick="showSection('conexiones', document.querySelector('.sidebar-btn[onclick*=conexiones]'))">
+            <button class="action-btn" onclick="showSection('connections', document.querySelector('.sidebar-btn[onclick*=conexiones]'))">
               <span class="action-icon"><svg style="width:20px;height:20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></span> Conexiones
             </button>
             <button class="action-btn" onclick="showFeature('train')">
@@ -537,10 +1266,10 @@
         </div>
       </div>
     </div>
-  </div><!-- end section-inicio -->
+  </div><!-- end section-home -->
 
   <!-- SECTION: AGENTES -->
-  <div id="section-agentes" class="page-section section-hidden">
+  <div id="section-agents" class="page-section section-hidden">
     <div class="container">
       <div class="card fade-in" id="agentsSection">
         <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/></svg> Tu Equipo de Agentes</h2>
@@ -573,10 +1302,10 @@
         <p id="agentLimitMsg" class="hidden" style="color: #f39c12; font-size: 0.85rem; margin-top: 12px; text-align: center;"></p>
       </div>
     </div>
-  </div><!-- end section-agentes -->
+  </div><!-- end section-agents -->
 
   <!-- SECTION: PLANES -->
-  <div id="section-planes" class="page-section section-hidden">
+  <div id="section-plans" class="page-section section-hidden">
     <div class="container">
       <!-- Plan actual -->
       <div class="card fade-in" style="margin-bottom:20px;">
@@ -648,10 +1377,10 @@
         </div>
       </div>
     </div>
-  </div><!-- end section-planes -->
+  </div><!-- end section-plans -->
 
   <!-- SECTION: CONEXIONES -->
-  <div id="section-conexiones" class="page-section section-hidden">
+  <div id="section-connections" class="page-section section-hidden">
     <div class="container">
 
       <!-- Page Header -->
@@ -854,7 +1583,7 @@
 
       </div><!-- end grid -->
     </div>
-  </div><!-- end section-conexiones -->
+  </div><!-- end section-connections -->
 
   <!-- Paywall Overlay -->
   <div class="paywall-overlay" id="paywallOverlay">
@@ -1130,7 +1859,7 @@
 
       // Restore section from hash AFTER render is complete
       const hash = window.location.hash.replace('#', '');
-      const validSections = ['inicio', 'agentes', 'planes', 'conexiones'];
+      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'documents'];
       if (hash && validSections.includes(hash)) {
         const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
         showSection(hash, btn);
@@ -1566,35 +2295,19 @@
     }
 
     // ═══ FEATURES ═══
-    function getSubpageUrl(page) {
-      const urlParams = new URLSearchParams(window.location.search);
-      const adminView = urlParams.get('adminView') === '1';
-      const impersonateUid = urlParams.get('impersonateUid');
-      const parts = [];
-      if (clientSlug) parts.push('u=' + clientSlug);
-      if (adminView && impersonateUid) {
-        parts.push('adminView=1');
-        parts.push('impersonateUid=' + impersonateUid);
-      }
-      return page + (parts.length ? '?' + parts.join('&') : '');
-    }
-
     function showFeature(feature) {
       if (feature === 'train') {
-        window.location.href = getSubpageUrl('businesses.html');
+        showSection('businesses');
         return;
       }
-
       if (feature === 'contacts') {
-        window.location.href = getSubpageUrl('contacts.html');
+        showSection('contacts');
         return;
       }
-
       if (feature === 'documents') {
-        window.location.href = getSubpageUrl('documents.html');
+        showSection('documents');
         return;
       }
-
       if (feature === 'whatsapp') {
         checkWhatsAppStatus();
         return;
@@ -1618,7 +2331,7 @@
             setTimeout(checkWhatsAppStatus, 5000);
           } else {
             // Después de 90s sin conectar → redirigir a QR
-            window.location.href = 'businesses.html' + (clientSlug ? '?u=' + clientSlug : '');
+            showSection('businesses');
           }
         }
       } catch (error) {
@@ -1626,7 +2339,7 @@
         if (_waReconnectAttempts <= 18) {
           setTimeout(checkWhatsAppStatus, 5000);
         } else {
-          window.location.href = 'businesses.html' + (clientSlug ? '?u=' + clientSlug : '');
+          showSection('businesses');
         }
       }
     }
@@ -1680,7 +2393,7 @@
 
         if (data.success) {
           showToast('WhatsApp desvinculado correctamente', 'success');
-          setTimeout(() => window.location.href = 'businesses.html' + (clientSlug ? '?u=' + clientSlug : ''), 1200);
+          setTimeout(() => showSection('businesses') + (clientSlug ? '?u=' + clientSlug : ''), 1200);
         }
       } catch (error) {
         showToast('Error al desvincular: ' + error.message, 'error');
@@ -2118,20 +2831,1814 @@
     }
   </script>
   <script>
+
+    // ═══ HTML ESCAPE (canonical) ═══
+    function esc(str) {
+      const div = document.createElement('div');
+      div.textContent = str || '';
+      return div.innerHTML;
+    }
+
+
+    // ═══ CONTACTS SECTION JS ═══
+    let selectedPhone = null;
+    let allConversations = [];
+    let contactTypes = {};
+    let activeFilter = 'all';
+    let contactsLoaded = false;
+
+    // Contacts-specific BACKEND_URL (already defined in owner scope)
+    let groups = [];
+    let currentGroupId = null;
+    let groupContacts = [];
+    let editingGroupId = null;
+
+    function initContacts() {
+      if (contactsLoaded) return;
+      contactsLoaded = true;
+      loadGroups();
+      loadConversations();
+    }
+
+    function switchContactsView(view, btn) {
+      document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('groupsView').style.display = view === 'groups' ? '' : 'none';
+      document.getElementById('conversationsView').style.display = view === 'conversations' ? '' : 'none';
+    }
+
+    async function loadConversations() {
+      try {
+        const res = await fetch('https://api.miia-app.com/api/conversations');
+        const data = await res.json();
+        if (!data || !Array.isArray(data)) {
+          document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><p>Sin conversaciones aún</p></div>';
+          return;
+        }
+        allConversations = data;
+        await loadContactTypes();
+        updateCounts();
+        applyContactFilter();
+      } catch (error) {
+        console.error('Error cargando conversaciones:', error);
+        document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><p>Error al cargar conversaciones</p></div>';
+      }
+    }
+
+    async function loadContactTypes() {
+      if (!currentUser) return;
+      const snapshot = await db.collection('contacts')
+        .where('client_uid', '==', currentUser.uid)
+        .get();
+      snapshot.forEach(doc => {
+        const d = doc.data();
+        if (d.phone && d.contactType) contactTypes[d.phone] = d.contactType;
+      });
+    }
+
+    function getContactType(phone) {
+      return contactTypes[phone] || 'otro';
+    }
+
+    function updateCounts() {
+      let leads = 0, clientes = 0, otros = 0;
+      allConversations.forEach(c => {
+        const type = getContactType(c.phoneNumber || c.phone);
+        if (type === 'lead') leads++;
+        else if (type === 'cliente') clientes++;
+        else otros++;
+      });
+      document.getElementById('countAll').textContent = allConversations.length;
+      document.getElementById('countLead').textContent = leads;
+      document.getElementById('countCliente').textContent = clientes;
+      document.getElementById('countOtro').textContent = otros;
+    }
+
+    function setFilter(filter, btn) {
+      activeFilter = filter;
+      document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+      applyContactFilter();
+    }
+
+    function applyContactFilter() {
+      const q = (document.getElementById('contactSearch').value || '').toLowerCase();
+      const filtered = allConversations.filter(c => {
+        const phone = c.phoneNumber || c.phone || '';
+        const name = c.name || '';
+        const type = getContactType(phone);
+        if (activeFilter !== 'all' && type !== activeFilter) return false;
+        if (q && !name.toLowerCase().includes(q) && !phone.includes(q)) return false;
+        return true;
+      });
+      renderConversations(filtered);
+    }
+
+    function renderConversations(list) {
+      const container = document.getElementById('conversationsList');
+      if (list.length === 0) {
+        container.innerHTML = '<div class="empty-state"><p>Sin contactos en este grupo</p></div>';
+        return;
+      }
+      const typeClass = { lead:'type-lead', cliente:'type-cliente', otro:'type-otro' };
+      const typeLabel = { lead:'Lead', cliente:'Cliente', otro:'Otro' };
+      container.innerHTML = list.map(conv => {
+        const phone = conv.phoneNumber || conv.phone || '';
+        const name = conv.name || 'Sin nombre';
+        const type = getContactType(phone);
+        return `<div class="conversation-item" onclick="selectContact('${phone}', '${name.replace(/'/g, "\\'")}')">
+          <div class="conversation-name">${name}<span class="contact-type-badge ${typeClass[type]}">${typeLabel[type]}</span></div>
+          <div class="conversation-phone">${phone}</div>
+          <div class="conversation-preview">${conv.lastMessage || ''}</div>
+        </div>`;
+      }).join('');
+    }
+
+    async function selectContact(phone, name) {
+      selectedPhone = phone;
+      document.querySelectorAll('.conversation-item').forEach(el => el.classList.remove('active'));
+      event.target.closest('.conversation-item').classList.add('active');
+      const docId = currentUser.uid + '_' + phone;
+      const doc = await db.collection('contacts').doc(docId).get();
+      const data = doc.exists ? doc.data() : {};
+      document.getElementById('contactName').value = name;
+      document.getElementById('contactPhone').value = phone;
+      document.getElementById('contactEmail').value = data.email || '';
+      document.getElementById('contactType').value = data.contactType || getContactType(phone);
+      document.getElementById('contactStatus').value = data.status || 'lead';
+      document.getElementById('contactNotes').value = data.notes || '';
+      document.getElementById('emptyState').style.display = 'none';
+      document.getElementById('crmForm').classList.add('active');
+    }
+
+    async function saveContact(event) {
+      event.preventDefault();
+      if (!selectedPhone) return;
+      try {
+        const docId = currentUser.uid + '_' + selectedPhone;
+        const newType = document.getElementById('contactType').value;
+        await db.collection('contacts').doc(docId).set({
+          client_uid: currentUser.uid,
+          phone: selectedPhone,
+          email: document.getElementById('contactEmail').value,
+          contactType: newType,
+          status: document.getElementById('contactStatus').value,
+          notes: document.getElementById('contactNotes').value,
+          updated_at: new Date()
+        }, { merge: true });
+        contactTypes[selectedPhone] = newType;
+        updateCounts();
+        applyContactFilter();
+        showToast('Contacto guardado exitosamente', 'success');
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+      }
+    }
+
+    // ── Groups ──
+    async function loadGroups() {
+      if (!currentUser) return;
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups`, {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error(await res.text());
+        groups = await res.json();
+        renderGroupCards();
+      } catch (err) {
+        console.error('loadGroups error:', err);
+        document.getElementById('groupCards').innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">⚠️</div><p>Error al cargar grupos</p></div>`;
+      }
+    }
+
+    function renderGroupCards() {
+      const container = document.getElementById('groupCards');
+      if (!groups || groups.length === 0) {
+        container.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">👥</div><p>No hay grupos aún. ¡Crea el primero!</p></div>`;
+        return;
+      }
+      container.innerHTML = groups.map(g => {
+        const autoB = `<span class="group-badge ${g.autoRespond ? 'on' : 'off'}">${g.autoRespond ? '✓ Auto' : '— Auto'}</span>`;
+        const proaB = `<span class="group-badge ${g.proactiveEnabled ? 'on' : 'off'}">${g.proactiveEnabled ? '✓ Proactivo' : '— Proactivo'}</span>`;
+        const tonePreview = g.tone ? g.tone.slice(0, 60) + (g.tone.length > 60 ? '…' : '') : '<em style="color:var(--text-muted)">Sin tono configurado</em>';
+        return `<div class="group-card" onclick="openGroup('${g.id}')">
+          <div class="group-card-icon">${g.icon || '👥'}</div>
+          <h3>${esc(g.name)}</h3>
+          <div class="group-card-meta" style="margin-bottom:8px;">${g.contactCount ?? 0} contacto(s)</div>
+          <div style="margin-bottom:8px;font-size:0.82rem;color:var(--text-muted);">${tonePreview}</div>
+          <div>${autoB}${proaB}</div>
+        </div>`;
+      }).join('');
+    }
+
+    function openCreateGroupModal() {
+      editingGroupId = null;
+      document.getElementById('groupModalTitle').textContent = 'Crear Grupo';
+      document.getElementById('groupModalName').value = '';
+      document.getElementById('groupModalIcon').value = '👥';
+      document.getElementById('groupModalTone').value = '';
+      document.getElementById('createGroupModal').classList.add('open');
+    }
+
+    function openEditGroupModal() {
+      const g = groups.find(x => x.id === currentGroupId);
+      if (!g) return;
+      editingGroupId = currentGroupId;
+      document.getElementById('groupModalTitle').textContent = 'Editar Grupo';
+      document.getElementById('groupModalName').value = g.name || '';
+      document.getElementById('groupModalIcon').value = g.icon || '👥';
+      document.getElementById('groupModalTone').value = g.tone || '';
+      document.getElementById('createGroupModal').classList.add('open');
+    }
+
+    function closeGroupModal() {
+      document.getElementById('createGroupModal').classList.remove('open');
+    }
+
+    async function submitGroupModal() {
+      const name = document.getElementById('groupModalName').value.trim();
+      if (!name) { showToast('El nombre es requerido', 'error'); return; }
+      const body = {
+        name,
+        icon: document.getElementById('groupModalIcon').value.trim() || '👥',
+        tone: document.getElementById('groupModalTone').value.trim()
+      };
+      try {
+        const token = await auth.currentUser.getIdToken();
+        if (editingGroupId) {
+          const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${editingGroupId}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+            body: JSON.stringify(body)
+          });
+          if (!res.ok) throw new Error(await res.text());
+          showToast('Grupo actualizado', 'success');
+        } else {
+          const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+            body: JSON.stringify(body)
+          });
+          if (!res.ok) throw new Error(await res.text());
+          showToast('Grupo creado', 'success');
+        }
+        closeGroupModal();
+        await loadGroups();
+        if (editingGroupId) refreshGroupDetailHeader();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function createGroup() { return submitGroupModal(); }
+
+    async function updateGroupConfig(groupId) {
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const body = {
+          tone: document.getElementById('cfgTone').value.trim(),
+          autoRespond: document.getElementById('cfgAutoRespond').checked,
+          proactiveEnabled: document.getElementById('cfgProactive').checked
+        };
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${groupId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify(body)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const g = groups.find(x => x.id === groupId);
+        if (g) Object.assign(g, body);
+        showToast('Configuración guardada', 'success');
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function deleteGroup(groupId) {
+      if (!confirm('¿Eliminar este grupo y todos sus contactos? Esta acción no se puede deshacer.')) return;
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${groupId}`, {
+          method: 'DELETE',
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error(await res.text());
+        showToast('Grupo eliminado', 'success');
+        backToGroups();
+        await loadGroups();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function openGroup(groupId) {
+      currentGroupId = groupId;
+      const g = groups.find(x => x.id === groupId);
+      if (!g) return;
+      document.getElementById('groupDetailTitle').textContent = (g.icon || '👥') + ' ' + g.name;
+      document.getElementById('cfgAutoRespond').checked = !!g.autoRespond;
+      document.getElementById('cfgProactive').checked = !!g.proactiveEnabled;
+      document.getElementById('cfgTone').value = g.tone || '';
+      document.getElementById('groupCardsSection').style.display = 'none';
+      document.getElementById('groupDetailView').style.display = '';
+      document.getElementById('addContactForm').classList.remove('open');
+      await loadGroupContacts();
+    }
+
+    function refreshGroupDetailHeader() {
+      const g = groups.find(x => x.id === currentGroupId);
+      if (g) document.getElementById('groupDetailTitle').textContent = (g.icon || '👥') + ' ' + g.name;
+    }
+
+    function backToGroups() {
+      currentGroupId = null;
+      groupContacts = [];
+      document.getElementById('groupDetailView').style.display = 'none';
+      document.getElementById('groupCardsSection').style.display = '';
+    }
+
+    async function loadGroupContacts() {
+      document.getElementById('groupContactsBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Cargando...</td></tr>';
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${currentGroupId}/contacts`, {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error(await res.text());
+        groupContacts = await res.json();
+        renderGroupContacts();
+      } catch (err) {
+        document.getElementById('groupContactsBody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger,#ef4444);">Error: ${esc(err.message)}</td></tr>`;
+      }
+    }
+
+    function renderGroupContacts() {
+      const tbody = document.getElementById('groupContactsBody');
+      if (!groupContacts || groupContacts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Sin contactos. Agrega el primero.</td></tr>';
+        return;
+      }
+      const otherGroups = groups.filter(g => g.id !== currentGroupId);
+      tbody.innerHTML = groupContacts.map(c => {
+        const moveOptions = otherGroups.map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join('');
+        return `<tr>
+          <td>${esc(c.phone)}</td>
+          <td>${esc(c.name || '—')}</td>
+          <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.notes || '—')}</td>
+          <td>
+            <label class="toggle-switch">
+              <input type="checkbox" ${c.proactiveEnabled ? 'checked' : ''} onchange="toggleContactProactive('${c.phone}', this.checked)">
+              <span class="toggle-slider"></span>
+            </label>
+          </td>
+          <td>
+            ${otherGroups.length > 0 ? `<select style="font-size:0.8rem;padding:4px 6px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:transparent;color:var(--text-dark);" onchange="moveContact('${c.phone}', this.value); this.value=''">
+              <option value="">Mover a...</option>${moveOptions}
+            </select>` : '<span style="color:var(--text-muted);font-size:0.8rem;">—</span>'}
+          </td>
+          <td>
+            <div class="actions">
+              <button class="btn-icon danger" title="Eliminar" onclick="removeContactFromGroup('${c.phone}')">🗑</button>
+            </div>
+          </td>
+        </tr>`;
+      }).join('');
+    }
+
+    function toggleAddContactForm() {
+      document.getElementById('addContactForm').classList.toggle('open');
+      if (document.getElementById('addContactForm').classList.contains('open')) {
+        document.getElementById('newContactPhone').value = '';
+        document.getElementById('newContactName').value = '';
+        document.getElementById('newContactNotes').value = '';
+        document.getElementById('newContactPhone').focus();
+      }
+    }
+
+    async function addContactToGroup() {
+      const phone = document.getElementById('newContactPhone').value.trim();
+      if (!phone) { showToast('El teléfono es requerido', 'error'); return; }
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${currentGroupId}/contacts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({
+            phone,
+            name: document.getElementById('newContactName').value.trim(),
+            notes: document.getElementById('newContactNotes').value.trim(),
+            proactiveEnabled: false
+          })
+        });
+        if (!res.ok) throw new Error(await res.text());
+        showToast('Contacto agregado', 'success');
+        toggleAddContactForm();
+        await loadGroupContacts();
+        await loadGroups();
+        renderGroupCards();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function updateGroupContact(phone) {
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const c = groupContacts.find(x => x.phone === phone);
+        if (!c) return;
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${currentGroupId}/contacts/${encodeURIComponent(phone)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify(c)
+        });
+        if (!res.ok) throw new Error(await res.text());
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function removeContactFromGroup(phone) {
+      if (!confirm(`¿Eliminar ${phone} de este grupo?`)) return;
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${currentGroupId}/contacts/${encodeURIComponent(phone)}`, {
+          method: 'DELETE',
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error(await res.text());
+        showToast('Contacto eliminado', 'success');
+        await loadGroupContacts();
+        await loadGroups();
+        renderGroupCards();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function moveContact(phone, toGroupId) {
+      if (!toGroupId) return;
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/move-contact`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ phone, fromGroupId: currentGroupId, toGroupId })
+        });
+        if (!res.ok) throw new Error(await res.text());
+        showToast('Contacto movido', 'success');
+        await loadGroupContacts();
+        await loadGroups();
+        renderGroupCards();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    async function toggleContactProactive(phone, enabled) {
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${currentGroupId}/contacts/${encodeURIComponent(phone)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ proactiveEnabled: enabled })
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const c = groupContacts.find(x => x.phone === phone);
+        if (c) c.proactiveEnabled = enabled;
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // Close group modal on overlay click
+    document.addEventListener('DOMContentLoaded', function() {
+      const gm = document.getElementById('createGroupModal');
+      if (gm) gm.addEventListener('click', function(e) { if (e.target === this) closeGroupModal(); });
+    });
+
+
+    // ═══ BUSINESSES SECTION JS ═══
+    const BACKEND_URL = 'https://api.miia-app.com';
+    let waConnected = false;
+    let expertSessionMessages = [];
+    let currentSessionDate = null;
+    let currentBizId = null;
+    let businesses = [];
+    let businessesLoaded = false;
+
+    function initBusinesses() {
+      if (businessesLoaded) return;
+      businessesLoaded = true;
+      checkBizWaStatus();
+      loadBusinesses();
+      loadHumanizerPref();
+    }
+
+    // ═══ TABS ═══
+    function switchBizTab(tabId, evt) {
+      document.querySelectorAll('#tabsContainer .tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#tabsContainer .tab-btn').forEach(b => b.classList.remove('active'));
+      const panel = document.getElementById('tab-' + tabId);
+      if (panel) panel.classList.add('active');
+      const btn = evt && evt.target ? evt.target : null;
+      if (btn) btn.classList.add('active');
+      if (tabId === 'schedule') loadScheduleConfig();
+    }
+  // ═══ BUSINESS LIST ═══
+  async function loadBusinesses() {
+    if (!currentUser) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses`);
+      if (res.ok) {
+        businesses = await res.json();
+      } else {
+        businesses = [];
+      }
+    } catch (e) {
+      console.error('Error loading businesses:', e);
+      businesses = [];
+    }
+    renderBusinessCards();
+  }
+
+  function renderBusinessCards() {
+    const container = document.getElementById('businessCards');
+    if (!businesses || businesses.length === 0) {
+      container.innerHTML = `
+        <div class="biz-empty" style="grid-column:1/-1;">
+          <div class="biz-empty-icon">🏢</div>
+          <h3>Todavía no tienes negocios</h3>
+          <p>Creá tu primer negocio para empezar a entrenar a MIIA</p>
+        </div>`;
+      return;
+    }
+    container.innerHTML = businesses.map(biz => `
+      <div class="biz-card" onclick="selectBusiness('${esc(biz.id)}')">
+        <h3>${esc(biz.name || 'Sin nombre')}</h3>
+        <p>${esc((biz.description || 'Sin descripción').substring(0, 100))}${(biz.description || '').length > 100 ? '…' : ''}</p>
+        <div class="biz-card-badges">
+          ${biz.productCount !== undefined ? `<span class="biz-badge">📦 ${biz.productCount} productos</span>` : ''}
+          ${biz.sessionCount !== undefined ? `<span class="biz-badge">💬 ${biz.sessionCount} sesiones</span>` : ''}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function selectBusiness(bizId) {
+    currentBizId = bizId;
+    const biz = businesses.find(b => b.id === bizId);
+    document.getElementById('bizDetailName').textContent = biz ? (biz.name || 'Negocio') : 'Negocio';
+
+    // Show detail header and tabs, hide list
+    document.getElementById('businessListView').style.display = 'none';
+    document.getElementById('businessDetailHeader').classList.add('visible');
+    document.getElementById('tabsContainer').classList.add('visible');
+
+    // Reset to first tab (Perfil)
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    const perfilPanel = document.getElementById('tab-perfil');
+    if (perfilPanel) perfilPanel.classList.add('active');
+    const firstBtn = document.querySelector('.tab-btn');
+    if (firstBtn) firstBtn.classList.add('active');
+
+    // Populate profile tab with biz data
+    if (biz) populateProfileTab(biz);
+
+    // Load all tab data scoped to this business
+    loadProducts();
+    loadContactRules();
+    loadSessions();
+    loadPaymentMethods();
+  }
+
+  function populateProfileTab(biz) {
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+    setVal('bizProfileName', biz.name);
+    setVal('bizProfileEmail', biz.email);
+    setVal('bizProfileAddress', biz.address);
+    setVal('bizProfileWebsite', biz.website);
+    setVal('bizProfileDemoLink', biz.demoLink);
+    setVal('bizProfileDescription', biz.description);
+    setVal('bizProfileWhatsapp', biz.whatsapp_number);
+    setVal('bizProfileOwnerRole', biz.ownerRole);
+  }
+
+  function backToList() {
+    currentBizId = null;
+    document.getElementById('businessListView').style.display = '';
+    document.getElementById('businessDetailHeader').classList.remove('visible');
+    document.getElementById('tabsContainer').classList.remove('visible');
+  }
+
+  // ═══ BUSINESS CRUD ═══
+  function openCreateBizModal() {
+    ['createBizName','createBizDescription','createBizEmail','createBizAddress','createBizWebsite','createBizWhatsapp','createBizOwnerRole']
+      .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+    document.getElementById('createBizModal').classList.remove('hidden');
+  }
+
+  async function submitCreateBusiness() {
+    const name = document.getElementById('createBizName').value.trim();
+    if (!name) { showToast('El nombre del negocio es obligatorio', 'warning'); return; }
+    const formData = {
+      name,
+      description: document.getElementById('createBizDescription').value.trim(),
+      email: document.getElementById('createBizEmail').value.trim(),
+      address: document.getElementById('createBizAddress').value.trim(),
+      website: document.getElementById('createBizWebsite').value.trim(),
+      whatsapp_number: document.getElementById('createBizWhatsapp').value.trim(),
+      ownerRole: document.getElementById('createBizOwnerRole').value.trim()
+    };
+    await createBusiness(formData);
+  }
+
+  async function createBusiness(formData) {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || 'Error al crear negocio', 'error'); return; }
+      document.getElementById('createBizModal').classList.add('hidden');
+      showToast('Negocio creado correctamente', 'success');
+      await loadBusinesses();
+    } catch (e) {
+      showToast('Error al crear negocio: ' + e.message, 'error');
+    }
+  }
+
+  function openEditBizModal() {
+    if (!currentBizId) return;
+    const biz = businesses.find(b => b.id === currentBizId);
+    if (!biz) return;
+    const setVal = (id, val) => { const el = document.getElementById(id); if (el) el.value = val || ''; };
+    setVal('editBizName', biz.name);
+    setVal('editBizDescription', biz.description);
+    setVal('editBizEmail', biz.email);
+    setVal('editBizAddress', biz.address);
+    setVal('editBizWebsite', biz.website);
+    setVal('editBizDemoLink', biz.demoLink);
+    setVal('editBizWhatsapp', biz.whatsapp_number);
+    setVal('editBizOwnerRole', biz.ownerRole);
+    document.getElementById('editBizModal').classList.remove('hidden');
+  }
+
+  async function submitEditBusiness() {
+    const name = document.getElementById('editBizName').value.trim();
+    if (!name) { showToast('El nombre del negocio es obligatorio', 'warning'); return; }
+    const formData = {
+      name,
+      description: document.getElementById('editBizDescription').value.trim(),
+      email: document.getElementById('editBizEmail').value.trim(),
+      address: document.getElementById('editBizAddress').value.trim(),
+      website: document.getElementById('editBizWebsite').value.trim(),
+      demoLink: document.getElementById('editBizDemoLink').value.trim(),
+      whatsapp_number: document.getElementById('editBizWhatsapp').value.trim(),
+      ownerRole: document.getElementById('editBizOwnerRole').value.trim()
+    };
+    await updateBusiness(currentBizId, formData);
+  }
+
+  async function updateBusiness(bizId, formData) {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${bizId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (!res.ok) { showToast(data.error || 'Error al actualizar negocio', 'error'); return; }
+      document.getElementById('editBizModal').classList.add('hidden');
+      showToast('Negocio actualizado', 'success');
+      // Update local list
+      const idx = businesses.findIndex(b => b.id === bizId);
+      if (idx !== -1) businesses[idx] = { ...businesses[idx], ...formData };
+      // Update header name
+      document.getElementById('bizDetailName').textContent = formData.name || 'Negocio';
+      // Update profile tab
+      populateProfileTab({ ...businesses[idx] });
+    } catch (e) {
+      showToast('Error al actualizar: ' + e.message, 'error');
+    }
+  }
+
+  function confirmDeleteBusiness() {
+    if (!currentBizId) return;
+    const biz = businesses.find(b => b.id === currentBizId);
+    const name = biz ? biz.name : 'este negocio';
+    if (!confirm(`¿Eliminar "${name}"? Esta acción es irreversible y eliminará todos los productos, sesiones y datos asociados.`)) return;
+    deleteBusiness(currentBizId);
+  }
+
+  async function deleteBusiness(bizId) {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${bizId}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json();
+        showToast(data.error || 'Error al eliminar negocio', 'error');
+        return;
+      }
+      showToast('Negocio eliminado', 'success');
+      backToList();
+      await loadBusinesses();
+    } catch (e) {
+      showToast('Error al eliminar: ' + e.message, 'error');
+    }
+  }
+
+  // ═══ PROFILE TAB SAVE ═══
+  async function saveBusinessProfile() {
+    if (!currentBizId) { showToast('No hay negocio seleccionado', 'warning'); return; }
+    const name = document.getElementById('bizProfileName').value.trim();
+    if (!name) { showToast('El nombre es obligatorio', 'warning'); return; }
+    const formData = {
+      name,
+      email: document.getElementById('bizProfileEmail').value.trim(),
+      address: document.getElementById('bizProfileAddress').value.trim(),
+      website: document.getElementById('bizProfileWebsite').value.trim(),
+      demoLink: document.getElementById('bizProfileDemoLink').value.trim(),
+      description: document.getElementById('bizProfileDescription').value.trim(),
+      whatsapp_number: document.getElementById('bizProfileWhatsapp').value.trim(),
+      ownerRole: document.getElementById('bizProfileOwnerRole').value.trim()
+    };
+    const statusEl = document.getElementById('profileStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await res.json();
+      if (!res.ok) { statusEl.textContent = data.error || 'Error'; return; }
+      statusEl.textContent = 'Perfil guardado';
+      setTimeout(() => statusEl.textContent = '', 3000);
+      // Update local
+      const idx = businesses.findIndex(b => b.id === currentBizId);
+      if (idx !== -1) businesses[idx] = { ...businesses[idx], ...formData };
+      document.getElementById('bizDetailName').textContent = name;
+    } catch (e) {
+      statusEl.textContent = 'Error al guardar';
+    }
+  }
+
+  // ═══ WHATSAPP STATUS ═══
+  async function checkBizWaStatus() {
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/status?uid=${currentUser.uid}`);
+      const data = await res.json();
+      waConnected = data.connected;
+      updateWaBanner();
+    } catch (e) {
+      console.error('Error checking WA status:', e);
+      waConnected = false;
+      updateWaBanner();
+    }
+  }
+
+  function updateWaBanner() {
+    const banner = document.getElementById('waBanner');
+    const text = document.getElementById('waStatusText');
+    const btn = document.getElementById('waActionBtn');
+    btn.classList.remove('hidden');
+    if (waConnected) {
+      banner.className = 'wa-banner connected';
+      text.textContent = 'WhatsApp conectado';
+      btn.textContent = 'Desvincular';
+      btn.className = 'wa-btn-disconnect';
+    } else {
+      banner.className = 'wa-banner disconnected';
+      text.textContent = 'WhatsApp no conectado';
+      btn.textContent = 'Conectar';
+      btn.className = 'wa-btn-connect';
+    }
+    updateSidebarWaDot(waConnected);
+  }
+
+  function toggleWhatsApp() {
+    if (waConnected) {
+      if (!confirm('Desvincular WhatsApp?')) return;
+      currentUser.getIdToken().then(token => {
+        fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/logout`, {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token }
+        })
+          .then(r => r.json())
+          .then(() => { waConnected = false; updateWaBanner(); })
+          .catch(err => { console.error('[WA] Error desvinculando:', err); alert('Error al desvincular. Intenta de nuevo.'); });
+      });
+    } else {
+      document.getElementById('qrModal').classList.remove('hidden');
+      connectWhatsApp();
+    }
+  }
+
+  function switchWaTab(tab) {
+    const isQR = tab === 'qr';
+    document.getElementById('waPanelQR').style.display = isQR ? '' : 'none';
+    document.getElementById('waPanelCode').style.display = isQR ? 'none' : '';
+    document.getElementById('waTabQR').style.background = isQR ? 'var(--accent-primary)' : 'transparent';
+    document.getElementById('waTabQR').style.color = isQR ? 'white' : 'var(--text-muted)';
+    document.getElementById('waTabCode').style.background = isQR ? 'transparent' : 'var(--accent-primary)';
+    document.getElementById('waTabCode').style.color = isQR ? 'var(--text-muted)' : 'white';
+  }
+
+  async function requestPairingCode() {
+    const phone = document.getElementById('pairingPhone').value.replace(/\D/g, '');
+    if (!phone || phone.length < 10) {
+      document.getElementById('pairingError').style.display = '';
+      document.getElementById('pairingError').textContent = 'Ingresá un número válido (ej: 5491112345678)';
+      return;
+    }
+    document.getElementById('pairingError').style.display = 'none';
+    document.getElementById('pairingCodeDisplay').style.display = 'none';
+    document.getElementById('pairingCodeValue').textContent = '...';
+
+    try {
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/qr`);
+      await new Promise(r => setTimeout(r, 2000));
+
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/request-pairing-code`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone })
+      });
+      const data = await res.json();
+      if (data.code) {
+        document.getElementById('pairingCodeDisplay').style.display = '';
+        document.getElementById('pairingCodeValue').textContent = data.code;
+      } else {
+        document.getElementById('pairingError').style.display = '';
+        document.getElementById('pairingError').textContent = data.error || 'Error generando código. Intentá con QR.';
+      }
+    } catch (e) {
+      document.getElementById('pairingError').style.display = '';
+      document.getElementById('pairingError').textContent = 'Error de conexión: ' + e.message;
+    }
+  }
+
+  async function connectWhatsApp() {
+    if (!currentUser || !currentUser.uid) {
+      alert('Error: No estás autenticado. Recarga la página.');
+      return;
+    }
+    try {
+      const userDoc = await db.collection('users').doc(currentUser.uid).get();
+      const geminiApiKey = userDoc.exists ? (userDoc.data().gemini_api_key || '') : '';
+
+      const initRes = await fetch(`${BACKEND_URL}/api/tenant/init`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uid: currentUser.uid, geminiApiKey })
+      });
+
+      if (!initRes.ok) {
+        const error = await initRes.json();
+        alert('Error al iniciar WhatsApp: ' + (error.error || 'Error desconocido'));
+        document.getElementById('qrModal').classList.add('hidden');
+        return;
+      }
+    } catch (e) {
+      alert('Error al conectar WhatsApp: ' + e.message);
+      document.getElementById('qrModal').classList.add('hidden');
+      return;
+    }
+
+    let pollCount = 0;
+    let countdown = 30;
+    let countdownTimer = setInterval(() => {
+      countdown--;
+      const el = document.getElementById('qrCountdown');
+      if (el) el.textContent = countdown > 0 ? `Iniciando WhatsApp... ${countdown}s` : 'Casi listo...';
+    }, 1000);
+    document.getElementById('qrCode').innerHTML = `<div style="text-align:center;padding:40px 20px;"><div style="font-size:2rem;margin-bottom:12px;">⏳</div><p id="qrCountdown" style="color:var(--text-muted);font-size:0.9rem;">Iniciando WhatsApp... 30s</p><p style="color:var(--text-muted);font-size:0.8rem;margin-top:8px;">Puppeteer tarda ~15-30s en arrancar</p></div>`;
+
+    const pollInterval = setInterval(async () => {
+      pollCount++;
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/qr`);
+        if (!res.ok) {
+          const error = await res.json();
+          if (pollCount === 1) {
+            clearInterval(pollInterval);
+            clearInterval(countdownTimer);
+            document.getElementById('qrCode').innerHTML = `<p style="color: red;">Error: ${error.error || 'No se pudo inicializar WhatsApp'}</p>`;
+          }
+          return;
+        }
+        const data = await res.json();
+        if (data.phase === 'authenticated_loading') {
+          clearInterval(countdownTimer);
+          document.getElementById('qrCode').innerHTML = `<div style="text-align:center;padding:40px 20px;"><div style="font-size:2rem;margin-bottom:12px;">🔄</div><p style="color:#34D399;font-size:0.9rem;">Sesión autenticada — cargando WhatsApp...</p></div>`;
+        }
+        if (data.qrCode) {
+          clearInterval(countdownTimer);
+          document.getElementById('qrCode').innerHTML = `<img src="${data.qrCode}" alt="QR" style="max-width:260px;">`;
+        }
+        if (data.isReady) {
+          clearInterval(pollInterval);
+          clearInterval(countdownTimer);
+          waConnected = true;
+          updateWaBanner();
+          document.getElementById('qrModal').classList.add('hidden');
+        }
+      } catch (e) {
+        console.error('[QR POLL] Error:', e.message);
+      }
+      if (pollCount > 180) {
+        clearInterval(pollInterval);
+        clearInterval(countdownTimer);
+        document.getElementById('qrCode').innerHTML = '<p style="color: var(--text-muted);">Timeout. Cierra y vuelve a intentar.</p>';
+      }
+    }, 1000);
+  }
+
+  // ═══ TAB: PRODUCTS ═══
+  const PRODUCT_EXAMPLES = [
+    { name: 'Consulta medica inicial', description: 'Primera consulta con medico general', price: '50000', pricePromo: '45000', stock: 'Disponible' },
+    { name: 'Plan premium mensual', description: 'Acceso completo a todas las funciones', price: '29.99', pricePromo: '24.99', stock: 'Ilimitado' },
+    { name: 'Curso de marketing digital', description: 'Curso de 8 semanas online', price: '199', pricePromo: '149', stock: '20 cupos' },
+    { name: 'Servicio de diseno web', description: 'Landing page profesional', price: '500', pricePromo: '400', stock: '5 proyectos/mes' },
+    { name: 'Asesoria legal empresarial', description: 'Consultoria por hora', price: '80', pricePromo: '', stock: 'Agenda abierta' }
+  ];
+
+  let products = [];
+
+  function renderProductRow(product, index) {
+    const ex = PRODUCT_EXAMPLES[index] || PRODUCT_EXAMPLES[0];
+    return `<tr data-idx="${index}">
+      <td><input type="text" value="${esc(product.name || '')}" placeholder="${ex.name}" data-field="name"></td>
+      <td><input type="text" value="${esc(product.description || '')}" placeholder="${ex.description}" data-field="description"></td>
+      <td><input type="text" value="${esc(product.price || '')}" placeholder="${ex.price}" data-field="price" style="width:90px;"></td>
+      <td><input type="text" value="${esc(product.pricePromo || '')}" placeholder="${ex.pricePromo}" data-field="pricePromo" style="width:90px;"></td>
+      <td><input type="text" value="${esc(product.stock || '')}" placeholder="${ex.stock}" data-field="stock" style="width:100px;"></td>
+      <td><div class="row-actions">
+        <button class="row-btn save" title="Guardar" onclick="saveProduct(${index})"><svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg></button>
+        <button class="row-btn add" title="Agregar linea" onclick="addProductRow(${index})">+</button>
+        <button class="row-btn delete" title="Eliminar" onclick="deleteProduct(${index})"><svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+      </div></td>
+    </tr>`;
+  }
+
+  function renderProducts() {
+    const body = document.getElementById('productsBody');
+    body.innerHTML = products.map((p, i) => renderProductRow(p, i)).join('');
+  }
+
+  async function loadProducts() {
+    if (!currentBizId) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/products`);
+      const data = await res.json();
+      products = data.length > 0 ? data : PRODUCT_EXAMPLES.map(e => ({ ...e, id: null }));
+      renderProducts();
+    } catch (e) {
+      products = PRODUCT_EXAMPLES.map(e => ({ ...e, id: null }));
+      renderProducts();
+    }
+  }
+
+  function getRowData(index) {
+    const row = document.querySelector(`tr[data-idx="${index}"]`);
+    if (!row) return null;
+    const data = {};
+    row.querySelectorAll('input').forEach(inp => { data[inp.dataset.field] = inp.value; });
+    return data;
+  }
+
+  async function saveProduct(index) {
+    if (!currentBizId) { showToast('Selecciona un negocio primero', 'warning'); return; }
+    const data = getRowData(index);
+    if (!data || !data.name.trim()) { showToast('El nombre del producto es obligatorio', 'warning'); return; }
+    const statusEl = document.getElementById('productStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      const result = await res.json();
+      if (result.success) {
+        products[index] = { ...data, id: result.id };
+        statusEl.textContent = 'MIIA aprendio este producto';
+        setTimeout(() => statusEl.textContent = '', 3000);
+      }
+    } catch (e) {
+      statusEl.textContent = 'Error al guardar';
+    }
+  }
+
+  function addProductRow(afterIndex) {
+    const idx = afterIndex !== undefined ? afterIndex + 1 : products.length;
+    products.splice(idx, 0, { name: '', description: '', price: '', pricePromo: '', stock: '', id: null });
+    renderProducts();
+  }
+
+  async function deleteProduct(index) {
+    if (!currentBizId) return;
+    const p = products[index];
+    if (p.id) {
+      if (!confirm('Eliminar este producto? MIIA olvidara esta informacion permanentemente.')) return;
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/products/${p.id}`, { method: 'DELETE' });
+    }
+    products.splice(index, 1);
+    if (products.length === 0) products.push({ name: '', description: '', price: '', pricePromo: '', stock: '', id: null });
+    renderProducts();
+    document.getElementById('productStatus').textContent = 'Producto eliminado del cerebro de MIIA';
+    setTimeout(() => document.getElementById('productStatus').textContent = '', 3000);
+  }
+
+  // ═══ TAB: CONTACT RULES ═══
+  const LEAD_EXAMPLES = [
+    { keyword: 'precio', context: 'Cuando preguntan cuanto cuesta algo' },
+    { keyword: 'cuanto cuesta', context: 'Consulta directa de precio' },
+    { keyword: 'tienen disponible', context: 'Pregunta por disponibilidad' },
+    { keyword: 'me pueden cotizar', context: 'Solicitud de cotizacion' },
+    { keyword: 'quisiera informacion', context: 'Interes general en productos' }
+  ];
+  const CLIENT_EXAMPLES = [
+    { keyword: 'mi cuenta', context: 'Ya tiene una cuenta activa' },
+    { keyword: 'ya soy cliente', context: 'Se identifica como cliente existente' },
+    { keyword: 'numero de factura', context: 'Tiene transacciones previas' },
+    { keyword: 'renovar', context: 'Quiere renovar su plan' },
+    { keyword: 'soporte', context: 'Necesita ayuda con servicio existente' }
+  ];
+
+  let leadKeywords = [];
+  let clientKeywords = [];
+
+  function renderKeywordRow(type, item, index, examples) {
+    const ex = examples[index] || examples[0];
+    return `<tr>
+      <td><input type="text" value="${esc(item.keyword || '')}" placeholder="${ex.keyword} (separar multiples por comas)" data-type="${type}" data-idx="${index}" data-field="keyword"></td>
+      <td><input type="text" value="${esc(item.context || '')}" placeholder="${ex.context}" data-type="${type}" data-idx="${index}" data-field="context"></td>
+      <td><button class="row-btn delete" onclick="deleteKeyword('${type}',${index})"><svg style="width:14px;height:14px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></td>
+    </tr>`;
+  }
+
+  function renderKeywords() {
+    document.getElementById('leadKeywordsBody').innerHTML =
+      leadKeywords.map((k, i) => renderKeywordRow('lead', k, i, LEAD_EXAMPLES)).join('');
+    document.getElementById('clientKeywordsBody').innerHTML =
+      clientKeywords.map((k, i) => renderKeywordRow('client', k, i, CLIENT_EXAMPLES)).join('');
+  }
+
+  async function loadContactRules() {
+    if (!currentBizId) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/contact-rules`);
+      const data = await res.json();
+      leadKeywords = (data.lead_keywords || []).map(k => ({ keyword: k, context: '' }));
+      clientKeywords = (data.client_keywords || []).map(k => ({ keyword: k, context: '' }));
+      if (leadKeywords.length === 0) leadKeywords = LEAD_EXAMPLES.map(e => ({ ...e }));
+      if (clientKeywords.length === 0) clientKeywords = CLIENT_EXAMPLES.map(e => ({ ...e }));
+      renderKeywords();
+    } catch (e) {
+      leadKeywords = LEAD_EXAMPLES.map(e => ({ ...e }));
+      clientKeywords = CLIENT_EXAMPLES.map(e => ({ ...e }));
+      renderKeywords();
+    }
+  }
+
+  function addKeywordRow(type) {
+    const arr = type === 'lead' ? leadKeywords : clientKeywords;
+    arr.push({ keyword: '', context: '' });
+    renderKeywords();
+  }
+
+  function deleteKeyword(type, index) {
+    const arr = type === 'lead' ? leadKeywords : clientKeywords;
+    arr.splice(index, 1);
+    if (arr.length === 0) arr.push({ keyword: '', context: '' });
+    renderKeywords();
+  }
+
+  async function saveContactRules() {
+    if (!currentBizId) { showToast('Selecciona un negocio primero', 'warning'); return; }
+    document.querySelectorAll('input[data-type="lead"]').forEach(inp => {
+      const idx = parseInt(inp.dataset.idx);
+      if (leadKeywords[idx]) leadKeywords[idx][inp.dataset.field] = inp.value;
+    });
+    document.querySelectorAll('input[data-type="client"]').forEach(inp => {
+      const idx = parseInt(inp.dataset.idx);
+      if (clientKeywords[idx]) clientKeywords[idx][inp.dataset.field] = inp.value;
+    });
+
+    const statusEl = document.getElementById('rulesStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      const parseKeywords = (keywords) => {
+        return keywords
+          .filter(k => k.keyword.trim())
+          .flatMap(k => k.keyword.split(',').map(kw => kw.trim()).filter(kw => kw));
+      };
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/contact-rules`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          lead_keywords: parseKeywords(leadKeywords),
+          client_keywords: parseKeywords(clientKeywords)
+        })
+      });
+      statusEl.textContent = 'Reglas guardadas - MIIA clasificara contactos automaticamente';
+      setTimeout(() => statusEl.textContent = '', 4000);
+    } catch (e) {
+      statusEl.textContent = 'Error al guardar';
+    }
+  }
+
+  // ═══ TAB: EXPERT CHAT + SESSIONS ═══
+  let sessions = [];
+
+  async function loadSessions() {
+    if (!currentBizId) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/sessions`);
+      sessions = await res.json();
+      renderSessions();
+    } catch (e) {
+      console.error('Error loading sessions:', e);
+    }
+  }
+
+  function renderSessions() {
+    const list = document.getElementById('sessionsList');
+    const fixedTag = '<div class="session-tag fixed" onclick="switchBizTab(\'docs\', event)"><span><svg style="width:14px;height:14px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> Documentos</span></div>';
+    const sessionTags = sessions.map(s => `
+      <div class="session-tag ${s.date === currentSessionDate ? 'active' : ''}" onclick="viewSession('${s.date}')">
+        <div>
+          <div class="tag-date">${s.date}</div>
+          <div>${esc(s.summary || s.date)}</div>
+        </div>
+        <div class="tag-actions">
+          <button title="Actualizar" onclick="event.stopPropagation();updateSession('${s.date}')"><svg style="width:13px;height:13px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg></button>
+          <button title="Eliminar" onclick="event.stopPropagation();deleteSession('${s.date}')"><svg style="width:13px;height:13px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+        </div>
+      </div>
+    `).join('');
+    list.innerHTML = fixedTag + sessionTags;
+  }
+
+  function startNewSession() {
+    currentSessionDate = new Date().toISOString().split('T')[0];
+    expertSessionMessages = [];
+    document.getElementById('expertMessages').innerHTML =
+      '<div class="message miia"><div class="message-bubble">Nueva sesion iniciada! Explicame lo que necesites sobre tu negocio.</div></div>';
+  }
+
+  function viewSession(date) {
+    const s = sessions.find(x => x.date === date);
+    if (!s) return;
+    currentSessionDate = date;
+    renderSessions();
+    const msgs = document.getElementById('expertMessages');
+    msgs.innerHTML = (s.messages || []).map(m =>
+      `<div class="message ${m.role === 'user' ? 'user' : 'miia'}"><div class="message-bubble">${esc(m.content).replace(/\n/g, '<br>')}</div></div>`
+    ).join('');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+
+  async function sendExpertMessage() {
+    const input = document.getElementById('expertInput');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+
+    addChatMessage('expertMessages', 'user', message);
+    expertSessionMessages.push({ role: 'user', content: message });
+
+    const isLearn = message.toUpperCase().startsWith('APRENDE:');
+
+    try {
+      if (isLearn) {
+        const res = await fetch(`${BACKEND_URL}/api/train`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: message.replace(/^APRENDE:/i, '').trim() })
+        });
+        const data = await res.json();
+        const reply = data.response || '✅ Guardado.';
+        addChatMessage('expertMessages', 'miia', reply);
+        expertSessionMessages.push({ role: 'assistant', content: reply });
+        if (data.saved === true) showToast('✅ Guardado en memoria permanente', 'success');
+        else if (data.tipo === 'PREGUNTA') showToast('⚠️ Eso es una pregunta, no se guardó', 'warning');
+        else showToast('❌ No se guardó', 'error');
+      } else {
+        const history = expertSessionMessages.slice(-20);
+        const res = await fetch(`${BACKEND_URL}/api/admin-chat`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message, history })
+        });
+        const data = await res.json();
+        const reply = data.response || 'Sin respuesta.';
+        addChatMessage('expertMessages', 'miia', reply);
+        expertSessionMessages.push({ role: 'assistant', content: reply });
+      }
+    } catch (e) {
+      addChatMessage('expertMessages', 'miia', 'Error al procesar. Intenta de nuevo.');
+    }
+  }
+
+  async function saveCurrentSession() {
+    if (!currentBizId) { showToast('Selecciona un negocio primero', 'warning'); return; }
+    if (expertSessionMessages.length === 0) { showToast('No hay mensajes en la sesión actual', 'warning'); return; }
+    const statusEl = document.getElementById('sessionSaveStatus');
+    statusEl.textContent = 'Guardando sesion...';
+
+    const trainingBlock = expertSessionMessages
+      .filter(m => m.role === 'user')
+      .map(m => m.content)
+      .join('\n');
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/sessions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: expertSessionMessages, trainingBlock })
+      });
+      const data = await res.json();
+      statusEl.textContent = `Sesion guardada: "${data.summary || 'OK'}"`;
+      setTimeout(() => statusEl.textContent = '', 4000);
+      loadSessions();
+    } catch (e) {
+      statusEl.textContent = 'Error al guardar sesion';
+    }
+  }
+
+  async function updateSession(date) {
+    if (!currentBizId) return;
+    const text = prompt('Agrega informacion adicional para esta sesion:');
+    if (!text || !text.trim()) return;
+    try {
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/sessions/${date}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ additionalText: text.trim() })
+      });
+      showToast('Sesión actualizada. MIIA aprendió la nueva información.', 'success');
+      loadSessions();
+    } catch (e) {
+      showToast('Error al actualizar', 'error');
+    }
+  }
+
+  async function deleteSession(date) {
+    if (!currentBizId) return;
+    if (!confirm(`Eliminar sesion del ${date}? MIIA olvidara permanentemente todo lo aprendido en esa sesion.`)) return;
+    try {
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/sessions/${date}`, { method: 'DELETE' });
+      sessions = sessions.filter(s => s.date !== date);
+      renderSessions();
+    } catch (e) {
+      showToast('Error al eliminar', 'error');
+    }
+  }
+
+  // ═══ TAB: TEST MIIA ═══
+  async function sendTestMessage() {
+    const input = document.getElementById('testInput');
+    const message = input.value.trim();
+    if (!message) return;
+    input.value = '';
+
+    addChatMessage('testMessages', 'user', message);
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/test`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message, bizId: currentBizId })
+      });
+      const data = await res.json();
+      addChatMessage('testMessages', 'miia', data.response || 'No pude responder. Entrena a MIIA primero.');
+    } catch (e) {
+      addChatMessage('testMessages', 'miia', 'Error de conexion. Intenta de nuevo.');
+    }
+  }
+
+  function resetTest() {
+    document.getElementById('testMessages').innerHTML =
+      '<div class="message miia"><div class="message-bubble">Hola! Bienvenido. En que puedo ayudarte hoy?</div></div>';
+  }
+
+  // ═══ TAB: COBROS ═══
+  const COUNTRY_LABELS = { CO: '🇨🇴 Colombia', AR: '🇦🇷 Argentina', CL: '🇨🇱 Chile', MX: '🇲🇽 México', ALL: '🌐 Internacional' };
+
+  const PAYMENT_METHODS_DEFAULT = [
+    { id: 'nequi',          name: 'Nequi',                    type: 'link',          country: 'CO', icon: '📲', enabled: false, payment_link: '' },
+    { id: 'daviplata',      name: 'Daviplata',                type: 'link',          country: 'CO', icon: '📱', enabled: false, payment_link: '' },
+    { id: 'pse',            name: 'PSE',                      type: 'link',          country: 'CO', icon: '🏦', enabled: false, payment_link: '' },
+    { id: 'bold',           name: 'Bold',                     type: 'link',          country: 'CO', icon: '💳', enabled: false, payment_link: '' },
+    { id: 'wompi',          name: 'Wompi / Bancolombia',      type: 'link',          country: 'CO', icon: '🏧', enabled: false, payment_link: '' },
+    { id: 'efecty',         name: 'Efecty',                   type: 'instrucciones', country: 'CO', icon: '🏪', enabled: false, reference_code: '', instructions: '' },
+    { id: 'baloto',         name: 'Baloto',                   type: 'instrucciones', country: 'CO', icon: '🎰', enabled: false, reference_code: '', instructions: '' },
+    { id: 'mercadopago',    name: 'MercadoPago',              type: 'link',          country: 'AR', icon: '💳', enabled: false, payment_link: '' },
+    { id: 'transferencia_ar', name: 'Transferencia (CBU/CVU)',type: 'banco',         country: 'AR', icon: '🏦', enabled: false, cbu_alias: '', bank_name: '', account_holder: '' },
+    { id: 'modo',           name: 'Modo',                     type: 'link',          country: 'AR', icon: '📲', enabled: false, payment_link: '' },
+    { id: 'uala',           name: 'Ualá',                     type: 'link',          country: 'AR', icon: '📱', enabled: false, payment_link: '' },
+    { id: 'rapipago',       name: 'Rapipago / PagoFácil',     type: 'instrucciones', country: 'AR', icon: '🏪', enabled: false, reference_code: '', instructions: '' },
+    { id: 'webpay',         name: 'Webpay (Transbank)',        type: 'link',          country: 'CL', icon: '💳', enabled: false, payment_link: '' },
+    { id: 'khipu',          name: 'Khipu',                    type: 'link',          country: 'CL', icon: '🔗', enabled: false, payment_link: '' },
+    { id: 'transferencia_cl', name: 'Transferencia bancaria', type: 'banco',         country: 'CL', icon: '🏦', enabled: false, cci_rut: '', bank_name: '', account_holder: '' },
+    { id: 'mach',           name: 'Mach (BCI)',               type: 'link',          country: 'CL', icon: '📲', enabled: false, payment_link: '' },
+    { id: 'spei',           name: 'SPEI (Transferencia)',      type: 'banco',         country: 'MX', icon: '🏦', enabled: false, clabe: '', bank_name: '', account_holder: '' },
+    { id: 'oxxo',           name: 'OXXO Pay',                 type: 'instrucciones', country: 'MX', icon: '🏪', enabled: false, reference_code: '', instructions: '' },
+    { id: 'clip',           name: 'CLIP',                     type: 'link',          country: 'MX', icon: '💳', enabled: false, payment_link: '' },
+    { id: 'mercadopago_mx', name: 'MercadoPago MX',           type: 'link',          country: 'MX', icon: '💳', enabled: false, payment_link: '' },
+    { id: 'paypal',         name: 'PayPal',                   type: 'link',          country: 'ALL', icon: '🅿️', enabled: false, payment_link: '' },
+    { id: 'stripe',         name: 'Stripe',                   type: 'link',          country: 'ALL', icon: '💠', enabled: false, payment_link: '' },
+    { id: 'cripto',         name: 'Criptomonedas',            type: 'cripto',        country: 'ALL', icon: '₿',  enabled: false, wallet_address: '', network: '', coin: '' },
+    { id: 'efectivo',       name: 'Efectivo en local',        type: 'instrucciones', country: 'ALL', icon: '💵', enabled: false, reference_code: '', instructions: '' },
+    { id: 'qr',             name: 'QR Genérico',              type: 'qr',            country: 'ALL', icon: '📱', enabled: false, qr_image_base64: '', qr_description: '' }
+  ];
+
+  let paymentMethods = [];
+
+  function getMethodFields(m) {
+    if (!m.enabled) return '';
+    switch (m.type) {
+      case 'link': {
+        const linkPlaceholders = {
+          nequi: 'https://link.nequi.com.co/pagos/... o número de celular', daviplata: 'https://daviplata.com/cobrar/...',
+          pse: 'Link del botón PSE de tu pasarela (PayU, Wompi...)', bold: 'https://commerce.bold.co/link/...',
+          wompi: 'https://checkout.wompi.co/l/...', mercadopago: 'https://mpago.la/...',
+          modo: 'https://modo.com.ar/link/...', uala: 'https://uala.com.ar/cobrar/...',
+          webpay: 'Link de pago Webpay (Transbank)', khipu: 'https://khipu.com/payment/create/...',
+          mach: 'Link de pago Mach (BCI)', clip: 'https://clip.mx/...', mercadopago_mx: 'https://mpago.la/...',
+          paypal: 'https://paypal.me/tuempresa o tu link de pago', stripe: 'https://buy.stripe.com/...'
+        };
+        return `<p class="payment-label">Link de pago</p>
+                <input type="url" id="plink-${m.id}" placeholder="${linkPlaceholders[m.id] || 'https://...'}" value="${esc(m.payment_link||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;">`;
+      }
+      case 'banco': {
+        const bankLabel = m.country === 'MX' ? 'CLABE (18 dígitos)' : m.country === 'CL' ? 'RUT / CCI' : 'CBU, CVU o Alias';
+        const bankPlaceholder = m.country === 'MX' ? '000000000000000000' : m.country === 'CL' ? '12345678-9 / 0123...' : '0000000000000000000000 / mi.alias';
+        const bankVal = m.cbu_alias || m.clabe || m.cci_rut || '';
+        return `<p class="payment-label">${bankLabel}</p>
+                <input type="text" id="pcbu-${m.id}" placeholder="${bankPlaceholder}" value="${esc(bankVal)}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">
+                <p class="payment-label">Banco</p>
+                <input type="text" id="pbank-${m.id}" placeholder="Nombre del banco" value="${esc(m.bank_name||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">
+                <p class="payment-label">Titular de la cuenta</p>
+                <input type="text" id="pholder-${m.id}" placeholder="Nombre completo del titular" value="${esc(m.account_holder||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;">`;
+      }
+      case 'instrucciones': {
+        const refPlaceholders = { efecty: '900-123456 (generado por tu pasarela)', baloto: 'Código Baloto', rapipago: 'Código de pago', oxxo: 'Referencia OXXO (generada por Conekta/Stripe)', efectivo: '' };
+        const instrPlaceholders = { efecty: 'Ve a cualquier punto Efecty, indica el código y paga. Luego envíame el comprobante.', baloto: 'Paga en cualquier punto Baloto con este código.', rapipago: 'Lleva este código a cualquier Rapipago o PagoFácil.', oxxo: 'Ve a cualquier tienda OXXO y pide pagar con referencia.', efectivo: 'Ej: Aceptamos pago en efectivo en nuestra oficina: Calle 123, Bogotá. Horario: L-V 9-18h.' };
+        const showRef = m.id !== 'efectivo';
+        return (showRef ? `<p class="payment-label">Código / referencia de pago</p>
+                <input type="text" id="prefcode-${m.id}" placeholder="${refPlaceholders[m.id]||'Código'}" value="${esc(m.reference_code||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">` : '') +
+               `<p class="payment-label">Instrucciones para el cliente</p>
+                <textarea id="pinstr-${m.id}" placeholder="${instrPlaceholders[m.id]||''}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-body);font-size:0.85rem;resize:vertical;min-height:60px;font-family:inherit;">${esc(m.instructions||'')}</textarea>`;
+      }
+      case 'qr': {
+        const preview = m.qr_image_base64 ? `<img src="${m.qr_image_base64}" style="width:80px;height:80px;object-fit:contain;border-radius:8px;margin-top:6px;display:block;">` : '';
+        return `<p class="payment-label">Imagen QR de cobro</p>
+                <input type="file" id="pqrfile-${m.id}" accept="image/*" onchange="handleQRUpload(event,'${m.id}')" style="width:100%;font-size:0.82rem;color:var(--text-muted);">
+                <div id="pqrpreview-${m.id}">${preview}</div>
+                <p class="payment-label" style="margin-top:8px;">Descripción (opcional)</p>
+                <input type="text" id="pqdesc-${m.id}" placeholder="Ej: QR Nequi, QR empresa, QR punto de venta..." value="${esc(m.qr_description||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;">`;
+      }
+      case 'cripto':
+        return `<p class="payment-label">Dirección wallet</p>
+                <input type="text" id="pwallet-${m.id}" placeholder="Dirección de la billetera" value="${esc(m.wallet_address||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">
+                <p class="payment-label">Red</p>
+                <input type="text" id="pnet-${m.id}" placeholder="TRC20, ERC20, BEP20..." value="${esc(m.network||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">
+                <p class="payment-label">Moneda</p>
+                <input type="text" id="pcoin-${m.id}" placeholder="USDT, BTC, ETH..." value="${esc(m.coin||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;">`;
+    }
+    return '';
+  }
+
+  function renderPaymentCard(m) {
+    return `
+      <div class="payment-card ${m.enabled ? 'enabled' : ''}" id="pcard-${m.id}">
+        <div class="payment-card-header">
+          <div class="payment-icon">${m.icon}</div>
+          <h4>${m.name}</h4>
+          <label class="toggle-switch">
+            <input type="checkbox" ${m.enabled ? 'checked' : ''} onchange="togglePayment('${m.id}', this.checked)">
+            <span class="toggle-track"></span>
+          </label>
+        </div>
+        <div id="pfields-${m.id}">${getMethodFields(m)}</div>
+      </div>`;
+  }
+
+  function renderPaymentGrid() {
+    const groups = ['CO', 'AR', 'CL', 'MX', 'ALL'];
+    let html = '';
+    for (const country of groups) {
+      const methods = paymentMethods.filter(m => m.country === country);
+      html += `<div class="payment-group-header">${COUNTRY_LABELS[country]}</div>`;
+      html += methods.map(m => renderPaymentCard(m)).join('');
+    }
+    document.getElementById('paymentGrid').innerHTML = html;
+  }
+
+  function togglePayment(id, enabled) {
+    const m = paymentMethods.find(x => x.id === id);
+    if (!m) return;
+    m.enabled = enabled;
+    const card = document.getElementById('pcard-' + id);
+    card.classList.toggle('enabled', enabled);
+    document.getElementById('pfields-' + id).innerHTML = getMethodFields(m);
+  }
+
+  function handleQRUpload(event, id) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const m = paymentMethods.find(x => x.id === id);
+      if (m) m.qr_image_base64 = e.target.result;
+      document.getElementById('pqrpreview-' + id).innerHTML =
+        `<img src="${e.target.result}" style="width:80px;height:80px;object-fit:contain;border-radius:8px;margin-top:6px;display:block;">`;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function readMethodFields(m) {
+    if (!m.enabled) return;
+    switch (m.type) {
+      case 'link':
+        m.payment_link = document.getElementById('plink-' + m.id)?.value || ''; break;
+      case 'banco': {
+        const v = document.getElementById('pcbu-' + m.id)?.value || '';
+        if (m.country === 'MX') m.clabe = v;
+        else if (m.country === 'CL') m.cci_rut = v;
+        else m.cbu_alias = v;
+        m.bank_name = document.getElementById('pbank-' + m.id)?.value || '';
+        m.account_holder = document.getElementById('pholder-' + m.id)?.value || '';
+        break;
+      }
+      case 'instrucciones':
+        m.reference_code = document.getElementById('prefcode-' + m.id)?.value || '';
+        m.instructions = document.getElementById('pinstr-' + m.id)?.value || '';
+        break;
+      case 'qr':
+        m.qr_description = document.getElementById('pqdesc-' + m.id)?.value || '';
+        break;
+      case 'cripto':
+        m.wallet_address = document.getElementById('pwallet-' + m.id)?.value || '';
+        m.network = document.getElementById('pnet-' + m.id)?.value || '';
+        m.coin = document.getElementById('pcoin-' + m.id)?.value || '';
+        break;
+    }
+  }
+
+  async function loadPaymentMethods() {
+    if (!currentBizId) return;
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/payment-methods`);
+      const data = await res.json();
+      if (data && data.length > 0) {
+        paymentMethods = PAYMENT_METHODS_DEFAULT.map(def => {
+          const saved = data.find(d => d.id === def.id);
+          return saved ? { ...def, ...saved } : { ...def };
+        });
+      } else {
+        paymentMethods = PAYMENT_METHODS_DEFAULT.map(d => ({ ...d }));
+      }
+    } catch (e) {
+      paymentMethods = PAYMENT_METHODS_DEFAULT.map(d => ({ ...d }));
+    }
+    renderPaymentGrid();
+  }
+
+  async function savePaymentMethods() {
+    if (!currentBizId) { showToast('Selecciona un negocio primero', 'warning'); return; }
+    paymentMethods.forEach(readMethodFields);
+    const statusEl = document.getElementById('cobrosStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/payment-methods`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ methods: paymentMethods })
+      });
+      const activeCount = paymentMethods.filter(m => m.enabled).length;
+      statusEl.textContent = `${activeCount} método${activeCount !== 1 ? 's' : ''} activado${activeCount !== 1 ? 's' : ''} — MIIA ya sabe cómo cobrar`;
+      setTimeout(() => statusEl.textContent = '', 4000);
+    } catch (e) {
+      statusEl.textContent = 'Error al guardar';
+    }
+  }
+
+  // ═══ HELPERS ═══
+  function addChatMessage(containerId, sender, text) {
+    const container = document.getElementById(containerId);
+    const div = document.createElement('div');
+    div.className = `message ${sender}`;
+    div.innerHTML = `<div class="message-bubble">${esc(text).replace(/\n/g, '<br>')}</div>`;
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+  }
+
+  // esc() defined earlier
+
+  // ═══ HUMANIZER TOGGLE ═══
+  async function loadHumanizerPref() {
+    try {
+      const doc = await db.collection('users').doc(currentUser.uid).get();
+      const enabled = doc.data()?.humanizer_enabled !== false;
+      document.getElementById('humanizerToggle').checked = enabled;
+      document.getElementById('humanizerLabel').textContent = enabled ? 'Activado' : 'Desactivado';
+    } catch(e) {
+      document.getElementById('humanizerLabel').textContent = 'Activado (por defecto)';
+    }
+  }
+
+  async function saveHumanizerPref(enabled) {
+    try {
+      await db.collection('users').doc(currentUser.uid).update({ humanizer_enabled: enabled });
+      document.getElementById('humanizerLabel').textContent = enabled ? 'Activado' : 'Desactivado';
+      showToast(enabled ? 'Humanizador activado' : 'Humanizador desactivado', enabled ? 'success' : 'info');
+    } catch(e) {
+      showToast('Error al guardar preferencia', 'error');
+    }
+  }
+
+  // ═══ SCHEDULE CONFIG ═══
+  async function loadScheduleConfig() {
+    try {
+      const doc = await db.collection('users').doc(currentUser.uid).collection('settings').doc('schedule').get();
+      if (!doc.exists) return;
+      const c = doc.data();
+      if (c.activeDays) {
+        document.querySelectorAll('#scheduleDays input').forEach(cb => {
+          cb.checked = c.activeDays.includes(parseInt(cb.value));
+        });
+      }
+      if (c.startTime) document.getElementById('scheduleStart').value = c.startTime;
+      if (c.endTime) document.getElementById('scheduleEnd').value = c.endTime;
+      if (c.timezone) document.getElementById('scheduleTZ').value = c.timezone;
+      if (c.offHoursMessage) document.getElementById('scheduleOffMsg').value = c.offHoursMessage;
+      if (c.autoReplyOffHours) document.getElementById('scheduleAutoReply').checked = true;
+      if (c.followupDays) document.getElementById('followupDays').value = c.followupDays;
+      if (c.followupMax) document.getElementById('followupMax').value = c.followupMax;
+      if (c.followupMsg1) document.getElementById('followupMsg1').value = c.followupMsg1;
+      if (c.followupMsgLast) document.getElementById('followupMsgLast').value = c.followupMsgLast;
+      if (c.followupFinalAction) document.getElementById('followupFinal').value = c.followupFinalAction;
+      if (c.hotKeywords) document.getElementById('intentHot').value = c.hotKeywords;
+      if (c.coldKeywords) document.getElementById('intentCold').value = c.coldKeywords;
+      if (c.coldAction) document.getElementById('intentColdAction').value = c.coldAction;
+      if (c.silenceBreakFromDashboard !== undefined) document.getElementById('silenceBreak').checked = c.silenceBreakFromDashboard;
+    } catch(e) {
+      console.error('Error loading schedule config:', e);
+    }
+  }
+
+  async function saveScheduleConfig() {
+    const statusEl = document.getElementById('scheduleStatus');
+    statusEl.textContent = 'Guardando...';
+    try {
+      const activeDays = [];
+      document.querySelectorAll('#scheduleDays input:checked').forEach(cb => activeDays.push(parseInt(cb.value)));
+
+      const config = {
+        activeDays,
+        startTime: document.getElementById('scheduleStart').value,
+        endTime: document.getElementById('scheduleEnd').value,
+        timezone: document.getElementById('scheduleTZ').value,
+        offHoursMessage: document.getElementById('scheduleOffMsg').value,
+        autoReplyOffHours: document.getElementById('scheduleAutoReply').checked,
+        followupDays: parseInt(document.getElementById('followupDays').value) || 3,
+        followupMax: parseInt(document.getElementById('followupMax').value) || 3,
+        followupMsg1: document.getElementById('followupMsg1').value,
+        followupMsgLast: document.getElementById('followupMsgLast').value,
+        followupFinalAction: document.getElementById('followupFinal').value,
+        hotKeywords: document.getElementById('intentHot').value,
+        coldKeywords: document.getElementById('intentCold').value,
+        coldAction: document.getElementById('intentColdAction').value,
+        silenceBreakFromDashboard: document.getElementById('silenceBreak').checked,
+        updatedAt: new Date().toISOString()
+      };
+
+      await db.collection('users').doc(currentUser.uid).collection('settings').doc('schedule').set(config, { merge: true });
+      statusEl.textContent = '✅ Guardado';
+      showToast('Configuración de horarios guardada', 'success');
+      setTimeout(() => statusEl.textContent = '', 3000);
+    } catch(e) {
+      statusEl.textContent = '❌ Error';
+      showToast('Error al guardar: ' + e.message, 'error');
+    }
+  }
+</script>
+
+
+    // ═══ DOCUMENTS SECTION JS ═══
+    let documentsLoaded = false;
+
+    function initDocuments() {
+      if (documentsLoaded) return;
+      documentsLoaded = true;
+      loadTemplates();
+      loadKnowledgeFiles();
+    }
+
+    function switchDocTab(tab) {
+      const section = document.getElementById('section-documents');
+      section.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      section.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tab).classList.add('active');
+    }
+
+    function generateQuotePDF() {
+      const client = document.getElementById('quoteClient').value;
+      const product = document.getElementById('quoteProduct').value;
+      const price = document.getElementById('quotePrice').value;
+      const expiry = document.getElementById('quoteExpiry').value;
+      const desc = document.getElementById('quoteDesc').value;
+      if (!client || !product || !price) {
+        showToast('Completa los datos requeridos', 'warning');
+        return;
+      }
+      const html = `
+        <html>
+        <head><title>Cotización</title></head>
+        <body style="font-family: Arial; padding: 40px; max-width: 800px;">
+          <h1 style="color: #667eea;">COTIZACIÓN</h1>
+          <p><strong>Cliente:</strong> ${client}</p>
+          <p><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-ES')}</p>
+          <hr style="border: 1px solid #ddd; margin: 20px 0;">
+          <h3>Detalles</h3>
+          <p><strong>Producto/Servicio:</strong> ${product}</p>
+          <p><strong>Descripción:</strong></p>
+          <p>${desc}</p>
+          <hr style="border: 1px solid #ddd; margin: 20px 0;">
+          <p style="font-size: 18px;"><strong>Total: USD $${parseFloat(price).toFixed(2)}</strong></p>
+          ${expiry ? `<p><strong>Válida hasta:</strong> ${expiry}</p>` : ''}
+          <p style="margin-top: 40px; color: #888; font-size: 12px;">Esta cotización fue generada por MIIA el ${new Date().toLocaleDateString('es-ES')}</p>
+        </body>
+        </html>
+      `;
+      const win = window.open('', '', 'height=600,width=800');
+      win.document.write(html);
+      win.document.close();
+      win.print();
+    }
+
+    async function createTemplate() {
+      const name = document.getElementById('templateName').value.trim();
+      const text = document.getElementById('templateText').value.trim();
+      if (!name || !text) {
+        showToast('Completa el nombre y texto', 'warning');
+        return;
+      }
+      try {
+        await db.collection('templates').doc(currentUser.uid).collection('items').add({
+          name: name,
+          text: text,
+          created_at: new Date()
+        });
+        document.getElementById('templateName').value = '';
+        document.getElementById('templateText').value = '';
+        loadTemplates();
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+      }
+    }
+
+    async function loadTemplates() {
+      try {
+        const snapshot = await db.collection('templates').doc(currentUser.uid).collection('items').get();
+        const list = document.getElementById('templatesListItems');
+        if (snapshot.empty) {
+          list.innerHTML = '<div class="empty-state"><p>Sin templates aún</p></div>';
+          return;
+        }
+        list.innerHTML = snapshot.docs.map(doc => `
+          <div class="item">
+            <div>
+              <div class="item-title">${doc.data().name}</div>
+              <div class="item-desc">${doc.data().text.substring(0, 80)}...</div>
+            </div>
+            <div class="item-actions">
+              <button class="btn-icon btn-delete" onclick="deleteTemplate('${doc.id}')">Eliminar</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('Error cargando templates:', error);
+      }
+    }
+
+    async function deleteTemplate(id) {
+      if (!confirm('¿Eliminar este template?')) return;
+      try {
+        await db.collection('templates').doc(currentUser.uid).collection('items').doc(id).delete();
+        loadTemplates();
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+      }
+    }
+
+    async function uploadFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      event.target.value = '';
+      showToast('⏳ Procesando archivo...', 'info');
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        const token = await firebase.auth().currentUser.getIdToken();
+        const res = await fetch(`https://api.miia-app.com/api/tenant/${currentUser.uid}/documents/upload`, {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token },
+          body: formData
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          throw new Error(data.error || 'Error desconocido al procesar el archivo');
+        }
+        await db.collection('knowledge_files').doc(currentUser.uid).collection('items').add({
+          name: file.name,
+          size: file.size,
+          type: file.type,
+          chunks: data.chunks,
+          preview: data.preview || '',
+          uploaded_at: new Date()
+        });
+        showToast(`✅ ${file.name} — ${data.chunks} fragmentos aprendidos por MIIA`, 'success');
+        loadKnowledgeFiles();
+      } catch (error) {
+        showToast('❌ Error: ' + error.message, 'error');
+      }
+    }
+
+    async function loadKnowledgeFiles() {
+      try {
+        const snapshot = await db.collection('knowledge_files').doc(currentUser.uid).collection('items').get();
+        const list = document.getElementById('knowledgeListItems');
+        if (snapshot.empty) {
+          list.innerHTML = '<div class="empty-state"><p>Sin archivos aún</p></div>';
+          return;
+        }
+        list.innerHTML = snapshot.docs.map(doc => {
+          const d = doc.data();
+          const chunks = d.chunks ? `· ${d.chunks} fragmentos` : '';
+          const preview = d.preview ? `<div class="item-desc" style="font-size:0.78rem;opacity:0.6;margin-top:2px;max-width:280px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${d.preview}</div>` : '';
+          return `
+            <div class="item">
+              <div>
+                <div class="item-title"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> ${d.name}</div>
+                <div class="item-desc">${(d.size / 1024).toFixed(1)} KB ${chunks}</div>
+                ${preview}
+              </div>
+              <div class="item-actions">
+                <button class="btn-icon btn-delete" onclick="deleteFile('${doc.id}')">Eliminar</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (error) {
+        console.error('Error cargando archivos:', error);
+      }
+    }
+
+    async function deleteFile(id) {
+      if (!confirm('¿Eliminar este archivo?')) return;
+      try {
+        await db.collection('knowledge_files').doc(currentUser.uid).collection('items').doc(id).delete();
+        loadKnowledgeFiles();
+      } catch (error) {
+        showToast('Error: ' + error.message, 'error');
+      }
+    }
+
+  </script>
+  <script>
     // ═══ SIDEBAR JS ═══
     function showSection(name, btn) {
       document.querySelectorAll('.page-section').forEach(s => s.classList.add('section-hidden'));
       const target = document.getElementById('section-' + name);
       if (target) {
         target.classList.remove('section-hidden');
-        // Forzar visibilidad de fade-in que el IntersectionObserver no detectó
         target.querySelectorAll('.fade-in:not(.visible)').forEach((el, i) => {
           setTimeout(() => el.classList.add('visible'), i * 80);
         });
       }
+      // Lazy-load section data on first visit
+      if (name === 'contacts') initContacts();
+      if (name === 'businesses') initBusinesses();
+      if (name === 'documents') initDocuments();
+
       document.querySelectorAll('.sidebar-nav .sidebar-btn').forEach(b => b.classList.remove('active'));
-      document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
       if (btn) btn.classList.add('active');
+      else {
+        // Find matching sidebar button
+        const allBtns = document.querySelectorAll('.sidebar-nav .sidebar-btn');
+        allBtns.forEach(b => {
+          if (b.getAttribute('onclick') && b.getAttribute('onclick').includes("'" + name + "'")) b.classList.add('active');
+        });
+      }
       history.replaceState(null, '', '#' + name);
     }
 
@@ -2172,7 +4679,7 @@
     // Restore section from hash on load
     window.addEventListener('DOMContentLoaded', function() {
       const hash = window.location.hash.replace('#', '');
-      const validSections = ['inicio', 'agentes', 'planes', 'conexiones'];
+      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'documents'];
       if (hash && validSections.includes(hash)) {
         const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
         showSection(hash, btn);
@@ -2190,7 +4697,7 @@
         dot.className = 'status-dot green pulse';
         label.textContent = 'WhatsApp activo';
         btn.textContent = 'Ver';
-        btn.onclick = () => showSection('inicio', document.querySelector('.sidebar-btn'));
+        btn.onclick = () => showSection('home', document.querySelector('.sidebar-btn'));
       } else {
         dot.className = 'status-dot red';
         label.textContent = 'WhatsApp';
@@ -2217,7 +4724,895 @@
     }
   </script>
   <script src="toast.js"></script>
-    <footer class="page-footer">
+    
+  <div id="section-contacts" class="page-section section-hidden">
+    <div style="max-width:1200px;margin:0 auto;padding:40px 24px 80px;">
+    <!-- View tabs -->
+    <div class="view-tabs">
+      <button class="view-tab active" onclick="switchContactsView('groups',this)">Grupos de Contacto</button>
+      <button class="view-tab" onclick="switchContactsView('conversations',this)">Conversaciones</button>
+    </div>
+
+    <!-- ══════════ GROUPS VIEW ══════════ -->
+    <div id="groupsView">
+
+      <!-- Group cards -->
+      <div id="groupCardsSection">
+        <div class="groups-header">
+          <h2>Grupos de Contacto</h2>
+          <button class="btn-primary" onclick="openCreateGroupModal()">+ Crear Grupo</button>
+        </div>
+        <div class="groups-grid" id="groupCards">
+          <div class="empty-state" style="grid-column:1/-1;">
+            <div class="empty-state-icon">👥</div>
+            <p>Cargando grupos...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group detail -->
+      <div id="groupDetailView" style="display:none;">
+        <div class="group-detail-header">
+          <button class="btn-secondary" onclick="backToGroups()">← Volver</button>
+          <h2 id="groupDetailTitle">Grupo</h2>
+          <button class="btn-primary" onclick="openEditGroupModal()">Editar</button>
+          <button class="btn-danger" onclick="deleteGroup(currentGroupId)">Eliminar</button>
+        </div>
+
+        <!-- Config -->
+        <div class="group-config">
+          <div class="toggle-row">
+            <span style="font-weight:600;color:var(--text-dark);font-size:0.9rem;">Respuesta automática</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="cfgAutoRespond">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row">
+            <span style="font-weight:600;color:var(--text-dark);font-size:0.9rem;">Mensajes proactivos</span>
+            <label class="toggle-switch">
+              <input type="checkbox" id="cfgProactive">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="toggle-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+            <span style="font-weight:600;color:var(--text-dark);font-size:0.9rem;">Tono / Instrucciones</span>
+            <textarea id="cfgTone" rows="3" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:var(--radius-sm);font-family:inherit;font-size:0.88rem;resize:vertical;" placeholder="Ej: Habla de forma profesional y cordial..."></textarea>
+          </div>
+          <div style="margin-top:14px;">
+            <button class="btn-primary" onclick="updateGroupConfig(currentGroupId)">Guardar configuración</button>
+          </div>
+        </div>
+
+        <!-- Contacts table -->
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+          <h3 style="color:var(--text-dark);font-size:1rem;font-weight:700;">Contactos del grupo</h3>
+          <button class="btn-secondary" onclick="toggleAddContactForm()">+ Agregar contacto</button>
+        </div>
+
+        <div style="overflow-x:auto;">
+          <table class="contacts-table">
+            <thead>
+              <tr>
+                <th>Teléfono</th>
+                <th>Nombre</th>
+                <th>Notas</th>
+                <th>Proactivo</th>
+                <th>Mover a</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="groupContactsBody">
+              <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Cargando...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Add contact inline form -->
+        <div class="add-contact-form" id="addContactForm">
+          <h4>Nuevo contacto</h4>
+          <div class="inline-grid">
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Teléfono *</label>
+              <input type="tel" id="newContactPhone" placeholder="5491112345678">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Nombre</label>
+              <input type="text" id="newContactName" placeholder="Nombre">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Notas</label>
+              <input type="text" id="newContactNotes" placeholder="Opcional">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn-primary" onclick="addContactToGroup()">Agregar</button>
+            <button class="btn-secondary" onclick="toggleAddContactForm()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ CONVERSATIONS VIEW ══════════ -->
+    <div id="conversationsView" style="display:none;">
+      <div class="contacts-layout">
+        <!-- Conversations List -->
+        <div class="card fade-in">
+          <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Conversaciones de WhatsApp</h2>
+          <input type="text" class="search-bar" id="contactSearch" placeholder="Buscar contacto..." oninput="applyContactFilter()">
+          <div class="filter-tabs" id="filterTabs">
+            <button class="filter-tab active" onclick="setFilter('all',this)">Todos <span class="count" id="countAll">0</span></button>
+            <button class="filter-tab" onclick="setFilter('lead',this)">Leads <span class="count" id="countLead">0</span></button>
+            <button class="filter-tab" onclick="setFilter('cliente',this)">Clientes <span class="count" id="countCliente">0</span></button>
+            <button class="filter-tab" onclick="setFilter('otro',this)">Otros <span class="count" id="countOtro">0</span></button>
+          </div>
+          <div class="conversations-list" id="conversationsList">
+            <div class="empty-state">
+              <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg></div>
+              <p>Cargando conversaciones...</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CRM Panel -->
+        <div class="card fade-in">
+          <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Información del Contacto</h2>
+          <div class="empty-state" id="emptyState">
+            <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+            <p>Selecciona un contacto para editar su información</p>
+          </div>
+          <form class="crm-form" id="crmForm" onsubmit="saveContact(event)">
+            <div class="form-group">
+              <label>Nombre</label>
+              <input type="text" id="contactName" disabled placeholder="Nombre del contacto" style="background: var(--bg-light); color: var(--text-muted);">
+            </div>
+            <div class="form-group">
+              <label>Teléfono</label>
+              <input type="tel" id="contactPhone" disabled placeholder="Número de teléfono" style="background: var(--bg-light); color: var(--text-muted);">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input type="email" id="contactEmail" placeholder="email@example.com">
+            </div>
+            <div class="form-group">
+              <label>Tipo de contacto</label>
+              <select id="contactType">
+                <option value="lead">🟡 Lead</option>
+                <option value="cliente">🟢 Cliente</option>
+                <option value="otro">⚪ Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Estado</label>
+              <select id="contactStatus">
+                <option value="lead">🟡 Lead</option>
+                <option value="client">🟢 Cliente</option>
+                <option value="lost">🔴 Perdido</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Notas</label>
+              <textarea id="contactNotes" placeholder="Agrega notas sobre este contacto..."></textarea>
+            </div>
+            <button type="submit" class="btn-save">Guardar cambios</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ CREATE / EDIT GROUP MODAL ══ -->
+  <div class="modal-overlay" id="createGroupModal">
+    <div class="modal-box">
+      <h3 id="groupModalTitle">Crear Grupo</h3>
+      <div class="form-group">
+        <label>Nombre *</label>
+        <input type="text" id="groupModalName" placeholder="Ej: Clientes VIP">
+      </div>
+      <div class="form-group">
+        <label>Icono (emoji)</label>
+        <input type="text" id="groupModalIcon" placeholder="👥" maxlength="4" style="width:80px;">
+      </div>
+      <div class="form-group">
+        <label>Tono / Instrucciones</label>
+        <textarea id="groupModalTone" rows="3" placeholder="Ej: Responde de forma amigable y concisa..."></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeGroupModal()">Cancelar</button>
+        <button class="btn-primary" onclick="submitGroupModal()">Guardar</button>
+      </div>
+    </div>
+  </div>
+  
+
+
+
+    </div>
+  </div>
+
+  <div id="section-businesses" class="page-section section-hidden">
+<!-- ═══ WHATSAPP STATUS BANNER ═══ -->
+<div id="waBanner" class="wa-banner disconnected" style="max-width:1100px;margin:20px auto 0;padding:0 20px;">
+  <span id="waStatusText">Verificando WhatsApp...</span>
+  <button id="waActionBtn" class="wa-btn-connect hidden" onclick="toggleWhatsApp()">Conectar</button>
+</div>
+
+<!-- ═══ BUSINESS LIST VIEW ═══ -->
+<div id="businessListView">
+  <div class="biz-list-header">
+    <h2>Mis Negocios</h2>
+    <button class="btn-sm btn-primary" onclick="openCreateBizModal()">+ Crear Negocio</button>
+  </div>
+  <div id="businessCards" class="biz-cards">
+    <div class="biz-empty" style="grid-column:1/-1;">
+      <div class="biz-empty-icon">🏢</div>
+      <h3>Cargando negocios...</h3>
+      <p>Un momento por favor</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BUSINESS DETAIL HEADER ═══ -->
+<div id="businessDetailHeader">
+  <button class="biz-back-btn" onclick="backToList()" title="Volver a la lista">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+  </button>
+  <span class="biz-detail-name" id="bizDetailName">—</span>
+  <button class="biz-edit-btn" onclick="openEditBizModal()">Editar</button>
+  <button class="biz-delete-btn" onclick="confirmDeleteBusiness()">Eliminar</button>
+</div>
+
+<!-- ═══ TABS ═══ -->
+<div class="tabs-container" id="tabsContainer">
+  <div class="tabs-nav">
+    <button class="tab-btn active" onclick="switchBizTab('perfil', event)">Perfil</button>
+    <button class="tab-btn" onclick="switchBizTab('products', event)">Productos</button>
+    <button class="tab-btn" onclick="switchBizTab('recognize', event)">Como Reconocer</button>
+    <button class="tab-btn" onclick="switchBizTab('expert', event)">Chat Experto</button>
+    <button class="tab-btn" onclick="switchBizTab('docs', event)">Documentos</button>
+    <button class="tab-btn" onclick="switchBizTab('test', event)">Testear MIIA</button>
+    <button class="tab-btn" onclick="switchBizTab('cobros', event)">Cobros</button>
+    <button class="tab-btn" onclick="switchBizTab('schedule', event)" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Horarios</button>
+    <button class="tab-btn" onclick="switchBizTab('config', event)" style="display:inline-flex;align-items:center;gap:6px;"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> Configuración</button>
+  </div>
+
+  <div class="tab-content">
+
+    <!-- ════ TAB 0: PERFIL ════ -->
+    <div id="tab-perfil" class="tab-panel active">
+      <h3 class="section-title">Perfil del Negocio</h3>
+      <p class="section-desc">Información principal de este negocio. MIIA usará estos datos para presentarse y responder consultas sobre el negocio.</p>
+
+      <div class="profile-form">
+        <div class="form-row">
+          <label>Nombre del negocio <span style="color:var(--danger)">*</span></label>
+          <input type="text" id="bizProfileName" placeholder="Ej: Tienda Moda Joven">
+        </div>
+        <div class="form-row">
+          <label>Email de contacto</label>
+          <input type="email" id="bizProfileEmail" placeholder="contacto@minegocio.com">
+        </div>
+        <div class="form-row">
+          <label>Dirección</label>
+          <input type="text" id="bizProfileAddress" placeholder="Ej: Calle 123, Bogotá">
+        </div>
+        <div class="form-row">
+          <label>Sitio web</label>
+          <input type="url" id="bizProfileWebsite" placeholder="https://minegocio.com">
+        </div>
+        <div class="form-row">
+          <label>Link demo / catálogo</label>
+          <input type="url" id="bizProfileDemoLink" placeholder="https://demo.minegocio.com">
+        </div>
+        <div class="form-row">
+          <label>Descripción del negocio</label>
+          <textarea id="bizProfileDescription" rows="4" placeholder="Describe brevemente qué hace tu negocio, a quién va dirigido, qué lo diferencia..."></textarea>
+        </div>
+        <div class="form-row">
+          <label>Número de WhatsApp</label>
+          <input type="tel" id="bizProfileWhatsapp" placeholder="Ej: 5491112345678 (sin + ni espacios)">
+        </div>
+        <div class="form-row">
+          <label>Tu rol en el negocio</label>
+          <input type="text" id="bizProfileOwnerRole" placeholder="Ej: Dueño, Gerente, Vendedor...">
+        </div>
+        <div class="grid-toolbar">
+          <button class="btn-sm btn-primary" onclick="saveBusinessProfile()">Guardar perfil</button>
+          <span id="profileStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ TAB 1: PRODUCTOS ════ -->
+    <div id="tab-products" class="tab-panel">
+      <h3 class="section-title">Productos y Servicios</h3>
+      <p class="section-desc">Carga tus productos para que MIIA sepa que ofrecer a tus clientes. Cada linea guardada se incorpora inmediatamente al cerebro de tu MIIA.</p>
+
+      <div style="overflow-x:auto;">
+        <table class="grid-table" id="productsTable">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Descripcion</th>
+              <th>Precio base</th>
+              <th>Precio promo</th>
+              <th>Stock</th>
+              <th style="width:100px;">Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="productsBody"></tbody>
+        </table>
+      </div>
+      <div class="grid-toolbar">
+        <button class="btn-sm btn-outline" onclick="addProductRow()">+ Agregar linea</button>
+        <span id="productStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+      </div>
+    </div>
+
+    <!-- ════ TAB 2: COMO RECONOCER ════ -->
+    <div id="tab-recognize" class="tab-panel">
+      <h3 class="section-title">Como MIIA reconoce a tus contactos</h3>
+      <p class="section-desc">Define palabras clave para que MIIA clasifique automaticamente a cada contacto como Lead, Cliente o descartado.</p>
+
+      <!-- Leads -->
+      <div style="margin-bottom:32px;">
+        <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Leads (Potenciales Clientes)</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">Palabras que indican interes de compra</p>
+        <table class="grid-table">
+          <thead><tr><th>Palabra o frase clave</th><th>Ejemplo de contexto</th><th style="width:60px;"></th></tr></thead>
+          <tbody id="leadKeywordsBody"></tbody>
+        </table>
+        <button class="btn-sm btn-outline" style="margin-top:8px;" onclick="addKeywordRow('lead')">+ Agregar</button>
+      </div>
+
+      <!-- Clientes -->
+      <div style="margin-bottom:32px;">
+        <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Clientes (Ya compraron)</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:12px;">Palabras que indican que ya son clientes</p>
+        <table class="grid-table">
+          <thead><tr><th>Palabra o frase clave</th><th>Ejemplo de contexto</th><th style="width:60px;"></th></tr></thead>
+          <tbody id="clientKeywordsBody"></tbody>
+        </table>
+        <button class="btn-sm btn-outline" style="margin-top:8px;" onclick="addKeywordRow('client')">+ Agregar</button>
+      </div>
+
+      <!-- Otros -->
+      <div style="background:rgba(102,126,234,0.04);padding:20px;border-radius:var(--radius-md);">
+        <h4 style="font-weight:700;color:var(--text-dark);margin-bottom:4px;">Otros (Familia, amigos, desconocidos)</h4>
+        <p style="font-size:0.85rem;color:var(--text-muted);">Todos los contactos que NO activen palabras clave de Lead ni de Cliente en sus primeros 10 mensajes seran clasificados como "Otros". MIIA no los atendera comercialmente.</p>
+      </div>
+
+      <div class="grid-toolbar" style="margin-top:20px;">
+        <button class="btn-sm btn-primary" onclick="saveContactRules()">Guardar reglas</button>
+        <span id="rulesStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+      </div>
+    </div>
+
+    <!-- ════ TAB 3: CHAT EXPERTO ════ -->
+    <div id="tab-expert" class="tab-panel">
+      <h3 class="section-title">Entrenamiento Experto</h3>
+      <p class="section-desc">Conversa con MIIA para ensenarle la logica de tu negocio. Cada sesion se guarda por dia con un resumen.</p>
+
+      <div class="chat-layout">
+        <!-- Sessions sidebar -->
+        <div class="sessions-panel">
+          <div class="sessions-header">
+            <h3>Sesiones</h3>
+            <button class="btn-sm btn-primary" style="width:100%;" onclick="startNewSession()">+ Nueva sesion</button>
+          </div>
+          <div class="sessions-list" id="sessionsList">
+            <!-- Fixed tags -->
+            <div class="session-tag fixed" onclick="switchBizTab('docs', event)">
+              <span><svg style="width:14px;height:14px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> Documentos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat area -->
+        <div class="chat-panel">
+          <div class="chat-header">
+            <div class="avatar"><svg style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4.5 4.5 0 0 0-3.6 7.2L12 14l3.6-4.8A4.5 4.5 0 0 0 12 2z"/><path d="M12 14v8"/></svg></div>
+            <div>
+              <h3>MIIA — Modo Entrenamiento</h3>
+              <p>Explicale todo sobre tu negocio</p>
+            </div>
+          </div>
+          <div class="chat-messages" id="expertMessages">
+            <div class="message miia">
+              <div class="message-bubble">Hola! Soy MIIA. Estoy lista para aprender sobre tu negocio.<br><br>Puedes explicarme como ofrecer tus productos, como cerrar ventas, como manejar objeciones... todo lo que necesite saber para atender a tus clientes.</div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input type="text" id="expertInput" placeholder="Preguntale o conversá... Para guardar: 'APRENDE: [info]'" onkeypress="if(event.key==='Enter')sendExpertMessage()">
+            <button onclick="sendExpertMessage()">Enviar</button>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:12px;display:flex;gap:10px;">
+        <button class="btn-sm btn-primary" onclick="saveCurrentSession()">Guardar sesion de hoy</button>
+        <span id="sessionSaveStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+      </div>
+    </div>
+
+    <!-- ════ TAB 4: DOCUMENTOS ════ -->
+    <div id="tab-docs" class="tab-panel">
+      <div class="docs-link-card">
+        <div class="icon"><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></div>
+        <h3>Documentos y Archivos de Conocimiento</h3>
+        <p>Los archivos que subas aqui seran estudiados por MIIA y formaran parte de su cerebro. Incluye cotizaciones, templates y archivos de referencia.</p>
+        <a href="#" id="docsLink" onclick="showSection('documents')">Gestionar Documentos</a>
+      </div>
+    </div>
+
+    <!-- ════ TAB 5: TESTEAR MIIA ════ -->
+    <div id="tab-test" class="tab-panel">
+      <h3 class="section-title">Testear MIIA</h3>
+      <p class="section-desc">Habla con tu MIIA como si fueras un cliente. La conversacion de prueba NO se guarda como lead real.</p>
+
+      <div class="test-chat">
+        <div class="test-header">
+          <div class="avatar"><svg style="width:24px;height:24px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6M10 9V3h4v6l5 10a2 2 0 0 1-1.8 2.8H6.8A2 2 0 0 1 5 19z"/></svg></div>
+          <div>
+            <h3 style="font-size:1rem;font-weight:600;">Modo Prueba</h3>
+            <p style="font-size:0.8rem;opacity:0.85;">Hablas con MIIA como si fueras un cliente</p>
+          </div>
+          <button class="test-reset" onclick="resetTest()">Reiniciar prueba</button>
+        </div>
+        <div class="chat-messages" id="testMessages">
+          <div class="message miia">
+            <div class="message-bubble">Hola! Bienvenido. En que puedo ayudarte hoy?</div>
+          </div>
+        </div>
+        <div class="chat-input">
+          <input type="text" id="testInput" placeholder="Escribe como si fueras un cliente..." onkeypress="if(event.key==='Enter')sendTestMessage()">
+          <button onclick="sendTestMessage()">Enviar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ TAB 6: COBROS ════ -->
+    <div id="tab-cobros" class="tab-panel">
+      <h3 class="section-title">Métodos de Cobro</h3>
+      <p class="section-desc">Activa los métodos de pago que aceptas y escribe las instrucciones que MIIA debe dar a tus clientes cuando pregunten cómo pagar.</p>
+
+      <div class="payment-grid" id="paymentGrid">
+        <!-- Rendered by JS -->
+      </div>
+
+      <div style="background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.12);border-radius:var(--radius-md);padding:16px;margin-bottom:20px;">
+        <p style="font-size:0.85rem;color:var(--text-muted);"><svg style="width:14px;height:14px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg> <strong style="color:var(--text-dark);">Tip:</strong> Cuando un cliente pregunte "¿cómo pago?" o "¿qué métodos de pago tienen?", MIIA responderá automáticamente con los métodos que tengas activos y sus instrucciones.</p>
+      </div>
+
+      <div class="grid-toolbar">
+        <button class="btn-sm btn-primary" onclick="savePaymentMethods()">Guardar métodos de cobro</button>
+        <span id="cobrosStatus" style="font-size:0.82rem;color:var(--accent);font-weight:600;margin-left:auto;"></span>
+      </div>
+    </div>
+
+    <!-- ════ TAB 7: HORARIOS Y SEGUIMIENTO ════ -->
+    <div id="tab-schedule" class="tab-panel">
+      <h3 class="section-title">Horarios y Seguimiento de Leads</h3>
+      <p class="section-desc">Configurá cuándo MIIA responde, cómo hace seguimiento y cómo detecta la intención del lead.</p>
+
+      <div style="max-width:720px;display:flex;flex-direction:column;gap:24px;">
+
+        <!-- A) DISPONIBILIDAD -->
+        <div class="payment-card" style="display:flex;flex-direction:column;gap:14px;">
+          <h4 style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">🕐</span> Disponibilidad
+          </h4>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:8px;">Días activos</label>
+            <div style="display:flex;gap:6px;flex-wrap:wrap;" id="scheduleDays">
+              <label class="day-chip"><input type="checkbox" value="1" checked> Lun</label>
+              <label class="day-chip"><input type="checkbox" value="2" checked> Mar</label>
+              <label class="day-chip"><input type="checkbox" value="3" checked> Mié</label>
+              <label class="day-chip"><input type="checkbox" value="4" checked> Jue</label>
+              <label class="day-chip"><input type="checkbox" value="5" checked> Vie</label>
+              <label class="day-chip"><input type="checkbox" value="6"> Sáb</label>
+              <label class="day-chip"><input type="checkbox" value="0"> Dom</label>
+            </div>
+          </div>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;">
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Hora inicio</label>
+              <input type="time" id="scheduleStart" value="09:00" placeholder="09:00" style="padding:8px 12px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+            </div>
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Hora fin</label>
+              <input type="time" id="scheduleEnd" value="21:00" placeholder="21:00" style="padding:8px 12px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+            </div>
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Zona horaria</label>
+              <select id="scheduleTZ" style="padding:8px 12px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+                <option value="America/Argentina/Buenos_Aires">Argentina (GMT-3)</option>
+                <option value="America/Bogota">Colombia (GMT-5)</option>
+                <option value="America/Mexico_City">México (GMT-6)</option>
+                <option value="America/Santiago">Chile (GMT-4)</option>
+                <option value="America/Lima">Perú (GMT-5)</option>
+                <option value="America/Caracas">Venezuela (GMT-4)</option>
+                <option value="Europe/Madrid">España (GMT+1/+2)</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje fuera de horario</label>
+            <input type="text" id="scheduleOffMsg" placeholder="Mensaje fuera de horario" value="Gracias por escribir. Nuestro horario de atención es de lunes a viernes de 9:00 a 21:00. Te responderemos a primera hora." style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);">¿Responder fuera de horario?</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="scheduleAutoReply">
+              <span class="toggle-track"></span>
+            </label>
+            <span style="font-size:0.8rem;color:var(--text-muted);">Si activo, envía el mensaje automáticamente</span>
+          </div>
+        </div>
+
+        <!-- B) SEGUIMIENTO DE LEADS -->
+        <div class="payment-card" style="display:flex;flex-direction:column;gap:14px;">
+          <h4 style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">🔄</span> Seguimiento de Leads
+          </h4>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:end;">
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Seguimiento cada</label>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input type="number" id="followupDays" value="3" placeholder="3" min="1" max="30" style="width:60px;padding:8px 10px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
+                <span style="font-size:0.88rem;color:var(--text-muted);">días sin respuesta</span>
+              </div>
+            </div>
+            <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Máx. seguimientos</label>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input type="number" id="followupMax" value="3" placeholder="3" min="1" max="10" style="width:60px;padding:8px 10px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
+                <span style="font-size:0.88rem;color:var(--text-muted);">intentos antes de parar</span>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje 1er seguimiento</label>
+            <input type="text" id="followupMsg1" placeholder="Primer mensaje de seguimiento" value="Hola, ¿pudiste revisar la información que te envié? Quedo atento a cualquier consulta." style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje último seguimiento</label>
+            <input type="text" id="followupMsgLast" placeholder="Último mensaje de seguimiento" value="Solo quería saber si seguís interesado. Si no es el momento, no hay problema. ¡Éxitos!" style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Después del último intento sin respuesta</label>
+            <select id="followupFinal" style="padding:8px 12px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+              <option value="archive">Archivar lead (no contactar más)</option>
+              <option value="notify">Solo notificar al vendedor</option>
+              <option value="retry30">Reintentar en 30 días</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- C) DETECCIÓN DE INTENCIÓN -->
+        <div class="payment-card" style="display:flex;flex-direction:column;gap:14px;">
+          <h4 style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">🎯</span> Detección de Intención
+          </h4>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Señales de INTERÉS (lead caliente)</label>
+            <textarea id="intentHot" rows="3" placeholder="Ej: me interesa, quiero cotización, cuánto cuesta..." style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;font-family:inherit;">me interesa, quiero cotización, cuánto cuesta, necesito información, agendemos, demo, presupuesto, precio</textarea>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Separadas por coma. MIIA etiqueta como HOT y notifica al vendedor.</p>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Señales de NO interés (lead frío)</label>
+            <textarea id="intentCold" rows="3" placeholder="Ej: no me interesa, ahora no, ya tengo proveedor..." style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;font-family:inherit;">no me interesa, ahora no, ya tengo, no necesito, dejame en paz, no gracias, otro momento</textarea>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Separadas por coma. MIIA respeta el silencio y no vuelve a contactar.</p>
+          </div>
+          <div>
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Si el lead dice que NO le interesa</label>
+            <select id="intentColdAction" style="padding:8px 12px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);">
+              <option value="silence">Respetar silencio total (no contactar más)</option>
+              <option value="retry60">Reintentar en 60 días con mensaje suave</option>
+              <option value="notify_only">Solo notificar al vendedor, MIIA no responde</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- D) MODO SILENCIO -->
+        <div class="payment-card" style="display:flex;flex-direction:column;gap:14px;">
+          <h4 style="font-weight:700;color:var(--text-dark);font-size:1rem;display:flex;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;">🤫</span> Modo Silencio
+          </h4>
+          <p style="font-size:0.85rem;color:var(--text-muted);margin:0;">Cuando un lead o el vendedor dice "Chau MIIA", MIIA se retira de ese chat. No responde más hasta que el lead envíe un nuevo mensaje.</p>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);">Vendedor puede reactivar desde el dashboard</label>
+            <label class="toggle-switch">
+              <input type="checkbox" id="silenceBreak" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+
+        <!-- GUARDAR -->
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="btn-sm btn-primary" onclick="saveScheduleConfig()" style="padding:10px 28px;font-size:0.95rem;">Guardar configuración</button>
+          <span id="scheduleStatus" style="font-size:0.85rem;color:var(--accent);font-weight:600;"></span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ════ TAB 8: CONFIGURACIÓN ════ -->
+    <div id="tab-config" class="tab-panel">
+      <h3 class="section-title">Configuración de MIIA</h3>
+      <p class="section-desc">Ajustes avanzados del comportamiento de tu asistente.</p>
+
+      <div style="max-width:600px;">
+        <div class="payment-card" style="margin-bottom:20px;">
+          <div class="payment-card-header" style="align-items:flex-start;gap:16px;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:12px;width:100%;">
+              <span><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="9" cy="16" r="1"/><circle cx="15" cy="16" r="1"/><path d="M12 2v4M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+              <div style="flex:1;">
+                <h4 style="color:var(--text-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">Humanizador de respuestas</h4>
+                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">Hace que MIIA introduzca pequeños errores tipográficos ocasionales (2% de mensajes) y tome pausas variables antes de responder. Útil para que WhatsApp no detecte comportamiento automático.</p>
+              </div>
+              <label class="toggle-switch" style="flex-shrink:0;">
+                <input type="checkbox" id="humanizerToggle" onchange="saveHumanizerPref(this.checked)">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,229,255,0.06);border-radius:8px;width:100%;">
+              <span style="font-size:0.85rem;color:var(--text-muted);">Estado actual:</span>
+              <span id="humanizerLabel" style="font-size:0.85rem;font-weight:700;color:var(--primary);">Cargando...</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:12px;padding:16px 20px;">
+          <p style="font-size:0.82rem;color:var(--text-muted);line-height:1.7;">
+            <strong style="color:var(--text-dark);">Tip:</strong> También puedes activar o desactivar el humanizador enviando un mensaje a MIIA por WhatsApp:<br>
+            <code style="background:rgba(0,0,0,0.3);padding:2px 8px;border-radius:4px;font-size:0.8rem;">"desactivar humanizador"</code> o <code style="background:rgba(0,0,0,0.3);padding:2px 8px;border-radius:4px;font-size:0.8rem;">"activar humanizador"</code>
+          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══ QR MODAL ═══ -->
+<div id="qrModal" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="modal-card" style="max-width:420px;width:100%">
+    <h3>Conectar WhatsApp</h3>
+
+    <!-- Tabs QR / Código -->
+    <div style="display:flex;gap:0;border:1px solid var(--border-color);border-radius:8px;margin-bottom:20px;overflow:hidden;">
+      <button id="waTabQR" onclick="switchWaTab('qr')" style="flex:1;padding:9px;font-size:0.85rem;border:none;cursor:pointer;background:var(--accent-primary);color:white;font-weight:600;transition:background .2s;">
+        📷 Escanear QR
+      </button>
+      <button id="waTabCode" onclick="switchWaTab('code')" style="flex:1;padding:9px;font-size:0.85rem;border:none;cursor:pointer;background:transparent;color:var(--text-muted);font-weight:600;transition:background .2s;">
+        🔢 Código (móvil)
+      </button>
+    </div>
+
+    <!-- Panel QR -->
+    <div id="waPanelQR">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px;text-align:center;">Abrí WhatsApp → Dispositivos vinculados → Vincular dispositivo → escaneá</p>
+      <div id="qrCode"><p style="color:var(--text-muted);text-align:center;">Generando QR...</p></div>
+    </div>
+
+    <!-- Panel Código -->
+    <div id="waPanelCode" style="display:none;">
+      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px;text-align:center;">
+        Ingresá tu número de WhatsApp en formato internacional (sin + ni espacios).<br>
+        Luego en tu celular: WhatsApp → Dispositivos vinculados → Vincular con número de teléfono → ingresá el código de 8 dígitos.
+      </p>
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <input id="pairingPhone" type="tel" placeholder="ej: 5491112345678" style="flex:1;padding:10px 12px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;color:var(--text-primary);font-size:0.9rem;outline:none;">
+        <button onclick="requestPairingCode()" style="padding:10px 16px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">
+          Generar código
+        </button>
+      </div>
+      <div id="pairingCodeDisplay" style="display:none;text-align:center;padding:20px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:12px;">
+        <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:8px;">Tu código de vinculación (válido ~60s):</p>
+        <div id="pairingCodeValue" style="font-size:2.2rem;font-weight:800;letter-spacing:8px;color:#7C3AED;font-family:monospace;"></div>
+        <p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;">Ingresalo en WhatsApp → Dispositivos vinculados → Vincular con número de teléfono</p>
+      </div>
+      <div id="pairingError" style="display:none;color:#f87171;font-size:0.82rem;text-align:center;margin-top:8px;"></div>
+    </div>
+
+    <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="document.getElementById('qrModal').classList.add('hidden')">Cerrar</button>
+  </div>
+</div>
+
+<!-- ═══ CREATE BUSINESS MODAL ═══ -->
+<div id="createBizModal" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="biz-modal-card">
+    <h3>Crear Negocio</h3>
+    <div class="form-row">
+      <label>Nombre del negocio <span style="color:var(--danger)">*</span></label>
+      <input type="text" id="createBizName" placeholder="Ej: Tienda Moda Joven">
+    </div>
+    <div class="form-row">
+      <label>Descripción</label>
+      <textarea id="createBizDescription" rows="3" placeholder="Describe brevemente tu negocio..."></textarea>
+    </div>
+    <div class="form-row">
+      <label>Email de contacto</label>
+      <input type="email" id="createBizEmail" placeholder="contacto@minegocio.com">
+    </div>
+    <div class="form-row">
+      <label>Dirección</label>
+      <input type="text" id="createBizAddress" placeholder="Ej: Calle 123, Bogotá">
+    </div>
+    <div class="form-row">
+      <label>Sitio web</label>
+      <input type="url" id="createBizWebsite" placeholder="https://minegocio.com">
+    </div>
+    <div class="form-row">
+      <label>Número de WhatsApp</label>
+      <input type="tel" id="createBizWhatsapp" placeholder="Ej: 5491112345678">
+    </div>
+    <div class="form-row">
+      <label>Tu rol en el negocio</label>
+      <input type="text" id="createBizOwnerRole" placeholder="Ej: Dueño, Gerente...">
+    </div>
+    <div class="form-actions">
+      <button class="btn-sm btn-primary" onclick="submitCreateBusiness()">Crear Negocio</button>
+      <button class="btn-sm btn-outline" onclick="document.getElementById('createBizModal').classList.add('hidden')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EDIT BUSINESS MODAL ═══ -->
+<div id="editBizModal" class="modal-overlay hidden" onclick="if(event.target===this)this.classList.add('hidden')">
+  <div class="biz-modal-card">
+    <h3>Editar Negocio</h3>
+    <div class="form-row">
+      <label>Nombre del negocio <span style="color:var(--danger)">*</span></label>
+      <input type="text" id="editBizName" placeholder="Ej: Tienda Moda Joven">
+    </div>
+    <div class="form-row">
+      <label>Descripción</label>
+      <textarea id="editBizDescription" rows="3" placeholder="Describe brevemente tu negocio..."></textarea>
+    </div>
+    <div class="form-row">
+      <label>Email de contacto</label>
+      <input type="email" id="editBizEmail" placeholder="contacto@minegocio.com">
+    </div>
+    <div class="form-row">
+      <label>Dirección</label>
+      <input type="text" id="editBizAddress" placeholder="Ej: Calle 123, Bogotá">
+    </div>
+    <div class="form-row">
+      <label>Sitio web</label>
+      <input type="url" id="editBizWebsite" placeholder="https://minegocio.com">
+    </div>
+    <div class="form-row">
+      <label>Link demo / catálogo</label>
+      <input type="url" id="editBizDemoLink" placeholder="https://demo.minegocio.com">
+    </div>
+    <div class="form-row">
+      <label>Número de WhatsApp</label>
+      <input type="tel" id="editBizWhatsapp" placeholder="Ej: 5491112345678">
+    </div>
+    <div class="form-row">
+      <label>Tu rol en el negocio</label>
+      <input type="text" id="editBizOwnerRole" placeholder="Ej: Dueño, Gerente...">
+    </div>
+    <div class="form-actions">
+      <button class="btn-sm btn-primary" onclick="submitEditBusiness()">Guardar cambios</button>
+      <button class="btn-sm btn-outline" onclick="document.getElementById('editBizModal').classList.add('hidden')">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+  </div>
+
+  <div id="section-documents" class="page-section section-hidden">
+    <div style="max-width:1000px;margin:0 auto;padding:40px 24px 80px;">
+  <div class="container">
+    <div class="card fade-in">
+      <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> Documentos y Recursos</h2>
+
+      <div class="tabs">
+        <button class="tab active" onclick="switchDocTab('quotes')"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg> Cotizaciones</button>
+        <button class="tab" onclick="switchDocTab('templates')"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Templates</button>
+        <button class="tab" onclick="switchDocTab('knowledge')"><svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Archivos</button>
+      </div>
+
+      <!-- Tab 1: Cotizaciones -->
+      <div id="quotes" class="tab-content active">
+        <h3 style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 16px;">Crear Cotización</h3>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Nombre del Cliente</label>
+            <input type="text" id="quoteClient" placeholder="Ej: Juan Pérez">
+          </div>
+          <div class="form-group">
+            <label>Producto/Servicio</label>
+            <input type="text" id="quoteProduct" placeholder="Ej: Desarrollo Web">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio (USD)</label>
+            <input type="number" id="quotePrice" placeholder="1000" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label>Fecha de Vencimiento</label>
+            <input type="date" id="quoteExpiry" placeholder="Fecha de vencimiento">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea id="quoteDesc" placeholder="Detalla lo que incluye la cotización..."></textarea>
+        </div>
+        <button class="btn" onclick="generateQuotePDF()">📥 Descargar PDF</button>
+
+        <div id="quotesList" style="margin-top: 24px;">
+          <h4 style="color: var(--text-dark); margin-bottom: 12px;">Cotizaciones Recientes</h4>
+          <div class="item-list" id="quotesListItems">
+            <div class="empty-state">
+              <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></div>
+              <p>Sin cotizaciones aún</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 2: Templates -->
+      <div id="templates" class="tab-content">
+        <h3 style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 16px;">Crear Template</h3>
+        <div class="form-group">
+          <label>Nombre del Template</label>
+          <input type="text" id="templateName" placeholder="Ej: Saludo inicial">
+        </div>
+        <div class="form-group">
+          <label>Texto del Template</label>
+          <textarea id="templateText" placeholder="Escribe el mensaje que MIIA usará como respuesta..."></textarea>
+        </div>
+        <button class="btn" onclick="createTemplate()">✅ Guardar Template</button>
+
+        <div id="templatesList" style="margin-top: 24px;">
+          <h4 style="color: var(--text-dark); margin-bottom: 12px;">Mis Templates</h4>
+          <div class="item-list" id="templatesListItems">
+            <div class="empty-state">
+              <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+              <p>Sin templates aún</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab 3: Archivos -->
+      <div id="knowledge" class="tab-content">
+        <h3 style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 16px;">Subir Archivos de Conocimiento</h3>
+        <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 0.9rem;">Sube catálogos, PDFs o documentos con información sobre tu negocio. MIIA los usará para responder mejor a tus clientes.</p>
+        <label class="file-input-label">
+          <svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Seleccionar Archivo
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" onchange="uploadFile(event)">
+        </label>
+
+        <div id="knowledgeList" style="margin-top: 24px;">
+          <h4 style="color: var(--text-dark); margin-bottom: 12px;">Archivos Subidos</h4>
+          <div class="item-list" id="knowledgeListItems">
+            <div class="empty-state">
+              <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></div>
+              <p>Sin archivos aún</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+
+    </div>
+  </div>
+
+<footer class="page-footer">
       MIIA © 2025 · <a href="terms.html">Términos</a> · <a href="terms.html#2">Privacidad</a>
     </footer>
   </div><!-- end .main-content -->

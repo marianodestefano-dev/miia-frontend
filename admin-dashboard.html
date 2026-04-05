@@ -177,23 +177,23 @@
     </div>
 
     <nav class="sidebar-nav">
-      <button class="sidebar-btn active" onclick="showAdminSection('resumen', this)">
+      <button class="sidebar-btn active" onclick="showAdminSection('summary', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
         Resumen
       </button>
-      <button class="sidebar-btn" onclick="showAdminSection('clientes', this)">
+      <button class="sidebar-btn" onclick="showAdminSection('clients', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
         Clientes
       </button>
-      <button class="sidebar-btn" onclick="showAdminSection('contactos', this)">
+      <button class="sidebar-btn" onclick="showAdminSection('contacts', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
         Contactos
       </button>
-      <button class="sidebar-btn" onclick="showAdminSection('pagos', this)">
+      <button class="sidebar-btn" onclick="showAdminSection('payments', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         Pagos
       </button>
-      <button class="sidebar-btn" onclick="showAdminSection('conexiones', this)">
+      <button class="sidebar-btn" onclick="showAdminSection('connections', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
         Conexiones
       </button>
@@ -235,7 +235,7 @@
   <div class="main-content">
 
     <!-- ═══ SECTION: RESUMEN ═══ -->
-    <div id="admin-section-resumen" class="page-section" style="padding:28px 24px 60px;max-width:1400px;">
+    <div id="admin-section-summary" class="page-section" style="padding:28px 24px 60px;max-width:1400px;">
       <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Resumen de Plataforma</h2>
       <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Vista general de clientes, ingresos y alertas del sistema.</p>
 
@@ -308,17 +308,17 @@
           <div id="planBreakdownResumen"></div>
         </div>
       </div>
-    </div><!-- end admin-section-resumen -->
+    </div><!-- end admin-section-summary -->
 
     <!-- ═══ SECTION: CONTACTOS ═══ -->
-    <div id="admin-section-contactos" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
+    <div id="admin-section-contacts" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
       <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Sesiones WhatsApp</h2>
       <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Sesiones de WhatsApp activas de tus clientes conectadas al servidor.</p>
       <div id="tenantsList"><p style="color:var(--text-muted);">Cargando...</p></div>
-    </div><!-- end admin-section-contactos -->
+    </div><!-- end admin-section-contacts -->
 
     <!-- ═══ SECTION: PAGOS ═══ -->
-    <div id="admin-section-pagos" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
+    <div id="admin-section-payments" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
       <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Facturación y Pagos</h2>
       <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:24px;">Ingresos recurrentes y distribución por plan de suscripción.</p>
       <div class="stats-grid" style="margin-bottom:24px;">
@@ -330,10 +330,10 @@
         <h4 class="section-title" style="margin-bottom:12px;">Clientes por plan</h4>
         <div id="planBreakdown"></div>
       </div>
-    </div><!-- end admin-section-pagos -->
+    </div><!-- end admin-section-payments -->
 
     <!-- ═══ SECTION: CLIENTES (unificado) ═══ -->
-    <div id="admin-section-clientes" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
+    <div id="admin-section-clients" class="page-section section-hidden" style="padding:28px 24px 60px;max-width:1400px;">
       <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Clientes</h2>
       <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:20px;">Administra planes, estados y configuracion. Hace clic en un cliente para gestionar sus datos.</p>
 
@@ -528,10 +528,10 @@
 
         </div><!-- end adminClientPanel -->
       </div><!-- end adminClientPanelWrapper -->
-    </div><!-- end admin-section-clientes -->
+    </div><!-- end admin-section-clients -->
 
     <!-- ═══ SECTION: CONEXIONES ═══ -->
-    <div id="admin-section-conexiones" class="page-section section-hidden" style="padding:28px 24px 60px; max-width:1400px;">
+    <div id="admin-section-connections" class="page-section section-hidden" style="padding:28px 24px 60px; max-width:1400px;">
       <div style="margin-bottom:28px;">
         <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin-bottom:6px;display:flex;align-items:center;gap:10px;">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
@@ -1709,7 +1709,7 @@
   // Restore section from hash
   window.addEventListener('DOMContentLoaded', function() {
     const hash = window.location.hash.replace('#', '');
-    const valid = ['resumen','clientes','contactos','pagos','conexiones'];
+    const valid = ['summary','clients','contacts','payments','connections'];
     if (hash && valid.includes(hash)) {
       const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
       showAdminSection(hash, btn);
