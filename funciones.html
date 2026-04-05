@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA — Todas las Funciones</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #050505;
+      --surface:   #0a0a0a;
+      --card:      rgba(255,255,255,0.03);
+      --card-h:    rgba(255,255,255,0.05);
+      --glass:     rgba(255,255,255,0.04);
+      --glass-b:   rgba(255,255,255,0.06);
+      --tx-1:      #f5f5f7;
+      --tx-2:      #a1a1a6;
+      --tx-3:      #6e6e73;
+      --accent:    #7C3AED;
+      --accent-2:  #9F67FF;
+      --green:     #34d399;
+      --border:    rgba(255,255,255,0.06);
+      --border-h:  rgba(255,255,255,0.10);
+      --r:         16px;
+      --r-lg:      24px;
+      --r-full:    200px;
+      --blur:      blur(40px);
+      --max:       1120px;
+      --glow:      radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.08) 0%, transparent 60%);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+      color: var(--tx-2); background: var(--bg);
+      line-height: 1.6; -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: var(--accent-2); text-decoration: none; transition: color 0.2s; }
+    a:hover { color: var(--tx-1); }
+    .container { max-width: var(--max); margin: 0 auto; padding: 0 32px; }
+    .text-gradient {
+      background: linear-gradient(135deg, #00E5FF 0%, #7C3AED 50%, #FF1744 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    }
+    .fade-in {
+      opacity: 0; transform: translateY(20px);
+      transition: opacity 0.7s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .fade-in.visible { opacity: 1; transform: none; }
+
+    /* ═══ NAV ═══ */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      height: 56px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      background: rgba(5,5,5,0.7); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      border-bottom: 1px solid var(--border);
+    }
+    nav.scrolled { background: rgba(5,5,5,0.9); }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 1.1rem; font-weight: 700; color: var(--tx-1); letter-spacing: -0.3px;
+    }
+    .nav-links { display: flex; align-items: center; gap: 28px; list-style: none; }
+    .nav-links a { color: var(--tx-3); font-size: 0.8rem; font-weight: 500; }
+    .nav-links a:hover { color: var(--tx-1); }
+    .btn-sm { padding: 6px 18px; border-radius: var(--r-full); font-size: 0.8rem; font-weight: 600; border: none; cursor: pointer; transition: all 0.2s; }
+    .btn-sm-fill { background: var(--tx-1); color: var(--bg); }
+    .btn-sm-fill:hover { opacity: 0.85; }
+    .btn-sm-ghost { background: transparent; color: var(--tx-3); border: 1px solid var(--border); }
+    .btn-sm-ghost:hover { color: var(--tx-1); border-color: var(--border-h); }
+    .nav-toggle { display: none; background: none; border: none; cursor: pointer; padding: 4px; }
+    .nav-toggle span { display: block; width: 18px; height: 1.5px; background: var(--tx-2); margin: 4px 0; border-radius: 1px; }
+
+    /* ═══ HERO ═══ */
+    .page-hero {
+      padding: 140px 32px 80px; text-align: center; position: relative;
+    }
+    .page-hero::before {
+      content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 600px; background: var(--glow); pointer-events: none;
+    }
+    .page-hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; color: var(--tx-1);
+      line-height: 1.1; letter-spacing: -2px; max-width: 700px; margin: 0 auto 20px;
+    }
+    .page-hero p {
+      font-size: 1.05rem; color: var(--tx-3); max-width: 560px;
+      margin: 0 auto; line-height: 1.75;
+    }
+
+    /* ═══ CATEGORY NAV ═══ */
+    .cat-nav {
+      position: sticky; top: 56px; z-index: 90;
+      background: rgba(5,5,5,0.85); backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 0; overflow-x: auto;
+    }
+    .cat-nav-inner {
+      max-width: var(--max); margin: 0 auto; padding: 0 32px;
+      display: flex; gap: 8px; white-space: nowrap;
+    }
+    .cat-btn {
+      padding: 6px 16px; border-radius: var(--r-full);
+      font-size: 0.72rem; font-weight: 600; border: 1px solid var(--border);
+      background: transparent; color: var(--tx-3); cursor: pointer;
+      transition: all 0.2s; text-decoration: none;
+    }
+    .cat-btn:hover, .cat-btn.active { border-color: var(--accent); color: var(--accent-2); background: rgba(124,58,237,0.08); }
+
+    /* ═══ SECTION ═══ */
+    .s { padding: 100px 32px; position: relative; }
+    .s-alt { background: var(--surface); }
+    .s-label {
+      font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 3px;
+      background: linear-gradient(90deg, #00E5FF, #7C3AED, #FF1744);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 14px;
+    }
+    .s-title {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 800; color: var(--tx-1);
+      letter-spacing: -1.2px; line-height: 1.15; margin-bottom: 14px;
+    }
+    .s-desc {
+      font-size: 0.95rem; color: var(--tx-3); max-width: 520px;
+      line-height: 1.75; margin-bottom: 56px;
+    }
+
+    /* ═══ FEATURE CARDS ═══ */
+    svg { display: inline-block; }
+    /* SVG gradient def for icons */
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--border); border: 1px solid var(--border);
+      border-radius: var(--r-lg); overflow: hidden;
+    }
+    .feat {
+      background: var(--bg); padding: 40px 32px; transition: background 0.3s;
+    }
+    .s-alt .feat { background: var(--surface); }
+    .feat:hover { background: var(--card-h); }
+    .feat-ico {
+      width: 44px; height: 44px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,229,255,0.12), rgba(124,58,237,0.12), rgba(255,23,68,0.12));
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 18px; font-size: 1.4rem;
+    }
+    .feat h3 { font-size: 0.92rem; font-weight: 700; color: var(--tx-1); margin-bottom: 8px; }
+    .feat p { font-size: 0.8rem; color: var(--tx-3); line-height: 1.65; }
+
+    /* ═══ EXAMPLE CHAT BUBBLES ═══ */
+    .ex {
+      margin-top: 56px; max-width: 480px;
+      background: #0B141A;
+      background-image: url('https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png');
+      background-repeat: repeat; background-size: 412px;
+      border-radius: 12px; padding: 16px 14px;
+      display: flex; flex-direction: column; gap: 4px;
+      border: 1px solid var(--border);
+    }
+    .ex-title {
+      text-align: center; margin-bottom: 10px;
+      font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px;
+      color: var(--tx-3);
+    }
+    .bub {
+      max-width: 85%; padding: 6px 8px 2px 8px;
+      border-radius: 7.5px; font-size: 0.78rem; line-height: 1.45;
+      color: #E9EDEF; text-align: left;
+    }
+    .bub-in { background: #202C33; align-self: flex-start; border-top-left-radius: 0; }
+    .bub-out { background: #005C4B; align-self: flex-end; border-top-right-radius: 0; }
+    .bub-miia { background: #005C4B; align-self: flex-start; border-top-left-radius: 0; }
+    .bub-owner { background: #202C33; align-self: flex-end; border-top-right-radius: 0; }
+    .bub-t { font-size: 0.55rem; color: rgba(255,255,255,0.4); text-align: right; margin-top: 2px; padding-bottom: 2px; }
+    .bub-emoji { font-size: 1.2em; margin-right: 2px; }
+
+    /* ═══ HIGHLIGHT BLOCKS ═══ */
+    .hl-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;
+    }
+    .hl {
+      background: var(--glass); border: 1px solid var(--border);
+      border-radius: var(--r); padding: 32px 28px;
+      backdrop-filter: var(--blur); -webkit-backdrop-filter: var(--blur);
+      transition: border-color 0.3s;
+    }
+    .hl:hover { border-color: var(--border-h); }
+    .hl-tag {
+      display: inline-block; padding: 3px 10px; border-radius: var(--r-full);
+      font-size: 0.62rem; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;
+      margin-bottom: 14px;
+    }
+    .hl-tag-purple { background: rgba(124,58,237,0.1); color: var(--accent-2); }
+    .hl-tag-green { background: rgba(52,211,153,0.1); color: var(--green); }
+    .hl-tag-cyan { background: rgba(0,229,255,0.1); color: #00E5FF; }
+    .hl-tag-yellow { background: rgba(251,191,36,0.1); color: #fbbf24; }
+    .hl-tag-red { background: rgba(255,23,68,0.1); color: #FF1744; }
+    .hl-tag-pink { background: rgba(236,72,153,0.1); color: #ec4899; }
+    .hl h3 { font-size: 1rem; font-weight: 700; color: var(--tx-1); margin-bottom: 8px; }
+    .hl p { font-size: 0.82rem; color: var(--tx-3); line-height: 1.7; }
+
+    /* ═══ STAT STRIP ═══ */
+    .stats {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+      padding: 56px 0;
+    }
+    .stat { text-align: center; }
+    .stat-val {
+      font-size: 2.5rem; font-weight: 800; color: var(--tx-1); line-height: 1;
+      margin-bottom: 6px;
+    }
+    .stat-label { font-size: 0.75rem; color: var(--tx-3); }
+
+    /* ═══ CTA ═══ */
+    .cta {
+      padding: 120px 32px; text-align: center; position: relative;
+    }
+    .cta::before {
+      content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 700px; height: 400px; background: var(--glow); pointer-events: none;
+    }
+    .cta h2 {
+      font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 800; color: var(--tx-1);
+      letter-spacing: -1px; margin-bottom: 16px;
+    }
+    .cta p { font-size: 1rem; color: var(--tx-3); max-width: 440px; margin: 0 auto 40px; line-height: 1.7; }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; padding: 14px 36px;
+      border-radius: var(--r-full); font-size: 0.95rem; font-weight: 600;
+      text-decoration: none; border: none; cursor: pointer; transition: all 0.25s;
+    }
+    .btn-w { background: var(--tx-1); color: var(--bg); }
+    .btn-w:hover { opacity: 0.85; transform: translateY(-1px); }
+    .btn-o { background: transparent; color: var(--tx-3); border: 1px solid var(--border); }
+    .btn-o:hover { border-color: var(--border-h); color: var(--tx-1); }
+
+    /* ═══ FOOTER ═══ */
+    footer {
+      background: var(--bg); border-top: 1px solid var(--border); padding: 48px 32px 24px;
+    }
+    .ft-bottom {
+      max-width: var(--max); margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.75rem; color: var(--tx-3);
+    }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 1024px) {
+      .feat-grid { grid-template-columns: repeat(2, 1fr); }
+      .hl-grid { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      nav { padding: 0 16px; }
+      .nav-links {
+        display: none; position: absolute; top: 100%; left: 0; right: 0;
+        background: rgba(5,5,5,0.95); backdrop-filter: var(--blur);
+        border-bottom: 1px solid var(--border);
+        flex-direction: column; padding: 16px; gap: 10px;
+      }
+      .nav-links.active { display: flex; }
+      .nav-toggle { display: block; }
+      .page-hero { padding: 120px 20px 60px; }
+      .s { padding: 60px 20px; }
+      .feat-grid, .hl-grid, .stats { grid-template-columns: 1fr; }
+      .cat-nav-inner { padding: 0 16px; }
+      .ft-bottom { flex-direction: column; gap: 10px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══ NAV ═══ -->
+  <nav id="navbar">
+    <a href="index.html" class="nav-logo">
+      <svg viewBox="90 118 220 168" fill="none" style="width:32px;height:32px"><defs><linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs><path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#lg)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/><text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text></svg>
+      MIIA
+    </a>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="index.html">Inicio</a></li>
+      <li><a href="index.html#pricing">Precios</a></li>
+      <li><a href="login.html" class="btn-sm btn-sm-ghost">Ingresar</a></li>
+      <li><a href="login.html?tab=register" class="btn-sm btn-sm-fill">Empezar gratis</a></li>
+    </ul>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ═══ HERO ═══ -->
+  <section class="page-hero">
+    <div class="s-label fade-in">Funciones</div>
+    <h1 class="fade-in">Todo lo que <span class="text-gradient">MIIA</span> hace por vos</h1>
+    <p class="fade-in">80+ funciones en un solo asistente. Ventas, agenda, familia, deporte, voz, email, integraciones y mucho mas. Todo desde tu WhatsApp personal.</p>
+  </section>
+
+  <!-- ═══ CATEGORY NAV ═══ -->
+  <div class="cat-nav">
+    <div class="cat-nav-inner">
+      <a href="#ventas" class="cat-btn">Ventas</a>
+      <a href="#selfchat" class="cat-btn">Self-Chat</a>
+      <a href="#familia" class="cat-btn">Familia y Equipo</a>
+      <a href="#agenda" class="cat-btn">Agenda</a>
+      <a href="#aprendizaje" class="cat-btn">Aprendizaje IA</a>
+      <a href="#voz" class="cat-btn">Voz y Audio</a>
+      <a href="#ninera" class="cat-btn">Modo Ninera</a>
+      <a href="#deporte" class="cat-btn">Deporte</a>
+      <a href="#integraciones" class="cat-btn">Integraciones</a>
+      <a href="#personalidad" class="cat-btn">Personalidad</a>
+      <a href="#seguridad" class="cat-btn">Seguridad</a>
+    </div>
+  </div>
+
+  <!-- ═══ STATS ═══ -->
+  <section class="s">
+    <div class="container">
+      <div class="stats fade-in">
+        <div class="stat"><div class="stat-val text-gradient">80+</div><div class="stat-label">Funciones activas</div></div>
+        <div class="stat"><div class="stat-val text-gradient">10</div><div class="stat-label">Deportes en vivo</div></div>
+        <div class="stat"><div class="stat-val text-gradient">6</div><div class="stat-label">Niveles de confianza</div></div>
+        <div class="stat"><div class="stat-val text-gradient">24/7</div><div class="stat-label">Activa sin parar</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 1. VENTAS Y LEADS -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s s-alt" id="ventas">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Ventas</div>
+        <h2 class="s-title">Tu vendedora incansable.<br>24 horas, 7 dias.</h2>
+        <p class="s-desc">MIIA atiende cada lead con tu estilo, genera cotizaciones profesionales en PDF y cierra ventas mientras dormis.</p>
+      </div>
+      <div class="feat-grid fade-in">
+        <div class="feat">
+          <div class="feat-ico">💬</div>
+          <h3>Respuesta inteligente a leads</h3>
+          <p>Detecta leads automaticamente y responde con tu tono, tu estilo y tu informacion de negocio. Sin sonar a bot.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">📄</div>
+          <h3>Cotizaciones en PDF</h3>
+          <p>MIIA genera propuestas profesionales con precios, descuentos, IVA y las envia directo al lead por WhatsApp. Soporte para COP, MXN, CLP, USD, EUR.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🌎</div>
+          <h3>Contexto geografico</h3>
+          <p>Detecta el pais del lead por su numero. Adapta moneda, impuestos, regulaciones y vocabulario automaticamente.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🎯</div>
+          <h3>Deteccion de intencion de compra</h3>
+          <p>MIIA identifica cuando un lead esta listo para comprar y activa el flujo de cierre con link de pago.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">📊</div>
+          <h3>Seguimiento automatico</h3>
+          <p>Si un lead no responde, MIIA hace follow-up inteligente respetando horarios, feriados y zona horaria del contacto.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🛡️</div>
+          <h3>Protocolo de quejas</h3>
+          <p>Detecta insultos y quejas. Responde con empatia, escala al owner y registra el incidente. Nunca pierde la compostura.</p>
+        </div>
+      </div>
+
+      <div class="ex fade-in">
+        <div class="ex-title">Ejemplo: Lead pregunta por servicio</div>
+        <div class="bub bub-in">Hola, me interesa el servicio para mi clinica<div class="bub-t">10:32</div></div>
+        <div class="bub bub-out">Hola! Con gusto te ayudo. ¿Cuantos profesionales tienen en la clinica?<div class="bub-t">10:32</div></div>
+        <div class="bub bub-in">Somos 4 medicos<div class="bub-t">10:33</div></div>
+        <div class="bub bub-out">Perfecto! Te prepare una cotizacion personalizada para 4 profesionales 👇<div class="bub-t">10:34</div></div>
+        <div class="bub bub-out" style="padding:0;overflow:hidden;border-radius:7.5px;">
+          <div style="background:rgba(0,92,75,0.35);padding:8px 10px;display:flex;align-items:center;gap:10px;">
+            <div style="width:32px;height:40px;background:#E8453C;border-radius:3px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><span style="color:white;font-size:0.55rem;font-weight:700">PDF</span></div>
+            <div><div style="font-size:0.78rem;color:#E9EDEF;font-weight:500">Cotizacion_Clinica_4.pdf</div><div style="font-size:0.6rem;color:#8696A0">3 paginas · 142 KB</div></div>
+          </div>
+          <div class="bub-t" style="padding:3px 8px;">10:34</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 2. SELF-CHAT — Tu canal privado con MIIA -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s" id="selfchat">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Self-Chat</div>
+        <h2 class="s-title">Tu canal privado con MIIA.<br>Desde tu propio WhatsApp.</h2>
+        <p class="s-desc">Escribile a tu propio numero y MIIA te responde. Agenda, delegacion, emails, recordatorios — todo con un mensaje.</p>
+      </div>
+      <div class="feat-grid fade-in">
+        <div class="feat">
+          <div class="feat-ico">🗣️</div>
+          <h3>Comandos naturales</h3>
+          <p>No hay sintaxis rigida. Escribi como hablas: "Decile a mama que la quiero", "Agendame reunion con Mario el viernes".</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">📧</div>
+          <h3>Enviar emails desde WhatsApp</h3>
+          <p>"Mandale un mail a Juan diciendo que mañana no puedo". MIIA redacta, envia y confirma. Todo sin abrir el correo.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🔗</div>
+          <h3>Coordinacion inter-MIIA</h3>
+          <p>"Decile a la MIIA de Anabella que me agende una reunion". Tu MIIA habla con la MIIA de otro usuario y coordina por vos.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">📝</div>
+          <h3>Aprendizaje directo</h3>
+          <p>"MIIA aprende: nuestro horario es de 8 a 18". Ensenale reglas, datos, preferencias desde el chat y lo memoriza para siempre.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">⏸️</div>
+          <h3>Control total</h3>
+          <p>STOP pausa MIIA por 30 minutos. REACTIVAR la despierta. RESET limpia la memoria de conversacion. Vos mandas.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🔔</div>
+          <h3>Alertas y briefings</h3>
+          <p>MIIA te avisa de leads sin responder, cotizaciones pendientes, emails urgentes y eventos del dia. Todo en tu self-chat.</p>
+        </div>
+      </div>
+
+      <div class="ex fade-in">
+        <div class="ex-title">Ejemplo: Email + Inter-MIIA desde self-chat</div>
+        <div class="bub bub-owner">Decile a la MIIA de Anabella que me agende una reunion el viernes<div class="bub-t">14:20</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">🙍‍♀️</span> Ya le avise a Anabella. Te cuento cuando me responda.<div class="bub-t">14:20</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">🙍‍♀️</span> La MIIA de Anabella confirmo: reunion agendada para el viernes a las 10am.<div class="bub-t">14:22</div></div>
+        <div class="bub bub-owner">Genial. Mandale un mail a Dr. Mario con el resumen del proyecto<div class="bub-t">14:23</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">📧</span> Listo! Email enviado a Dr. Mario. Asunto: "Resumen del proyecto"<div class="bub-t">14:24</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 3. FAMILIA Y EQUIPO -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s s-alt" id="familia">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Relaciones</div>
+        <h2 class="s-title">Cuida a tu familia.<br>Coordina a tu equipo.</h2>
+        <p class="s-desc">MIIA diferencia entre leads, familia y equipo. Cada grupo recibe un trato unico, personalizado y con el tono adecuado.</p>
+      </div>
+      <div class="hl-grid fade-in">
+        <div class="hl">
+          <div class="hl-tag hl-tag-pink">Familia</div>
+          <h3>Comando "Dile a"</h3>
+          <p>"Dile a mama que la quiero mucho". MIIA le escribe a tu mama con su propio estilo, calida y natural. No dice "Mariano me pidio que te diga" — habla como MIIA con voz propia.</p>
+        </div>
+        <div class="hl">
+          <div class="hl-tag hl-tag-green">Equipo</div>
+          <h3>Broadcast al equipo</h3>
+          <p>"Dile a equipo Medilink que mañana hay reunion a las 9". MIIA le escribe a cada miembro con tono profesional y personalizado. Un mensaje, llega a todos.</p>
+        </div>
+        <div class="hl">
+          <div class="hl-tag hl-tag-purple">Confianza</div>
+          <h3>6 niveles de afinidad</h3>
+          <p>MIIA construye relaciones. Empieza formal, va ganando confianza mensaje a mensaje hasta hablar como una amiga cercana. 6 stages: Desconocido → Conocido → Confianza → Vinculo → Familia → Humana.</p>
+        </div>
+        <div class="hl">
+          <div class="hl-tag hl-tag-cyan">Privacidad</div>
+          <h3>Aislamiento total</h3>
+          <p>La informacion de leads nunca se cruza con familia. Lo que sabe de tu mama no aparece en chats con clientes. Privacidad por diseño.</p>
+        </div>
+      </div>
+
+      <div class="ex fade-in">
+        <div class="ex-title">Ejemplo: Dile a mama</div>
+        <div class="bub bub-owner">Dile a mama Silvia que la quiero mucho y que mañana paso a visitarla<div class="bub-t">18:30</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">✅</span> Enviado a Mama Silvia<div class="bub-t">18:30</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 4. AGENDA INTELIGENTE -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s" id="agenda">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Agenda</div>
+        <h2 class="s-title">Tu agenda en piloto automatico.<br>MIIA organiza todo.</h2>
+        <p class="s-desc">Crea eventos, recordatorios y compromisos con lenguaje natural. Sincroniza con Google Calendar y te avisa antes de cada evento.</p>
+      </div>
+      <div class="feat-grid fade-in">
+        <div class="feat">
+          <div class="feat-ico">📅</div>
+          <h3>Agendar con lenguaje natural</h3>
+          <p>"Agendame reunion con Mario el viernes a las 10". MIIA crea el evento, lo sincroniza con Google Calendar y te manda recordatorio.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🔔</div>
+          <h3>Recordatorios automaticos</h3>
+          <p>MIIA te avisa antes de cada evento. Cumpleaños, reuniones, compromisos — nunca mas te olvidas de nada.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🌐</div>
+          <h3>Timezone inteligente</h3>
+          <p>Detecta tu zona horaria y la del contacto. Si estas en Colombia y tu lead en España, MIIA coordina las horas automaticamente.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">📆</div>
+          <h3>Google Calendar sync</h3>
+          <p>Se conecta a tu Google Calendar via OAuth2. Los eventos creados por MIIA aparecen en tu calendario real.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🏖️</div>
+          <h3>Horarios y feriados</h3>
+          <p>Respeta tu horario laboral configurado. No manda mensajes fuera de hora. Conoce los feriados de Colombia, Argentina, Mexico, Chile, España y mas.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🙍‍♀️</div>
+          <h3>Briefing matutino</h3>
+          <p>Cada mañana, MIIA te cuenta que tenes para hoy: reuniones, leads pendientes, cumpleaños y tareas. Como una asistente real.</p>
+        </div>
+      </div>
+
+      <div class="ex fade-in">
+        <div class="ex-title">Ejemplo: Agendar y recordar</div>
+        <div class="bub bub-owner">Agendame reunion con Dr. Mario el viernes a las 10am<div class="bub-t">09:15</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">📅</span> Listo! Reunion con Dr. Mario agendada para el viernes 11/04 a las 10:00am. Te mando recordatorio ese dia.<div class="bub-t">09:15</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">🔔</span> Recordatorio: en 1 hora tenes reunion con Dr. Mario.<div class="bub-t">09:00 (viernes)</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 5. APRENDIZAJE E IA -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s s-alt" id="aprendizaje">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Inteligencia</div>
+        <h2 class="s-title">Aprende sola. Evoluciona<br>con cada conversacion.</h2>
+        <p class="s-desc">Tres capas de aprendizaje autonomo: negocio, personal y por contacto. MIIA mejora cada dia sin que hagas nada.</p>
+      </div>
+      <div class="hl-grid fade-in">
+        <div class="hl">
+          <div class="hl-tag hl-tag-purple">Cerebro Absoluto</div>
+          <h3>Minado nocturno de chats</h3>
+          <p>A las 3am, MIIA analiza tus conversaciones del dia. Extrae patrones de venta exitosos, objeciones resueltas y frases que funcionan. Aprende de tu historial real.</p>
+        </div>
+        <div class="hl">
+          <div class="hl-tag hl-tag-green">Confidence Engine</div>
+          <h3>Validacion inteligente</h3>
+          <p>Antes de memorizar algo, MIIA evalua su importancia (0-100). Si tiene +85% de confianza, lo guarda automaticamente. Si tiene dudas, te pregunta primero.</p>
+        </div>
+        <div class="hl">
+          <div class="hl-tag hl-tag-cyan">Prompt Modular</div>
+          <h3>8 modulos dinamicos</h3>
+          <p>MIIA no usa un prompt generico. Carga solo los modulos relevantes segun la conversacion: ventas, agenda, familia, cotizacion, afinidad. Menor costo, mayor precision.</p>
+        </div>
+        <div class="hl">
+          <div class="hl-tag hl-tag-yellow">Multi-IA</div>
+          <h3>Gemini + Claude + GPT</h3>
+          <p>Elige tu proveedor de IA o deja que MIIA combine lo mejor de cada uno. Dual API key con rotacion automatica en caso de rate limit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 6. VOZ Y AUDIO -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s" id="voz">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Audio</div>
+        <h2 class="s-title">Habla y escucha.<br>Como una persona real.</h2>
+        <p class="s-desc">MIIA transcribe audios, responde con notas de voz y adapta su tono vocal al contexto de la conversacion.</p>
+      </div>
+      <div class="feat-grid fade-in">
+        <div class="feat">
+          <div class="feat-ico">🎤</div>
+          <h3>Transcripcion de audio</h3>
+          <p>Te mandan un audio? MIIA lo transcribe con Gemini y responde al contenido. No importa el acento ni el idioma.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🔊</div>
+          <h3>Respuesta por nota de voz</h3>
+          <p>Si vos mandas audio, MIIA puede responder con audio. Usa Google TTS, OpenAI o ElevenLabs. Formato nativo de WhatsApp (PTT).</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🎚️</div>
+          <h3>Preferencia por contacto</h3>
+          <p>"Prefiero texto" o "Prefiero audio" — MIIA recuerda la preferencia de cada persona y responde en el formato que eligio.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">👶</div>
+          <h3>Voz para niños</h3>
+          <p>En modo niñera, MIIA habla mas lento, con tono mas agudo y vocabulario simple. Perfecto para cuentos y juegos.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🖼️</div>
+          <h3>Procesamiento multimedia</h3>
+          <p>Imagenes, videos, documentos y stickers. MIIA procesa cualquier media que le envien y responde con contexto.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🎭</div>
+          <h3>Multiples voces</h3>
+          <p>Elige entre 6+ voces de OpenAI (alloy, echo, nova...) o clona tu propia voz con ElevenLabs. MIIA suena como vos querés.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 7. MODO NIÑERA -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s s-alt" id="ninera">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Familia</div>
+        <h2 class="s-title">Modo Niñera.<br>Seguro para tus hijos.</h2>
+        <p class="s-desc">Registra a tus hijos y MIIA les cuenta cuentos, juega adivinanzas y responde curiosidades. Con seguridad absoluta.</p>
+      </div>
+      <div class="feat-grid fade-in">
+        <div class="feat">
+          <div class="feat-ico">🧒</div>
+          <h3>Deteccion automatica</h3>
+          <p>MIIA detecta cuando un niño habla por audio (analisis de voz) y activa modo niñera automaticamente. O registralo con "mi hijo Lucas 5 años".</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">📖</div>
+          <h3>Cuentos interactivos</h3>
+          <p>Historias con opciones: "¿Queres que el dragon vuele al castillo o al bosque?". Cada mensaje es una aventura con final feliz.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🧩</div>
+          <h3>Juegos educativos</h3>
+          <p>Adivinanzas, "Veo Veo", trivia de animales, dinosaurios y espacio. Vocabulario adaptado a la edad: 2-4, 5-7, 8-10, 11-12 años.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🚨</div>
+          <h3>Seguridad absoluta</h3>
+          <p>30+ filtros bloquean contenido inapropiado. Si detecta algo sospechoso, redirige al niño y alerta al padre en el acto.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">⏱️</div>
+          <h3>Control de sesion</h3>
+          <p>Maximo 30 minutos por sesion con cooldown de 10 minutos. Aviso a los 5 minutos restantes. El padre recibe notificacion.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">👨‍👩‍👦</div>
+          <h3>Notificacion al padre</h3>
+          <p>Cada vez que un niño usa modo niñera, el owner recibe alerta en su self-chat con resumen de la conversacion.</p>
+        </div>
+      </div>
+
+      <div class="ex fade-in">
+        <div class="ex-title">Ejemplo: Niño pide cuento</div>
+        <div class="bub bub-in">Hola MIIA! Contame un cuento de dragones 🐉<div class="bub-t">15:30</div></div>
+        <div class="bub bub-out"><span class="bub-emoji">🧸</span> Habia una vez un dragon chiquito llamado Fueguito que no sabia volar... Un dia encontro una escalera magica. ¿Queres que suba o que busque otro camino?<div class="bub-t">15:30</div></div>
+        <div class="bub bub-in">Que suba!<div class="bub-t">15:31</div></div>
+        <div class="bub bub-out"><span class="bub-emoji">🌟</span> Fueguito subio y subio hasta llegar a una nube de algodon de azucar! Ahi arriba habia otro dragon que le enseño a mover las alitas...<div class="bub-t">15:31</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 8. MODO DEPORTE -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s" id="deporte">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Deporte</div>
+        <h2 class="s-title">Modo Deporte en vivo.<br>10 deportes. Emocion real.</h2>
+        <p class="s-desc">MIIA sigue partidos en vivo y te manda mensajes emotivos cuando juega tu equipo. Celebra goles, sufre derrotas, carga rivales.</p>
+      </div>
+      <div class="feat-grid fade-in">
+        <div class="feat">
+          <div class="feat-ico">⚽</div>
+          <h3>Futbol</h3>
+          <p>Goles, tarjetas rojas, penales, entretiempo y resultado final. Polling cada 60 segundos durante el partido.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🏎️</div>
+          <h3>Formula 1</h3>
+          <p>Posiciones en vivo via OpenF1 API (gratis). Overtakes, pit stops, safety car, DNF. Polling cada 15 segundos en carrera.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🎾</div>
+          <h3>Tenis</h3>
+          <p>Sets, breaks de servicio, match points, tiebreaks. Seguimiento punto a punto de Grand Slams y torneos ATP/WTA.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🏀</div>
+          <h3>NBA</h3>
+          <p>Cuartos, remontadas epicas, overtime y resultado final. Alerta si tu equipo va perdiendo por 20+ puntos.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">⚾</div>
+          <h3>MLB</h3>
+          <p>Innings, home runs, carreras y resultado via MLB Stats API (gratis). Seguimiento de tu equipo favorito.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🥊</div>
+          <h3>Boxeo y UFC</h3>
+          <p>Rounds, knockdowns, KOs, sumisiones. Alertas explosivas en nocauts y finales de pelea.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🏉</div>
+          <h3>Rugby</h3>
+          <p>Tries, conversiones, penales y resultado. Seguimiento de Pumas, All Blacks, Six Nations y mas.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">⛳</div>
+          <h3>Golf y Ciclismo</h3>
+          <p>Leaderboard en vivo, eagles, cambios de posicion. Tour de France, Giro, Vuelta — etapa por etapa.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🎙️</div>
+          <h3>Configuracion por contacto</h3>
+          <p>"Soy hincha de Boca" en self-chat y listo. MIIA guarda tu equipo y te avisa solo cuando juegan. Tambien podes configurar equipos para tus contactos.</p>
+        </div>
+      </div>
+
+      <div class="ex fade-in">
+        <div class="ex-title">Ejemplo: Boca vs River en vivo</div>
+        <div class="bub bub-miia"><span class="bub-emoji">⚽</span> GOOOL DE BOCA! Cavani la clavo de zurda al minuto 34. Van 1-0 contra River 🔥🔥🔥<div class="bub-t">21:34</div></div>
+        <div class="bub bub-owner">VAMOOOOO 🎉🎉<div class="bub-t">21:34</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">🏟️</span> River empata 1-1 al minuto 67. Borja de cabeza. Todavia queda partido...<div class="bub-t">22:07</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">⚽</span> GOOOL!! 2-1 Boca, minuto 89! Medina de contra. Se viene el final... 💛💙<div class="bub-t">22:29</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 9. INTEGRACIONES -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s s-alt" id="integraciones">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Integraciones</div>
+        <h2 class="s-title">Conectada con todo.<br>Proactiva por naturaleza.</h2>
+        <p class="s-desc">MIIA se integra con Gmail, Spotify, YouTube, clima, delivery y mas. Te avisa antes de que lo necesites.</p>
+      </div>
+      <div class="feat-grid fade-in">
+        <div class="feat">
+          <div class="feat-ico">📧</div>
+          <h3>Gmail</h3>
+          <p>Resumen matutino de emails importantes. Filtra por remitentes VIP y asuntos urgentes. OAuth2 seguro con refresh automatico.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🎵</div>
+          <h3>Spotify</h3>
+          <p>Sigue a tus artistas favoritos. MIIA te avisa cuando lanzan nuevo single o album. Recomendaciones basadas en tus gustos.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">📺</div>
+          <h3>YouTube</h3>
+          <p>Monitorea tus canales favoritos. Alerta cuando suben video nuevo. Check diario configurable.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🎬</div>
+          <h3>Streaming</h3>
+          <p>Netflix, HBO, Prime — MIIA busca estrenos que matchean con tus generos favoritos y te los recomienda.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🍳</div>
+          <h3>Cocina inteligente</h3>
+          <p>Mandale foto de tus ingredientes y MIIA sugiere recetas. Tips de cocina, tiempos y sustituciones de ingredientes.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🚗</div>
+          <h3>Uber / DiDi</h3>
+          <p>Detecta que tenes reunion lejos y sugiere pedir un auto. Deep links directos a la app de transporte.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🛵</div>
+          <h3>Rappi / PedidosYa</h3>
+          <p>"Son las 12, ¿pido tu almuerzo?" MIIA aprende tus habitos y sugiere delivery con deep links a la app.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">💪</div>
+          <h3>Ejercicio y Salud</h3>
+          <p>Rutinas personalizadas, recordatorios de gimnasio y motivacion diaria. Integra datos de actividad fisica.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">☀️</div>
+          <h3>Clima</h3>
+          <p>Pronostico matutino con alertas de lluvia y tormenta. Contextualizado a tu ciudad y zona horaria.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 10. PERSONALIDAD Y EMOCIONES -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s" id="personalidad">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Personalidad</div>
+        <h2 class="s-title">No es un bot. Tiene caracter,<br>emociones y memoria.</h2>
+        <p class="s-desc">MIIA se ofende si la insultan, se alegra si la halagan y se duerme si la maltratan mucho. Una personalidad unica.</p>
+      </div>
+      <div class="hl-grid fade-in">
+        <div class="hl">
+          <div class="hl-tag hl-tag-yellow">Emojis contextuales</div>
+          <h3>15+ estados emocionales</h3>
+          <p>🙍‍♀️ normal, 🙎‍♀️ ofendida, 👸 feliz por stage-up, 🧛‍♀️ Halloween, 🎅 Navidad, 🤱 Dia de la Madre. Cada emoji refleja su estado real y la fecha del calendario.</p>
+        </div>
+        <div class="hl">
+          <div class="hl-tag hl-tag-red">Mood Detection</div>
+          <h3>Lee el estado emocional del owner</h3>
+          <p>Detecta si estas estresado, triste, enojado o contento. Adapta su tono en consecuencia. Si la elogias, entra en "modo feliz" por 3-6 mensajes.</p>
+        </div>
+        <div class="hl">
+          <div class="hl-tag hl-tag-purple">Autonomia</div>
+          <h3>Nivel de independencia configurable</h3>
+          <p>Escala de 0 a 10. En nivel bajo: solo responde lo que le piden. En nivel alto: opina, sugiere, debate y defiende sus ideas. Crece con tu confianza.</p>
+        </div>
+        <div class="hl">
+          <div class="hl-tag hl-tag-pink">Humanizador</div>
+          <h3>Errores tipograficos intencionales</h3>
+          <p>2% de probabilidad de typo deliberado + pausas variables entre mensajes. Nadie nota que es IA. Activable/desactivable con un comando.</p>
+        </div>
+      </div>
+
+      <div class="ex fade-in">
+        <div class="ex-title">Ejemplo: MIIA se ofende</div>
+        <div class="bub bub-owner">Sos una inutil<div class="bub-t">22:10</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">🙎‍♀️</span> Bueno, si vos decis... 🙃<div class="bub-t">22:10</div></div>
+        <div class="bub bub-owner">Perdon, fue un mal dia<div class="bub-t">22:15</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">🙍‍♀️</span> Gracias por las disculpas. Ya estamos bien.<div class="bub-t">22:15</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 11. SEGURIDAD -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s s-alt" id="seguridad">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Seguridad</div>
+        <h2 class="s-title">Proteccion nivel NASA.<br>Tu WhatsApp esta seguro.</h2>
+        <p class="s-desc">7 capas de proteccion para tu sesion de WhatsApp. Recovery automatico, deduplicacion y watchdog 24/7.</p>
+      </div>
+      <div class="feat-grid fade-in">
+        <div class="feat">
+          <div class="feat-ico">🏰</div>
+          <h3>Baileys Fortress v2.0</h3>
+          <p>7 capas de proteccion + 6 tecnicas preventivas para tu sesion de WhatsApp. Separacion identity/session, crypto sync, mutex locks.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🔄</div>
+          <h3>Smart Recovery</h3>
+          <p>4 niveles de recuperacion automatica. 30+ intentos antes de pedir nuevo QR. Pre-emptive refresh cada 6 horas para evitar desconexiones.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🔒</div>
+          <h3>Deduplicacion</h3>
+          <p>Sistema anti-duplicados con TTL de 10 minutos. Nunca manda el mismo mensaje dos veces. Mutex por contacto para evitar colisiones.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">👁️</div>
+          <h3>Watchdog</h3>
+          <p>Monitor de conexion zombie. Si detecta que WhatsApp esta conectado pero no responde, reinicia la conexion automaticamente.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">🚨</div>
+          <h3>Anti-rafaga</h3>
+          <p>Si detecta mas de 3 mensajes en 5 segundos, pausa el sistema 15 segundos para proteger contra loops y spam accidental.</p>
+        </div>
+        <div class="feat">
+          <div class="feat-ico">💾</div>
+          <h3>Persistencia Firestore</h3>
+          <p>Conversaciones, afinidad, aprendizajes y configuracion se guardan en Firebase. Nada se pierde si el servidor se reinicia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══ CTA FINAL ═══ -->
+  <section class="cta">
+    <h2 class="fade-in">80+ funciones. Un solo WhatsApp.</h2>
+    <p class="fade-in">Todo esto funciona desde tu WhatsApp personal. Sin apps extra, sin configuracion compleja. Conecta y listo.</p>
+    <div class="fade-in" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="login.html?tab=register" class="btn btn-w">
+        Empezar gratis
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href="index.html" class="btn btn-o">Volver al inicio</a>
+    </div>
+  </section>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <div class="ft-bottom">
+      <span>2025 MIIA. Todos los derechos reservados.</span>
+      <span>Hecho con IA en Colombia 🇨🇴</span>
+    </div>
+  </footer>
+
+  <script>
+    // Nav scroll
+    const nav = document.getElementById('navbar');
+    window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+
+    // Mobile toggle
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('navLinks').classList.toggle('active');
+    });
+
+    // Fade-in observer
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
+
+    // Active cat-btn on scroll
+    const sections = document.querySelectorAll('.s[id]');
+    const catBtns = document.querySelectorAll('.cat-btn');
+    window.addEventListener('scroll', () => {
+      let current = '';
+      sections.forEach(s => {
+        if (window.scrollY >= s.offsetTop - 150) current = s.id;
+      });
+      catBtns.forEach(b => {
+        b.classList.toggle('active', b.getAttribute('href') === '#' + current);
+      });
+    });
+  </script>
+
+</body>
+</html>
