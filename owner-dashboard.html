@@ -950,7 +950,7 @@
 
     function initSocket() {
       if (socket) return; // Already initialized
-      socket = io(window.location.origin, { reconnection: true, reconnectionDelay: 1000 });
+      socket = io('https://api.miia-app.com', { reconnection: true, reconnectionDelay: 1000 });
 
       // Detectar desincronización de sesión WhatsApp
       socket.on(`tenant_recovery_needed_${currentUserUid}`, (data) => {
