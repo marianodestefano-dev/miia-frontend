@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA — Informe MARIANO SINCERO</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00E5FF;
+      --secondary: #FF1744;
+      --bg-deep: #0F0F0F;
+      --bg-card: #141414;
+      --bg-surface: #1A1A1A;
+      --border: rgba(0,229,255,0.08);
+      --text-white: #F1F5F9;
+      --text-primary: #E2E8F0;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --gradient-main: linear-gradient(135deg, #00E5FF 0%, #7C3AED 50%, #FF1744 100%);
+      --radius: 12px;
+      --green: #34D399;
+      --amber: #f59e0b;
+      --red: #ef4444;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-secondary);
+      min-height: 100vh;
+      line-height: 1.7;
+      padding-top: 64px;
+    }
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: rgba(3,5,8,0.8); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none; font-size: 1.25rem; font-weight: 800;
+      color: var(--text-white); letter-spacing: -0.5px;
+    }
+    .nav-back { color: var(--text-muted); text-decoration: none; font-weight: 500; font-size: 0.85rem; }
+    .nav-back:hover { color: var(--text-white); }
+    .container { max-width: 800px; margin: 0 auto; padding: 48px 24px 100px; }
+    .header { text-align: center; margin-bottom: 48px; }
+    .badge {
+      display: inline-block; background: rgba(239,68,68,.1); color: var(--red);
+      padding: 4px 14px; border-radius: 20px; font-size: 0.72rem;
+      font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;
+    }
+    .header h1 { color: var(--text-white); font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+    .header p { color: var(--text-muted); font-size: 0.9rem; }
+    .section {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 32px; margin-bottom: 20px;
+    }
+    .section h2 {
+      color: var(--text-white); font-size: 1.15rem; font-weight: 700;
+      margin-bottom: 16px; display: flex; align-items: center; gap: 8px;
+    }
+    .section h3 { color: var(--text-primary); font-size: 0.95rem; font-weight: 600; margin: 16px 0 8px; }
+    .section p { margin-bottom: 10px; font-size: 0.88rem; }
+    .section ul { padding-left: 20px; margin-bottom: 12px; }
+    .section li { margin-bottom: 4px; font-size: 0.86rem; }
+    .verdict {
+      display: inline-block; padding: 3px 10px; border-radius: 6px;
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    }
+    .verdict-ok { background: rgba(52,211,153,.12); color: var(--green); }
+    .verdict-warn { background: rgba(245,158,11,.12); color: var(--amber); }
+    .verdict-risk { background: rgba(239,68,68,.12); color: var(--red); }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 0.84rem; }
+    th { text-align: left; color: var(--text-muted); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    td { padding: 8px 12px; border-bottom: 1px solid rgba(255,255,255,.03); color: var(--text-secondary); }
+    .highlight { background: rgba(0,229,255,.04); border: 1px solid rgba(0,229,255,.1); border-radius: 8px; padding: 14px 18px; margin: 12px 0; }
+    .footer { text-align: center; padding: 40px 0; color: var(--text-muted); font-size: 0.78rem; }
+    @media (max-width: 768px) {
+      .container { padding: 32px 16px 80px; }
+      .section { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="../index.html" class="nav-logo">MIIA</a>
+  <a href="../index.html" class="nav-back">← Volver</a>
+</nav>
+
+<div class="container">
+
+  <div class="header">
+    <div class="badge">Auditoría Interna</div>
+    <h1>Informe MARIANO SINCERO</h1>
+    <p>Auditoría completa de datos, privacidad y seguridad — Desde el día 1</p>
+    <p style="margin-top:4px;font-size:0.8rem;">Última actualización: 6 de abril de 2026</p>
+  </div>
+
+  <!-- 1. QUÉ DATOS ALMACENA MIIA -->
+  <div class="section">
+    <h2>1. Qué datos almacena MIIA</h2>
+
+    <table>
+      <thead><tr><th>Dato</th><th>Dónde</th><th>Quién accede</th><th>Encriptado</th></tr></thead>
+      <tbody>
+        <tr><td>Email, nombre, foto</td><td>Firebase Auth + Firestore</td><td>Solo el propio usuario</td><td><span class="verdict verdict-ok">Sí (AES-256)</span></td></tr>
+        <tr><td>Productos y precios</td><td>Firestore businesses/{bizId}/products</td><td>Owner + agentes asignados</td><td><span class="verdict verdict-ok">Sí (en reposo)</span></td></tr>
+        <tr><td>Cerebro del negocio</td><td>Firestore businesses/{bizId}/brain</td><td>Owner + agentes asignados</td><td><span class="verdict verdict-ok">Sí (en reposo)</span></td></tr>
+        <tr><td>Contactos y grupos</td><td>Firestore contact_groups + contact_index</td><td>Solo el owner</td><td><span class="verdict verdict-ok">Sí (en reposo)</span></td></tr>
+        <tr><td>Conversaciones (contexto IA)</td><td>Memoria RAM del servidor</td><td>Nadie directamente</td><td><span class="verdict verdict-warn">En tránsito sí, en RAM no</span></td></tr>
+        <tr><td>Sesiones de entrenamiento</td><td>Firestore businesses/{bizId}/sessions</td><td>Solo el owner</td><td><span class="verdict verdict-ok">Sí (en reposo)</span></td></tr>
+        <tr><td>Preferencias deportivas</td><td>Firestore miia_sports</td><td>Solo el owner</td><td><span class="verdict verdict-ok">Sí (en reposo)</span></td></tr>
+        <tr><td>Agenda personal</td><td>Firestore personal/miia_agenda</td><td>Solo el owner</td><td><span class="verdict verdict-ok">Sí (en reposo)</span></td></tr>
+        <tr><td>Sesión WhatsApp (keys)</td><td>Firestore (encrypted)</td><td>Solo el backend del tenant</td><td><span class="verdict verdict-ok">Sí (AES-256-CBC)</span></td></tr>
+        <tr><td>Contadores de uso</td><td>Firestore stats/counters</td><td>Owner + Admin (agregados)</td><td><span class="verdict verdict-ok">Sí (en reposo)</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 2. QUÉ NO ALMACENA MIIA -->
+  <div class="section">
+    <h2>2. Qué NO almacena MIIA</h2>
+    <ul>
+      <li><strong>Mensajes de WhatsApp:</strong> NO se guardan en disco ni en base de datos. Solo se mantienen temporalmente en RAM para contexto de la conversación activa. Al reiniciar el servidor, se pierden.</li>
+      <li><strong>Audios/imágenes/videos:</strong> NO se almacenan. Se procesan en memoria y se descartan.</li>
+      <li><strong>Contraseñas:</strong> NO existen. La autenticación es vía Google OAuth (Firebase Auth).</li>
+      <li><strong>Datos de tarjeta de crédito:</strong> NO pasan por MIIA. Los pagos los procesa Paddle (PCI-DSS compliant).</li>
+      <li><strong>Conversaciones de otros usuarios:</strong> cada tenant está completamente aislado.</li>
+    </ul>
+  </div>
+
+  <!-- 3. QUIÉN PUEDE VER QUÉ -->
+  <div class="section">
+    <h2>3. Quién puede ver qué</h2>
+
+    <table>
+      <thead><tr><th>Rol</th><th>Puede ver</th><th>NO puede ver</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Owner</strong></td>
+          <td>Sus negocios, contactos, agenda, deportes, self-chat, configuraciones</td>
+          <td>Mensajes de sus agentes con sus leads, datos de otros owners</td>
+        </tr>
+        <tr>
+          <td><strong>Agente</strong></td>
+          <td>Solo el cerebro del negocio asignado, sus propios leads</td>
+          <td>Datos del owner, otros negocios, otros agentes, agenda, deportes</td>
+        </tr>
+        <tr>
+          <td><strong>Familiar (slot)</strong></td>
+          <td>Su self-chat privado, agenda familiar compartida</td>
+          <td>Negocios del owner, leads, otros familiares</td>
+        </tr>
+        <tr>
+          <td><strong>Admin (Mariano)</strong></td>
+          <td>Métricas agregadas (contadores), estado de conexión, plan activo</td>
+          <td>Mensajes, conversaciones, contactos, cerebros de CUALQUIER usuario</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <strong>Regla de oro:</strong> El admin ve NÚMEROS, nunca CONTENIDO. Los contadores (mensajes procesados, contactos totales) se almacenan por separado y no contienen ningún dato personal o contenido de mensajes.
+    </div>
+  </div>
+
+  <!-- 4. SEGURIDAD TÉCNICA -->
+  <div class="section">
+    <h2>4. Seguridad técnica</h2>
+
+    <h3>Encriptación</h3>
+    <ul>
+      <li><strong>En tránsito:</strong> HTTPS/TLS en todas las conexiones (Railway fuerza HTTPS)</li>
+      <li><strong>En reposo:</strong> Firebase Firestore encripta automáticamente con AES-256 (Google Cloud)</li>
+      <li><strong>Sesiones WA:</strong> Encriptadas con AES-256-CBC antes de guardar en Firestore</li>
+      <li><strong>Backups:</strong> Encriptados con AES-256-CBC antes de descarga</li>
+    </ul>
+
+    <h3>Autenticación</h3>
+    <ul>
+      <li>Firebase Auth con Google OAuth 2.0</li>
+      <li>Tokens JWT verificados en cada request al backend</li>
+      <li>verifyTenantAuth: usuario solo accede a su propio uid</li>
+      <li>verifyAdminToken: solo emails en ADMIN_EMAILS</li>
+    </ul>
+
+    <h3>Firestore Security Rules</h3>
+    <ul>
+      <li>Cada usuario solo lee/escribe sus propios documentos</li>
+      <li>Colección conversations: <code>allow read, write: if false</code> — bloqueada desde frontend</li>
+      <li>Audit logs: solo lectura por el propio usuario, escritura solo backend</li>
+      <li>Default deny: todo lo no explícitamente permitido está bloqueado</li>
+    </ul>
+
+    <h3>Anti-detección WhatsApp</h3>
+    <ul>
+      <li>Contact Gate: cascada 8 pasos — MIIA no existe sin trigger</li>
+      <li>Rate Limiter: 5 niveles, máximo 250 msgs/día</li>
+      <li>Human Delay: delays contextuales (lectura + typing + ocupado)</li>
+      <li>Night Mode: auto-sleep 22:15-23:05</li>
+      <li>Read Receipts Selectivos: contactos ignorados = ticks grises</li>
+      <li>Reacciones: 30% (no 100%)</li>
+      <li>Split Casual: 30% de respuestas medianas se parten</li>
+    </ul>
+  </div>
+
+  <!-- 5. FLUJO DE DATOS CON TERCEROS -->
+  <div class="section">
+    <h2>5. Flujo de datos con terceros</h2>
+
+    <table>
+      <thead><tr><th>Tercero</th><th>Qué recibe</th><th>Para qué</th><th>Retiene datos?</th></tr></thead>
+      <tbody>
+        <tr><td>Google Gemini API</td><td>Prompt (contexto conversación + instrucciones)</td><td>Generar respuestas IA</td><td><span class="verdict verdict-ok">No (API stateless)</span></td></tr>
+        <tr><td>Firebase/Google Cloud</td><td>Datos de usuario encriptados</td><td>Base de datos + Auth</td><td><span class="verdict verdict-warn">Sí (infraestructura)</span></td></tr>
+        <tr><td>Railway</td><td>Código del backend</td><td>Hosting del servidor</td><td><span class="verdict verdict-ok">Solo código, no datos</span></td></tr>
+        <tr><td>Vercel</td><td>Frontend estático (HTML/CSS/JS)</td><td>Hosting del frontend</td><td><span class="verdict verdict-ok">Solo código, no datos</span></td></tr>
+        <tr><td>Paddle</td><td>Email del usuario</td><td>Procesamiento de pagos</td><td><span class="verdict verdict-warn">Sí (PCI-DSS)</span></td></tr>
+        <tr><td>WhatsApp (Meta)</td><td>Mensajes (via Baileys WebSocket)</td><td>Canal de comunicación</td><td><span class="verdict verdict-warn">Sí (política Meta)</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="highlight">
+      <strong>Nota sobre Gemini:</strong> Google Gemini API no entrena modelos con datos enviados vía API (per Google AI Studio ToS, abril 2025). Los prompts no se almacenan más allá del request.
+    </div>
+  </div>
+
+  <!-- 6. DERECHOS DEL USUARIO -->
+  <div class="section">
+    <h2>6. Derechos del usuario (self-service)</h2>
+
+    <table>
+      <thead><tr><th>Derecho</th><th>Cómo ejercerlo</th><th>Tiempo</th></tr></thead>
+      <tbody>
+        <tr><td>Descargar todos mis datos</td><td>Dashboard → Conexiones → Descargar mis datos</td><td>Inmediato</td></tr>
+        <tr><td>Eliminar mi cuenta</td><td>Dashboard → Conexiones → Eliminar mi cuenta</td><td>Inmediato e irreversible</td></tr>
+        <tr><td>Cancelar suscripción</td><td>Dashboard → Planes → Cancelar</td><td>Fin del período</td></tr>
+        <tr><td>Modificar mis datos</td><td>Dashboard → Perfil del negocio</td><td>Inmediato</td></tr>
+        <tr><td>Revocar acceso WhatsApp</td><td>Dashboard → Conexiones → Desconectar</td><td>Inmediato</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 7. RIESGOS CONOCIDOS Y MITIGACIONES -->
+  <div class="section">
+    <h2>7. Riesgos conocidos y mitigaciones</h2>
+
+    <table>
+      <thead><tr><th>Riesgo</th><th>Severidad</th><th>Mitigación</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>WhatsApp puede banear cuentas que usan Baileys</td>
+          <td><span class="verdict verdict-risk">Alto</span></td>
+          <td>Rate limiter, human delays, anti-detección completo, Dual-Engine con auto-switch</td>
+        </tr>
+        <tr>
+          <td>Conversaciones en RAM se pierden al reiniciar</td>
+          <td><span class="verdict verdict-warn">Medio</span></td>
+          <td>Contexto se reconstruye parcialmente desde Firestore. Feature de persistencia planificado.</td>
+        </tr>
+        <tr>
+          <td>API keys de Gemini expuestas si Railway se compromete</td>
+          <td><span class="verdict verdict-warn">Medio</span></td>
+          <td>Keys en variables de entorno (no en código). Pool de 17 backup keys con rotación.</td>
+        </tr>
+        <tr>
+          <td>Firebase Admin SDK bypasea security rules</td>
+          <td><span class="verdict verdict-warn">Medio</span></td>
+          <td>Backend nunca lee mensajes de otros usuarios. Rules protegen acceso frontend. Contadores agregados para admin.</td>
+        </tr>
+        <tr>
+          <td>Meta prohibió chatbots IA terceros (oct 2025)</td>
+          <td><span class="verdict verdict-risk">Alto</span></td>
+          <td>MIIA es indetectable. Anti-detección completo. Plan B: canal propio de mensajería (P9.1).</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 8. HISTORIAL DE CAMBIOS DE PRIVACIDAD -->
+  <div class="section">
+    <h2>8. Historial de cambios de privacidad</h2>
+    <ul>
+      <li><strong>Sesión 16 (Abril 2026):</strong> Firestore Security Rules implementadas. Admin NUNCA puede leer mensajes desde frontend. Conversations bloqueadas.</li>
+      <li><strong>Sesión 16 (Abril 2026):</strong> Copyright headers en HTTP + meta tags en frontend.</li>
+      <li><strong>Sesión 17 (Abril 2026):</strong> Botón "Eliminar mi cuenta" (triple confirmación, irreversible). Botón "Descargar mis datos" (export v2.0 multi-negocio).</li>
+      <li><strong>Sesión 17 (Abril 2026):</strong> Privacy counters — contadores agregados para que admin vea métricas sin acceder a contenido.</li>
+      <li><strong>Sesión 17 (Abril 2026):</strong> ToS actualizados (pricing, procesamiento mensajes, no pago, eliminación).</li>
+      <li><strong>Sesión 17 (Abril 2026):</strong> Informe MARIANO SINCERO (este documento).</li>
+    </ul>
+  </div>
+
+  <!-- 9. COMPROMISOS -->
+  <div class="section">
+    <h2>9. Compromisos de MIIA</h2>
+    <div class="highlight">
+      <ul style="padding-left:16px;">
+        <li>El admin (Mariano) <strong>NUNCA</strong> leerá mensajes o conversaciones de ningún usuario.</li>
+        <li>Los datos de un usuario <strong>NUNCA</strong> serán visibles para otro usuario.</li>
+        <li>Los datos <strong>NUNCA</strong> se venderán a terceros.</li>
+        <li>Cada usuario puede eliminar su cuenta y todos sus datos en cualquier momento, sin intermediarios.</li>
+        <li>Este informe se actualizará con cada cambio relevante en el manejo de datos.</li>
+        <li>Se generará un informe de privacidad semestral para cada usuario (planificado P4.3).</li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+
+<footer class="footer">
+  <p>&copy; 2024-2026 Mariano De Stefano. Todos los derechos reservados.</p>
+  <p style="margin-top:4px;"><a href="../terms.html" style="color:var(--text-muted);">Términos</a> · <a href="../terms.html#2" style="color:var(--text-muted);">Privacidad</a> · <a href="../index.html" style="color:var(--text-muted);">Inicio</a></p>
+</footer>
+
+</body>
+</html>
