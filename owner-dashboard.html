@@ -3955,11 +3955,30 @@
     const statusEl = document.getElementById('rulesStatus');
     statusEl.textContent = 'Guardando...';
     try {
+      // Blacklist: palabras genéricas que NUNCA pueden ser keywords de negocio
+      const FORBIDDEN = new Set([
+        'hola','hey','hi','hello','buenas','buen dia','buenos dias','buenas tardes','buenas noches',
+        'que tal','como estas','como andas','como va','que onda','que haces','chau','adios',
+        'nos vemos','hasta luego','bye','gracias','por favor','perdon','disculpa','dale','listo',
+        'ok','si','no','bueno','perfecto','claro','ya','vale','de nada','con gusto',
+        'quien sos','que es esto','me pasaron tu numero','de donde sos','donde queda',
+        'ja','jaja','jajaja','ah','oh','mmm','xd','lol'
+      ]);
+      const normalize = (t) => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
       const parseKeywords = (keywords) => {
         return keywords
           .filter(k => k.keyword.trim())
           .flatMap(k => k.keyword.split(',').map(kw => kw.trim()).filter(kw => kw));
       };
+      // Validar contra blacklist
+      const allKws = [...parseKeywords(leadKeywords), ...parseKeywords(clientKeywords)];
+      const forbidden = allKws.filter(kw => FORBIDDEN.has(normalize(kw)));
+      if (forbidden.length > 0) {
+        statusEl.textContent = `Palabras muy genericas (no permitidas): ${forbidden.join(', ')}. Usa palabras especificas de tu negocio.`;
+        statusEl.style.color = 'var(--danger, #ef4444)';
+        setTimeout(() => { statusEl.style.color = ''; }, 6000);
+        return;
+      }
       await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/contact-rules`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },

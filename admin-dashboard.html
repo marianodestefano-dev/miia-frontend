@@ -1512,7 +1512,12 @@
     const statusEl = document.getElementById('adminRulesStatus');
     statusEl.textContent = 'Guardando...';
     try {
+      const FORBIDDEN = new Set(['hola','hey','hi','hello','buenas','buen dia','buenos dias','buenas tardes','buenas noches','que tal','como estas','como andas','chau','adios','gracias','por favor','perdon','disculpa','dale','listo','ok','si','no','bueno','perfecto','claro','ya','vale','de nada','ja','jaja','jajaja','ah','oh','mmm','xd','lol']);
+      const norm = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
       const parse = arr => arr.filter(k=>k.keyword.trim()).flatMap(k=>k.keyword.split(',').map(kw=>kw.trim()).filter(x=>x));
+      const allKws = [...parse(adminLeadKeywords), ...parse(adminClientKeywords)];
+      const bad = allKws.filter(kw => FORBIDDEN.has(norm(kw)));
+      if (bad.length > 0) { statusEl.textContent = `Palabras muy genericas: ${bad.join(', ')}`; statusEl.style.color='var(--danger,#ef4444)'; setTimeout(()=>{statusEl.style.color='';},6000); return; }
       await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/contact-rules`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ lead_keywords:parse(adminLeadKeywords), client_keywords:parse(adminClientKeywords) }) });
       statusEl.textContent = 'Reglas guardadas';
       setTimeout(() => statusEl.textContent='', 3000);
