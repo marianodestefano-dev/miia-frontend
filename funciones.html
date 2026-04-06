@@ -294,7 +294,7 @@
   <section class="page-hero">
     <div class="s-label fade-in">Funciones</div>
     <h1 class="fade-in">Todo lo que <span class="text-gradient">MIIA</span> hace por vos</h1>
-    <p class="fade-in">80+ funciónes en un solo asistente. Ventas, agenda, familia, deporte, voz, email, integraciónes y mucho más. Todo desde tu WhatsApp personal.</p>
+    <p class="fade-in">100+ funciones en un solo asistente. Ventas, agenda, familia, deporte, voz, email, viajes, precios, protección y mucho más. Todo desde tu WhatsApp personal.</p>
   </section>
 
   <!-- ═══ CATEGORY NAV ═══ -->
@@ -311,7 +311,10 @@
       <a href="#guardian-kids" class="cat-btn">Protección KIDS</a>
       <a href="#guardian-abuelos" class="cat-btn">Protección ABUELOS</a>
       <a href="#deporte" class="cat-btn">Deporte</a>
-      <a href="#integraciónes" class="cat-btn">Integraciones</a>
+      <a href="#precios" class="cat-btn">Rastreo de Precios</a>
+      <a href="#viajes" class="cat-btn">Viajes</a>
+      <a href="#miniapp" class="cat-btn">Mini App</a>
+      <a href="#integraciones" class="cat-btn">Integraciones</a>
       <a href="#personalidad" class="cat-btn">Personalidad</a>
       <a href="#seguridad" class="cat-btn">Seguridad</a>
     </div>
@@ -321,7 +324,7 @@
   <section class="s">
     <div class="container">
       <div class="stats fade-in">
-        <div class="stat"><div class="stat-val text-gradient">80+</div><div class="stat-label">Funciones activas</div></div>
+        <div class="stat"><div class="stat-val text-gradient">100+</div><div class="stat-label">Funciones activas</div></div>
         <div class="stat"><div class="stat-val text-gradient">10</div><div class="stat-label">Deportes en vivo</div></div>
         <div class="stat"><div class="stat-val text-gradient">6</div><div class="stat-label">Niveles de confianza</div></div>
         <div class="stat"><div class="stat-val text-gradient">24/7</div><div class="stat-label">Activa sin parar</div></div>
@@ -869,9 +872,131 @@
   </section>
 
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- 9. INTEGRACIONES -->
+  <!-- 9. RASTREO DE PRECIOS -->
   <!-- ═══════════════════════════════════════════════════════════════ -->
-  <section class="s s-alt" id="integraciónes">
+  <section class="s s-alt" id="precios">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Rastreo de Precios</div>
+        <h2 class="s-title">Tu cazadora de ofertas.<br>Nunca mas pagues de mas.</h2>
+        <p class="s-desc">MIIA sigue productos online, detecta bajas de precio y hasta contacta a la tienda por vos.</p>
+      </div>
+      <div class="func-grid fade-in">
+        <div class="func">
+          <h3>Seguimiento de productos</h3>
+          <p>Pega un link en el self-chat y MIIA empieza a rastrear el precio. Polling cada 30 minutos en modo normal, cada 4 horas en modo Cyber.</p>
+        </div>
+        <div class="func">
+          <h3>Alertas de precio</h3>
+          <p>Te avisa cuando un producto baja mas del 3%. Con emojis segun la magnitud: baja leve, buena oferta, o precio historico.</p>
+        </div>
+        <div class="func">
+          <h3>Contacto proactivo a tiendas</h3>
+          <p>Si la tienda tiene WhatsApp visible, MIIA le escribe preguntando por disponibilidad. Si responden, te avisa en tu self-chat.</p>
+        </div>
+        <div class="func">
+          <h3>Historial de precios</h3>
+          <p>Guarda cada precio que detecta en Firestore. Podes ver la evolucion del precio y decidir el mejor momento para comprar.</p>
+        </div>
+        <div class="func">
+          <h3>Alerta de stock bajo</h3>
+          <p>Si un producto pasa de "disponible" a "pocas unidades", MIIA te avisa antes de que se agote.</p>
+        </div>
+        <div class="func">
+          <h3>Modo Cyber</h3>
+          <p>Activa el modo Cyber Days y MIIA revisa precios cada 4 horas en vez de diariamente. Ideal para Black Friday, Hot Sale y Cyber Monday.</p>
+        </div>
+      </div>
+      <div class="chat-example fade-in">
+        <div class="bub bub-owner">Segui este producto: https://mercadolibre.com/auriculares-sony<div class="bub-t">14:20</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">🔍</span> Anotado! Sony WH-1000XM5 a $289.990 COP. Te aviso si baja.<div class="bub-t">14:21</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">🔥</span> Baja de precio! Sony WH-1000XM5: $289.990 → $219.990 (-24.1%). Pocas unidades.<div class="bub-t">+2 dias</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 10. VIAJES -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s" id="viajes">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Viajes</div>
+        <h2 class="s-title">Tu agente de viajes personal.<br>Desde WhatsApp.</h2>
+        <p class="s-desc">Busca vuelos, crea alertas de precio, genera checklists y te avisa cuando vence tu pasaporte.</p>
+      </div>
+      <div class="func-grid fade-in">
+        <div class="func">
+          <h3>Busqueda de vuelos</h3>
+          <p>"Vuelos BOG a EZE en mayo" y MIIA busca las mejores opciones con precio, aerolinea, escalas y duracion.</p>
+        </div>
+        <div class="func">
+          <h3>Alertas de vuelos baratos</h3>
+          <p>"Avisame si hay vuelos a Buenos Aires por menos de $200". MIIA revisa cada 6 horas y te avisa cuando encuentra.</p>
+        </div>
+        <div class="func">
+          <h3>Info de destino</h3>
+          <p>Visa, moneda, clima, enchufes, vacunas, transporte, eSIM y tips de seguridad. Todo en un mensaje.</p>
+        </div>
+        <div class="func">
+          <h3>Checklist de viaje</h3>
+          <p>MIIA genera una lista personalizada segun destino, duracion y proposito. Documentos, equipaje, finanzas, tech y salud.</p>
+        </div>
+        <div class="func">
+          <h3>Pasaporte</h3>
+          <p>Guarda la fecha de vencimiento de tu pasaporte y te avisa 3 meses antes. Muchos paises requieren 6 meses de vigencia.</p>
+        </div>
+      </div>
+      <div class="chat-example fade-in">
+        <div class="bub bub-owner">Que necesito para viajar a Chile?<div class="bub-t">10:15</div></div>
+        <div class="bub bub-miia"><span class="bub-emoji">🛂</span> Colombianos: no necesitas visa (hasta 90 dias). Moneda: CLP (~4.300/USD). Clima ahora: otoño, 8-18°C. Enchufe tipo C/L. No requiere vacunas.<div class="bub-t">10:16</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 11. MINI APP -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s s-alt" id="miniapp">
+    <div class="container">
+      <div class="fade-in">
+        <div class="s-label">Mini App</div>
+        <h2 class="s-title">Proteccion que va<br>mas alla de WhatsApp.</h2>
+        <p class="s-desc">Una app liviana (PWA) que complementa a MIIA con GPS, deteccion de caidas y boton de emergencia.</p>
+      </div>
+      <div class="func-grid fade-in">
+        <div class="func">
+          <h3>Boton SOS</h3>
+          <p>Un boton gigante que envia alerta inmediata con ubicacion GPS al owner y a todos los adultos responsables por email.</p>
+        </div>
+        <div class="func">
+          <h3>Deteccion de caidas</h3>
+          <p>Usa el acelerometro del celular para detectar caidas. Si no respondes en 30 segundos, activa alerta automatica.</p>
+        </div>
+        <div class="func">
+          <h3>GPS en segundo plano</h3>
+          <p>Comparte ubicacion en tiempo real sin tener la app abierta. Ideal para adultos mayores y niños.</p>
+        </div>
+        <div class="func">
+          <h3>Monitoreo de bateria</h3>
+          <p>MIIA te avisa si la bateria del celular protegido baja del 10%. Asi nunca se queda sin comunicacion.</p>
+        </div>
+        <div class="func">
+          <h3>Check-in diario</h3>
+          <p>Si un contacto protegido no escribe en 12 horas, MIIA te alerta. Si pasan 24 horas, notifica por email.</p>
+        </div>
+        <div class="func">
+          <h3>Sin app stores</h3>
+          <p>Es una PWA: se instala desde el navegador, funciona offline y no necesita cuenta de desarrollador ni aprobacion de Apple o Google.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- 12. INTEGRACIONES -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <section class="s" id="integraciones">
     <div class="container">
       <div class="fade-in">
         <div class="s-label">Integraciones</div>
@@ -1018,7 +1143,7 @@
 
   <!-- ═══ CTA FINAL ═══ -->
   <section class="cta">
-    <h2 class="fade-in">80+ funciónes. Un solo WhatsApp.</h2>
+    <h2 class="fade-in">100+ funciones. Un solo WhatsApp.</h2>
     <p class="fade-in">Todo esto funcióna desde tu WhatsApp personal. Sin apps extra, sin configuración compleja. Conecta y listo.</p>
     <div class="fade-in" style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
       <a href="login.html?tab=register" class="btn btn-w">
