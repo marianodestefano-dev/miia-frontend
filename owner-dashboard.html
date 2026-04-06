@@ -1582,6 +1582,37 @@
         </div>
 
       </div><!-- end grid -->
+
+      <!-- ═══ PRIVACIDAD Y DATOS ═══ -->
+      <div style="margin-top:32px;">
+        <h2 style="color:var(--text-dark);font-size:1.1rem;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+          <svg style="width:20px;height:20px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Privacidad y Datos
+        </h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+          <!-- Descargar mis datos -->
+          <div style="background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;font-size:0.92rem;color:var(--text-dark);margin-bottom:6px;">Descargar mis datos</div>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 14px;line-height:1.5;">Descarga una copia de todos tus datos: negocios, contactos, configuraciones y preferencias. Formato encriptado .miia</p>
+            <button id="btnExportData" onclick="exportMIIA()" style="width:100%;padding:10px;background:rgba(124,58,237,.1);color:var(--primary);border:1px solid rgba(124,58,237,.25);border-radius:8px;cursor:pointer;font-size:0.85rem;font-family:inherit;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;">
+              <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Descargar mis datos
+            </button>
+            <p style="font-size:0.68rem;color:var(--text-muted);margin:8px 0 0;text-align:center;">Máximo 1 vez por semana</p>
+          </div>
+
+          <!-- Eliminar mi cuenta -->
+          <div style="background:rgba(239,68,68,.04);border:1px solid rgba(239,68,68,.15);border-radius:12px;padding:20px;">
+            <div style="font-weight:700;font-size:0.92rem;color:var(--danger);margin-bottom:6px;">Eliminar mi cuenta</div>
+            <p style="font-size:0.78rem;color:var(--text-muted);margin:0 0 14px;line-height:1.5;">Elimina permanentemente tu cuenta y todos tus datos. Esta acción es irreversible. Se desconectará WhatsApp y se borrarán negocios, contactos y configuraciones.</p>
+            <button id="btnDeleteAccount" onclick="deleteMyAccount()" style="width:100%;padding:10px;background:rgba(239,68,68,.1);color:var(--danger);border:1px solid rgba(239,68,68,.3);border-radius:8px;cursor:pointer;font-size:0.85rem;font-family:inherit;font-weight:600;display:flex;align-items:center;justify-content:center;gap:8px;">
+              <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+              Eliminar mi cuenta
+            </button>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div><!-- end section-connections -->
 
@@ -2549,6 +2580,52 @@
       }
       btn.disabled = false;
       btn.textContent = 'Exportar MIIA';
+    }
+
+    // ═══ DELETE MY ACCOUNT ═══
+    async function deleteMyAccount() {
+      const user = auth.currentUser;
+      if (!user) return showToast('Debes iniciar sesión', 'warning');
+
+      // Triple confirmación
+      if (!confirm('⚠️ ¿Estás seguro de que quieres ELIMINAR tu cuenta?\n\nSe borrarán permanentemente:\n- Todos tus negocios y productos\n- Todos tus contactos y grupos\n- Tu conexión de WhatsApp\n- Todas tus configuraciones\n\nEsta acción es IRREVERSIBLE.')) return;
+
+      const typed = prompt('Para confirmar, escribe exactamente:\nELIMINAR MI CUENTA');
+      if (typed !== 'ELIMINAR MI CUENTA') {
+        return showToast('Confirmación incorrecta. Cuenta NO eliminada.', 'warning');
+      }
+
+      if (!confirm('ÚLTIMA OPORTUNIDAD: ¿Realmente quieres eliminar TODO? No hay vuelta atrás.')) return;
+
+      const btn = document.getElementById('btnDeleteAccount');
+      btn.disabled = true;
+      btn.innerHTML = 'Eliminando...';
+
+      try {
+        const token = await user.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${user.uid}/account`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ confirm: 'ELIMINAR MI CUENTA' })
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showToast(data.error || 'Error al eliminar', 'error');
+          btn.disabled = false;
+          btn.innerHTML = 'Eliminar mi cuenta';
+          return;
+        }
+        // Sign out and redirect
+        showToast('Cuenta eliminada. Redirigiendo...', 'success');
+        setTimeout(async () => {
+          try { await auth.signOut(); } catch (_) {}
+          window.location.href = 'index.html';
+        }, 2000);
+      } catch (e) {
+        showToast('Error: ' + e.message, 'error');
+        btn.disabled = false;
+        btn.innerHTML = 'Eliminar mi cuenta';
+      }
     }
 
     // ═══ AI PROVIDER CONFIG ═══
