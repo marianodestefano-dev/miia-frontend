@@ -220,10 +220,21 @@
     </div>
     <p>MIIA utiliza un sistema de IA híbrido que incluye:</p>
     <ul>
-      <li><strong>Generación de cerebro premium:</strong> al entrenar a MIIA con información de su negocio, un modelo de IA avanzado (Claude Opus) procesa esa información una única vez para generar artefactos optimizados (prompts, FAQ, guía de tono, reglas de negocio). Estos artefactos mejoran la calidad de todas las respuestas posteriores.</li>
-      <li><strong>Ejecución de respuestas:</strong> las conversaciones en tiempo real son procesadas por el modelo más adecuado según el contexto (Gemini Flash para leads y contactos, Claude Opus para el chat personal del owner).</li>
+      <li><strong>Generación de cerebro premium:</strong> al entrenar a MIIA con información de su negocio, un modelo de IA avanzado procesa esa información una única vez para generar artefactos optimizados (prompts, FAQ, guía de tono, reglas de negocio). Estos artefactos mejoran la calidad de todas las respuestas posteriores.</li>
+      <li><strong>Ejecución de respuestas:</strong> las conversaciones en tiempo real son procesadas por el modelo más adecuado según el contexto (Gemini Flash para leads y contactos, Claude Sonnet para el chat personal del owner).</li>
       <li><strong>Failover automático:</strong> si un proveedor de IA no está disponible, MIIA redirige automáticamente la solicitud a un proveedor alternativo para garantizar continuidad del servicio.</li>
+      <li><strong>API Key del Cliente:</strong> el Cliente puede configurar su propia clave de API de inteligencia artificial (Gemini, OpenAI, Claude) desde la sección Conexiones del dashboard. Cuando el Cliente provee su propia clave, MIIA la utiliza como proveedor principal y reserva las claves de MIIA como respaldo. Si la clave del Cliente falla o alcanza su cuota, MIIA notificará al Cliente y utilizará temporalmente sus propias claves de respaldo.</li>
     </ul>
+
+    <h3>1.5b Integración con Google Calendar</h3>
+    <p>MIIA puede integrarse con Google Calendar del Cliente a través de OAuth 2.0 para gestionar su agenda. Al conectar su Google Calendar, el Cliente autoriza a MIIA a:</p>
+    <ul>
+      <li>Consultar eventos existentes para verificar disponibilidad.</li>
+      <li>Crear, modificar y cancelar eventos en nombre del Cliente.</li>
+      <li>Proponer horarios libres a contactos del Cliente.</li>
+      <li>Generar links de Google Meet para reuniones virtuales.</li>
+    </ul>
+    <p>MIIA auto-detecta el sistema de calendario según el dominio del email de registro. Actualmente solo Google Calendar es compatible. Microsoft Outlook Calendar será soportado en futuras versiones.</p>
 
     <h3>1.6 Uso Aceptable</h3>
     <p>El Cliente se compromete a:</p>

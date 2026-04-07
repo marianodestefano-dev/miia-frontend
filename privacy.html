@@ -280,9 +280,15 @@
     <p>MIIA no vende ni comparte datos personales con terceros, salvo:</p>
     <ul style="padding-left:20px;margin-top:8px;">
       <li>Proveedores de infraestructura (Google Cloud, Firebase, Railway).</li>
-      <li>Proveedores de IA (Google Gemini, Anthropic Claude, OpenAI). MIIA selecciona automáticamente el proveedor según el contexto. Los datos enviados se limitan al contexto estrictamente necesario.</li>
+      <li>Proveedores de IA (Google Gemini, Anthropic Claude, OpenAI). MIIA selecciona automáticamente el proveedor según el contexto. Los datos enviados se limitan al contexto estrictamente necesario. Cuando el Cliente configura su propia clave de API, MIIA utiliza la clave del Cliente como proveedor principal.</li>
+      <li>Google Calendar API — solo cuando el Cliente conecta su cuenta de Google. MIIA accede exclusivamente a eventos del calendario para gestión de agenda.</li>
       <li>Requerimientos legales o judiciales aplicables.</li>
     </ul>
+  </div>
+
+  <div class="card" style="margin-bottom:16px;">
+    <h3>Claves de API del Cliente</h3>
+    <p>Si el Cliente configura su propia clave de API de IA, MIIA la almacena de forma segura en Firestore y la utiliza exclusivamente para procesar las conversaciones del Cliente. MIIA nunca comparte, registra ni expone las claves del Cliente. Si la clave falla, MIIA utiliza sus propias claves de respaldo y notifica al Cliente.</p>
   </div>
 
   <div class="card" style="margin-bottom:16px;">
