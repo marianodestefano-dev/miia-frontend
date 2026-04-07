@@ -2,10 +2,256 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0;url=terms.html#2">
-  <title>Redirigiendo a Política de Privacidad...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA - Privacidad y Seguridad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00E5FF;
+      --secondary: #FF1744;
+      --bg-deep: #0F0F0F;
+      --bg-card: #141414;
+      --bg-surface: #1A1A1A;
+      --border: rgba(0,229,255,0.08);
+      --text-white: #F1F5F9;
+      --text-primary: #E2E8F0;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --gradient-main: linear-gradient(135deg, #00E5FF 0%, #7C3AED 50%, #FF1744 100%);
+      --accent-green: #34D399;
+      --radius: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-secondary);
+      min-height: 100vh;
+      line-height: 1.7;
+    }
+    .hero {
+      text-align: center;
+      padding: 80px 24px 50px;
+      background: linear-gradient(180deg, rgba(0,229,255,.06) 0%, transparent 60%);
+    }
+    .hero h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: var(--gradient-main);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 40px;
+    }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+    }
+    .card-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+    }
+    .card h3 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 8px;
+    }
+    .card p { font-size: 0.88rem; line-height: 1.6; }
+    .section-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin: 40px 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .principle {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin-bottom: 12px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .principle-check {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(52,211,153,.15);
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 0.8rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+    .principle strong { color: var(--text-white); }
+    .cta-box {
+      text-align: center;
+      padding: 40px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      margin-top: 40px;
+    }
+    .cta-box a {
+      display: inline-block;
+      padding: 12px 28px;
+      background: var(--gradient-main);
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      margin-top: 14px;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      margin-bottom: 30px;
+    }
+    .footer {
+      text-align: center;
+      padding: 30px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border);
+    }
+    .footer a { color: var(--primary); text-decoration: none; }
+  </style>
 </head>
 <body>
-  <p>Redirigiendo a <a href="terms.html#2">Política de Privacidad</a>...</p>
+
+<div class="hero">
+  <h1>Privacidad en MIIA</h1>
+  <p>Tu privacidad no es una feature, es la base de todo. Esto es lo que hacemos para protegerte.</p>
+</div>
+
+<div class="container">
+  <a href="index.html" class="back-link">&larr; Volver al inicio</a>
+
+  <!-- Pilares -->
+  <div class="grid">
+    <div class="card">
+      <div class="card-icon" style="background:rgba(0,229,255,.1);color:var(--primary);">&#128274;</div>
+      <h3>Encriptación total</h3>
+      <p>Datos en tránsito con HTTPS/TLS. Datos en reposo con AES-256 (Google Cloud). Exportaciones encriptadas con AES-256-CBC.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:rgba(52,211,153,.1);color:var(--accent-green);">&#128065;</div>
+      <h3>Transparencia de accesos</h3>
+      <p>Cada acceso a tus datos queda registrado. Desde el dashboard podés ver quién accedió, cuándo y a qué. Informe semestral automático.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:rgba(124,58,237,.1);color:#7C3AED;">&#128101;</div>
+      <h3>Aislamiento por slot</h3>
+      <p>Cada familiar y agente tiene su espacio 100% privado. El owner no ve el self-chat de adultos. Los agentes solo ven su negocio asignado.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:rgba(255,23,68,.1);color:var(--secondary);">&#128465;</div>
+      <h3>Control total</h3>
+      <p>Descargá tus datos, eliminá tu cuenta, revocá permisos. Todo desde el dashboard, sin contactar soporte. Self-service completo.</p>
+    </div>
+  </div>
+
+  <!-- Principios -->
+  <div class="section-title">Nuestros principios</div>
+
+  <div class="principle">
+    <div class="principle-check">&#10003;</div>
+    <div><strong>MIIA nunca lee lo que no le corresponde.</strong> Solo procesa mensajes de conversaciones donde está activa. Conversaciones privadas sin MIIA = invisibles.</div>
+  </div>
+  <div class="principle">
+    <div class="principle-check">&#10003;</div>
+    <div><strong>El admin nunca ve tus mensajes.</strong> El administrador de MIIA ve métricas agregadas (cantidad de mensajes, contactos), nunca el contenido.</div>
+  </div>
+  <div class="principle">
+    <div class="principle-check">&#10003;</div>
+    <div><strong>No vendemos datos.</strong> MIIA no comparte datos personales con terceros. Solo usamos proveedores esenciales (Google Cloud, Firebase, Gemini, Claude, OpenAI) con datos mínimos necesarios para generar respuestas.</div>
+  </div>
+  <div class="principle">
+    <div class="principle-check">&#10003;</div>
+    <div><strong>Derecho al olvido real.</strong> Al eliminar tu cuenta, se borran TODOS tus datos: negocios, contactos, sesiones WA, configuraciones, historial. Inmediato e irreversible.</div>
+  </div>
+  <div class="principle">
+    <div class="principle-check">&#10003;</div>
+    <div><strong>Menores protegidos.</strong> Menores de 13: supervisión obligatoria. 13-17: el owner decide el nivel de supervisión. Cumplimos con estándares de protección de menores.</div>
+  </div>
+  <div class="principle">
+    <div class="principle-check">&#10003;</div>
+    <div><strong>Auditoría permanente.</strong> Cada acceso a datos, exportación, cambio de configuración y evento sensible queda registrado con timestamp, actor y recurso.</div>
+  </div>
+
+  <!-- Tus derechos -->
+  <div class="section-title">Tus derechos</div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Descargar tus datos</h3>
+      <p>Exportá una copia encriptada de todos tus datos desde el dashboard. Negocios, contactos, configuraciones, historial completo.</p>
+    </div>
+    <div class="card">
+      <h3>Eliminar tu cuenta</h3>
+      <p>Eliminá tu cuenta de forma permanente e inmediata desde el dashboard. Triple confirmación para evitar accidentes.</p>
+    </div>
+    <div class="card">
+      <h3>Ver quién accedió</h3>
+      <p>Consultá el log de accesos a tus datos: quién, cuándo, qué recurso. Resumen de 30 días + historial detallado.</p>
+    </div>
+    <div class="card">
+      <h3>Informe semestral</h3>
+      <p>Cada 6 meses recibís un informe por WhatsApp con métricas, datos almacenados, accesos y recomendaciones de seguridad.</p>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-box">
+    <p style="color:var(--text-white);font-weight:600;font-size:1rem;">Para la versión legal completa</p>
+    <p style="font-size:0.88rem;margin-top:6px;">Leé nuestros Términos de Servicio y Política de Privacidad completa.</p>
+    <a href="terms.html">Ver Términos y Condiciones</a>
+  </div>
+</div>
+
+<div class="footer">
+  MIIA &copy; 2024-2026 Mariano De Stefano. Todos los derechos reservados.<br>
+  <a href="terms.html">Términos</a> &middot; <a href="mailto:hola@miia-app.com">hola@miia-app.com</a>
+</div>
+
 </body>
 </html>
