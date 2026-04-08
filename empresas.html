@@ -137,7 +137,10 @@
     .section { padding: 100px 32px; max-width: var(--max); margin: 0 auto; }
     .section-label {
       font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 2px; color: var(--accent-2); margin-bottom: 12px;
+      letter-spacing: 2px; margin-bottom: 12px;
+      background: linear-gradient(90deg, #E879F9, #A855F7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
     .section-title {
       font-size: clamp(1.8rem, 3vw, 2.5rem);
@@ -166,7 +169,9 @@
       width: 48px; height: 48px; border-radius: 14px;
       display: flex; align-items: center; justify-content: center;
       font-size: 1.4rem; margin-bottom: 20px;
+      background: rgba(192,38,211,0.1) !important;
     }
+    .feature-icon svg { stroke: #E879F9 !important; }
     .feature h3 {
       font-size: 1rem; font-weight: 700; color: var(--tx-1);
       margin-bottom: 8px;
@@ -210,11 +215,11 @@
     .crm-card:hover { border-color: var(--border-h); }
     .crm-card-header {
       padding: 16px 20px;
-      background: rgba(59,91,255,0.05);
+      background: rgba(192,38,211,0.05);
       border-bottom: 1px solid var(--border);
       display: flex; align-items: center; gap: 10px;
     }
-    .crm-card-header svg { width: 20px; height: 20px; stroke: var(--accent-2); }
+    .crm-card-header svg { width: 20px; height: 20px; stroke: #E879F9; }
     .crm-card-header h4 { font-size: 0.88rem; font-weight: 700; color: var(--tx-1); }
     .crm-card-body { padding: 20px; }
     .crm-card-body p { font-size: 0.82rem; color: var(--tx-3); line-height: 1.6; margin-bottom: 12px; }
@@ -524,51 +529,51 @@
   </table>
 
   <div style="margin-top:64px;">
-    <h3 style="color:var(--tx-1);text-align:center;margin-bottom:8px;font-size:1.4rem;">¿Cuánto cuesta tener agentes humanos?</h3>
-    <p style="text-align:center;color:var(--tx-3);margin-bottom:32px;font-size:0.9rem;">Compara el costo mensual de un equipo de agentes vs. MIIA Enterprise</p>
+    <h3 style="color:var(--tx-1);text-align:center;margin-bottom:8px;font-size:1.4rem;">MIIA Enterprise vs. la competencia</h3>
+    <p style="text-align:center;color:var(--tx-3);margin-bottom:32px;font-size:0.9rem;">Compara el costo mensual de las herramientas más populares vs. MIIA Enterprise</p>
     <table class="comparison-table fade-in">
       <thead>
         <tr>
-          <th>Agentes</th>
-          <th class="generic-col">Equipo humano (aprox.)</th>
+          <th>Herramienta</th>
+          <th class="generic-col">Precio mensual</th>
+          <th>Limitaciones</th>
           <th class="enterprise-col">MIIA Enterprise</th>
-          <th>Ahorro</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>1 agente</td>
-          <td class="generic-col">$800 - $1,500/mes</td>
-          <td class="enterprise-col" style="color:var(--accent-2);font-weight:600;">Desde $99/mes</td>
-          <td style="color:var(--green);font-weight:700;">~90%</td>
+          <td>Zendesk Suite</td>
+          <td class="generic-col">$55 - $115/agente</td>
+          <td style="color:var(--tx-3);">No aprende sola, sin WhatsApp nativo</td>
+          <td class="enterprise-col" style="color:#E879F9;font-weight:600;">Agentes ilimitados</td>
         </tr>
         <tr>
-          <td>3 agentes</td>
-          <td class="generic-col">$2,400 - $4,500/mes</td>
-          <td class="enterprise-col" style="color:var(--accent-2);font-weight:600;">Desde $199/mes</td>
-          <td style="color:var(--green);font-weight:700;">~95%</td>
+          <td>HubSpot CRM Pro</td>
+          <td class="generic-col">$450 - $1,200/mes</td>
+          <td style="color:var(--tx-3);">Flujos manuales, sin IA conversacional</td>
+          <td class="enterprise-col" style="color:#E879F9;font-weight:600;">IA que aprende sola</td>
         </tr>
         <tr>
-          <td>5 agentes</td>
-          <td class="generic-col">$4,000 - $7,500/mes</td>
-          <td class="enterprise-col" style="color:var(--accent-2);font-weight:600;">Desde $349/mes</td>
-          <td style="color:var(--green);font-weight:700;">~95%</td>
+          <td>Intercom</td>
+          <td class="generic-col">$74 - $132/agente</td>
+          <td style="color:var(--tx-3);">Chatbot con reglas fijas, sin audios</td>
+          <td class="enterprise-col" style="color:#E879F9;font-weight:600;">Multimedia + coaching</td>
         </tr>
         <tr>
-          <td>10 agentes</td>
-          <td class="generic-col">$8,000 - $15,000/mes</td>
-          <td class="enterprise-col" style="color:var(--accent-2);font-weight:600;">Desde $599/mes</td>
-          <td style="color:var(--green);font-weight:700;">~96%</td>
+          <td>Respond.io</td>
+          <td class="generic-col">$79 - $249/mes</td>
+          <td style="color:var(--tx-3);">Sin cotizaciones PDF, sin ADN vendedor</td>
+          <td class="enterprise-col" style="color:#E879F9;font-weight:600;">PDFs + ADN + informes</td>
         </tr>
         <tr>
-          <td>20+ agentes</td>
-          <td class="generic-col">$16,000 - $30,000/mes</td>
-          <td class="enterprise-col" style="color:var(--accent-2);font-weight:600;">A medida</td>
-          <td style="color:var(--green);font-weight:700;">~97%</td>
+          <td>Salesforce</td>
+          <td class="generic-col">$25 - $300/usuario</td>
+          <td style="color:var(--tx-3);">Setup complejo, meses de implementación</td>
+          <td class="enterprise-col" style="color:#E879F9;font-weight:600;">Onboarding en 1 día</td>
         </tr>
       </tbody>
     </table>
-    <p style="text-align:center;color:var(--tx-3);margin-top:16px;font-size:0.78rem;">* Costos de agentes humanos basados en promedios de Latinoamérica. MIIA atiende 24/7 sin rotación, vacaciones ni capacitación.</p>
+    <p style="text-align:center;color:var(--tx-3);margin-top:16px;font-size:0.78rem;">* Precios públicos de cada plataforma (2025). MIIA Enterprise incluye todo: IA, WhatsApp API, agentes ilimitados, coaching y soporte 24/7.</p>
   </div>
 </section>
 
@@ -742,7 +747,7 @@
 <!-- CONTACT / CTA -->
 <section class="cta-section" id="contact">
   <h2>Hablemos de tu empresa</h2>
-  <p>Déjanos tu web y tu WhatsApp. MIIA analiza tu negocio y te contacta con un plan a medida. Sin compromiso.</p>
+  <p>Déjanos tus datos y analizamos tu negocio. Te contactamos con un plan a medida. Sin compromiso.</p>
 
   <div class="contact-form fade-in">
     <h3>Solicitar información</h3>
@@ -781,7 +786,7 @@
       <button type="submit" class="form-submit">Enviar solicitud</button>
     </form>
     <p class="form-note">
-      Recibirás un correo de confirmación al instante. En breve, MIIA te contactará por WhatsApp para conocer tu empresa a fondo y preparar una propuesta a medida.
+      Recibirás un correo de confirmación al instante.
     </p>
   </div>
 </section>
@@ -841,7 +846,7 @@
             <h3 style="color:var(--tx-1);margin-bottom:12px;">¡Solicitud recibida!</h3>
             <p style="color:var(--tx-3);font-size:0.88rem;line-height:1.7;">
               Te enviamos un correo de confirmación a <strong style="color:var(--tx-1);">${data.email}</strong>.<br><br>
-              En breve te contactaremos por WhatsApp al <strong style="color:var(--tx-1);">${data.phone}</strong> para conocer a fondo tu empresa y preparar una propuesta personalizada.
+              En breve te contactaremos al <strong style="color:var(--tx-1);">${data.phone}</strong> para preparar una propuesta personalizada.
             </p>
           </div>
         `;
