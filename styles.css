@@ -173,6 +173,8 @@ a:hover { color: var(--cyan); text-decoration: none; }
 
 .fade-in { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
+/* Safety net: cards en secciones activas SIEMPRE visibles (fix fade-in sin JS) */
+.page-section:not(.section-hidden) .fade-in { opacity: 1; transform: translateY(0); }
 
 /* ═══ NAVBAR (landing) ═══ */
 #navbar {
