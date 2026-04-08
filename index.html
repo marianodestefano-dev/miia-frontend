@@ -128,6 +128,25 @@
     .nav-toggle span { display: block; width: 18px; height: 1.5px; background: var(--tx-2); margin: 4px 0; border-radius: 1px; }
 
     /* ═══ HERO ═══ */
+    .whatsapp-cta-hero {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 18px;
+      margin-bottom: 32px;
+      background: rgba(37,211,102,0.12);
+      border: 1px solid rgba(37,211,102,0.30);
+      color: #34d399;
+      font-size: 0.82rem;
+      font-weight: 600;
+      border-radius: var(--r-full);
+      transition: all 0.2s;
+      text-decoration: none;
+      letter-spacing: 0.3px;
+    }
+    .whatsapp-cta-hero:hover { background: rgba(37,211,102,0.20); color: #5eead4; transform: scale(1.02); }
+    .whatsapp-cta-hero svg { width: 15px; height: 15px; }
+
     .hero {
       padding: 160px 32px 140px;
       text-align: center;
@@ -183,7 +202,7 @@
     /* ═══ HERO CHAT CAROUSEL ═══ */
     .hero-preview {
       margin: 72px auto 0;
-      max-width: 380px;
+      max-width: 300px;
       position: relative;
     }
     .chat-carousel {
@@ -212,110 +231,74 @@
     }
     /* ═══ iPhone 15 Pro Frame — pixel-perfect ═══ */
     .iphone-frame {
-      /* Titanium body */
-      background: linear-gradient(145deg, #2a2a2e 0%, #1d1d1f 50%, #2a2a2e 100%);
-      border-radius: 52px;
-      padding: 10px;
+      background: #1c1c1e;
+      border-radius: 32px;
+      padding: 4px;
       position: relative;
-      /* Titanium edge highlight */
-      border: 1.5px solid rgba(255,255,255,0.12);
-      /* Layered shadow: ambient + directional + glow */
-      box-shadow:
-        0 2px 4px rgba(0,0,0,0.2),
-        0 8px 24px rgba(0,0,0,0.3),
-        0 32px 64px rgba(0,0,0,0.5),
-        0 64px 120px rgba(0,0,0,0.3),
-        inset 0 1px 0 rgba(255,255,255,0.08),
-        inset 0 -1px 0 rgba(0,0,0,0.3);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+      width: 280px;
+      margin: 0 auto;
     }
-    /* Side buttons — left: silence + volume, right: power */
-    .iphone-frame::before {
-      content: '';
-      position: absolute;
-      left: -2.5px; top: 120px;
-      width: 3px; height: 28px;
-      background: linear-gradient(180deg, #3a3a3e, #2a2a2e, #3a3a3e);
-      border-radius: 2px 0 0 2px;
-      box-shadow:
-        0 32px 0 0 #2a2a2e,
-        0 32px 0 0 linear-gradient(180deg, #3a3a3e, #2a2a2e),
-        0 36px 0 0 #2a2a2e;
-    }
-    .iphone-frame::after {
-      content: '';
-      position: absolute;
-      right: -2.5px; top: 148px;
-      width: 3px; height: 48px;
-      background: linear-gradient(180deg, #3a3a3e, #2a2a2e, #3a3a3e);
-      border-radius: 0 2px 2px 0;
-    }
-    /* Dynamic Island */
+    .iphone-frame::before { display: none; }
+    .iphone-frame::after { display: none; }
+    /* Samsung S25 hole-punch camera */
     .iphone-notch {
-      width: 126px; height: 36px;
-      background: #000;
-      border-radius: 20px;
-      position: absolute;
-      top: 20px; left: 50%; transform: translateX(-50%);
-      z-index: 10;
-      box-shadow: inset 0 0 3px rgba(0,0,0,0.8);
-      display: flex; align-items: center; justify-content: center; gap: 8px;
-    }
-    /* Camera lens inside Dynamic Island */
-    .iphone-notch::before {
-      content: '';
-      width: 10px; height: 10px;
+      width: 8px; height: 8px;
+      background: #0a0a0a;
       border-radius: 50%;
-      background: radial-gradient(circle at 40% 35%, #1a1a2e 0%, #0a0a15 60%, #000 100%);
-      box-shadow: inset 0 0 2px rgba(0,0,255,0.15), 0 0 1px rgba(255,255,255,0.1);
-      margin-left: 28px;
+      position: absolute;
+      top: 12px; left: 50%; transform: translateX(-50%);
+      z-index: 10;
+      border: 1px solid rgba(255,255,255,0.04);
     }
-    /* Status bar area — time + icons */
+    .iphone-notch::before { display: none; }
+    /* Samsung S25 status bar */
     .iphone-status {
-      height: 54px;
+      height: 30px;
       background: #202C33;
       display: flex; align-items: flex-end; justify-content: space-between;
-      padding: 0 24px 6px;
-      font-size: 0.68rem; font-weight: 600; color: #E9EDEF;
+      padding: 0 16px 4px;
+      font-size: 0.58rem; font-weight: 600; color: #E9EDEF;
       position: relative;
     }
     .iphone-status-left { letter-spacing: 0.3px; }
     .iphone-status-right { display: flex; align-items: center; gap: 5px; }
-    .iphone-status-right svg { width: 14px; height: 14px; fill: #E9EDEF; }
+    .iphone-status-right svg { width: 12px; height: 12px; fill: #E9EDEF; }
     .iphone-screen {
-      border-radius: 42px;
+      border-radius: 28px;
       overflow: hidden;
       display: flex; flex-direction: column;
       background: #0B141A;
-      /* Subtle inner bezel shadow */
-      box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.5);
+      -webkit-font-smoothing: antialiased;
     }
     /* ═══ WhatsApp header ═══ */
     .chat-head {
-      padding: 8px 10px;
-      display: flex; align-items: center; gap: 8px;
+      padding: 6px 8px;
+      display: flex; align-items: center; gap: 6px;
       background: #202C33;
     }
     .chat-head .chat-back {
-      width: 20px; height: 20px; fill: none; stroke: #AEBAC1; stroke-width: 2;
+      width: 18px; height: 18px; fill: none; stroke: #AEBAC1; stroke-width: 2;
       flex-shrink: 0;
     }
     .chat-head-actions {
-      margin-left: auto; display: flex; align-items: center; gap: 14px;
+      margin-left: auto; display: flex; align-items: center; gap: 12px;
     }
-    .chat-head-actions svg { width: 16px; height: 16px; fill: #AEBAC1; }
+    .chat-head-actions svg { width: 15px; height: 15px; fill: #AEBAC1; }
     .chat-av {
-      width: 34px; height: 34px; border-radius: 50%;
-      background: linear-gradient(135deg, #00E5FF, #7C3AED, #FF1744);
+      width: 36px; height: 36px; border-radius: 50%;
+      overflow: hidden; flex-shrink: 0;
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.7rem; font-weight: 700; color: white;
-      flex-shrink: 0;
     }
-    .chat-name { font-size: 0.8rem; font-weight: 500; color: #E9EDEF; white-space: nowrap; }
-    .chat-status { font-size: 0.56rem; color: #8696A0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+    .chat-av svg { width: 20px; height: 20px; }
+    .chat-info { display: flex; flex-direction: column; justify-content: center; text-align: left; }
+    .chat-name { font-size: 0.82rem; font-weight: 500; color: #E9EDEF; white-space: nowrap; line-height: 1.2; }
+    .chat-status { font-size: 0.58rem; color: #8696A0; white-space: nowrap; line-height: 1.2; }
     /* ═══ WhatsApp doodle background — real pattern ═══ */
     .chat-msgs {
-      padding: 12px 10px; display: flex; flex-direction: column; gap: 3px;
-      height: 420px;
+      padding: 10px 8px; display: flex; flex-direction: column; gap: 3px;
+      height: 440px;
       overflow: hidden;
       background-color: #0B141A;
       /* WhatsApp doodle pattern — subtle dots instead of hotlinked image */
@@ -326,8 +309,8 @@
     }
     /* ═══ WhatsApp bubbles ═══ */
     .m {
-      max-width: 85%; padding: 5px 7px 1px 7px;
-      border-radius: 7.5px; font-size: 0.78rem; line-height: 1.4;
+      max-width: 85%; padding: 4px 6px 1px 6px;
+      border-radius: 7.5px; font-size: 0.72rem; line-height: 1.35;
       text-align: left; position: relative;
       opacity: 0; transform: translateY(10px) scale(0.97);
       animation: msgIn 0.35s ease forwards;
@@ -405,16 +388,14 @@
       flex: 1; background: #2A3942; border: none; border-radius: 8px;
       padding: 7px 10px; font-size: 0.72rem; color: #8696A0;
     }
-    /* iPhone home indicator */
     .iphone-home-bar {
-      height: 28px; background: #0B141A;
+      height: 16px; background: #0B141A;
       display: flex; align-items: center; justify-content: center;
-      padding-top: 4px;
     }
     .iphone-home-bar::after {
       content: '';
-      width: 120px; height: 4px;
-      background: rgba(255,255,255,0.2);
+      width: 80px; height: 3px;
+      background: rgba(255,255,255,0.12);
       border-radius: 100px;
     }
     /* Carousel dots */
@@ -527,11 +508,10 @@
       font-size: 0.65rem; font-weight: 600;
       text-transform: uppercase; letter-spacing: 1px;
       margin-bottom: 16px;
+      background: rgba(192,38,211,0.12);
+      color: #E879F9;
+      border: 1px solid rgba(192,38,211,0.25);
     }
-    .cap-tag-perf { background: rgba(124,58,237,0.1); color: var(--accent-2); }
-    .cap-tag-agent { background: rgba(52,211,153,0.1); color: var(--green); }
-    .cap-tag-audio { background: rgba(0,229,255,0.1); color: #00E5FF; }
-    .cap-tag-commerce { background: rgba(251,191,36,0.1); color: #fbbf24; }
     .cap h3 { font-size: 1.05rem; font-weight: 700; color: var(--tx-1); margin-bottom: 8px; }
     .cap p { font-size: 0.85rem; color: var(--tx-3); line-height: 1.7; }
 
@@ -766,9 +746,10 @@
       .hero .sub { font-size: 1rem; }
       .s { padding: 100px 20px; }
       .hero-preview { max-width: 320px; }
-      .iphone-frame { border-radius: 46px; padding: 8px; }
-      .iphone-screen { border-radius: 38px; }
-      .iphone-notch { width: 110px; height: 32px; top: 16px; }
+      .iphone-frame { border-radius: 28px; padding: 4px; width: 260px; }
+      .iphone-screen { border-radius: 24px; }
+      .iphone-notch { width: 7px; height: 7px; top: 11px; }
+      .chat-msgs { height: 380px; }
       .chat-msgs { height: 360px; }
       .iphone-status { height: 48px; padding: 0 20px 6px; }
       .feat-grid, .steps, .caps-grid, .price-grid, .test-grid { grid-template-columns: 1fr; }
@@ -804,9 +785,12 @@
 
   <!-- ═══ HERO ═══ -->
   <section class="hero">
-    <div class="badge fade-in"><span class="pulse"></span> Inteligencia Artificial + WhatsApp</div>
+    <a href="https://wa.me/573054169969?text=Hola%2C%20quiero%20conocer%20MIIA" target="_blank" rel="noopener" class="whatsapp-cta-hero fade-in">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Escríbele a MIIA
+    </a>
     <h1 class="fade-in">Tu asistente IA que <span class="text-gradient">vende, organiza y conecta</span></h1>
-    <p class="sub fade-in">Se conecta a tu WhatsApp y se hace cargo de todo: vende mientras duermes, organiza tu semana, cuida a tu familia, sigue el partido de tu equipo y te despierta con todo resuelto. Aprende sola de cada conversación. Sin comandos. Sin configuración.</p>
+    <p class="sub fade-in">Se conecta a tu WhatsApp y se hace cargo de todo. Vende mientras duermes, organiza tu semana, cuida a tu familia y aprende sola de cada conversación.</p>
     <div class="hero-btns fade-in">
       <a href="login.html" class="btn btn-w">
         Empezar gratis
@@ -818,29 +802,29 @@
     <div class="hero-preview fade-in">
       <div class="chat-carousel" id="chatCarousel">
 
-        <!-- SLIDE 1: Ventas inteligentes (Lead → cotización → seguimiento) -->
+        <!-- SLIDE 1: 💬 Ventas — MIIA cierra ventas mientras duermes -->
         <div class="chat-slide active" data-slide="0">
-          <div class="chat-feature-title">Tu vendedora que nunca duerme</div>
+          <div class="chat-feature-title">💬 Vende mientras duermes</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="iphone-status"><span class="iphone-status-left">11:42</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
             <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-              <div class="chat-av">A</div>
-              <div><div class="chat-name">Alejandra</div><div class="chat-status">en linea</div></div>
+              <div class="chat-av" style="background:linear-gradient(135deg,#E91E63,#FF5722);"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+              <div class="chat-info"><div class="chat-name">Alejandra López</div><div class="chat-status">en línea</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-in">Hola, me interesa el servicio para mi empresa<div class="m-t">10:32</div></div>
-              <div class="m m-out">Hola Alejandra! Con gusto te ayudo. ¿Para cuantas personas seria?<div class="m-t">10:32</div></div>
-              <div class="m m-in">Somos un equipo de 4<div class="m-t">10:33</div></div>
-              <div class="m m-out">Perfecto. Te prepare una cotizacion personalizada 👇<div class="m-t">10:34</div></div>
+              <div class="m m-in">Hola, me interesa el servicio para mi empresa de 4 personas<div class="m-t">02:14</div></div>
+              <div class="m m-out">Hola Alejandra! Con gusto. Para 4 personas el plan ideal es el Team. Te preparé una cotización personalizada 👇<div class="m-t">02:14</div></div>
               <div class="m m-out m-doc">
                 <div class="m-doc-inner">
                   <div class="m-doc-icon"><span>PDF</span></div>
                   <div><div class="m-doc-name">Cotización_Team4.pdf</div><div class="m-doc-size">3 páginas · 142 KB</div></div>
                 </div>
-                <div class="m-t" style="padding:3px 8px;">10:34</div>
+                <div class="m-t" style="padding:3px 8px;">02:15</div>
               </div>
-              <div class="m m-in">Impecable, lo reviso y te confirmo<div class="m-t">10:35</div></div>
+              <div class="m m-in">Impecable, lo reviso mañana y te confirmo<div class="m-t">02:16</div></div>
+              <div class="m m-out">Perfecto! Cualquier duda me escribes. Buen descanso 🌙<div class="m-t">02:16</div></div>
+              <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
               <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
@@ -851,22 +835,22 @@
           </div></div>
         </div>
 
-        <!-- SLIDE 2: Tu día en piloto automático (Self-chat briefing matutino) -->
+        <!-- SLIDE 2: ☀️ Briefing matutino — Tu día resuelto -->
         <div class="chat-slide" data-slide="1">
-          <div class="chat-feature-title">Tu día en piloto automático</div>
+          <div class="chat-feature-title">☀️ Tu día resuelto antes del café</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="iphone-status"><span class="iphone-status-left">7:00</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
             <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
-              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envía un mensaje a este mismo número</div></div>
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+              <div class="chat-info"><div class="chat-name">(Tú) MIIA</div><div class="chat-status">en línea</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-miia">Buenos días! Hoy tienes reunión con Dr. Mario a las 11am y almuerzo con tu equipo a la 1pm. Mañana es el cumple de Mamá Silvia, ¿le mando un saludo a las 8am?<div class="m-t">07:00</div></div>
-              <div class="m m-owner">Sí, mándale algo lindo de mi parte<div class="m-t">07:02</div></div>
-              <div class="m m-miia">Listo! Le mando un mensaje cariñoso en tu estilo. También: tienes 3 leads sin responder y lluvia a las 4pm. ¿Empiezo con los leads?<div class="m-t">07:02</div></div>
-              <div class="m m-owner">Dale, empieza. Y avísame si bajan las acciones de Apple<div class="m-t">07:03</div></div>
-              <div class="m m-miia">Perfecto. Atiendo los leads ahora y te aviso cualquier movimiento de AAPL. Tienes todo cubierto 💪<div class="m-t">07:03</div></div>
+              <div class="m m-out"><span class="m-emoji">🙋‍♀️</span>: Buenos días! Tu resumen:<br>📅 Reunión con Dr. Mario — 11am<br>🍽️ Almuerzo con equipo — 1pm<br>🌧️ Lluvia a las 4pm<br>🎂 Mañana cumple Mamá Silvia<br><br>¿Le mando un saludo a las 8am?<div class="m-t">07:00</div></div>
+              <div class="m m-out">Sí, mándale algo lindo<div class="m-t">07:02</div></div>
+              <div class="m m-out"><span class="m-emoji">👩‍💻</span>: Listo! También tienes 3 leads sin responder. ¿Los atiendo?<div class="m-t">07:02</div></div>
+              <div class="m m-out">Sí, empieza con los leads<div class="m-t">07:03</div></div>
+              <div class="m m-out"><span class="m-emoji">👩‍💻</span>: Perfecto. Atiendo los leads ahora. Tienes todo cubierto.<div class="m-t">07:03</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -878,22 +862,22 @@
           </div></div>
         </div>
 
-        <!-- SLIDE 3: Modo Deporte en vivo -->
+        <!-- SLIDE 3: ⚽ Deportes en vivo -->
         <div class="chat-slide" data-slide="2">
-          <div class="chat-feature-title">Tus pasiones en tiempo real</div>
+          <div class="chat-feature-title">⚽ Tus pasiones en tiempo real</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="iphone-status"><span class="iphone-status-left">21:34</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
             <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
-              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envía un mensaje a este mismo número</div></div>
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+              <div class="chat-info"><div class="chat-name">(Tú) MIIA</div><div class="chat-status">en línea</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-miia">⚽ GOOOL DE BOCA! Cavani la clavo de zurda al minuto 34. Van 1-0 contra River 🔥🔥🔥<div class="m-t">21:34</div></div>
-              <div class="m m-owner">VAMOOOOO 🎉🎉<div class="m-t">21:34</div></div>
-              <div class="m m-miia">🏟️ River empata 1-1 al minuto 67. Borja de cabeza. Todavía queda partido...<div class="m-t">22:07</div></div>
-              <div class="m m-owner">Uff, cuéntame todo<div class="m-t">22:07</div></div>
-              <div class="m m-miia">⚽ GOOOL!! 2-1 Boca, minuto 89! Medina de contra. Se viene el final... 💛💙<div class="m-t">22:29</div></div>
+              <div class="m m-out"><span class="m-emoji">🤵‍♀️</span>: GOOOL DE BOCA! Cavani de zurda al 34'. Van 1-0 contra River 🔥🔥<div class="m-t">21:34</div></div>
+              <div class="m m-out">VAMOOOOO 🎉🎉<div class="m-t">21:34</div></div>
+              <div class="m m-out"><span class="m-emoji">🤵‍♀️</span>: River empata 1-1 al 67'. Borja de cabeza.<div class="m-t">22:07</div></div>
+              <div class="m m-out"><span class="m-emoji">🤵‍♀️</span>: GOOOL!! 2-1 Boca, Medina al 89! 💛💙<div class="m-t">22:29</div></div>
+              <div class="m m-out"><span class="m-emoji">🤵‍♀️</span>: Final! Boca 2 - River 1. Le aviso a tu Tío Roberto 😏<div class="m-t">22:48</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -905,22 +889,22 @@
           </div></div>
         </div>
 
-        <!-- SLIDE 4: Aprende sola + coordina todo -->
+        <!-- SLIDE 4: 👨‍👩‍👧 Cuida a tu familia -->
         <div class="chat-slide" data-slide="3">
-          <div class="chat-feature-title">Aprende, coordina y ejecuta</div>
+          <div class="chat-feature-title">👨‍👩‍👧 Cuida a tu familia</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="iphone-status"><span class="iphone-status-left">16:40</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
             <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
-              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envía un mensaje a este mismo número</div></div>
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+              <div class="chat-info"><div class="chat-name">(Tú) MIIA</div><div class="chat-status">en línea</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-owner">Dile a la MIIA de Anabella que me agende una reunión el viernes<div class="m-t">14:20</div></div>
-              <div class="m m-miia">Ya le avisé. Te cuento cuando me confirme.<div class="m-t">14:20</div></div>
-              <div class="m m-miia">Anabella confirmó: viernes 10am. Te mando recordatorio ese día. También aprendí algo: el lead de ayer preguntó por el plan familiar, lo anoté en su perfil para la próxima.<div class="m-t">14:22</div></div>
-              <div class="m m-owner">Genial. Mándale un mail a Dr. Mario con el resumen del proyecto<div class="m-t">14:23</div></div>
-              <div class="m m-miia">📧 Listo! Email enviado. Asunto: "Resumen del proyecto". Ah, y hoy Verstappen sale P3 en la qualy, te aviso cuando arranque la carrera 🏎️<div class="m-t">14:24</div></div>
+              <div class="m m-out"><span class="m-emoji">🙍‍♀️</span>: Tu mamá me escribió preguntando por la receta del domingo. Ya se la mandé en tu nombre 😊<div class="m-t">16:30</div></div>
+              <div class="m m-out">Genial, gracias!<div class="m-t">16:31</div></div>
+              <div class="m m-out"><span class="m-emoji">🙍‍♀️</span>: Alerta: tu hijo Mateo recibió un mensaje sospechoso. Era phishing disfrazado de premio. Lo bloqueé, no llegó a abrirlo.<div class="m-t">16:35</div></div>
+              <div class="m m-out">Uf, menos mal. Gracias MIIA<div class="m-t">16:36</div></div>
+              <div class="m m-out"><span class="m-emoji">💁‍♀️</span>: Recordatorio: a las 8pm la medicina de Abuela Carmen. ¿Le mando el aviso?<div class="m-t">16:40</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -932,29 +916,83 @@
           </div></div>
         </div>
 
-        <!-- SLIDE 5: Audios, familia y proteccion -->
+        <!-- SLIDE 5: 📊 Bolsa, crypto y noticias -->
         <div class="chat-slide" data-slide="4">
-          <div class="chat-feature-title">Escucha, protege y cuida</div>
+          <div class="chat-feature-title">📊 Finanzas y noticias al instante</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="iphone-status"><span class="iphone-status-left">9:15</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
             <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
-              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envía un mensaje a este mismo número</div></div>
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+              <div class="chat-info"><div class="chat-name">(Tú) MIIA</div><div class="chat-status">en línea</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-owner">
+              <div class="m m-out"><span class="m-emoji">👩‍💼</span>: AAPL bajó 3.2% en apertura ($182.40). ¿Quieres que te avise si baja de $180?<div class="m-t">09:05</div></div>
+              <div class="m m-out">Sí, avísame<div class="m-t">09:06</div></div>
+              <div class="m m-out"><span class="m-emoji">👩‍💼</span>: Anotado. También:<br>₿ Bitcoin: $67,240 (+1.8%)<br>📰 Noticia: "Fed mantiene tasas sin cambio"<br>🌤️ Bogotá hoy: 22°C, nublado<div class="m-t">09:06</div></div>
+              <div class="m m-out">¿Qué pasó con Ethereum?<div class="m-t">09:10</div></div>
+              <div class="m m-out"><span class="m-emoji">👩‍💼</span>: ETH: $3,520 (+0.9%). Volumen normal. Sin alertas por ahora.<div class="m-t">09:10</div></div>
+              <div class="m m-typing"><span></span><span></span><span></span></div>
+            </div>
+            <div class="chat-input-bar">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+              <div class="chat-input-field">Mensaje</div>
+              <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </div>
+            <div class="iphone-home-bar"></div>
+          </div></div>
+        </div>
+
+        <!-- SLIDE 6: 🎧 Entiende audios y ejecuta -->
+        <div class="chat-slide" data-slide="5">
+          <div class="chat-feature-title">🎧 Entiende audios y ejecuta</div>
+          <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
+            <div class="iphone-status"><span class="iphone-status-left">14:20</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+              <div class="chat-info"><div class="chat-name">(Tú) MIIA</div><div class="chat-status">en línea</div></div>
+              <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+            </div>
+            <div class="chat-msgs">
+              <div class="m m-out">
                 <div class="m-voice">
                   <div class="m-voice-btn"><svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg></div>
-                  <div class="m-voice-wave"><span style="height:4px"></span><span style="height:10px"></span><span style="height:16px"></span><span style="height:8px"></span><span style="height:14px"></span><span style="height:6px"></span><span style="height:12px"></span><span style="height:18px"></span><span style="height:10px"></span><span style="height:5px"></span><span style="height:13px"></span><span style="height:7px"></span><span style="height:15px"></span><span style="height:9px"></span><span style="height:4px"></span><span style="height:11px"></span><span style="height:6px"></span><span style="height:14px"></span><span style="height:8px"></span><span style="height:3px"></span></div>
-                  <div class="m-voice-dur">0:12</div>
+                  <div class="m-voice-wave"><span style="height:4px"></span><span style="height:10px"></span><span style="height:16px"></span><span style="height:8px"></span><span style="height:14px"></span><span style="height:6px"></span><span style="height:12px"></span><span style="height:18px"></span><span style="height:10px"></span><span style="height:5px"></span><span style="height:13px"></span><span style="height:7px"></span><span style="height:15px"></span><span style="height:9px"></span><span style="height:4px"></span></div>
+                  <div class="m-voice-dur">0:08</div>
                 </div>
-                <div class="m-t">16:40</div>
+                <div class="m-t">14:20</div>
               </div>
-              <div class="m m-miia">🎧 Escuché tu audio. Quieres cancelar la reunión de mañana y reagendar para el jueves. ¿Confirmo?<div class="m-t">16:40</div></div>
-              <div class="m m-owner">Sí, confirma<div class="m-t">16:41</div></div>
-              <div class="m m-miia">Listo, reagendé con Dr. Mario para el jueves 10am. Ya le avisé por WhatsApp. Ah, y tu mamá me escribió preguntando por la receta del domingo, ya se la mandé 😊<div class="m-t">16:41</div></div>
-              <div class="m m-miia">⚠️ Alerta: tu hijo Mateo recibió un mensaje sospechoso. Lo bloqueé y te dejo el detalle aquí.<div class="m-t">16:45</div></div>
+              <div class="m m-out"><span class="m-emoji">👩‍💻</span>: Escuché tu audio. Quieres cancelar la reunión de mañana y moverla al jueves. ¿Confirmo?<div class="m-t">14:20</div></div>
+              <div class="m m-out">Sí, confirma<div class="m-t">14:21</div></div>
+              <div class="m m-out"><span class="m-emoji">👩‍💻</span>: Listo! Reagendé con Dr. Mario para jueves 10am. Ya le avisé por WhatsApp y le mandé email de confirmación.<div class="m-t">14:21</div></div>
+              <div class="m m-out">Perfecto, gracias<div class="m-t">14:22</div></div>
+              <div class="m m-typing"><span></span><span></span><span></span></div>
+            </div>
+            <div class="chat-input-bar">
+              <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
+              <div class="chat-input-field">Mensaje</div>
+              <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+            </div>
+            <div class="iphone-home-bar"></div>
+          </div></div>
+        </div>
+
+        <!-- SLIDE 7: 🧠 Aprende sola de cada conversación -->
+        <div class="chat-slide" data-slide="6">
+          <div class="chat-feature-title">🧠 Aprende sola y mejora cada día</div>
+          <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
+            <div class="iphone-status"><span class="iphone-status-left">22:30</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+              <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);"><svg viewBox="0 0 24 24" fill="rgba(255,255,255,0.9)" width="18" height="18"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+              <div class="chat-info"><div class="chat-name">(Tú) MIIA</div><div class="chat-status">en línea</div></div>
+              <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
+            </div>
+            <div class="chat-msgs">
+              <div class="m m-out"><span class="m-emoji">👩‍💻</span>: Resumen del día:<br>✅ 3 leads atendidos, 1 cotización enviada<br>📅 2 reuniones confirmadas para mañana<br>🎂 Saludo enviado a Mamá Silvia<br>⚽ Boca ganó 2-1<br>📈 AAPL cerró en $183.20 (+0.4%)<div class="m-t">22:00</div></div>
+              <div class="m m-out">Qué más aprendiste hoy?<div class="m-t">22:01</div></div>
+              <div class="m m-out"><span class="m-emoji">👩‍🎓</span>: 3 cosas nuevas:<br>1. Alejandra prefiere cotizaciones en PDF<br>2. Dr. Mario prefiere jueves para reuniones<br>3. Tu mamá siempre escribe a las 4pm<div class="m-t">22:01</div></div>
+              <div class="m m-out">Genial, buenas noches MIIA<div class="m-t">22:30</div></div>
+              <div class="m m-out"><span class="m-emoji">🙋‍♀️</span>: Buenas noches! Mañana te despierto con todo listo. Descansa.<div class="m-t">22:30</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -974,6 +1012,8 @@
         <div class="chat-dot" data-dot="2"></div>
         <div class="chat-dot" data-dot="3"></div>
         <div class="chat-dot" data-dot="4"></div>
+        <div class="chat-dot" data-dot="5"></div>
+        <div class="chat-dot" data-dot="6"></div>
       </div>
     </div>
   </section>
@@ -1066,7 +1106,7 @@
         <div class="step fade-in">
           <div class="step-n">03</div>
           <h3>Ella se encarga de todo</h3>
-          <p>Vende, agenda, recuerda, protege, informa, coordina y aprende. Cada día es mejor que el anterior. Tú solo vives.</p>
+          <p>Vende, agenda, recuerda, protege, informa, coordina y aprende. Cada día es mejor que el anterior. Tú solo decides qué hacer con tu tiempo libre.</p>
         </div>
       </div>
     </div>
@@ -1082,22 +1122,22 @@
       </div>
       <div class="caps-grid fade-in">
         <div class="cap">
-          <span class="cap-tag cap-tag-perf">Inteligencia</span>
+          <span class="cap-tag">Inteligencia</span>
           <h3>Cerebro que evoluciona solo</h3>
           <p>Tres capas de aprendizaje: tu negocio, tu personalidad y cada contacto. Sin comandos — MIIA detecta qué guardar, qué agendar y qué recordarte. Con tu aprobación.</p>
         </div>
         <div class="cap">
-          <span class="cap-tag cap-tag-agent">Proactiva</span>
+          <span class="cap-tag">Proactiva</span>
           <h3>Actúa antes de que se lo pidas</h3>
           <p>Te despierta con tu agenda y el clima. Sigue a tus leads si no contestan. Recuerda cumpleaños. Alerta sobre tus acciones. Coordina con tu equipo. No espera órdenes.</p>
         </div>
         <div class="cap">
-          <span class="cap-tag cap-tag-audio">Multimedia</span>
+          <span class="cap-tag">Multimedia</span>
           <h3>Escucha, ve y lee por ti</h3>
           <p>Transcribe audios de cualquier duración, analiza fotos, lee PDFs y entiende documentos. Todo lo que te mandan, MIIA lo procesa sin que tengas que abrir nada.</p>
         </div>
         <div class="cap">
-          <span class="cap-tag cap-tag-commerce">Estrategia</span>
+          <span class="cap-tag">Estrategia</span>
           <h3>Tu coach nocturno con datos reales</h3>
           <p>Cada noche te envía un informe: qué pasó con tus leads, qué oportunidades perdiste, qué patrones detectó y cómo mejorar. ADN de ventas basado en conversaciones reales.</p>
         </div>
@@ -1282,29 +1322,15 @@
     </div>
   </section>
 
-  <!-- ═══ CTA ═══ -->
-  <section class="cta">
-    <div class="fade-in">
-      <h2>Tu vida y tu negocio<br>en piloto automático</h2>
-      <p>Emprendedores, profesionales y familias ya confían en MIIA para no perderse de nada. ¿Tú cuándo empiezas?</p>
-      <a href="login.html" class="btn btn-w">
-        Empezar gratis ahora
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-    </div>
-  </section>
-
   <!-- ═══ MANIFESTO ═══ -->
   <div class="manifesto">
     <div class="manifesto-card fade-in">
       <div class="manifesto-label">Manifiesto MIIA</div>
       <p class="manifesto-text">
-        <strong>No somos un chatbot.</strong> MIIA nació de una realidad: personas que pierden ventas porque dormían,
-        olvidan el cumple de mamá, no ven el gol de su equipo y no dan abasto con todo a la vez.
-        La IA no debería reemplazarte. Debería <strong>liberarte</strong>.
+        <strong>No somos un chatbot.</strong> Somos lo que pasa cuando la inteligencia artificial entiende tu vida completa: tu negocio, tu familia, tus pasiones, tu tiempo.
         <br><br>
-        MIIA aprende de cada conversación. Detecta patrones que tú no ves. Cuida relaciones que no puedes atender.
-        Vende cuando descansas. Te despierta con todo resuelto.
+        Creamos MIIA porque creemos que la tecnología debe adaptarse a ti, no al revés. Que nadie debería perder una venta por estar durmiendo, olvidar un cumpleaños por estar ocupado, ni perderse el gol de su equipo por estar en una reunión. La IA no debería reemplazarte. Debería <strong>liberarte</strong>.
+        <br><br>
         <span class="manifesto-hl">MIIA no es tu empleada. Es tu socia digital. Y cada día es mejor que ayer.</span>
       </p>
     </div>
@@ -1335,8 +1361,8 @@
       <div class="ft-col">
         <h4>Empresa</h4>
         <a href="empresas.html">Enterprise</a>
-        <a href="mailto:hola@miia-app.com">Contacto</a>
-        <a href="terms.html">Sobre MIIA</a>
+        <a href="https://wa.me/573054169969?text=Hola%2C%20quiero%20información%20sobre%20MIIA" target="_blank" rel="noopener">Contacto</a>
+        <a href="about.html">Sobre MIIA</a>
       </div>
       <div class="ft-col">
         <h4>Legal</h4>
