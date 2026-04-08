@@ -183,7 +183,7 @@
     /* ═══ HERO CHAT CAROUSEL ═══ */
     .hero-preview {
       margin: 72px auto 0;
-      max-width: 520px;
+      max-width: 380px;
       position: relative;
     }
     .chat-carousel {
@@ -203,42 +203,68 @@
       opacity: 0; transform: translateX(-40px);
     }
     .chat-feature-title {
-      text-align: center; margin-bottom: 14px;
+      text-align: center; margin-bottom: 18px;
       font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
       letter-spacing: 3px;
       background: linear-gradient(90deg, #00E5FF, #7C3AED, #FF1744);
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    .chat-box {
-      border-radius: 12px;
+    /* ═══ iPhone Frame ═══ */
+    .iphone-frame {
+      background: #1a1a1a;
+      border-radius: 44px;
+      padding: 12px;
+      border: 3px solid #333;
+      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.03);
+      position: relative;
+    }
+    .iphone-notch {
+      width: 120px; height: 28px;
+      background: #1a1a1a;
+      border-radius: 0 0 18px 18px;
+      position: absolute;
+      top: 12px; left: 50%; transform: translateX(-50%);
+      z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .iphone-notch::after {
+      content: '';
+      width: 50px; height: 4px;
+      background: #333;
+      border-radius: 4px;
+    }
+    .iphone-screen {
+      border-radius: 32px;
       overflow: hidden;
-      box-shadow: 0 30px 70px rgba(0,0,0,0.5);
       display: flex; flex-direction: column;
-      border: 1px solid rgba(255,255,255,0.06);
+      background: #0B141A;
     }
     /* ═══ WhatsApp header ═══ */
     .chat-head {
-      padding: 8px 12px;
-      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      padding-top: 32px;
+      display: flex; align-items: center; gap: 8px;
       background: #202C33;
     }
     .chat-head-actions {
-      margin-left: auto; display: flex; gap: 16px;
+      margin-left: auto; display: flex; gap: 12px;
     }
-    .chat-head-actions svg { width: 18px; height: 18px; fill: #AEBAC1; }
+    .chat-head-actions svg { width: 16px; height: 16px; fill: #AEBAC1; }
     .chat-av {
-      width: 36px; height: 36px; border-radius: 50%;
+      width: 34px; height: 34px; border-radius: 50%;
       background: linear-gradient(135deg, #00E5FF, #7C3AED, #FF1744);
       display: flex; align-items: center; justify-content: center;
-      font-size: 0.72rem; font-weight: 700; color: white;
+      font-size: 0.7rem; font-weight: 700; color: white;
+      flex-shrink: 0;
     }
-    .chat-name { font-size: 0.88rem; font-weight: 500; color: #E9EDEF; }
-    .chat-status { font-size: 0.62rem; color: #8696A0; }
+    .chat-name { font-size: 0.82rem; font-weight: 500; color: #E9EDEF; white-space: nowrap; }
+    .chat-status { font-size: 0.58rem; color: #8696A0; white-space: nowrap; }
     /* ═══ WhatsApp doodle background — real pattern ═══ */
     .chat-msgs {
-      padding: 16px 14px; display: flex; flex-direction: column; gap: 4px;
-      min-height: 320px;
+      padding: 12px 10px; display: flex; flex-direction: column; gap: 3px;
+      height: 420px;
+      overflow: hidden;
       background-color: #0B141A;
       background-image: url('https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png');
       background-repeat: repeat; background-size: 412px;
@@ -246,8 +272,8 @@
     }
     /* ═══ WhatsApp bubbles ═══ */
     .m {
-      max-width: 82%; padding: 5px 7px 1px 7px;
-      border-radius: 7.5px; font-size: 0.82rem; line-height: 1.4;
+      max-width: 85%; padding: 5px 7px 1px 7px;
+      border-radius: 7.5px; font-size: 0.78rem; line-height: 1.4;
       text-align: left; position: relative;
       opacity: 0; transform: translateY(10px) scale(0.97);
       animation: msgIn 0.35s ease forwards;
@@ -317,13 +343,24 @@
     .chat-msgs .m-typing { animation-delay: 5.0s; }
     /* WhatsApp input bar */
     .chat-input-bar {
-      padding: 5px 8px; display: flex; align-items: center; gap: 6px;
+      padding: 5px 8px; display: flex; align-items: center; gap: 5px;
       background: #202C33;
     }
-    .chat-input-bar svg { width: 22px; height: 22px; fill: #8696A0; flex-shrink: 0; }
+    .chat-input-bar svg { width: 20px; height: 20px; fill: #8696A0; flex-shrink: 0; }
     .chat-input-field {
       flex: 1; background: #2A3942; border: none; border-radius: 8px;
-      padding: 8px 12px; font-size: 0.75rem; color: #8696A0;
+      padding: 7px 10px; font-size: 0.72rem; color: #8696A0;
+    }
+    /* iPhone bottom bar */
+    .iphone-home-bar {
+      height: 16px; background: #0B141A;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .iphone-home-bar::after {
+      content: '';
+      width: 100px; height: 4px;
+      background: #444;
+      border-radius: 4px;
     }
     /* Carousel dots */
     .chat-dots {
@@ -673,7 +710,12 @@
       .hero h1 { letter-spacing: -1.5px; }
       .hero .sub { font-size: 1rem; }
       .s { padding: 100px 20px; }
-      .hero-preview { max-width: 100%; }
+      .hero-preview { max-width: 320px; }
+      .iphone-frame { border-radius: 36px; padding: 10px; }
+      .iphone-screen { border-radius: 26px; }
+      .iphone-notch { width: 100px; height: 24px; }
+      .chat-msgs { height: 380px; }
+      .chat-head { padding-top: 28px; }
       .feat-grid, .steps, .caps-grid, .price-grid, .test-grid { grid-template-columns: 1fr; }
       .price-card.enterprise { grid-column: span 1; }
       .cta h2 { font-size: 1.8rem; }
@@ -708,7 +750,7 @@
   <section class="hero">
     <div class="badge fade-in"><span class="pulse"></span> Inteligencia Artificial + WhatsApp</div>
     <h1 class="fade-in">Tu asistente IA que <span class="text-gradient">vende, organiza y conecta</span></h1>
-    <p class="sub fade-in">MIIA se conecta a tu WhatsApp y se convierte en tu mano derecha. Atiende leads, genera cotizaciones, organiza tu agenda, gestiona tu familia y cuida tus relaciones. Aprende de vos cada dia. Todo con tu estilo, todo en piloto automático.</p>
+    <p class="sub fade-in">Se conecta a tu WhatsApp y se hace cargo de todo: vende mientras dormis, organiza tu semana, cuida a tu familia, sigue el partido de tu equipo y te despierta con todo resuelto. Aprende sola de cada conversacion. Sin comandos. Sin configuracion.</p>
     <div class="hero-btns fade-in">
       <a href="login.html" class="btn btn-w">
         Empezar gratis
@@ -720,24 +762,24 @@
     <div class="hero-preview fade-in">
       <div class="chat-carousel" id="chatCarousel">
 
-        <!-- SLIDE 1: Cotización automática (Lead → PDF) -->
+        <!-- SLIDE 1: Ventas inteligentes (Lead → cotización → seguimiento) -->
         <div class="chat-slide active" data-slide="0">
-          <div class="chat-feature-title">Cotizaciones automáticas en PDF</div>
-          <div class="chat-box">
+          <div class="chat-feature-title">Tu vendedora que nunca duerme</div>
+          <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
             <div class="chat-head">
               <div class="chat-av">A</div>
-              <div><div class="chat-name">Alejandra</div><div class="chat-status">en línea</div></div>
+              <div><div class="chat-name">Alejandra</div><div class="chat-status">en linea</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
               <div class="m m-in">Hola, me interesa el servicio para mi empresa<div class="m-t">10:32</div></div>
-              <div class="m m-out">Hola Alejandra! Con gusto te ayudo. ¿Para cuántas personas sería?<div class="m-t">10:32</div></div>
+              <div class="m m-out">Hola Alejandra! Con gusto te ayudo. ¿Para cuantas personas seria?<div class="m-t">10:32</div></div>
               <div class="m m-in">Somos un equipo de 4<div class="m-t">10:33</div></div>
-              <div class="m m-out">Perfecto. Te preparé una cotización personalizada 👇<div class="m-t">10:34</div></div>
+              <div class="m m-out">Perfecto. Te prepare una cotizacion personalizada 👇<div class="m-t">10:34</div></div>
               <div class="m m-out m-doc">
                 <div class="m-doc-inner">
                   <div class="m-doc-icon"><span>PDF</span></div>
-                  <div><div class="m-doc-name">Cotización_Team4.pdf</div><div class="m-doc-size">3 páginas · 142 KB</div></div>
+                  <div><div class="m-doc-name">Cotizacion_Team4.pdf</div><div class="m-doc-size">3 paginas · 142 KB</div></div>
                 </div>
                 <div class="m-t" style="padding:3px 8px;">10:34</div>
               </div>
@@ -748,24 +790,25 @@
               <div class="chat-input-field">Mensaje</div>
               <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
             </div>
-          </div>
+            <div class="iphone-home-bar"></div>
+          </div></div>
         </div>
 
-        <!-- SLIDE 2: Agenda & recordatorios (Self-chat) -->
+        <!-- SLIDE 2: Tu dia en piloto automatico (Self-chat briefing matutino) -->
         <div class="chat-slide" data-slide="1">
-          <div class="chat-feature-title">Agenda inteligente y recordatorios</div>
-          <div class="chat-box">
+          <div class="chat-feature-title">Tu dia en piloto automatico</div>
+          <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
             <div class="chat-head">
               <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
-              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Enviá un mensaje a este mismo número</div></div>
+              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envia un mensaje a este mismo numero</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-miia"><span class="m-emoji">🙍‍♀️</span> Mañana es el cumpleaños de Mamá Silvia. ¿Querés que le mande un saludo a las 8am?<div class="m-t">09:00</div></div>
-              <div class="m m-owner">Sí, mandále algo lindo de mi parte<div class="m-t">09:01</div></div>
-              <div class="m m-miia"><span class="m-emoji">🦸‍♀️</span> ¡Listo! Mañana a las 8am le envío un mensaje cariñoso en tu estilo. También te recuerdo: tenés reunión con Dr. Mario a las 11am.<div class="m-t">09:01</div></div>
-              <div class="m m-owner">Genial, ¿algo más para hoy?<div class="m-t">09:02</div></div>
-              <div class="m m-miia"><span class="m-emoji">🙍‍♀️</span> Tenés 3 leads sin responder y una cotización pendiente. ¿Arranco con las respuestas?<div class="m-t">09:02</div></div>
+              <div class="m m-miia">Buenos dias! Hoy tenes reunion con Dr. Mario a las 11am y almuerzo con tu equipo a la 1pm. Manana es el cumple de Mama Silvia, ¿le mando un saludo a las 8am?<div class="m-t">07:00</div></div>
+              <div class="m m-owner">Si, mandale algo lindo de mi parte<div class="m-t">07:02</div></div>
+              <div class="m m-miia">Listo! Le mando un mensaje cariñoso en tu estilo. Tambien: tenes 3 leads sin responder y lluvia a las 4pm. ¿Arranco con los leads?<div class="m-t">07:02</div></div>
+              <div class="m m-owner">Dale, arranca. Y avisame si bajan las acciones de Apple<div class="m-t">07:03</div></div>
+              <div class="m m-miia">Perfecto. Atiendo los leads ahora y te aviso cualquier movimiento de AAPL. Tenes todo cubierto 💪<div class="m-t">07:03</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -773,24 +816,25 @@
               <div class="chat-input-field">Mensaje</div>
               <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
             </div>
-          </div>
+            <div class="iphone-home-bar"></div>
+          </div></div>
         </div>
 
         <!-- SLIDE 3: Modo Deporte en vivo -->
         <div class="chat-slide" data-slide="2">
-          <div class="chat-feature-title">Modo deporte en vivo</div>
-          <div class="chat-box">
+          <div class="chat-feature-title">Tus pasiones en tiempo real</div>
+          <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
             <div class="chat-head">
               <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
-              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Enviá un mensaje a este mismo número</div></div>
+              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envia un mensaje a este mismo numero</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-miia"><span class="m-emoji">⚽</span> ¡GOOOL DE BOCA! Cavani la clavó de zurda al minuto 34. Van 1-0 contra River 🔥🔥🔥<div class="m-t">21:34</div></div>
+              <div class="m m-miia">⚽ GOOOL DE BOCA! Cavani la clavo de zurda al minuto 34. Van 1-0 contra River 🔥🔥🔥<div class="m-t">21:34</div></div>
               <div class="m m-owner">VAMOOOOO 🎉🎉<div class="m-t">21:34</div></div>
-              <div class="m m-miia"><span class="m-emoji">🏟️</span> River empata 1-1 al minuto 67. Borja de cabeza. Todavía queda partido...<div class="m-t">22:07</div></div>
+              <div class="m m-miia">🏟️ River empata 1-1 al minuto 67. Borja de cabeza. Todavia queda partido...<div class="m-t">22:07</div></div>
               <div class="m m-owner">Uff, contame todo<div class="m-t">22:07</div></div>
-              <div class="m m-miia"><span class="m-emoji">⚽</span> ¡¡GOOOL!! 2-1 Boca, minuto 89! Medina de contra. Se viene el final... 💛💙<div class="m-t">22:29</div></div>
+              <div class="m m-miia">⚽ GOOOL!! 2-1 Boca, minuto 89! Medina de contra. Se viene el final... 💛💙<div class="m-t">22:29</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -798,24 +842,25 @@
               <div class="chat-input-field">Mensaje</div>
               <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
             </div>
-          </div>
+            <div class="iphone-home-bar"></div>
+          </div></div>
         </div>
 
-        <!-- SLIDE 4: Inter-MIIA (coordinación entre MIIAs) -->
+        <!-- SLIDE 4: Aprende sola + coordina todo -->
         <div class="chat-slide" data-slide="3">
-          <div class="chat-feature-title">Coordinación entre asistentes</div>
-          <div class="chat-box">
+          <div class="chat-feature-title">Aprende, coordina y ejecuta</div>
+          <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
             <div class="chat-head">
               <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
-              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Enviá un mensaje a este mismo número</div></div>
+              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envia un mensaje a este mismo numero</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
-              <div class="m m-owner">Decile a la MIIA de Anabella que me agende una reunión el viernes<div class="m-t">14:20</div></div>
-              <div class="m m-miia"><span class="m-emoji">🙍‍♀️</span> Ya le avisé a Anabella. Te cuento cuando me responda.<div class="m-t">14:20</div></div>
-              <div class="m m-miia"><span class="m-emoji">🙍‍♀️</span> La MIIA de Anabella confirmó: reunión agendada para el viernes a las 10am. Te mando recordatorio ese día.<div class="m-t">14:22</div></div>
-              <div class="m m-owner">Genial. Mandále un mail a Dr. Mario con el resumen del proyecto<div class="m-t">14:23</div></div>
-              <div class="m m-miia"><span class="m-emoji">📧</span> ¡Listo! Email enviado a Dr. Mario. Asunto: "Resumen del proyecto — Mariano"<div class="m-t">14:24</div></div>
+              <div class="m m-owner">Decile a la MIIA de Anabella que me agende una reunion el viernes<div class="m-t">14:20</div></div>
+              <div class="m m-miia">Ya le avise. Te cuento cuando me confirme.<div class="m-t">14:20</div></div>
+              <div class="m m-miia">Anabella confirmo: viernes 10am. Te mando recordatorio ese dia. Tambien aprendi algo: el lead de ayer pregunto por el plan familiar, lo anote en su perfil para la proxima.<div class="m-t">14:22</div></div>
+              <div class="m m-owner">Genial. Mandale un mail a Dr. Mario con el resumen del proyecto<div class="m-t">14:23</div></div>
+              <div class="m m-miia">📧 Listo! Email enviado. Asunto: "Resumen del proyecto". Ah, y hoy Verstappen sale P3 en la qualy, te aviso cuando arranque la carrera 🏎️<div class="m-t">14:24</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -823,16 +868,17 @@
               <div class="chat-input-field">Mensaje</div>
               <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
             </div>
-          </div>
+            <div class="iphone-home-bar"></div>
+          </div></div>
         </div>
 
-        <!-- SLIDE 5: Notas de voz (Self-chat) -->
+        <!-- SLIDE 5: Audios, familia y proteccion -->
         <div class="chat-slide" data-slide="4">
-          <div class="chat-feature-title">Notas de voz inteligentes</div>
-          <div class="chat-box">
+          <div class="chat-feature-title">Escucha, protege y cuida</div>
+          <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
             <div class="chat-head">
               <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
-              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Enviá un mensaje a este mismo número</div></div>
+              <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envia un mensaje a este mismo numero</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
             </div>
             <div class="chat-msgs">
@@ -844,17 +890,10 @@
                 </div>
                 <div class="m-t">16:40</div>
               </div>
-              <div class="m m-miia"><span class="m-emoji">🎧</span> Escuché tu audio. Querés que cancele la reunión de mañana y la reagende para el jueves. ¿Confirmo?<div class="m-t">16:40</div></div>
-              <div class="m m-owner">Sí, confirmá<div class="m-t">16:41</div></div>
-              <div class="m m-miia">
-                <div class="m-voice">
-                  <div class="m-voice-btn"><svg viewBox="0 0 24 24"><polygon points="8,5 19,12 8,19"/></svg></div>
-                  <div class="m-voice-wave"><span style="height:6px"></span><span style="height:12px"></span><span style="height:8px"></span><span style="height:15px"></span><span style="height:10px"></span><span style="height:5px"></span><span style="height:13px"></span><span style="height:7px"></span><span style="height:11px"></span><span style="height:4px"></span><span style="height:9px"></span><span style="height:14px"></span><span style="height:6px"></span><span style="height:10px"></span><span style="height:3px"></span></div>
-                  <div class="m-voice-dur">0:08</div>
-                </div>
-                <div class="m-t">16:41</div>
-              </div>
-              <div class="m m-miia"><span class="m-emoji">✅</span> Listo, reagendé con Dr. Mario para el jueves 10am. Ya le avisé por WhatsApp.<div class="m-t">16:41</div></div>
+              <div class="m m-miia">🎧 Escuche tu audio. Queres cancelar la reunion de manana y reagendar para el jueves. ¿Confirmo?<div class="m-t">16:40</div></div>
+              <div class="m m-owner">Si, confirma<div class="m-t">16:41</div></div>
+              <div class="m m-miia">Listo, reagende con Dr. Mario para el jueves 10am. Ya le avise por WhatsApp. Ah, y tu mama me escribio preguntando por la receta del domingo, ya se la mande 😊<div class="m-t">16:41</div></div>
+              <div class="m m-miia">⚠️ Alerta: tu hijo Mateo recibio un mensaje sospechoso. Lo bloquee y te dejo el detalle aca.<div class="m-t">16:45</div></div>
               <div class="m m-typing"><span></span><span></span><span></span></div>
             </div>
             <div class="chat-input-bar">
@@ -862,7 +901,8 @@
               <div class="chat-input-field">Mensaje</div>
               <svg viewBox="0 0 24 24"><path d="M12 15c1.66 0 3-1.34 3-3V6c0-1.66-1.34-3-3-3S9 4.34 9 6v6c0 1.66 1.34 3 3 3zm5-3c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-2.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
             </div>
-          </div>
+            <div class="iphone-home-bar"></div>
+          </div></div>
         </div>
 
       </div>
@@ -882,56 +922,56 @@
     <div class="container">
       <div class="fade-in">
         <div class="s-label">Funciones</div>
-        <h2 class="s-title">100+ funciones.<br>Un solo WhatsApp.</h2>
-        <p class="s-desc">No es un chatbot genérico. Es una asistente con 58 funciones activas que vende, organiza, protege y aprende — todo desde tu WhatsApp personal.</p>
+        <h2 class="s-title">Una sola conversacion.<br>Toda tu vida resuelta.</h2>
+        <p class="s-desc">No es un chatbot que responde preguntas. Es una asistente que piensa, aprende, decide y actua. Vende mientras dormis, organiza tu semana, cuida a tu familia y te avisa cuando juega tu equipo.</p>
       </div>
       <!-- SVG gradient definition for feature icons -->
       <svg width="0" height="0" style="position:absolute"><defs><linearGradient id="feat-grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs></svg>
       <div class="feat-grid fade-in">
         <div class="feat">
           <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="url(#feat-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
-          <h3>Vende por vos, 24/7</h3>
-          <p>Responde leads, detecta intención de compra, envía cotizaciones en PDF y hace seguimiento automático. Tu vendedora incansable.</p>
+          <h3>Vende mientras vivis</h3>
+          <p>Detecta intencion de compra, responde leads con tu estilo, genera cotizaciones en PDF y hace seguimiento automatico si no te contestan. Cierra ventas a las 3am.</p>
         </div>
         <div class="feat">
           <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="url(#feat-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-          <h3>Agenda inteligente</h3>
-          <p>Agenda reuniones, te recuerda compromisos, mueve o cancela eventos. Sincroniza con Google Calendar y avisa 10 minutos antes.</p>
+          <h3>Tu dia resuelto antes del cafe</h3>
+          <p>Cada manana te cuenta tu agenda, el clima, tus pendientes y las noticias de tu sector. Agenda, mueve y cancela reuniones. Sincroniza con Google Calendar y te avisa antes de cada evento.</p>
         </div>
         <div class="feat">
           <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="url(#feat-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
-          <h3>Cuida a tu familia</h3>
-          <p>Modo protección para niños y adultos mayores. Detección automática, control parental, alertas de emergencia y check-in diario.</p>
+          <h3>Tu familia protegida</h3>
+          <p>Proteccion inteligente para niños y adultos mayores. Detecta contenido peligroso, bloquea amenazas, hace check-in diario y te alerta al instante si algo no esta bien.</p>
         </div>
         <div class="feat">
           <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="url(#feat-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 014 10 15 15 0 01-4 10 15 15 0 01-4-10 15 15 0 014-10z"/></svg></div>
-          <h3>Sigue deportes en vivo</h3>
-          <p>Fútbol, F1, tenis, NBA y 6 deportes más. MIIA manda mensajes emotivos a tus contactos cuando juega su equipo favorito.</p>
+          <h3>Vive tus pasiones en vivo</h3>
+          <p>Futbol, F1, tenis, NBA y mas. MIIA sigue los partidos en tiempo real y te manda mensajes emotivos a vos y a tus contactos segun el equipo de cada uno.</p>
         </div>
         <div class="feat">
           <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="url(#feat-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
-          <h3>Rastrea precios</h3>
-          <p>Seguí productos online y recibí alertas cuando bajan de precio. MIIA incluso contacta a la tienda por vos para consultar disponibilidad.</p>
+          <h3>Bolsa, crypto y precios</h3>
+          <p>Segui acciones, criptomonedas y productos online. MIIA te alerta cuando hay movimientos importantes o cuando baja algo que te interesa.</p>
         </div>
         <div class="feat">
           <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="url(#feat-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg></div>
-          <h3>Viajes y vuelos</h3>
-          <p>Busca vuelos baratos, crea alertas de precio, genera checklists de viaje y te avisa cuando vence tu pasaporte.</p>
+          <h3>Emails desde WhatsApp</h3>
+          <p>Deci "mandale un mail a Dr. Mario" y MIIA lo redacta y lo envia. Tambien te resume los emails importantes del dia para que no abras la bandeja.</p>
         </div>
         <div class="feat">
           <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="url(#feat-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
-          <h3>Aprende sola</h3>
-          <p>Tres capas de aprendizaje autónomo: negocio, personalidad y contacto. Cada conversación la hace mejor — con tu aprobación.</p>
+          <h3>Aprende de cada conversacion</h3>
+          <p>Tres capas de inteligencia: tu negocio, tu personalidad y cada contacto. No necesitas comandos: MIIA detecta sola que guardar, que agendar y que recordarte.</p>
         </div>
         <div class="feat">
           <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="url(#feat-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></div>
-          <h3>Voz y audio</h3>
-          <p>Escucha audios de WhatsApp, los transcribe y responde con sentido. También lee y crea cuentos para niños con voces.</p>
+          <h3>Entiende audios y fotos</h3>
+          <p>Te mandan un audio de 3 minutos? MIIA lo escucha, lo entiende y responde por vos. Tambien analiza imagenes y documentos que te envian.</p>
         </div>
         <div class="feat">
           <div class="feat-ico"><svg viewBox="0 0 24 24" fill="none" stroke="url(#feat-grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
-          <h3>100+ funciones activas</h3>
-          <p>Emails desde WhatsApp, "Dile a", recordatorios, integraciones con YouTube, Spotify, delivery, cocina y mucho más.</p>
+          <h3>Y esto es solo el principio</h3>
+          <p>Informes nocturnos de tu negocio, noticias personalizadas, coordinar con otras MIIAs, Google Tasks, coaching de ventas y mucho mas. Cada semana hay funciones nuevas.</p>
         </div>
       </div>
       <div style="text-align:center; margin-top:56px;" class="fade-in">
@@ -948,24 +988,24 @@
     <div class="container">
       <div class="s-center fade-in">
         <div class="s-label">Proceso</div>
-        <h2 class="s-title">Tres pasos. MIIA trabaja por vos.</h2>
-        <p class="s-desc">Sin configuración compleja. Sin WhatsApp Business. Conecta tu WhatsApp personal y listo.</p>
+        <h2 class="s-title">Tres pasos. MIIA hace el resto.</h2>
+        <p class="s-desc">Sin configuracion compleja. Sin WhatsApp Business. Tu WhatsApp personal + MIIA = piloto automatico.</p>
       </div>
       <div class="steps">
         <div class="step fade-in">
           <div class="step-n">01</div>
           <h3>Conecta tu WhatsApp</h3>
-          <p>Escanea un codigo QR desde el dashboard y MIIA se conecta a tu cuenta en segundos.</p>
+          <p>Escanea un QR desde el dashboard. En 30 segundos MIIA esta conectada a tu numero, lista para trabajar.</p>
         </div>
         <div class="step fade-in">
           <div class="step-n">02</div>
-          <h3>Entrena con tu negocio</h3>
-          <p>Escribile "Aprende:" seguido de cualquier información: productos, precios, servicios, reglas.</p>
+          <h3>Contale sobre tu vida</h3>
+          <p>Hablale como a una persona: tu negocio, tu familia, tus gustos. MIIA entiende contexto y aprende sola de cada conversacion. Sin comandos.</p>
         </div>
         <div class="step fade-in">
           <div class="step-n">03</div>
-          <h3>Ella hace todo por vos</h3>
-          <p>MIIA atiende leads, genera cotizaciones, organiza tu agenda, cuida a tu familia y cierra ventas 24/7.</p>
+          <h3>Ella se encarga de todo</h3>
+          <p>Vende, agenda, recuerda, protege, informa, coordina y aprende. Cada dia es mejor que el anterior. Vos solo vivis.</p>
         </div>
       </div>
     </div>
@@ -976,29 +1016,29 @@
     <div class="container">
       <div class="fade-in">
         <div class="s-label">Inteligencia</div>
-        <h2 class="s-title">Mas que un chatbot.<br>Tu socia digital.</h2>
-        <p class="s-desc">MIIA no solo responde. Aprende de cada conversación, cuida tus relaciones y opera en piloto automático.</p>
+        <h2 class="s-title">No responde preguntas.<br>Toma decisiones.</h2>
+        <p class="s-desc">MIIA piensa, anticipa y actua. Cada conversacion la hace mas inteligente. Cada dia te conoce mejor.</p>
       </div>
       <div class="caps-grid fade-in">
         <div class="cap">
-          <span class="cap-tag cap-tag-perf">Performance</span>
-          <h3>Motor de aprendizaje autonomo</h3>
-          <p>Cada conversación entrena a MIIA: aprende tu negocio, tu entorno y tu estilo. Tres capas: negocio, owner y contacto.</p>
+          <span class="cap-tag cap-tag-perf">Inteligencia</span>
+          <h3>Cerebro que evoluciona solo</h3>
+          <p>Tres capas de aprendizaje: tu negocio, tu personalidad y cada contacto. Sin comandos — MIIA detecta que guardar, que agendar y que recordarte. Con tu aprobacion.</p>
         </div>
         <div class="cap">
-          <span class="cap-tag cap-tag-agent">Agentes</span>
-          <h3>Sistema proactivo inteligente</h3>
-          <p>MIIA escribe primero. Hace seguimiento a leads, recuerda cumpleanos, coordina con tu equipo y mantiene relaciones activas.</p>
+          <span class="cap-tag cap-tag-agent">Proactiva</span>
+          <h3>Actua antes de que se lo pidas</h3>
+          <p>Te despierta con tu agenda y el clima. Sigue a tus leads si no contestan. Recuerda cumpleanos. Alerta sobre tus acciones. Coordina con tu equipo. No espera ordenes.</p>
         </div>
         <div class="cap">
-          <span class="cap-tag cap-tag-audio">Audio</span>
-          <h3>Procesamiento de audio y multimedia</h3>
-          <p>Transcribe audios, analiza imagenes y documentos. Entiende lo que te envian sin que tengas que leerlo.</p>
+          <span class="cap-tag cap-tag-audio">Multimedia</span>
+          <h3>Escucha, ve y lee por vos</h3>
+          <p>Transcribe audios de cualquier duracion, analiza fotos, lee PDFs y entiende documentos. Todo lo que te mandan, MIIA lo procesa sin que tengas que abrir nada.</p>
         </div>
         <div class="cap">
-          <span class="cap-tag cap-tag-commerce">Comercio</span>
-          <h3>Informes de inteligencia</h3>
-          <p>Recibe reportes con análisis de patrones, ADN de comunicación, coaching y sugerencias de mejora basados en datos reales.</p>
+          <span class="cap-tag cap-tag-commerce">Estrategia</span>
+          <h3>Tu coach nocturno con datos reales</h3>
+          <p>Cada noche te envia un informe: que paso con tus leads, que oportunidades perdiste, que patrones detecto y como mejorar. ADN de ventas basado en conversaciones reales.</p>
         </div>
       </div>
     </div>
@@ -1143,7 +1183,7 @@
         </div>
         <div class="faq-i fade-in">
           <button class="faq-q">¿Puedo entrenarla con mi negocio? <span class="faq-ic">+</span></button>
-          <div class="faq-a"><p>Si. Escribele "Aprende:" seguido de cualquier dato. MIIA lo guarda y lo usa en futuras conversaciónes.</p></div>
+          <div class="faq-a"><p>Si. Hablale naturalmente sobre tu negocio, tus productos, tus precios. MIIA entiende el contexto y aprende sola de cada conversacion. Tambien podes usar "Aprende:" si queres ser explicito.</p></div>
         </div>
         <div class="faq-i fade-in">
           <button class="faq-q">¿Que pasa si quiero responder yo directamente? <span class="faq-ic">+</span></button>
@@ -1164,8 +1204,8 @@
   <!-- ═══ CTA ═══ -->
   <section class="cta">
     <div class="fade-in">
-      <h2>Deja que MIIA trabaje<br>mientras vos vivis</h2>
-      <p>Unete a cientos de emprendedores que ya pusieron su negocio y su vida en piloto automático.</p>
+      <h2>Tu vida y tu negocio<br>en piloto automatico</h2>
+      <p>Emprendedores, profesionales y familias ya confian en MIIA para no perderse de nada. ¿Vos cuando empezas?</p>
       <a href="login.html" class="btn btn-w">
         Empezar gratis ahora
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -1178,13 +1218,13 @@
     <div class="manifesto-card fade-in">
       <div class="manifesto-label">Manifiesto MIIA</div>
       <p class="manifesto-text">
-        <strong>No somos un chatbot más.</strong> MIIA nacio de una frustración real: emprendedores que pierden ventas,
-        olvidan citas, descuidan relaciones y no pueden con todo a la vez. Creemos que la inteligencia artificial
-        no deberia reemplazarte, sino <strong>amplificarte</strong>.
+        <strong>No somos un chatbot.</strong> MIIA nacio de una realidad: personas que pierden ventas porque dormian,
+        olvidan el cumple de mama, no ven el gol de su equipo y no dan abasto con todo a la vez.
+        La IA no deberia reemplazarte. Deberia <strong>liberarte</strong>.
         <br><br>
-        Cada conversación que MIIA tiene, la hace mejor. Cada patron que detecta, te lo comparte.
-        Cada relacion que cuida — ya sea un lead, un familiar o un colega — es una relacion que vos no perdes.
-        <span class="manifesto-hl">MIIA no es tu empleada. Es tu socia digital.</span>
+        MIIA aprende de cada conversacion. Detecta patrones que vos no ves. Cuida relaciones que vos no podes atender.
+        Vende cuando vos descansas. Te despierta con todo resuelto.
+        <span class="manifesto-hl">MIIA no es tu empleada. Es tu socia digital. Y cada dia es mejor que ayer.</span>
       </p>
     </div>
   </div>
