@@ -210,45 +210,97 @@
       -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       background-clip: text;
     }
-    /* ═══ iPhone Frame ═══ */
+    /* ═══ iPhone 15 Pro Frame — pixel-perfect ═══ */
     .iphone-frame {
-      background: #1a1a1a;
-      border-radius: 44px;
-      padding: 12px;
-      border: 3px solid #333;
-      box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.03);
+      /* Titanium body */
+      background: linear-gradient(145deg, #2a2a2e 0%, #1d1d1f 50%, #2a2a2e 100%);
+      border-radius: 52px;
+      padding: 10px;
+      position: relative;
+      /* Titanium edge highlight */
+      border: 1.5px solid rgba(255,255,255,0.12);
+      /* Layered shadow: ambient + directional + glow */
+      box-shadow:
+        0 2px 4px rgba(0,0,0,0.2),
+        0 8px 24px rgba(0,0,0,0.3),
+        0 32px 64px rgba(0,0,0,0.5),
+        0 64px 120px rgba(0,0,0,0.3),
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -1px 0 rgba(0,0,0,0.3);
+    }
+    /* Side buttons — left: silence + volume, right: power */
+    .iphone-frame::before {
+      content: '';
+      position: absolute;
+      left: -2.5px; top: 120px;
+      width: 3px; height: 28px;
+      background: linear-gradient(180deg, #3a3a3e, #2a2a2e, #3a3a3e);
+      border-radius: 2px 0 0 2px;
+      box-shadow:
+        0 32px 0 0 #2a2a2e,
+        0 32px 0 0 linear-gradient(180deg, #3a3a3e, #2a2a2e),
+        0 36px 0 0 #2a2a2e;
+    }
+    .iphone-frame::after {
+      content: '';
+      position: absolute;
+      right: -2.5px; top: 148px;
+      width: 3px; height: 48px;
+      background: linear-gradient(180deg, #3a3a3e, #2a2a2e, #3a3a3e);
+      border-radius: 0 2px 2px 0;
+    }
+    /* Dynamic Island */
+    .iphone-notch {
+      width: 126px; height: 36px;
+      background: #000;
+      border-radius: 20px;
+      position: absolute;
+      top: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 10;
+      box-shadow: inset 0 0 3px rgba(0,0,0,0.8);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    /* Camera lens inside Dynamic Island */
+    .iphone-notch::before {
+      content: '';
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #1a1a2e 0%, #0a0a15 60%, #000 100%);
+      box-shadow: inset 0 0 2px rgba(0,0,255,0.15), 0 0 1px rgba(255,255,255,0.1);
+      margin-left: 28px;
+    }
+    /* Status bar area — time + icons */
+    .iphone-status {
+      height: 54px;
+      background: #202C33;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      padding: 0 24px 6px;
+      font-size: 0.68rem; font-weight: 600; color: #E9EDEF;
       position: relative;
     }
-    .iphone-notch {
-      width: 120px; height: 28px;
-      background: #1a1a1a;
-      border-radius: 0 0 18px 18px;
-      position: absolute;
-      top: 12px; left: 50%; transform: translateX(-50%);
-      z-index: 10;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .iphone-notch::after {
-      content: '';
-      width: 50px; height: 4px;
-      background: #333;
-      border-radius: 4px;
-    }
+    .iphone-status-left { letter-spacing: 0.3px; }
+    .iphone-status-right { display: flex; align-items: center; gap: 5px; }
+    .iphone-status-right svg { width: 14px; height: 14px; fill: #E9EDEF; }
     .iphone-screen {
-      border-radius: 32px;
+      border-radius: 42px;
       overflow: hidden;
       display: flex; flex-direction: column;
       background: #0B141A;
+      /* Subtle inner bezel shadow */
+      box-shadow: inset 0 0 0 0.5px rgba(0,0,0,0.5);
     }
     /* ═══ WhatsApp header ═══ */
     .chat-head {
-      padding: 10px 12px;
-      padding-top: 32px;
+      padding: 8px 10px;
       display: flex; align-items: center; gap: 8px;
       background: #202C33;
     }
+    .chat-head .chat-back {
+      width: 20px; height: 20px; fill: none; stroke: #AEBAC1; stroke-width: 2;
+      flex-shrink: 0;
+    }
     .chat-head-actions {
-      margin-left: auto; display: flex; gap: 12px;
+      margin-left: auto; display: flex; align-items: center; gap: 14px;
     }
     .chat-head-actions svg { width: 16px; height: 16px; fill: #AEBAC1; }
     .chat-av {
@@ -258,8 +310,8 @@
       font-size: 0.7rem; font-weight: 700; color: white;
       flex-shrink: 0;
     }
-    .chat-name { font-size: 0.82rem; font-weight: 500; color: #E9EDEF; white-space: nowrap; }
-    .chat-status { font-size: 0.58rem; color: #8696A0; white-space: nowrap; }
+    .chat-name { font-size: 0.8rem; font-weight: 500; color: #E9EDEF; white-space: nowrap; }
+    .chat-status { font-size: 0.56rem; color: #8696A0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
     /* ═══ WhatsApp doodle background — real pattern ═══ */
     .chat-msgs {
       padding: 12px 10px; display: flex; flex-direction: column; gap: 3px;
@@ -351,16 +403,17 @@
       flex: 1; background: #2A3942; border: none; border-radius: 8px;
       padding: 7px 10px; font-size: 0.72rem; color: #8696A0;
     }
-    /* iPhone bottom bar */
+    /* iPhone home indicator */
     .iphone-home-bar {
-      height: 16px; background: #0B141A;
+      height: 28px; background: #0B141A;
       display: flex; align-items: center; justify-content: center;
+      padding-top: 4px;
     }
     .iphone-home-bar::after {
       content: '';
-      width: 100px; height: 4px;
-      background: #444;
-      border-radius: 4px;
+      width: 120px; height: 4px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 100px;
     }
     /* Carousel dots */
     .chat-dots {
@@ -711,11 +764,11 @@
       .hero .sub { font-size: 1rem; }
       .s { padding: 100px 20px; }
       .hero-preview { max-width: 320px; }
-      .iphone-frame { border-radius: 36px; padding: 10px; }
-      .iphone-screen { border-radius: 26px; }
-      .iphone-notch { width: 100px; height: 24px; }
-      .chat-msgs { height: 380px; }
-      .chat-head { padding-top: 28px; }
+      .iphone-frame { border-radius: 46px; padding: 8px; }
+      .iphone-screen { border-radius: 38px; }
+      .iphone-notch { width: 110px; height: 32px; top: 16px; }
+      .chat-msgs { height: 360px; }
+      .iphone-status { height: 48px; padding: 0 20px 6px; }
       .feat-grid, .steps, .caps-grid, .price-grid, .test-grid { grid-template-columns: 1fr; }
       .price-card.enterprise { grid-column: span 1; }
       .cta h2 { font-size: 1.8rem; }
@@ -766,7 +819,8 @@
         <div class="chat-slide active" data-slide="0">
           <div class="chat-feature-title">Tu vendedora que nunca duerme</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="chat-head">
+            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
               <div class="chat-av">A</div>
               <div><div class="chat-name">Alejandra</div><div class="chat-status">en linea</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
@@ -798,7 +852,8 @@
         <div class="chat-slide" data-slide="1">
           <div class="chat-feature-title">Tu dia en piloto automatico</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="chat-head">
+            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
               <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
               <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envia un mensaje a este mismo numero</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
@@ -824,7 +879,8 @@
         <div class="chat-slide" data-slide="2">
           <div class="chat-feature-title">Tus pasiones en tiempo real</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="chat-head">
+            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
               <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
               <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envia un mensaje a este mismo numero</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
@@ -850,7 +906,8 @@
         <div class="chat-slide" data-slide="3">
           <div class="chat-feature-title">Aprende, coordina y ejecuta</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="chat-head">
+            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
               <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
               <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envia un mensaje a este mismo numero</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
@@ -876,7 +933,8 @@
         <div class="chat-slide" data-slide="4">
           <div class="chat-feature-title">Escucha, protege y cuida</div>
           <div class="iphone-frame"><div class="iphone-notch"></div><div class="iphone-screen">
-            <div class="chat-head">
+            <div class="iphone-status"><span class="iphone-status-left">9:41</span><span class="iphone-status-right"><svg viewBox="0 0 24 24"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg><svg viewBox="0 0 24 24"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg></span></div>
+            <div class="chat-head"><svg class="chat-back" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
               <div class="chat-av" style="background:linear-gradient(135deg,#34D399,#7C3AED);">M</div>
               <div><div class="chat-name">Tu MIIA</div><div class="chat-status">Envia un mensaje a este mismo numero</div></div>
               <div class="chat-head-actions"><svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0016 9.5 6.5 6.5 0 109.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5z"/></svg><svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></div>
