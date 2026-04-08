@@ -1513,7 +1513,7 @@
               <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA responderá automáticamente tus conversaciónes de WhatsApp, clasificará leads y cerrará ventas 24/7 sin que intervengas.</p>
             </div>
           </div>
-          <button onclick="showFeature('whatsapp')" style="width:100%;padding:10px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.18)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
+          <button onclick="linkWhatsAppFromConnections()" style="width:100%;padding:10px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.18)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
             Vincular WhatsApp
           </button>
         </div>
@@ -2575,8 +2575,23 @@
     let _waReconnectAttempts = 0;
     async function checkWhatsAppStatus() {
       try {
-        const res = await fetch('https://api.miia-app.com/api/status');
+        const uid = currentUser ? currentUser.uid : '';
+        const res = await fetch(`${API}/api/status?uid=${uid}`);
         const data = await res.json();
+
+        // Actualizar badge de WhatsApp en Conexiones
+        const waStatusEl = document.getElementById('connWaStatus');
+        if (waStatusEl) {
+          if (data.connected) {
+            waStatusEl.textContent = 'Conectado';
+            waStatusEl.style.background = 'rgba(52,211,153,.1)';
+            waStatusEl.style.color = '#34D399';
+          } else {
+            waStatusEl.textContent = 'No conectado';
+            waStatusEl.style.background = 'rgba(239,68,68,.1)';
+            waStatusEl.style.color = '#EF4444';
+          }
+        }
 
         if (data.connected) {
           _waReconnectAttempts = 0;
@@ -2588,7 +2603,7 @@
             showReconnectingBanner(_waReconnectAttempts);
             setTimeout(checkWhatsAppStatus, 5000);
           } else {
-            // Después de 90s sin conectar → redirigir a QR
+            // Después de 90s sin conectar → redirigir a businesses para vincular
             showSection('businesses');
           }
         }
@@ -2646,7 +2661,12 @@
       if (!confirm('¿Desvincular WhatsApp? Tendrás que escanear el código QR nuevamente.')) return;
 
       try {
-        const res = await fetch('https://api.miia-app.com/api/logout', { method: 'POST' });
+        const uid = currentUser ? currentUser.uid : '';
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${API}/api/tenant/${uid}/logout`, {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
         const data = await res.json();
 
         if (data.success) {
@@ -2934,6 +2954,56 @@
       }
     }
 
+    // ═══ LINK WHATSAPP DESDE CONEXIONES ═══
+    async function linkWhatsAppFromConnections() {
+      try {
+        const uid = currentUser ? currentUser.uid : '';
+        const res = await fetch(`${API}/api/status?uid=${uid}`);
+        const data = await res.json();
+        if (data.connected) {
+          showWhatsAppModal();
+        } else {
+          // Ir directo a la sección de negocios donde está el QR
+          showSection('businesses');
+          // Esperar a que la sección cargue y abrir QR
+          setTimeout(() => {
+            const qrModal = document.getElementById('qrModal');
+            if (qrModal) {
+              qrModal.classList.remove('hidden');
+              connectWhatsApp();
+            }
+          }, 500);
+        }
+      } catch (e) {
+        showSection('businesses');
+      }
+    }
+
+    // ═══ CONNECTIONS INIT ═══
+    let connectionsLoaded = false;
+    async function initConnections() {
+      if (connectionsLoaded) return;
+      connectionsLoaded = true;
+      // Cargar estado de WhatsApp para esta sección
+      try {
+        const uid = currentUser ? currentUser.uid : '';
+        const res = await fetch(`${API}/api/status?uid=${uid}`);
+        const data = await res.json();
+        const waStatusEl = document.getElementById('connWaStatus');
+        if (waStatusEl) {
+          if (data.connected) {
+            waStatusEl.textContent = 'Conectado';
+            waStatusEl.style.background = 'rgba(37,211,102,.12)';
+            waStatusEl.style.color = '#25D366';
+          } else {
+            waStatusEl.textContent = 'No conectado';
+            waStatusEl.style.background = 'rgba(239,68,68,.1)';
+            waStatusEl.style.color = '#EF4444';
+          }
+        }
+      } catch (_) {}
+    }
+
     // ═══ AI PROVIDER CONFIG ═══
     const BACKEND = 'https://api.miia-app.com';
     const aiProviderSelect = document.getElementById('aiProviderSelect');
@@ -2962,6 +3032,9 @@
         const isCustom = data.provider !== 'gemini' || data.hasCustomKey;
         aiKeyContainer.style.display = isCustom ? 'flex' : 'none';
         aiResetBtn.style.display = data.hasCustomKey ? 'block' : 'none';
+        // Actualizar badge de IA en Conexiones
+        const aiBadge = document.getElementById('connAiStatus');
+        if (aiBadge) aiBadge.textContent = data.providerLabel || 'Gemini (default)';
         if (data.hasCustomKey) {
           document.getElementById('aiApiKeyInput').placeholder = 'Key configurada (ingresa nueva para cambiar)';
           aiStatus.innerHTML = `<span style="color:var(--accent);">Usando ${data.providerLabel}</span>`;
@@ -5319,6 +5392,7 @@
       if (name === 'businesses') initBusinesses();
       if (name === 'documents') initDocuments();
       if (name === 'analytics') initAnalytics();
+      if (name === 'connections') initConnections();
 
       document.querySelectorAll('.sidebar-nav .sidebar-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
