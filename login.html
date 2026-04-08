@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MIIA — Iniciar Sesion</title>
+  <title>MIIA — Iniciar Sesión</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -35,67 +35,40 @@
     /* ── LEFT PANEL ── */
     .login-left {
       flex: 0 0 46%;
-      background: linear-gradient(145deg, #080818 0%, #0d0d2b 60%, #080818 100%);
+      background: #0A0A0A;
       border-right: 1px solid var(--border);
       display: flex; flex-direction: column;
       padding: 48px 52px;
       position: relative; overflow: hidden;
     }
-    .login-left::before {
-      content: '';
-      position: absolute; top: -140px; left: -100px;
-      width: 500px; height: 500px;
-      background: radial-gradient(ellipse, rgba(0,229,255,.2) 0%, transparent 65%);
-      pointer-events: none;
-    }
-    .login-left::after {
-      content: '';
-      position: absolute; bottom: -100px; right: -80px;
-      width: 400px; height: 400px;
-      background: radial-gradient(ellipse, rgba(124,58,237,.15) 0%, transparent 65%);
-      pointer-events: none;
-    }
+    .login-left::before { display: none; }
+    .login-left::after { display: none; }
 
-    .particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
-    .particle {
-      position: absolute; width: 2px; height: 2px; border-radius: 50%;
-      animation: float linear infinite;
-    }
-    @keyframes float {
-      0%   { transform: translateY(100vh) scale(0); opacity: 0; }
-      10%  { opacity: 1; }
-      90%  { opacity: .3; }
-      100% { transform: translateY(-20px) scale(1.5); opacity: 0; }
-    }
+    .particles { display: none; }
 
     .left-logo {
       display: flex; align-items: center; gap: 10px;
       position: relative; z-index: 1; text-decoration: none;
     }
-    .left-logo svg { width: 38px; height: 38px; }
-    .left-logo-text { font-size: 1.3rem; font-weight: 800; color: var(--text-white); letter-spacing: -.02em; }
+    .left-logo svg { width: 76px; height: 76px; }
+
+    .whatsapp-login-cta {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 7px 18px; margin-top: 12px;
+      background: rgba(37,211,102,0.12); border: 1px solid rgba(37,211,102,0.30);
+      color: #34d399;
+      font-size: .78rem; font-weight: 600;
+      border-radius: var(--r-full); text-decoration: none;
+      transition: all .2s; letter-spacing: 0.3px;
+    }
+    .whatsapp-login-cta:hover { background: rgba(37,211,102,0.20); color: #5eead4; transform: scale(1.02); }
+    .whatsapp-login-cta svg { width: 14px; height: 14px; }
+    .whatsapp-login-label { font-size: .72rem; color: var(--text-muted); margin-top: 16px; font-weight: 500; }
 
     .left-hero {
       position: relative; z-index: 1;
       flex: 1; display: flex; flex-direction: column;
       justify-content: center; padding: 56px 0 40px;
-    }
-    .left-badge {
-      display: inline-flex; align-items: center; gap: 8px;
-      padding: 5px 14px; border-radius: var(--r-full);
-      background: rgba(0,229,255,.1); border: 1px solid rgba(0,229,255,.25);
-      color: #9F67FF; font-size: .75rem; font-weight: 600;
-      margin-bottom: 24px; width: fit-content;
-      letter-spacing: .03em; text-transform: uppercase;
-    }
-    .left-badge-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: #34D399; box-shadow: 0 0 8px #34D399;
-      animation: pulse-dot 2s ease-in-out infinite;
-    }
-    @keyframes pulse-dot {
-      0%,100% { opacity:1; box-shadow:0 0 8px #34D399; }
-      50% { opacity:.6; box-shadow:0 0 3px #34D399; }
     }
     .left-title {
       font-size: 2.6rem; font-weight: 900; color: var(--text-white);
@@ -117,48 +90,40 @@
     }
     .feature-icon {
       width: 36px; height: 36px; border-radius: 10px;
-      background: rgba(0,229,255,.08); border: 1px solid rgba(0,229,255,.15);
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.08);
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .feature-icon svg { width: 18px; height: 18px; stroke: var(--primary); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .feature-icon svg { width: 18px; height: 18px; stroke: rgba(255,255,255,.6); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 
-    .left-stats {
-      display: flex; gap: 28px; margin-top: 44px; padding-top: 32px;
-      border-top: 1px solid var(--border); position: relative; z-index: 1;
-    }
-    .stat-item { display: flex; flex-direction: column; gap: 2px; }
-    .stat-num { font-size: 1.4rem; font-weight: 800; color: var(--text-white); letter-spacing: -.03em; }
-    .stat-label { font-size: .73rem; color: var(--text-muted); font-weight: 500; }
-
-    .left-footer { position: relative; z-index: 1; font-size: .74rem; color: var(--text-muted); margin-top: 20px; }
+    .left-footer { position: relative; z-index: 1; font-size: .74rem; color: var(--text-muted); margin-top: auto; padding-top: 20px; }
     .left-footer a { color: var(--text-muted); text-decoration: none; }
     .left-footer a:hover { color: var(--text-body); }
 
     /* ── RIGHT PANEL ── */
     .login-right {
-      flex: 1; display: flex; align-items: center; justify-content: center;
-      padding: 40px 24px; background: var(--bg-deep);
+      flex: 1; display: flex; align-items: flex-start; justify-content: center;
+      padding: 32px 24px; background: var(--bg-deep); overflow-y: auto;
     }
-    .login-box { width: 100%; max-width: 420px; animation: fadeUp .4s ease forwards; }
+    .login-box { width: 100%; max-width: 400px; animation: fadeUp .4s ease forwards; padding-top: 20px; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 
-    .login-box h2 { font-size: 1.75rem; font-weight: 800; color: var(--text-white); margin-bottom: 6px; letter-spacing: -.03em; }
-    .login-box .subtitle { font-size: .88rem; color: var(--text-muted); margin-bottom: 28px; }
+    .login-box h2 { font-size: 1.5rem; font-weight: 800; color: var(--text-white); margin-bottom: 4px; letter-spacing: -.03em; }
+    .login-box .subtitle { font-size: .82rem; color: var(--text-muted); margin-bottom: 20px; }
 
-    .tabs { display: flex; margin-bottom: 28px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 4px; gap: 4px; }
+    .tabs { display: flex; margin-bottom: 18px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-md); padding: 3px; gap: 3px; }
     .tab {
-      flex: 1; padding: 9px; text-align: center; cursor: pointer;
-      color: var(--text-muted); font-weight: 600; font-size: .84rem;
-      border-radius: 9px; transition: all .2s; background: none; border: none; font-family: inherit;
+      flex: 1; padding: 8px; text-align: center; cursor: pointer;
+      color: var(--text-muted); font-weight: 600; font-size: .8rem;
+      border-radius: 8px; transition: all .2s; background: none; border: none; font-family: inherit;
     }
     .tab.active { background: var(--bg-surface); color: var(--text-white); box-shadow: 0 1px 6px rgba(0,0,0,.5); }
 
-    .form-group { margin-bottom: 16px; }
-    label { display: block; margin-bottom: 6px; color: var(--text-body); font-weight: 600; font-size: .78rem; }
+    .form-group { margin-bottom: 12px; }
+    label { display: block; margin-bottom: 4px; color: var(--text-body); font-weight: 600; font-size: .74rem; }
     input, select {
-      width: 100%; padding: 11px 14px;
+      width: 100%; padding: 9px 12px;
       border: 1px solid var(--border-md); border-radius: var(--r-sm);
-      font-size: .88rem; background: var(--bg-card); color: var(--text-white);
+      font-size: .84rem; background: var(--bg-card); color: var(--text-white);
       font-family: inherit; transition: all .2s;
     }
     input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,229,255,.12); }
@@ -180,21 +145,21 @@
     .pw-match-err { color: #f87171; }
 
     .btn-submit {
-      width: 100%; padding: 12px;
+      width: 100%; padding: 10px;
       background: var(--gradient); color: white; border: none;
-      border-radius: var(--r-full); font-size: .9rem; font-weight: 700;
-      cursor: pointer; transition: all .2s; margin-top: 6px; font-family: inherit;
+      border-radius: var(--r-full); font-size: .85rem; font-weight: 700;
+      cursor: pointer; transition: all .2s; margin-top: 4px; font-family: inherit;
     }
     .btn-submit:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,229,255,.3); }
     .btn-submit:disabled { opacity: .5; cursor: not-allowed; transform: none; box-shadow: none; }
 
-    .divider { text-align: center; margin: 22px 0; color: var(--text-muted); position: relative; font-size: .76rem; }
+    .divider { text-align: center; margin: 14px 0; color: var(--text-muted); position: relative; font-size: .74rem; }
     .divider::before, .divider::after { content: ''; position: absolute; top: 50%; width: 38%; height: 1px; background: var(--border); }
     .divider::before { left: 0; }
     .divider::after { right: 0; }
 
     .google-btn {
-      width: 100%; padding: 11px;
+      width: 100%; padding: 9px;
       background: var(--bg-card); color: var(--text-body);
       border: 1px solid var(--border-md); border-radius: var(--r-sm);
       font-size: .88rem; font-weight: 600; cursor: pointer;
@@ -207,11 +172,11 @@
     .error { background: rgba(239,68,68,.1); color: #f87171; border: 1px solid rgba(239,68,68,.2); }
     .success { background: rgba(52,211,153,.1); color: #34d399; border: 1px solid rgba(52,211,153,.2); }
 
-    .terms-text { text-align: center; font-size: .73rem; color: var(--text-muted); margin-top: 14px; line-height: 1.6; }
+    .terms-text { text-align: center; font-size: .7rem; color: var(--text-muted); margin-top: 10px; line-height: 1.5; }
     .terms-text a { color: #9F67FF; text-decoration: none; }
     .terms-text a:hover { color: var(--text-white); }
 
-    .back-link { text-align: center; margin-top: 20px; }
+    .back-link { text-align: center; margin-top: 12px; }
     .back-link a { color: var(--text-muted); font-size: .82rem; font-weight: 500; transition: color .2s; text-decoration: none; }
     .back-link a:hover { color: var(--text-body); }
 
@@ -266,28 +231,23 @@
 
     <a href="index.html" class="left-logo">
       <svg viewBox="90 118 220 168" fill="none"><defs><linearGradient id="lg_login" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs><path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#lg_login)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/><text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text></svg>
-      <span class="left-logo-text">MIIA</span>
     </a>
 
     <div class="left-hero">
-      <div class="left-badge">
-        <div class="left-badge-dot"></div>
-        Tu asistente IA en WhatsApp
-      </div>
-      <h1 class="left-title">Tu vida y tu negocio<br>en <span class="grad">piloto automatico</span></h1>
-      <p class="left-sub">MIIA gestiona tu negocio, organiza tu agenda, cuida tus relaciones personales y responde por vos en WhatsApp, las 24 horas.</p>
+      <h1 class="left-title">Tu vida en<br><span class="grad">piloto automático</span></h1>
+      <p class="left-sub">Negocios, agenda, familia, finanzas, deportes. Todo gestionado desde WhatsApp, las 24 horas.</p>
       <div class="features-list">
         <div class="feature-item">
           <div class="feature-icon">
             <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
-          <div>Responde leads y <strong style="color:var(--text-white)">cierra ventas</strong> sin que intervengas</div>
+          <div>Responde leads y <strong style="color:var(--text-white)">cierra ventas</strong> mientras duermes</div>
         </div>
         <div class="feature-item">
           <div class="feature-icon">
             <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
           </div>
-          <div>Agenda reuniones y <strong style="color:var(--text-white)">recordatorios</strong> automaticos</div>
+          <div>Agenda, recordatorios y <strong style="color:var(--text-white)">briefing matutino</strong></div>
         </div>
         <div class="feature-item">
           <div class="feature-icon">
@@ -297,29 +257,21 @@
         </div>
         <div class="feature-item">
           <div class="feature-icon">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
           </div>
-          <div>Clima, noticias, deportes y <strong style="color:var(--text-white)">mas, cada manana</strong></div>
+          <div>Deportes, finanzas, clima y <strong style="color:var(--text-white)">noticias en vivo</strong></div>
+        </div>
+        <div class="feature-item">
+          <div class="feature-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </div>
+          <div>Entiende <strong style="color:var(--text-white)">audios, fotos y documentos</strong></div>
         </div>
       </div>
     </div>
 
-    <div class="left-stats">
-      <div class="stat-item">
-        <span class="stat-num">24/7</span>
-        <span class="stat-label">Siempre disponible</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num">&lt;3s</span>
-        <span class="stat-label">Tiempo respuesta</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-num">100%</span>
-        <span class="stat-label">Tu estilo propio</span>
-      </div>
-    </div>
 
-    <div class="left-footer">&copy; 2026 MIIA &middot; <a href="terms.html">Terminos</a> &middot; <a href="privacy.html">Privacidad</a> &middot; <a href="dna-extraction.html">ADN Comercial</a> &middot; <a href="cookies.html">Cookies</a></div>
+    <div class="left-footer">&copy; 2026 MIIA &middot; <a href="terms.html">Términos</a> &middot; <a href="privacy.html">Privacidad</a> &middot; <a href="dna-extraction.html">ADN Comercial</a> &middot; <a href="cookies.html">Cookies</a></div>
   </div>
 
   <!-- RIGHT PANEL -->
@@ -332,7 +284,7 @@
       <div class="message success" id="successMessage"></div>
 
       <div class="tabs">
-        <button class="tab active" onclick="switchTab('login', this)">Iniciar Sesion</button>
+        <button class="tab active" onclick="switchTab('login', this)">Iniciar Sesión</button>
         <button class="tab" onclick="switchTab('register', this)">Registrarse</button>
       </div>
 
@@ -343,67 +295,29 @@
           <input type="email" id="loginEmail" required placeholder="tu@email.com">
         </div>
         <div class="form-group">
-          <label>Contrasena</label>
+          <label>Contraseña</label>
           <div class="password-wrapper">
-            <input type="password" id="loginPassword" required placeholder="Tu contrasena">
+            <input type="password" id="loginPassword" required placeholder="Tu contraseña">
             <button type="button" class="toggle-pw" onclick="togglePassword('loginPassword', this)">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
             </button>
           </div>
-          <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Olvidaste tu contrasena?</a>
+          <a href="#" class="forgot-link" onclick="handleForgotPassword(event)">Olvidaste tu contraseña?</a>
         </div>
-        <button type="submit" class="btn-submit">Iniciar Sesion</button>
+        <button type="submit" class="btn-submit">Iniciar Sesión</button>
       </form>
 
-      <!-- Register Form -->
-      <form id="registerForm" class="hidden" onsubmit="handleRegister(event)">
-        <div class="form-group">
-          <label>Nombre / Empresa</label>
-          <input type="text" id="registerName" required placeholder="Tu nombre o empresa">
-        </div>
-        <div class="form-group">
-          <label>Email</label>
-          <input type="email" id="registerEmail" required placeholder="tu@email.com">
-        </div>
-        <div class="form-group">
-          <label>WhatsApp (con codigo pais)</label>
-          <input type="tel" id="registerWhatsapp" required placeholder="+57 300 123 4567">
-        </div>
-        <div class="form-group">
-          <label>Plan</label>
-          <select id="registerPlan" required>
-            <option value="trial" selected>Trial gratuito — 7 dias</option>
-            <option value="monthly">Mensual — $15 USD/mes (1 slot)</option>
-            <option value="quarterly">Trimestral — $39 USD / 3 meses (2 slots)</option>
-            <option value="semestral">Semestral — $69 USD / 6 meses (3 slots)</option>
-            <option value="annual">Anual — $99 USD / ano (5 slots)</option>
-            <option value="familiar">Familiar — $19.99 USD/mes (5 numeros)</option>
-            <option value="enterprise">Enterprise — Contactar ventas</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Contrasena</label>
-          <div class="password-wrapper">
-            <input type="password" id="registerPassword" required placeholder="Minimo 6 caracteres" oninput="checkPasswordMatch()">
-            <button type="button" class="toggle-pw" onclick="togglePassword('registerPassword', this)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-        </div>
-        <div class="form-group">
-          <label>Confirmar contrasena</label>
-          <div class="password-wrapper">
-            <input type="password" id="registerPasswordConfirm" required placeholder="Repite tu contrasena" oninput="checkPasswordMatch()">
-            <button type="button" class="toggle-pw" onclick="togglePassword('registerPasswordConfirm', this)">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-            </button>
-          </div>
-          <div class="pw-match-msg" id="pwMatchMsg"></div>
-        </div>
-        <button type="submit" class="btn-submit" id="registerBtn">Crear Cuenta</button>
-      </form>
+      <!-- Register Form — BLOQUEADO TEMPORALMENTE -->
+      <div id="registerForm" class="hidden" style="text-align:center; padding: 2rem 1rem;">
+        <div style="font-size: 3rem; margin-bottom: 1rem;">🚧</div>
+        <h3 style="color: var(--text-primary, #333); margin-bottom: 0.5rem;">MIIA est&aacute; en construcci&oacute;n</h3>
+        <p style="color: var(--text-secondary, #666); line-height: 1.6;">
+          Estamos preparando todo para que tu experiencia sea perfecta.<br>
+          El registro estar&aacute; disponible muy pronto.
+        </p>
+      </div>
 
-      <div class="divider">O continua con</div>
+      <div class="divider">O continúa con</div>
 
       <button class="google-btn" onclick="handleGoogleLogin()">
         <svg width="17" height="17" viewBox="0 0 20 20">
@@ -415,8 +329,14 @@
         Continuar con Google
       </button>
 
-      <p class="terms-text">Al registrarte aceptas los <a href="terms.html" target="_blank">Terminos</a>, <a href="privacy.html" target="_blank">Privacidad</a>, <a href="cookies.html" target="_blank">Cookies</a> y <a href="dna-extraction.html" target="_blank">ADN Comercial</a>.</p>
-      <div class="back-link"><a href="index.html">&larr; Volver al inicio</a></div>
+      <p class="terms-text">Al registrarte aceptas los <a href="terms.html" target="_blank">Términos</a>, <a href="privacy.html" target="_blank">Privacidad</a>, <a href="cookies.html" target="_blank">Cookies</a> y <a href="dna-extraction.html" target="_blank">ADN Comercial</a>.</p>
+      <div class="back-link"><a href="index.html">&larr; Ir al inicio</a></div>
+
+      <p class="whatsapp-login-label">¿Preguntas antes de empezar?</p>
+      <a href="https://wa.me/573054169969?text=Hola%2C%20tengo%20una%20pregunta%20sobre%20MIIA" target="_blank" rel="noopener" class="whatsapp-login-cta">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Escríbele a MIIA
+      </a>
     </div>
   </div>
 
@@ -427,26 +347,16 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 7l-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
       </div>
       <h2>Verifica tu email</h2>
-      <p>Enviamos un link de activacion a:</p>
+      <p>Enviamos un link de activación a:</p>
       <p id="verifyEmail" class="verify-email"></p>
-      <p style="margin-bottom:24px;font-size:.83rem;">Hace clic en el enlace del email para activar tu cuenta. Revisa tambien spam.</p>
-      <button onclick="checkVerified()" class="btn-verify btn-verify-primary">Ya verifique mi email</button>
+      <p style="margin-bottom:24px;font-size:.83rem;">Haz clic en el enlace del email para activar tu cuenta. Revisa también spam.</p>
+      <button onclick="checkVerified()" class="btn-verify btn-verify-primary">Ya verifiqué mi email</button>
       <button onclick="resendVerification()" class="btn-verify btn-verify-ghost">Reenviar email</button>
       <div id="verifyMsg" style="font-size:.77rem;color:#94a3b8;margin-top:10px;"></div>
     </div>
   </div>
 
   <script>
-    // Particles
-    const container = document.getElementById('particles');
-    const colors = ['rgba(0,229,255,.5)','rgba(124,58,237,.4)','rgba(255,23,68,.35)'];
-    for (let i = 0; i < 22; i++) {
-      const p = document.createElement('div');
-      p.className = 'particle';
-      const sz = 1 + Math.random() * 2.5;
-      p.style.cssText = `left:${Math.random()*100}%;width:${sz}px;height:${sz}px;animation-duration:${10+Math.random()*16}s;animation-delay:${Math.random()*12}s;background:${colors[Math.floor(Math.random()*colors.length)]};`;
-      container.appendChild(p);
-    }
 
     // Auto-switch to register tab if ?tab=register
     const _urlTab = new URLSearchParams(window.location.search).get('tab');
@@ -469,6 +379,7 @@
     const API_BASE = 'https://api.miia-app.com';
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    auth.languageCode = 'es';
     const db = firebase.firestore();
 
     function switchTab(tab, el) {
@@ -496,11 +407,11 @@
       const btn = document.getElementById('registerBtn');
       if (!pw2) { msg.textContent = ''; btn.disabled = false; return; }
       if (pw === pw2) {
-        msg.textContent = 'Las contrasenas coinciden';
+        msg.textContent = 'Las contraseñas coinciden';
         msg.className = 'pw-match-msg pw-match-ok';
         btn.disabled = false;
       } else {
-        msg.textContent = 'Las contrasenas no coinciden';
+        msg.textContent = 'Las contraseñas no coinciden';
         msg.className = 'pw-match-msg pw-match-err';
         btn.disabled = true;
       }
@@ -519,21 +430,61 @@
         setTimeout(() => redirectByRole(user), 700);
       } catch (error) {
         if (['auth/account-exists-with-different-credential','auth/invalid-login-credentials','auth/wrong-password'].includes(error.code)) {
-          // Check if account was created with Google
-          try {
-            const methods = await auth.fetchSignInMethodsForEmail(email);
-            if (methods.includes('google.com') && !methods.includes('password')) {
-              showError('Esta cuenta fue creada con Google. Usa el boton "Continuar con Google" para ingresar.');
-            } else {
-              showError('Email o contrasena incorrectos.');
-            }
-          } catch(e) {
-            showError('Email o contrasena incorrectos.');
+          const pw = document.getElementById('loginPassword').value;
+          showError('Email o contraseña incorrectos. Si creaste tu cuenta con Google, puedes vincular una contraseña abajo.');
+          // Always show link-password button for failed logins
+          let linkBtn = document.getElementById('linkPasswordBtn');
+          if (!linkBtn) {
+            linkBtn = document.createElement('button');
+            linkBtn.id = 'linkPasswordBtn';
+            linkBtn.type = 'button';
+            linkBtn.className = 'btn-submit';
+            linkBtn.style.cssText = 'margin-top:10px;background:linear-gradient(135deg,#34d399,#059669);font-size:.82rem;';
+            linkBtn.textContent = 'Vincular contraseña con Google';
+            document.getElementById('loginForm').appendChild(linkBtn);
           }
+          linkBtn.style.display = 'block';
+          linkBtn.onclick = async function() {
+            if (!pw || pw.length < 6) { showError('Escribe una contraseña de al menos 6 caracteres arriba primero.'); return; }
+            try {
+              linkBtn.disabled = true;
+              linkBtn.textContent = 'Abriendo Google...';
+              const provider = new firebase.auth.GoogleAuthProvider();
+              provider.setCustomParameters({ login_hint: email });
+              const result = await auth.signInWithPopup(provider);
+              // Check if already has password provider
+              const hasPassword = result.user.providerData.some(p => p.providerId === 'password');
+              if (hasPassword) {
+                showError('Tu cuenta ya tiene contraseña. La que escribiste no es correcta.');
+                linkBtn.style.display = 'none';
+                return;
+              }
+              linkBtn.textContent = 'Vinculando...';
+              const credential = firebase.auth.EmailAuthProvider.credential(result.user.email, pw);
+              await result.user.linkWithCredential(credential);
+              showSuccess('Contraseña creada! Ahora puedes entrar con email/contraseña o con Google.');
+              linkBtn.style.display = 'none';
+              localStorage.setItem('miia_user', JSON.stringify({ uid: result.user.uid, email: result.user.email, logged_in: true }));
+              setTimeout(() => redirectByRole(result.user), 1000);
+            } catch (linkErr) {
+              console.error('[LINK-PW]', linkErr);
+              if (linkErr.code === 'auth/provider-already-linked') {
+                showError('Tu cuenta ya tiene contraseña. Revisa que sea correcta.');
+              } else if (linkErr.code === 'auth/popup-closed-by-user') {
+                showError('Cerraste la ventana de Google. Intenta de nuevo.');
+              } else if (linkErr.code === 'auth/credential-already-in-use') {
+                showError('Estas credenciales ya están en uso por otra cuenta.');
+              } else {
+                showError('Error: ' + linkErr.message);
+              }
+              linkBtn.disabled = false;
+              linkBtn.textContent = 'Vincular contraseña con Google';
+            }
+          };
         } else if (error.code === 'auth/user-not-found') {
-          showError('No existe una cuenta con ese email. Registrate primero.');
+          showError('No existe una cuenta con ese email. Regístrate primero.');
         } else if (error.code === 'auth/too-many-requests') {
-          showError('Demasiados intentos. Espera unos minutos o restablece tu contrasena.');
+          showError('Demasiados intentos. Espera unos minutos o restablece tu contraseña.');
         } else {
           showError('Error: ' + error.message);
         }
@@ -545,16 +496,33 @@
       const email = document.getElementById('loginEmail').value;
       if (!email) { showError('Ingresa tu email primero.'); return; }
       try {
-        await auth.sendPasswordResetEmail(email);
-        showSuccess('Email de recuperacion enviado a ' + email + '. Revisa tu bandeja.');
+        showSuccess('Enviando email de recuperación...');
+        const resp = await fetch(API_BASE + '/api/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await resp.json();
+        if (!resp.ok) {
+          if (data.error === 'google_only') {
+            showError('Tu cuenta fue creada con Google. Para crear una contraseña: escribe la contraseña que quieras en el campo e intenta iniciar sesión — te aparecerá la opción de vincularla.');
+          } else {
+            showError(data.error || data.message || 'Error al enviar email.');
+          }
+          return;
+        }
+        showSuccess('Email de recuperación enviado a ' + email + '. Revisa tu bandeja de entrada (y spam, por si acaso).');
       } catch (err) {
-        if (err.code === 'auth/user-not-found') showError('No existe una cuenta con ese email.');
-        else showError('Error: ' + err.message);
+        showError('Error de conexión. Intenta de nuevo.');
+        console.error('[FORGOT-PW]', err);
       }
     }
 
     async function handleRegister(event) {
       event.preventDefault();
+      // 🚧 REGISTRO BLOQUEADO TEMPORALMENTE — MIIA en construcción
+      showError('El registro no est\u00e1 disponible a\u00fan. MIIA est\u00e1 en construcci\u00f3n. Muy pronto estar\u00e1 lista.');
+      return;
       const name = document.getElementById('registerName').value;
       const email = document.getElementById('registerEmail').value;
       const whatsapp = document.getElementById('registerWhatsapp').value;
@@ -562,9 +530,9 @@
       const password = document.getElementById('registerPassword').value;
       const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
 
-      if (password.length < 6) { showError('La contrasena debe tener al menos 6 caracteres'); return; }
-      if (password !== passwordConfirm) { showError('Las contrasenas no coinciden'); return; }
-      if (!whatsapp.startsWith('+')) { showError('El WhatsApp debe incluir codigo pais (ejemplo: +57)'); return; }
+      if (password.length < 6) { showError('La contraseña debe tener al menos 6 caracteres'); return; }
+      if (password !== passwordConfirm) { showError('Las contraseñas no coinciden'); return; }
+      if (!whatsapp.startsWith('+')) { showError('El WhatsApp debe incluir código país (ejemplo: +57)'); return; }
 
       if (plan === 'enterprise') {
         window.location.href = 'empresas.html';
@@ -628,6 +596,11 @@
             await db.collection('users').doc(user.uid).set({ ...inviteDoc.data(), uid: user.uid, name: user.displayName||inviteDoc.data().name, photo: user.photoURL||'', invite_pending: false, last_login: new Date() });
             await inviteDoc.ref.delete();
           } else {
+            // 🚧 REGISTRO BLOQUEADO TEMPORALMENTE — MIIA en construcción
+            // Usuarios nuevos por Google tampoco pueden registrarse
+            await user.delete(); // Eliminar cuenta Firebase recién creada
+            showError('El registro no est\u00e1 disponible a\u00fan. MIIA est\u00e1 en construcci\u00f3n. Muy pronto estar\u00e1 lista.');
+            return;
             const now = new Date();
             const trialEnd = new Date(now.getTime() + 7*24*60*60*1000);
             await db.collection('users').doc(user.uid).set({
