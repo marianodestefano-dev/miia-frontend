@@ -10,6 +10,11 @@
   <meta name="author" content="Mariano De Stefano">
   <meta name="copyright" content="(c) 2024-2026 MIIA App. All rights reserved.">
   <title>MIIA - Dashboard</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#3B5BFF">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="miia-logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -1795,6 +1800,11 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
 
+    // ═══ API URL GLOBAL — ÚNICA FUENTE DE VERDAD ═══
+    const API = 'https://api.miia-app.com';
+    const API_BASE = API;
+    const BACKEND_URL = API;
+
     // ═══ Socket.IO initialization ═══
     let socket = null;
     let currentUserUid = null;
@@ -2584,7 +2594,7 @@
 
         if (data.success) {
           showToast('WhatsApp desvinculado correctamente', 'success');
-          setTimeout(() => showSection('businesses') + (clientSlug ? '?u=' + clientSlug : ''), 1200);
+          setTimeout(() => showSection('businesses'), 1200);
         }
       } catch (error) {
         showToast('Error al desvincular: ' + error.message, 'error');
@@ -3023,7 +3033,6 @@
     }
 
     // ═══ EMAIL CONFIG ═══
-    const API = 'https://api.miia-app.com';
 
     async function loadEmailConfig() {
       try {
@@ -3692,7 +3701,6 @@
 
 
     // ═══ BUSINESSES SECTION JS ═══
-    const BACKEND_URL = 'https://api.miia-app.com';
     let waConnected = false;
     let expertSessionMessages = [];
     let currentSessionDate = null;
@@ -6009,5 +6017,11 @@
     </footer>
   </div><!-- end .main-content -->
 </div><!-- end .app-layout -->
+<script>
+  // PWA Service Worker Registration
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(r => console.log('[PWA] SW registered')).catch(e => console.warn('[PWA] SW failed:', e));
+  }
+</script>
 </body>
 </html>

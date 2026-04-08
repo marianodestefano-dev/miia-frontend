@@ -710,7 +710,10 @@
           if (data.role === 'agent') { window.location.href = 'agent-dashboard.html?u=' + toSlug(user.email); return; }
         }
       } catch(e) {}
-      window.location.href = 'owner-dashboard.html?u=' + toSlug(user.email);
+      // Preservar plan seleccionado desde landing page
+      const urlPlan = new URLSearchParams(window.location.search).get('plan');
+      const planParam = urlPlan ? '&plan=' + urlPlan : '';
+      window.location.href = 'owner-dashboard.html?u=' + toSlug(user.email) + planParam;
     }
 
     function showError(msg) {
