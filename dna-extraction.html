@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA - Extracción de ADN Comercial</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #00E5FF;
+      --secondary: #FF1744;
+      --bg-deep: #0F0F0F;
+      --bg-card: #141414;
+      --bg-surface: #1A1A1A;
+      --border: rgba(0,229,255,0.08);
+      --border-hover: rgba(0,229,255,0.2);
+      --text-white: #F1F5F9;
+      --text-primary: #E2E8F0;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --gradient-main: linear-gradient(135deg, #00E5FF 0%, #7C3AED 50%, #FF1744 100%);
+      --accent-green: #34D399;
+      --accent-orange: #F59E0B;
+      --radius: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-secondary);
+      min-height: 100vh;
+      line-height: 1.7;
+      padding-top: 64px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: rgba(3,5,8,0.8);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -0.5px;
+    }
+    .nav-logo svg { height: 24px; width: 24px; }
+    .nav-back {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--text-white); }
+    .legal-container {
+      max-width: 740px;
+      margin: 0 auto;
+      padding: 56px 24px 100px;
+    }
+    .legal-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .legal-badge {
+      display: inline-block;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 4px 14px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .legal-header h1 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--text-white);
+      letter-spacing: -1px;
+      margin-bottom: 8px;
+    }
+    .legal-header p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+    .legal-section {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      margin-bottom: 16px;
+    }
+    .legal-section h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 14px;
+    }
+    .legal-section h3 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin: 20px 0 8px;
+    }
+    .legal-section p, .legal-section li {
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      line-height: 1.8;
+      margin-bottom: 8px;
+    }
+    .legal-section ul, .legal-section ol {
+      padding-left: 20px;
+      margin-top: 6px;
+    }
+    .legal-section ul li { margin-bottom: 4px; }
+    .highlight-box {
+      background: rgba(0,229,255,0.04);
+      border-left: 2px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 0 8px 8px 0;
+      margin: 14px 0;
+    }
+    .highlight-box p { margin-bottom: 0; }
+    .highlight-box.warning {
+      background: rgba(245,158,11,0.06);
+      border-left-color: var(--accent-orange);
+    }
+    .highlight-box.green {
+      background: rgba(52,211,153,0.06);
+      border-left-color: var(--accent-green);
+    }
+    .contact-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .contact-link:hover { text-decoration: underline; }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      font-size: 0.84rem;
+    }
+    .data-table th {
+      text-align: left;
+      padding: 10px 12px;
+      background: var(--bg-surface);
+      color: var(--text-white);
+      font-weight: 600;
+      border: 1px solid var(--border);
+    }
+    .data-table td {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+    }
+    .legal-footer {
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+      padding: 24px 32px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .legal-footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      margin: 0 8px;
+      transition: color 0.2s;
+    }
+    .legal-footer a:hover { color: var(--text-white); }
+    @media (max-width: 768px) {
+      .navbar { padding: 0 16px; }
+      .legal-container { padding: 40px 16px 80px; }
+      .legal-header h1 { font-size: 1.6rem; }
+      .legal-section { padding: 24px 20px; }
+      .data-table { font-size: 0.78rem; }
+      .data-table th, .data-table td { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html" class="nav-logo">
+    <svg viewBox="90 118 220 168" fill="none" xmlns="http://www.w3.org/2000/svg" style="width:30px;height:30px;flex-shrink:0"><defs><linearGradient id="miia_g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs><path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#miia_g4)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/><text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text></svg>
+    MIIA
+  </a>
+  <a href="index.html" class="nav-back">&larr; Volver</a>
+</nav>
+
+<div class="legal-container">
+
+  <div class="legal-header">
+    <div class="legal-badge">Documento Legal</div>
+    <h1>Extracción de ADN Comercial</h1>
+    <p>Última actualización: 8 de abril de 2026</p>
+  </div>
+
+  <!-- 1. Qué es el ADN Comercial -->
+  <div class="legal-section">
+    <h2>1. ¿Qué es el ADN Comercial?</h2>
+    <p>El <strong>ADN Comercial</strong> es un perfil inteligente que MIIA construye a partir del análisis de tus conversaciones de WhatsApp con leads y clientes. No se trata de datos biológicos ni personales sensibles — es un modelo de tu <strong>estilo de venta y comunicación profesional</strong>.</p>
+    <div class="highlight-box">
+      <p><strong>Analogía simple:</strong> Así como un coach de ventas observa cómo vendés para darte feedback, MIIA analiza tus conversaciones comerciales para aprender tu estilo y mejorar las respuestas automáticas a tus leads.</p>
+    </div>
+    <p>El ADN Comercial incluye exclusivamente información relacionada con tu actividad profesional y comercial, nunca información personal, familiar o privada.</p>
+  </div>
+
+  <!-- 2. Qué datos se analizan -->
+  <div class="legal-section">
+    <h2>2. ¿Qué datos analiza MIIA?</h2>
+    <p>MIIA analiza <strong>únicamente las conversaciones con leads y clientes</strong> que pasan por el sistema. Específicamente:</p>
+
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Dato analizado</th>
+          <th>Para qué se usa</th>
+          <th>Se comparte?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Preguntas frecuentes de tus leads</td>
+          <td>Generar FAQ automático para responder más rápido</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Objeciones comunes de clientes</td>
+          <td>Aprender a manejar objeciones como vos lo hacés</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Frases que cierran ventas</td>
+          <td>Identificar estrategias de cierre exitosas</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Tono y estilo de comunicación</td>
+          <td>Adaptar las respuestas de MIIA a tu personalidad</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Horarios de mayor conversión</td>
+          <td>Optimizar cuándo MIIA responde con más detalle</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Velocidad de respuesta promedio</td>
+          <td>Simular tu ritmo natural de conversación</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Productos/servicios más consultados</td>
+          <td>Priorizar información relevante en respuestas</td>
+          <td>No</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="highlight-box warning">
+      <p><strong>Lo que MIIA NUNCA analiza:</strong> Conversaciones personales, familiares, fotos, audios personales, datos bancarios, contraseñas, información médica o cualquier contenido no relacionado con tu actividad comercial.</p>
+    </div>
+  </div>
+
+  <!-- 3. Cómo funciona el proceso -->
+  <div class="legal-section">
+    <h2>3. ¿Cómo funciona el proceso?</h2>
+    <h3>3.1. Motor de Patrones</h3>
+    <p>Cada día, MIIA analiza las conversaciones de los últimos 7 días con tus leads y clientes. El Motor de Patrones identifica:</p>
+    <ul>
+      <li><strong>FAQ:</strong> Las 5 preguntas más frecuentes y la respuesta ideal basada en cómo vos respondés</li>
+      <li><strong>Objeciones:</strong> Las 3 objeciones más comunes y la mejor forma de manejarlas (aprendida de tu estilo)</li>
+      <li><strong>Estrategias de cierre:</strong> Frases y tácticas que han resultado en ventas exitosas</li>
+      <li><strong>Horarios pico:</strong> En qué momentos tus leads responden mejor</li>
+    </ul>
+
+    <h3>3.2. Perfil ADN Vendedor</h3>
+    <p>A partir de los patrones detectados, MIIA construye tu perfil de vendedor:</p>
+    <ul>
+      <li><strong>Tono:</strong> ¿Sos formal, informal o mixto?</li>
+      <li><strong>Velocidad:</strong> ¿Respondés rápido, tomás tu tiempo, o variás?</li>
+      <li><strong>Estilo:</strong> ¿Consultivo, empático, técnico o directo?</li>
+      <li><strong>Fortalezas:</strong> En qué aspectos de la venta destacás</li>
+      <li><strong>Áreas de mejora:</strong> Dónde MIIA puede complementarte mejor</li>
+    </ul>
+
+    <h3>3.3. Aplicación del ADN</h3>
+    <p>El ADN Comercial se usa exclusivamente para:</p>
+    <ul>
+      <li>Que las respuestas automáticas de MIIA a tus leads suenen como vos</li>
+      <li>Priorizar la información que más preguntan tus clientes</li>
+      <li>Manejar objeciones con el mismo enfoque que usarías vos</li>
+      <li>Generar informes que te ayuden a mejorar tus ventas</li>
+    </ul>
+  </div>
+
+  <!-- 4. Informes y análisis -->
+  <div class="legal-section">
+    <h2>4. Informes y Análisis que MIIA genera</h2>
+    <p>Además del ADN Comercial, MIIA genera informes periódicos para ayudarte a mejorar tu negocio:</p>
+
+    <h3>4.1. Análisis Nocturno (diario)</h3>
+    <p>Cada noche, MIIA te envía un resumen ejecutivo del día con:</p>
+    <ul>
+      <li>Leads calientes (quién mostró más interés)</li>
+      <li>Patrones detectados (preguntas repetidas, objeciones)</li>
+      <li>Oportunidades perdidas (leads que no cerraron)</li>
+      <li>Sugerencias accionables para mañana</li>
+      <li>Tono emocional general de las conversaciones</li>
+    </ul>
+
+    <h3>4.2. Reporte Quincenal (cada 15 días)</h3>
+    <p>Cada 2 semanas, recibís por email y WhatsApp un reporte con:</p>
+    <ul>
+      <li>Total de mensajes procesados (por tipo: owner, familia, leads)</li>
+      <li>Leads nuevos vs recurrentes</li>
+      <li>Top 5 contactos más activos</li>
+      <li>Uso de inteligencia artificial (volumen de consultas)</li>
+      <li>Tendencia de crecimiento o baja</li>
+      <li>Recomendaciones estratégicas</li>
+    </ul>
+
+    <h3>4.3. Informe de Privacidad (semestral)</h3>
+    <p>Cada 6 meses, generamos un informe completo de privacidad que incluye:</p>
+    <ul>
+      <li>Qué datos se procesaron y para qué</li>
+      <li>Quién accedió a tu información</li>
+      <li>Volumen de mensajes procesados</li>
+      <li>Estado de seguridad de tu cuenta</li>
+    </ul>
+
+    <div class="highlight-box green">
+      <p><strong>Todos los informes son privados.</strong> Solo vos podés verlos. Ni el administrador de MIIA ni otros usuarios tienen acceso a tus informes o datos de ADN.</p>
+    </div>
+  </div>
+
+  <!-- 5. Almacenamiento y seguridad -->
+  <div class="legal-section">
+    <h2>5. Almacenamiento y Seguridad</h2>
+
+    <h3>5.1. Dónde se guardan los datos</h3>
+    <ul>
+      <li>El ADN Comercial se almacena en <strong>Google Firebase (Firestore)</strong>, bajo tu cuenta personal</li>
+      <li>Los datos están cifrados en tránsito (TLS 1.3) y en reposo</li>
+      <li>Cada usuario tiene su espacio aislado — nadie puede ver tus datos</li>
+      <li>El acceso está protegido por Firebase Security Rules que garantizan aislamiento total</li>
+    </ul>
+
+    <h3>5.2. Quién tiene acceso</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Quién</th>
+          <th>Acceso</th>
+          <th>Puede ver ADN?</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vos (el owner)</td>
+          <td>Total — tus datos, tus informes, tu ADN</td>
+          <td>Si</td>
+        </tr>
+        <tr>
+          <td>Tus agentes</td>
+          <td>Solo datos del negocio asignado</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Tu familia (slots)</td>
+          <td>Solo su self-chat privado</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Administrador MIIA</td>
+          <td>Métricas agregadas (sin contenido de mensajes)</td>
+          <td>No</td>
+        </tr>
+        <tr>
+          <td>Otros usuarios</td>
+          <td>Ninguno</td>
+          <td>No</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>5.3. Retención de datos</h3>
+    <ul>
+      <li><strong>ADN Comercial:</strong> Se mantiene mientras tu cuenta esté activa. Se actualiza diariamente.</li>
+      <li><strong>Informes nocturnos:</strong> Se guardan indefinidamente en tu historial.</li>
+      <li><strong>Reportes quincenales:</strong> Se guardan indefinidamente en tu historial.</li>
+      <li><strong>Al cerrar cuenta:</strong> Todos los datos se eliminan en un plazo de 30 días.</li>
+      <li><strong>Al desvincular agente:</strong> El ADN del agente (su estilo) viaja con él. El cerebro del negocio se borra.</li>
+    </ul>
+  </div>
+
+  <!-- 6. Tus derechos -->
+  <div class="legal-section">
+    <h2>6. Tus Derechos</h2>
+    <p>Tenés control total sobre tu ADN Comercial:</p>
+
+    <h3>6.1. Consentimiento</h3>
+    <ul>
+      <li>La extracción de ADN es <strong>opcional</strong> — podés usar MIIA sin activarla</li>
+      <li>Al registrarte, se te presenta la opción de autorizar o no la extracción</li>
+      <li>Podés cambiar tu decisión en cualquier momento desde el dashboard</li>
+    </ul>
+
+    <h3>6.2. Acceso</h3>
+    <ul>
+      <li>Podés ver tu ADN Comercial completo en cualquier momento desde tu dashboard</li>
+      <li>Podés solicitar un export completo de todos tus datos (botón "Descargar mis datos")</li>
+    </ul>
+
+    <h3>6.3. Rectificación</h3>
+    <ul>
+      <li>Si considerás que el ADN no refleja tu estilo correctamente, podés solicitar un re-análisis</li>
+      <li>Podés modificar las FAQ y objeciones detectadas manualmente</li>
+    </ul>
+
+    <h3>6.4. Eliminación</h3>
+    <ul>
+      <li>Podés solicitar la eliminación completa de tu ADN Comercial en cualquier momento</li>
+      <li>Al eliminar tu cuenta, todo se borra automáticamente (botón "Eliminar mi cuenta")</li>
+      <li>La eliminación es irreversible — si volvés a activar, MIIA empieza de cero</li>
+    </ul>
+
+    <h3>6.5. Portabilidad</h3>
+    <ul>
+      <li>Podés descargar todos tus datos en formato legible (JSON/PDF)</li>
+      <li>El ADN, informes y estadísticas están incluidos en la descarga</li>
+    </ul>
+  </div>
+
+  <!-- 7. Qué pasa si desactivo -->
+  <div class="legal-section">
+    <h2>7. ¿Qué pasa si desactivo la extracción de ADN?</h2>
+    <p>Si decidís no autorizar la extracción de ADN Comercial:</p>
+    <ul>
+      <li>MIIA sigue funcionando normalmente para responder leads</li>
+      <li>Las respuestas serán genéricas en vez de personalizadas a tu estilo</li>
+      <li>No recibirás informes de patrones ni análisis nocturno de leads</li>
+      <li>No se generará perfil de vendedor</li>
+      <li>Podés activarlo en cualquier momento futuro</li>
+    </ul>
+    <div class="highlight-box">
+      <p><strong>En resumen:</strong> MIIA funciona sin ADN, pero funciona <em>mejor</em> con él — porque aprende cómo vendés vos y replica tu estilo de forma natural.</p>
+    </div>
+  </div>
+
+  <!-- 8. Uso comercial -->
+  <div class="legal-section">
+    <h2>8. Uso Comercial de los Datos</h2>
+    <p>MIIA <strong>NUNCA</strong>:</p>
+    <ul>
+      <li>Vende tus datos a terceros</li>
+      <li>Comparte tu ADN Comercial con otros usuarios</li>
+      <li>Usa tu información para publicidad</li>
+      <li>Transfiere datos a empresas de marketing</li>
+      <li>Entrena modelos de IA genéricos con tus conversaciones</li>
+    </ul>
+    <p>Tus datos se usan <strong>exclusivamente</strong> para mejorar el servicio que MIIA te da a vos. Punto.</p>
+  </div>
+
+  <!-- 9. Marco legal -->
+  <div class="legal-section">
+    <h2>9. Marco Legal Aplicable</h2>
+    <p>El tratamiento de datos de MIIA cumple con:</p>
+    <ul>
+      <li><strong>Ley 1581 de 2012</strong> (Colombia) — Protección de datos personales</li>
+      <li><strong>Decreto 1377 de 2013</strong> (Colombia) — Reglamentación parcial de la Ley 1581</li>
+      <li><strong>GDPR</strong> (Unión Europea) — Para usuarios en Europa</li>
+      <li><strong>Ley 25.326</strong> (Argentina) — Protección de datos personales</li>
+      <li><strong>LFPDPPP</strong> (México) — Ley Federal de Protección de Datos Personales</li>
+    </ul>
+    <p>Independientemente de tu ubicación, aplicamos el estándar más alto de protección disponible.</p>
+  </div>
+
+  <!-- 10. Cambios -->
+  <div class="legal-section">
+    <h2>10. Cambios a esta Política</h2>
+    <p>Nos reservamos el derecho de actualizar esta política. Si realizamos cambios sustanciales:</p>
+    <ul>
+      <li>Te notificaremos por email y WhatsApp con al menos 15 días de anticipación</li>
+      <li>Si los cambios afectan el alcance de la extracción de ADN, solicitaremos nuevo consentimiento</li>
+      <li>La fecha de actualización se refleja al inicio de este documento</li>
+    </ul>
+  </div>
+
+  <!-- Contact -->
+  <div class="legal-section" style="text-align: center;">
+    <h2>Contacto</h2>
+    <p>Para consultas sobre la extracción de ADN Comercial o ejercer tus derechos:</p>
+    <p><a href="mailto:hola@miia-app.com" class="contact-link">hola@miia-app.com</a></p>
+    <p style="margin-top:8px;font-size:0.8rem;color:var(--text-muted);">Responsable del tratamiento: MIIA App — Medellín, Colombia</p>
+  </div>
+
+</div>
+
+<footer class="legal-footer">
+  <p>&copy; 2026 MIIA. Todos los derechos reservados.</p>
+  <p style="margin-top:6px;">
+    <a href="terms.html">Términos</a>
+    <a href="privacy.html">Privacidad</a>
+    <a href="dna-extraction.html">ADN Comercial</a>
+    <a href="index.html">Inicio</a>
+  </p>
+</footer>
+
+</body>
+</html>
