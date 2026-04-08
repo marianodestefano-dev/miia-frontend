@@ -438,6 +438,102 @@
     .view-tab:hover { border-color:var(--primary); color:var(--primary); }
     .view-tab.active { background:var(--gradient-main); color:white; border-color:transparent; }
 
+    /* ═══ ANALYTICS CRM ═══ */
+    .an-metrics-bar { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px; }
+    .an-metric-card {
+      background:var(--card-bg); border:1px solid var(--border-c); border-radius:12px;
+      padding:16px; text-align:center;
+    }
+    .an-metric-value { font-size:1.6rem; font-weight:800; color:var(--text-dark); margin-bottom:2px; }
+    .an-metric-label { font-size:0.7rem; color:var(--text-mid); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .an-metric-bars { display:flex; align-items:flex-end; justify-content:center; gap:3px; height:28px; }
+    .an-metric-bars span {
+      width:6px; border-radius:3px; background:linear-gradient(to top, #E879F9, #A855F7);
+      transition:height 0.4s ease;
+    }
+    .an-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+    .an-panel {
+      background:var(--card-bg); border:1px solid var(--border-c); border-radius:12px;
+      overflow:hidden;
+    }
+    .an-panel-wide { grid-column:span 2; }
+    .an-panel-header {
+      display:flex; align-items:center; gap:10px; padding:14px 18px;
+      border-bottom:1px solid var(--border-c); background:rgba(192,38,211,0.04);
+    }
+    .an-panel-header svg { width:18px; height:18px; flex-shrink:0; }
+    .an-panel-header h3 { font-size:0.88rem; font-weight:700; color:var(--text-dark); flex:1; }
+    .an-date-select {
+      background:var(--card-bg); border:1px solid var(--border-c); border-radius:6px;
+      color:var(--text-dark); font-size:0.75rem; padding:4px 8px; cursor:pointer;
+    }
+    .an-loading { padding:32px; text-align:center; color:var(--text-mid); font-size:0.85rem; }
+    .an-empty { padding:32px; text-align:center; color:var(--text-mid); font-size:0.85rem; }
+
+    /* Pipeline Kanban */
+    .an-pipeline { display:flex; gap:0; overflow-x:auto; padding:0; }
+    .an-stage {
+      flex:1; min-width:160px; border-right:1px solid var(--border-c); padding:12px;
+    }
+    .an-stage:last-child { border-right:none; }
+    .an-stage-head {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--border-c);
+    }
+    .an-stage-name { font-size:0.72rem; font-weight:700; color:var(--text-mid); text-transform:uppercase; letter-spacing:0.5px; }
+    .an-stage-count {
+      font-size:0.68rem; font-weight:700; color:#E879F9; background:rgba(192,38,211,0.12);
+      padding:2px 8px; border-radius:10px;
+    }
+    .an-lead-card {
+      background:rgba(255,255,255,0.03); border:1px solid var(--border-c); border-radius:8px;
+      padding:8px 10px; margin-bottom:6px; cursor:default;
+    }
+    .an-lead-card:hover { border-color:rgba(232,121,249,0.3); }
+    .an-lead-name { font-size:0.78rem; font-weight:600; color:var(--text-dark); }
+    .an-lead-meta { font-size:0.68rem; color:var(--text-mid); margin-top:2px; }
+
+    /* Conversaciones */
+    .an-conversations { max-height:400px; overflow-y:auto; }
+    .an-conv-row {
+      display:flex; align-items:center; gap:10px; padding:10px 16px;
+      border-bottom:1px solid var(--border-c); cursor:default;
+    }
+    .an-conv-row:hover { background:rgba(232,121,249,0.04); }
+    .an-conv-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .an-conv-dot.active { background:#34D399; }
+    .an-conv-dot.waiting { background:#FBBF24; }
+    .an-conv-dot.idle { background:#64748B; }
+    .an-conv-info { flex:1; min-width:0; }
+    .an-conv-name { font-size:0.82rem; font-weight:600; color:var(--text-dark); }
+    .an-conv-msg { font-size:0.72rem; color:var(--text-mid); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .an-conv-time { font-size:0.68rem; color:var(--text-mid); flex-shrink:0; }
+    .an-conv-msgs-count { font-size:0.65rem; color:#E879F9; font-weight:600; flex-shrink:0; }
+
+    /* Nightly report */
+    .an-nightly { padding:16px 18px; }
+    .an-nightly-section { margin-bottom:14px; }
+    .an-nightly-title { font-size:0.78rem; font-weight:700; color:var(--text-dark); margin-bottom:6px; }
+    .an-nightly-item { font-size:0.78rem; color:var(--text-light); line-height:1.6; padding:2px 0; }
+    .an-nightly-item::before { content:'• '; color:#E879F9; font-weight:700; }
+
+    /* ADN */
+    .an-adn { padding:16px 18px; }
+    .an-adn-category { margin-bottom:16px; }
+    .an-adn-cat-title { font-size:0.72rem; font-weight:700; color:#E879F9; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .an-adn-item {
+      background:rgba(255,255,255,0.03); border:1px solid var(--border-c); border-radius:8px;
+      padding:8px 12px; margin-bottom:6px; font-size:0.78rem; color:var(--text-light); line-height:1.5;
+    }
+
+    @media (max-width:768px) {
+      .an-metrics-bar { grid-template-columns:repeat(2,1fr); }
+      .an-grid { grid-template-columns:1fr; }
+      .an-panel-wide { grid-column:span 1; }
+      .an-pipeline { flex-direction:column; }
+      .an-stage { border-right:none; border-bottom:1px solid var(--border-c); }
+    }
+
     /* ═══ GROUPS ═══ */
     .groups-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; }
     .groups-header h2 { color:var(--text-dark); font-size:1.3rem; font-weight:700; }
@@ -1036,6 +1132,9 @@
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
           <span class="sidebar-label">Mis Negocios</span>
         </button>
+        <button class="sidebar-btn" onclick="showSection('analytics', this)">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+          <span class="sidebar-label">Analytics</span>
         <button class="sidebar-btn" onclick="showSection('documents', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="sidebar-label">Documentos</span>
@@ -2012,7 +2111,7 @@
 
       // Restore section from hash AFTER render is complete
       const hash = window.location.hash.replace('#', '');
-      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'documents'];
+      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'analytics', 'documents'];
       if (hash && validSections.includes(hash)) {
         const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
         showSection(hash, btn);
@@ -4758,6 +4857,270 @@
 </script>
   <script>
 
+    // ═══ ANALYTICS CRM SECTION JS ═══
+    let analyticsLoaded = false;
+    let analyticsData = { pipeline: null, conversations: null, nightly: [], patterns: null, metrics: [] };
+
+    async function initAnalytics() {
+      if (analyticsLoaded) return;
+      analyticsLoaded = true;
+      console.log('[ANALYTICS] Inicializando sección CRM...');
+      // Cargar todo en paralelo
+      await Promise.all([
+        loadPipeline(),
+        loadConversations(),
+        loadNightly(),
+        loadPatterns(),
+        loadMetrics()
+      ]);
+    }
+
+    // ── Pipeline ──
+    async function loadPipeline() {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/analytics/pipeline`);
+        analyticsData.pipeline = await res.json();
+        renderPipeline();
+      } catch (e) {
+        console.error('[ANALYTICS] Error pipeline:', e);
+        document.getElementById('anPipeline').innerHTML = '<div class="an-empty">Error cargando pipeline</div>';
+      }
+    }
+
+    function renderPipeline() {
+      const { stages, totals } = analyticsData.pipeline || { stages: [], totals: {} };
+      const container = document.getElementById('anPipeline');
+
+      // Actualizar métricas header
+      document.getElementById('anMetricLeads').textContent = totals.active || 0;
+      document.getElementById('anMetricConv').textContent = (totals.conversion || 0) + '%';
+      const avgMs = totals.avgResponseMs || 0;
+      document.getElementById('anMetricResp').textContent = avgMs > 0 ? (avgMs / 60000).toFixed(1) + 'm' : '—';
+
+      if (!stages || stages.length === 0) {
+        container.innerHTML = '<div class="an-empty">Sin leads aún. Cuando MIIA atienda leads, aparecerán aquí.</div>';
+        return;
+      }
+
+      container.innerHTML = stages.map(stage => `
+        <div class="an-stage">
+          <div class="an-stage-head">
+            <span class="an-stage-name">${stage.name}</span>
+            <span class="an-stage-count">${stage.count}</span>
+          </div>
+          ${stage.leads.length === 0
+            ? '<div style="font-size:0.72rem;color:var(--text-mid);padding:8px 0;">Sin leads</div>'
+            : stage.leads.slice(0, 8).map(l => `
+              <div class="an-lead-card">
+                <div class="an-lead-name">${l.name}</div>
+                <div class="an-lead-meta">${l.lastActivity ? timeAgo(l.lastActivity) : 'Sin actividad'}</div>
+              </div>
+            `).join('') + (stage.leads.length > 8 ? `<div style="font-size:0.68rem;color:#E879F9;padding:4px;">+${stage.leads.length - 8} más</div>` : '')
+          }
+        </div>
+      `).join('');
+    }
+
+    // ── Conversaciones ──
+    async function loadConversations() {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/analytics/conversations`);
+        analyticsData.conversations = await res.json();
+        renderConversations();
+      } catch (e) {
+        console.error('[ANALYTICS] Error conversations:', e);
+        document.getElementById('anConversations').innerHTML = '<div class="an-empty">Error cargando conversaciones</div>';
+      }
+    }
+
+    function renderConversations() {
+      const convs = analyticsData.conversations || [];
+      const container = document.getElementById('anConversations');
+
+      if (convs.length === 0) {
+        container.innerHTML = '<div class="an-empty">Sin conversaciones activas</div>';
+        return;
+      }
+
+      container.innerHTML = convs.slice(0, 20).map(c => `
+        <div class="an-conv-row">
+          <div class="an-conv-dot ${c.status}"></div>
+          <div class="an-conv-info">
+            <div class="an-conv-name">${c.name}</div>
+            <div class="an-conv-msg">${c.lastMessageFrom === 'assistant' ? '🤖 ' : ''}${c.lastMessage || 'Sin mensajes'}</div>
+          </div>
+          <div class="an-conv-msgs-count">${c.messageCount} msgs</div>
+          <div class="an-conv-time">${c.lastActivity ? timeAgo(c.lastActivity) : ''}</div>
+        </div>
+      `).join('');
+    }
+
+    // ── Nightly ──
+    async function loadNightly() {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/analytics/nightly?days=7`);
+        analyticsData.nightly = await res.json();
+        // Poblar selector de fechas
+        const select = document.getElementById('anNightlyDate');
+        select.innerHTML = analyticsData.nightly.map((r, i) =>
+          `<option value="${i}">${r.date || r.id}</option>`
+        ).join('');
+        if (analyticsData.nightly.length === 0) {
+          select.innerHTML = '<option>Sin informes</option>';
+        }
+        renderNightlyReport();
+      } catch (e) {
+        console.error('[ANALYTICS] Error nightly:', e);
+        document.getElementById('anNightly').innerHTML = '<div class="an-empty">Error cargando informes</div>';
+      }
+    }
+
+    function renderNightlyReport() {
+      const container = document.getElementById('anNightly');
+      const idx = parseInt(document.getElementById('anNightlyDate').value) || 0;
+      const report = analyticsData.nightly[idx];
+
+      if (!report) {
+        container.innerHTML = '<div class="an-empty">Sin informes nocturnos aún. MIIA genera uno cada noche a las 23:00.</div>';
+        return;
+      }
+
+      // El reporte puede tener diferentes estructuras según lo que Opus devolvió
+      const content = report.report || report.analysis || report.content || report;
+      let html = '';
+
+      if (typeof content === 'string') {
+        // Texto plano — dividir por secciones
+        html = content.split('\n').filter(l => l.trim()).map(l =>
+          `<div class="an-nightly-item">${l.replace(/^[•\-]\s*/, '')}</div>`
+        ).join('');
+      } else if (typeof content === 'object') {
+        // Objeto estructurado
+        for (const [key, val] of Object.entries(content)) {
+          if (key.startsWith('_') || key === 'date' || key === 'generatedAt') continue;
+          const title = key.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+          html += `<div class="an-nightly-section">
+            <div class="an-nightly-title">${title}</div>`;
+          if (Array.isArray(val)) {
+            html += val.map(v => `<div class="an-nightly-item">${typeof v === 'string' ? v : JSON.stringify(v)}</div>`).join('');
+          } else {
+            html += `<div class="an-nightly-item">${typeof val === 'string' ? val : JSON.stringify(val)}</div>`;
+          }
+          html += '</div>';
+        }
+      }
+
+      container.innerHTML = html || '<div class="an-empty">Informe vacío</div>';
+    }
+
+    // ── Patterns / ADN ──
+    async function loadPatterns() {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/analytics/patterns`);
+        analyticsData.patterns = await res.json();
+        renderPatterns();
+      } catch (e) {
+        console.error('[ANALYTICS] Error patterns:', e);
+        document.getElementById('anADN').innerHTML = '<div class="an-empty">Error cargando ADN</div>';
+      }
+    }
+
+    function renderPatterns() {
+      const data = analyticsData.patterns;
+      const container = document.getElementById('anADN');
+
+      if (!data || !data.patterns) {
+        container.innerHTML = '<div class="an-empty">Sin análisis de patrones aún. Se genera automáticamente con las primeras conversaciones de leads.</div>';
+        return;
+      }
+
+      const patterns = data.patterns;
+      let html = '';
+
+      // Renderizar cada categoría de patrón
+      const categories = {
+        'FAQ Detectadas': patterns.faq || patterns.preguntas_frecuentes,
+        'Objeciones comunes': patterns.objeciones || patterns.objections,
+        'Estrategias de cierre': patterns.estrategias_cierre || patterns.closing_strategies,
+        'Horarios de conversión': patterns.horarios || patterns.peak_hours
+      };
+
+      for (const [title, items] of Object.entries(categories)) {
+        if (!items) continue;
+        html += `<div class="an-adn-category"><div class="an-adn-cat-title">${title}</div>`;
+        if (Array.isArray(items)) {
+          html += items.map(item =>
+            `<div class="an-adn-item">${typeof item === 'string' ? item : (item.question || item.text || item.description || JSON.stringify(item))}</div>`
+          ).join('');
+        } else if (typeof items === 'string') {
+          html += `<div class="an-adn-item">${items}</div>`;
+        }
+        html += '</div>';
+      }
+
+      // ADN vendedor acumulado
+      if (data.adn_vendedor) {
+        html += '<div class="an-adn-category"><div class="an-adn-cat-title">ADN Vendedor</div>';
+        const adn = data.adn_vendedor;
+        for (const [k, v] of Object.entries(adn)) {
+          if (k.startsWith('_') || k === 'updatedAt') continue;
+          html += `<div class="an-adn-item"><strong>${k.replace(/_/g, ' ')}:</strong> ${typeof v === 'string' ? v : JSON.stringify(v)}</div>`;
+        }
+        html += '</div>';
+      }
+
+      container.innerHTML = html || '<div class="an-empty">Sin patrones detectados aún</div>';
+    }
+
+    // ── Metrics ──
+    async function loadMetrics() {
+      try {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/analytics/metrics?days=7`);
+        analyticsData.metrics = await res.json();
+        renderMetrics();
+      } catch (e) {
+        console.error('[ANALYTICS] Error metrics:', e);
+      }
+    }
+
+    function renderMetrics() {
+      const metrics = analyticsData.metrics || [];
+      if (metrics.length === 0) return;
+
+      // Último día = hoy
+      const today = metrics[metrics.length - 1] || {};
+      document.getElementById('anMetricMsgs').textContent = today.messagesProcessed || 0;
+      document.getElementById('anMetricAI').textContent = today.aiCalls || 0;
+
+      // Barras de tendencia 7 días
+      renderSparkBars('anMetricMsgsBars', metrics.map(m => m.messagesProcessed || 0));
+      renderSparkBars('anMetricAIBars', metrics.map(m => m.aiCalls || 0));
+      renderSparkBars('anMetricRespBars', metrics.map(m => m.avgResponseMs || 0));
+    }
+
+    function renderSparkBars(containerId, values) {
+      const container = document.getElementById(containerId);
+      if (!container || values.length === 0) return;
+      const max = Math.max(...values, 1);
+      container.innerHTML = values.map(v => {
+        const h = Math.max(3, Math.round((v / max) * 24));
+        return `<span style="height:${h}px"></span>`;
+      }).join('');
+    }
+
+    // ── Utilidad: time ago ──
+    function timeAgo(dateStr) {
+      if (!dateStr) return '';
+      const diff = Date.now() - new Date(dateStr).getTime();
+      const min = Math.floor(diff / 60000);
+      if (min < 1) return 'ahora';
+      if (min < 60) return `${min}m`;
+      const hrs = Math.floor(min / 60);
+      if (hrs < 24) return `${hrs}h`;
+      const days = Math.floor(hrs / 24);
+      return `${days}d`;
+    }
+
     // ═══ DOCUMENTS SECTION JS ═══
     let documentsLoaded = false;
 
@@ -4955,6 +5318,7 @@
       if (name === 'contacts') initContacts();
       if (name === 'businesses') initBusinesses();
       if (name === 'documents') initDocuments();
+      if (name === 'analytics') initAnalytics();
 
       document.querySelectorAll('.sidebar-nav .sidebar-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
@@ -5005,7 +5369,7 @@
     // Restore section from hash on load
     window.addEventListener('DOMContentLoaded', function() {
       const hash = window.location.hash.replace('#', '');
-      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'documents'];
+      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'analytics', 'documents'];
       if (hash && validSections.includes(hash)) {
         const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
         showSection(hash, btn);
@@ -5834,6 +6198,93 @@
 
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- SECTION: ANALYTICS — CRM Dashboard con datos reales           -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="section-analytics" class="page-section section-hidden">
+    <div style="max-width:1200px;margin:0 auto;padding:24px 20px 80px;">
+
+      <!-- Métricas resumen -->
+      <div class="an-metrics-bar" id="anMetricsBar">
+        <div class="an-metric-card">
+          <div class="an-metric-value" id="anMetricMsgs">—</div>
+          <div class="an-metric-label">Mensajes hoy</div>
+          <div class="an-metric-bars" id="anMetricMsgsBars"></div>
+        </div>
+        <div class="an-metric-card">
+          <div class="an-metric-value" id="anMetricAI">—</div>
+          <div class="an-metric-label">Llamadas IA</div>
+          <div class="an-metric-bars" id="anMetricAIBars"></div>
+        </div>
+        <div class="an-metric-card">
+          <div class="an-metric-value" id="anMetricLeads">—</div>
+          <div class="an-metric-label">Leads activos</div>
+          <div class="an-metric-bars" id="anMetricLeadsBars"></div>
+        </div>
+        <div class="an-metric-card">
+          <div class="an-metric-value" id="anMetricConv">—</div>
+          <div class="an-metric-label">Conversión</div>
+          <div class="an-metric-bars" id="anMetricConvBars"></div>
+        </div>
+        <div class="an-metric-card">
+          <div class="an-metric-value" id="anMetricResp">—</div>
+          <div class="an-metric-label">Resp. promedio</div>
+          <div class="an-metric-bars" id="anMetricRespBars"></div>
+        </div>
+      </div>
+
+      <!-- Grid principal -->
+      <div class="an-grid">
+
+        <!-- Pipeline de ventas -->
+        <div class="an-panel an-panel-wide">
+          <div class="an-panel-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E879F9" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <h3>Pipeline de ventas</h3>
+          </div>
+          <div class="an-pipeline" id="anPipeline">
+            <div class="an-loading">Cargando pipeline...</div>
+          </div>
+        </div>
+
+        <!-- Conversaciones en vivo -->
+        <div class="an-panel">
+          <div class="an-panel-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E879F9" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <h3>Conversaciones en vivo</h3>
+          </div>
+          <div class="an-conversations" id="anConversations">
+            <div class="an-loading">Cargando conversaciones...</div>
+          </div>
+        </div>
+
+        <!-- Informe nocturno IA -->
+        <div class="an-panel">
+          <div class="an-panel-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E879F9" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            <h3>Informe nocturno IA</h3>
+            <select id="anNightlyDate" class="an-date-select" onchange="renderNightlyReport()"></select>
+          </div>
+          <div class="an-nightly" id="anNightly">
+            <div class="an-loading">Cargando informes...</div>
+          </div>
+        </div>
+
+        <!-- ADN Vendedor -->
+        <div class="an-panel">
+          <div class="an-panel-header">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#E879F9" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <h3>ADN Vendedor</h3>
+          </div>
+          <div class="an-adn" id="anADN">
+            <div class="an-loading">Cargando patrones...</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
   <div id="section-documents" class="page-section section-hidden">
     <div style="max-width:1000px;margin:0 auto;padding:40px 24px 80px;">
   <div class="container">
@@ -5939,7 +6390,7 @@
   </div>
 
 <footer class="page-footer">
-      MIIA © 2025 · <a href="terms.html">Términos</a> · <a href="privacy.html">Privacidad</a>
+      MIIA Center © 2026 · <a href="terms.html">Términos</a> · <a href="privacy.html">Privacidad</a> · <a href="cookies.html">Cookies</a> · <a href="dna-extraction.html">ADN Comercial</a>
     </footer>
   </div><!-- end .main-content -->
 </div><!-- end .app-layout -->
