@@ -778,7 +778,8 @@
     }
 
     /* ═══ QR MODAL ═══ */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 200; }
+    .modal-overlay.hidden { display: none !important; }
+    #qrModal, #createBizModal, #editBizModal { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: flex; align-items: center; justify-content: center; z-index: 200; }
     .modal-card { background: var(--bg-card); border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-lg); padding: 40px; max-width: 420px; width: 90%; text-align: center; }
     .modal-card h3 { margin-bottom: 16px; color: var(--text-dark); }
     .modal-card #qrCode img { max-width: 260px; margin: 16px auto; }
