@@ -3914,14 +3914,18 @@
   async function loadBusinesses() {
     if (!currentUser) return;
     try {
+      console.log('[BIZ] Cargando negocios...');
       const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses`);
       if (res.ok) {
         businesses = await res.json();
+        console.log('[BIZ] ✅ Negocios cargados:', businesses.length);
       } else {
+        const err = await res.text();
+        console.error('[BIZ] ❌ Error HTTP:', res.status, err);
         businesses = [];
       }
     } catch (e) {
-      console.error('Error loading businesses:', e);
+      console.error('[BIZ] ❌ Error cargando negocios:', e);
       businesses = [];
     }
     renderBusinessCards();
