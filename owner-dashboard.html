@@ -1210,6 +1210,24 @@
 
   <!-- Main Container -->
   <div class="container" id="mainContent">
+
+    <!-- ═══ WHATSAPP CONNECTION CARD — Visible en #home ═══ -->
+    <div id="homeWaCard" style="margin-bottom:24px;background:var(--glass-bg);border:1px solid var(--bd-1);border-radius:16px;padding:24px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div style="width:52px;height:52px;border-radius:14px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+      </div>
+      <div style="flex:1;min-width:200px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <h3 style="font-size:1.05rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp</h3>
+          <span id="homeWaBadge" style="font-size:0.72rem;padding:3px 10px;border-radius:99px;font-weight:600;background:rgba(239,68,68,.1);color:#EF4444;">Verificando...</span>
+        </div>
+        <p style="font-size:0.82rem;color:var(--text-muted);margin:0;line-height:1.4;">Vincula tu WhatsApp para que MIIA empiece a responder por ti.</p>
+      </div>
+      <button onclick="openQRModal()" id="homeWaConnectBtn" style="padding:12px 28px;background:#25D366;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.92rem;font-family:inherit;white-space:nowrap;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+        Vincular WhatsApp
+      </button>
+    </div>
+
     <!-- Stats -->
     <div class="stats">
       <div class="stat-card fade-in">
@@ -2579,18 +2597,19 @@
         const res = await fetch(`${API}/api/status?uid=${uid}`);
         const data = await res.json();
 
-        // Actualizar badge de WhatsApp en Conexiones
+        // Actualizar badge de WhatsApp en Conexiones + Home card
         const waStatusEl = document.getElementById('connWaStatus');
-        if (waStatusEl) {
-          if (data.connected) {
-            waStatusEl.textContent = 'Conectado';
-            waStatusEl.style.background = 'rgba(52,211,153,.1)';
-            waStatusEl.style.color = '#34D399';
-          } else {
-            waStatusEl.textContent = 'No conectado';
-            waStatusEl.style.background = 'rgba(239,68,68,.1)';
-            waStatusEl.style.color = '#EF4444';
-          }
+        const homeWaBadge = document.getElementById('homeWaBadge');
+        const homeWaBtn = document.getElementById('homeWaConnectBtn');
+        const homeWaCard = document.getElementById('homeWaCard');
+        if (data.connected) {
+          if (waStatusEl) { waStatusEl.textContent = 'Conectado'; waStatusEl.style.background = 'rgba(52,211,153,.1)'; waStatusEl.style.color = '#34D399'; }
+          if (homeWaBadge) { homeWaBadge.textContent = 'Conectado'; homeWaBadge.style.background = 'rgba(52,211,153,.1)'; homeWaBadge.style.color = '#34D399'; }
+          if (homeWaBtn) { homeWaBtn.textContent = 'Reconectar'; homeWaBtn.style.background = 'rgba(52,211,153,.15)'; homeWaBtn.style.color = '#34D399'; }
+        } else {
+          if (waStatusEl) { waStatusEl.textContent = 'No conectado'; waStatusEl.style.background = 'rgba(239,68,68,.1)'; waStatusEl.style.color = '#EF4444'; }
+          if (homeWaBadge) { homeWaBadge.textContent = 'No conectado'; homeWaBadge.style.background = 'rgba(239,68,68,.1)'; homeWaBadge.style.color = '#EF4444'; }
+          if (homeWaBtn) { homeWaBtn.textContent = 'Vincular WhatsApp'; homeWaBtn.style.background = '#25D366'; homeWaBtn.style.color = 'white'; }
         }
 
         if (data.connected) {

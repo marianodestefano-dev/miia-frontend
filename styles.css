@@ -173,8 +173,12 @@ a:hover { color: var(--cyan); text-decoration: none; }
 
 .fade-in { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s ease; }
 .fade-in.visible { opacity: 1; transform: translateY(0); }
-/* Safety net: cards en secciones activas SIEMPRE visibles (fix fade-in sin JS) */
-.page-section:not(.section-hidden) .fade-in { opacity: 1; transform: translateY(0); }
+/* NUCLEAR SAFETY NET: secciones activas SIEMPRE visibles — sin excepción */
+.page-section:not(.section-hidden) .fade-in { opacity: 1 !important; transform: translateY(0) !important; }
+.page-section:not(.section-hidden) .card { opacity: 1 !important; visibility: visible !important; }
+.page-section:not(.section-hidden) .container { opacity: 1 !important; visibility: visible !important; }
+.page-section:not(.section-hidden) { opacity: 1 !important; visibility: visible !important; }
+.page-section:not(.section-hidden) * { visibility: visible !important; }
 
 /* ═══ NAVBAR (landing) ═══ */
 #navbar {

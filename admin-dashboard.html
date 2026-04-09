@@ -241,7 +241,22 @@
       <h2 style="font-size:1.4rem;font-weight:800;color:var(--text-dark);margin-bottom:4px;">Resumen de Plataforma</h2>
       <p style="color:var(--text-muted);font-size:0.88rem;margin-bottom:16px;">Vista general de clientes, ingresos y alertas del sistema.</p>
 
-      <button onclick="document.getElementById('qrModal').classList.remove('hidden');adminOpenQrModal()" style="width:100%;padding:9px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;margin-bottom:20px;">Conectar WhatsApp</button>
+      <!-- ═══ WHATSAPP CONNECTION CARD — Prominente en #summary ═══ -->
+      <div id="adminHomeWaCard" style="margin-bottom:24px;background:var(--glass-bg);border:1px solid var(--bd-1);border-radius:16px;padding:20px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+        <div style="width:48px;height:48px;border-radius:12px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </div>
+        <div style="flex:1;min-width:180px;">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:3px;">
+            <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp</h3>
+            <span id="adminHomeWaBadge" style="font-size:0.72rem;padding:3px 10px;border-radius:99px;font-weight:600;background:rgba(239,68,68,.1);color:#EF4444;">Verificando...</span>
+          </div>
+          <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Vincula tu WhatsApp con QR o codigo de 8 digitos.</p>
+        </div>
+        <button onclick="adminOpenQrModal()" id="adminHomeWaBtn" style="padding:11px 24px;background:#25D366;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.88rem;font-family:inherit;white-space:nowrap;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+          Vincular WhatsApp
+        </button>
+      </div>
 
       <div class="stats-grid">
         <div class="stat-card"><div class="value" id="statTotal">0</div><div class="label">Total clientes</div></div>
@@ -1070,28 +1085,44 @@
 
   // ═══ TENANTS ═══
   async function loadTenants() {
+    const el = document.getElementById('tenantsList');
     try {
-      const res = await fetch(`${BACKEND_URL}/api/tenants`, { headers: { 'Authorization': `Bearer ${currentIdToken}` } });
-      const tenants = await res.json();
-      if (!Array.isArray(tenants) || tenants.length === 0) {
-        document.getElementById('tenantsList').innerHTML = '<p style="color:var(--text-muted);">No hay sesiónes WhatsApp activas</p>';
+      if (!currentIdToken) {
+        el.innerHTML = '<p style="color:var(--text-muted);">Esperando autenticacion...</p>';
         return;
       }
-      document.getElementById('tenantsList').innerHTML = tenants.map(t => `
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 10000);
+      const res = await fetch(`${BACKEND_URL}/api/tenants`, {
+        headers: { 'Authorization': `Bearer ${currentIdToken}` },
+        signal: controller.signal
+      });
+      clearTimeout(timeout);
+      if (!res.ok) {
+        el.innerHTML = `<p style="color:var(--danger);">Error del servidor (${res.status}). <button onclick="loadTenants()" style="color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:underline;font-family:inherit;">Reintentar</button></p>`;
+        return;
+      }
+      const tenants = await res.json();
+      if (!Array.isArray(tenants) || tenants.length === 0) {
+        el.innerHTML = '<p style="color:var(--text-muted);">No hay sesiones WhatsApp activas. <button onclick="loadTenants()" style="color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:underline;font-family:inherit;">Actualizar</button></p>';
+        return;
+      }
+      el.innerHTML = tenants.map(t => `
         <div class="tenant-card">
           <div>
-            <strong>${t.uid.substring(0,20)}...</strong>
+            <strong>${(t.uid || '').substring(0,20)}...</strong>
             <div class="tenant-status">
               <span class="dot ${t.isReady ? 'green' : t.hasQR ? 'yellow' : 'red'}"></span>
               <span>${t.isReady ? 'Conectado' : t.hasQR ? 'Esperando QR' : 'Desconectado'}</span>
-              <span style="margin-left:12px;color:var(--text-muted);font-size:0.82rem;">${t.conversationCount} conversaciónes</span>
+              <span style="margin-left:12px;color:var(--text-muted);font-size:0.82rem;">${t.conversationCount || 0} conversaciones</span>
             </div>
           </div>
           <button class="btn-sm btn-danger" onclick="disconnectTenant('${t.uid}')">Desconectar</button>
         </div>
       `).join('');
     } catch (e) {
-      document.getElementById('tenantsList').innerHTML = '<p style="color:var(--danger);">Error cargando tenants</p>';
+      const isTimeout = e.name === 'AbortError';
+      el.innerHTML = `<p style="color:var(--danger);">${isTimeout ? 'Timeout — el servidor no respondio a tiempo.' : 'Error: ' + e.message} <button onclick="loadTenants()" style="color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:underline;font-family:inherit;">Reintentar</button></p>`;
     }
   }
 
@@ -1310,15 +1341,21 @@
     const banner = document.getElementById('adminWaBanner');
     const text = document.getElementById('adminWaStatusText');
     const btn = document.getElementById('adminWaActionBtn');
-    // Update conexiónes card
+    // Update conexiónes card + home summary card
     const badge = document.getElementById('adminWaBadgeConexiones');
     const statusEl = document.getElementById('adminWaStatusConexiones');
+    const homeBadge = document.getElementById('adminHomeWaBadge');
+    const homeBtn = document.getElementById('adminHomeWaBtn');
     if (adminWaConnected) {
       if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(37,211,102,.1)'; badge.style.color = '#16a34a'; }
       if (statusEl) { statusEl.textContent = '✅ WhatsApp conectado y listo para recibir mensajes.'; statusEl.style.color = '#16a34a'; }
+      if (homeBadge) { homeBadge.textContent = 'Conectado'; homeBadge.style.background = 'rgba(52,211,153,.1)'; homeBadge.style.color = '#34D399'; }
+      if (homeBtn) { homeBtn.textContent = 'Reconectar'; homeBtn.style.background = 'rgba(52,211,153,.15)'; homeBtn.style.color = '#34D399'; }
     } else {
       if (badge) { badge.textContent = 'Desconectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#EF4444'; }
       if (statusEl) { statusEl.textContent = '❌ WhatsApp desconectado. Hacé clic en "Conectar WhatsApp" para vincular.'; statusEl.style.color = '#f87171'; }
+      if (homeBadge) { homeBadge.textContent = 'No conectado'; homeBadge.style.background = 'rgba(239,68,68,.1)'; homeBadge.style.color = '#EF4444'; }
+      if (homeBtn) { homeBtn.textContent = 'Vincular WhatsApp'; homeBtn.style.background = '#25D366'; homeBtn.style.color = 'white'; }
     }
     if (!banner) return;
     if (adminWaConnected) {
