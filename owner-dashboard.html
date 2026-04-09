@@ -2644,8 +2644,11 @@
             showReconnectingBanner(_waReconnectAttempts);
             setTimeout(checkWhatsAppStatus, 5000);
           } else {
-            // Después de 90s sin conectar → redirigir a businesses para vincular
-            showSection('businesses');
+            // Después de 90s sin conectar → mostrar estado desconectado en Home (sin redirigir)
+            const homeWaBadge = document.getElementById('homeWaBadge');
+            const homeWaBtn = document.getElementById('homeWaConnectBtn');
+            if (homeWaBadge) { homeWaBadge.textContent = 'No conectado'; homeWaBadge.style.background = 'rgba(239,68,68,.1)'; homeWaBadge.style.color = '#EF4444'; }
+            if (homeWaBtn) { homeWaBtn.textContent = 'Vincular WhatsApp'; homeWaBtn.style.background = '#25D366'; homeWaBtn.style.color = 'white'; }
           }
         }
       } catch (error) {
@@ -2653,7 +2656,7 @@
         if (_waReconnectAttempts <= 18) {
           setTimeout(checkWhatsAppStatus, 5000);
         } else {
-          showSection('businesses');
+          // Sin redirigir — el botón de vincular ya está en Home
         }
       }
     }
