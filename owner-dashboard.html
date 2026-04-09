@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=20260408">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <style>
     /* Design tokens moved to styles.css */
@@ -1230,22 +1230,22 @@
 
     <!-- Stats -->
     <div class="stats">
-      <div class="stat-card fade-in">
+      <div class="stat-card">
         <div class="stat-icon-box"><svg style="width:30px;height:30px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
         <div class="stat-number" id="statConversations">0</div>
         <div class="stat-label">Conversaciones hoy</div>
       </div>
-      <div class="stat-card fade-in">
+      <div class="stat-card">
         <div class="stat-icon-box"><svg style="width:30px;height:30px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
         <div class="stat-number" id="statLeads">0</div>
         <div class="stat-label">Leads activos</div>
       </div>
-      <div class="stat-card fade-in">
+      <div class="stat-card">
         <div class="stat-icon-box"><svg style="width:30px;height:30px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M2 10h2M20 10h2M2 14h2M20 14h2"/></svg></div>
         <div class="stat-number" id="statPresales">0</div>
         <div class="stat-label">Pre-ventas</div>
       </div>
-      <div class="stat-card fade-in">
+      <div class="stat-card">
         <div class="stat-icon-box">✅</div>
         <div class="stat-number" id="statSales">0</div>
         <div class="stat-label">Ventas cerradas</div>
@@ -1257,7 +1257,7 @@
       <!-- Left Column -->
       <div>
         <!-- Quick Actions -->
-        <div class="card fade-in">
+        <div class="card">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 10 10-12h-9l1-10z"/></svg> Acciones Rápidas</h2>
           <div class="quick-actions">
             <button class="action-btn" onclick="showSection('connections', document.querySelector('.sidebar-btn[onclick*=conexiónes]'))">
@@ -1276,7 +1276,7 @@
         </div>
 
         <!-- Deals / Pre-sales Section -->
-        <div class="card fade-in" id="dealsSection">
+        <div class="card" id="dealsSection">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M2 10h2M20 10h2M2 14h2M20 14h2"/></svg> Pipeline de Ventas</h2>
 
           <!-- Stats Summary -->
@@ -1332,7 +1332,7 @@
         </div>
 
         <!-- Activity -->
-        <div class="card fade-in">
+        <div class="card">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 20V10M12 20V4M6 20v-6"/></svg> Actividad Reciente</h2>
           <div class="empty-state">
             <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-6l-2 3H8l-2-3H0"/><path d="M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"/></svg></div>
@@ -1345,7 +1345,7 @@
       <!-- Right Column -->
       <div>
         <!-- Account Card -->
-        <div class="card fade-in">
+        <div class="card">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Tu Cuenta</h2>
           <div class="account-item">
             <span class="account-label">Plan</span>
@@ -1378,7 +1378,7 @@
         </div>
 
         <!-- Contacts Preview -->
-        <div class="card fade-in">
+        <div class="card">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Contactos Clasificados</h2>
           <div class="empty-state">
             <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
@@ -1392,8 +1392,8 @@
 
   <!-- SECTION: AGENTES -->
   <div id="section-agents" class="page-section section-hidden">
-    <div class="container">
-      <div class="card fade-in" id="agentsSection">
+    <div class="container" style="opacity:1;visibility:visible;">
+      <div class="card" id="agentsSection" style="opacity:1;visibility:visible;">
         <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22V12h6v10M8 6h.01M16 6h.01M8 10h.01M16 10h.01"/></svg> Tu Equipo de Agentes</h2>
         <div class="agents-counter">
           Agentes: <strong><span id="agentsUsed">0</span> / <span id="agentsLimit">1</span></strong>
@@ -1428,9 +1428,9 @@
 
   <!-- SECTION: PLANES -->
   <div id="section-plans" class="page-section section-hidden">
-    <div class="container">
+    <div class="container" style="opacity:1;visibility:visible;">
       <!-- Plan actual -->
-      <div class="card fade-in" style="margin-bottom:20px;">
+      <div class="card" style="margin-bottom:20px;opacity:1;visibility:visible;">
         <h2>Mi Plan</h2>
         <div class="account-item">
           <span class="account-label">Plan actual</span>
@@ -1447,7 +1447,7 @@
       </div>
 
       <!-- Medios de Pago -->
-      <div class="card fade-in" style="display:flex;flex-direction:column;gap:16px;">
+      <div class="card" style="display:flex;flex-direction:column;gap:16px;opacity:1;visibility:visible;">
         <div style="display:flex;align-items:flex-start;gap:14px;">
           <div style="width:44px;height:44px;border-radius:12px;background:rgba(16,185,129,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
@@ -1503,7 +1503,7 @@
 
   <!-- SECTION: CONEXIONES -->
   <div id="section-connections" class="page-section section-hidden">
-    <div class="container">
+    <div class="container" style="opacity:1;visibility:visible;">
 
       <!-- Page Header -->
       <div style="margin-bottom:32px;">
@@ -1518,7 +1518,7 @@
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;">
 
         <!-- ── 1. WHATSAPP ── -->
-        <div class="card fade-in" style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card" style="display:flex;flex-direction:column;gap:16px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
@@ -1537,7 +1537,7 @@
         </div>
 
         <!-- ── 2. IA ── -->
-        <div class="card fade-in" style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card" style="display:flex;flex-direction:column;gap:16px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(124,58,237,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="15" r="2"/></svg>
@@ -1572,7 +1572,7 @@
         </div>
 
         <!-- ── 3. GOOGLE CALENDAR ── -->
-        <div class="card fade-in" style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card" style="display:flex;flex-direction:column;gap:16px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(66,133,244,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
@@ -1605,7 +1605,7 @@
         </div>
 
         <!-- ── 4. EMAIL / SMTP ── -->
-        <div class="card fade-in" style="display:flex;flex-direction:column;gap:16px;">
+        <div class="card" style="display:flex;flex-direction:column;gap:16px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
@@ -1653,7 +1653,7 @@
         </div>
 
         <!-- ── 5. MEDIOS DE PAGO ── -->
-        <div class="card fade-in" style="display:flex;flex-direction:column;gap:16px;grid-column:1/-1;">
+        <div class="card" style="display:flex;flex-direction:column;gap:16px;grid-column:1/-1;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(16,185,129,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
@@ -2124,8 +2124,10 @@
       loadImapConfig();
       loadCalendarStatus();
 
-      // Setup UI
-      setupScrollAndAnimations();
+      // Check WhatsApp status on load — actualiza badge home + sidebar + conexiones
+      initHomeWaStatus();
+
+      // Setup UI (no-op: fade-in removed)
 
       // Restore section from hash AFTER render is complete
       const hash = window.location.hash.replace('#', '');
@@ -2587,6 +2589,20 @@
       if (feature === 'whatsapp') {
         checkWhatsAppStatus();
         return;
+      }
+    }
+
+    // Verificar estado WA al cargar la página (sin abrir modal)
+    async function initHomeWaStatus() {
+      try {
+        const uid = currentUser ? currentUser.uid : '';
+        const res = await fetch(`${API}/api/status?uid=${uid}`);
+        const data = await res.json();
+        updateSidebarWaStatus(data.connected);
+        console.log('[WA-STATUS] Estado inicial:', data.connected ? 'conectado' : 'desconectado');
+      } catch (e) {
+        console.warn('[WA-STATUS] Error verificando estado inicial:', e.message);
+        updateSidebarWaStatus(false);
       }
     }
 
@@ -3322,11 +3338,7 @@
 
     // ═══ UI ═══
     function setupScrollAndAnimations() {
-      // Force all fade-in elements to be visible immediately
-      // IntersectionObserver doesn't work with display:none sections
-      document.querySelectorAll('.fade-in').forEach((el, i) => {
-        setTimeout(() => el.classList.add('visible'), i * 80);
-      });
+      // No-op: fade-in removed for reliability
     }
   </script>
   <script>
@@ -5474,18 +5486,37 @@
       const dot = document.getElementById('sidebarWaDot');
       const label = document.getElementById('sidebarWaLabel');
       const btn = document.getElementById('sidebarWaBtn');
-      if (!dot) return;
-      // Update sidebar WA indicator
-      if (connected) {
-        dot.className = 'status-dot green pulse';
-        label.textContent = 'WhatsApp activo';
-        btn.textContent = 'Ver';
-        btn.onclick = () => showSection('home', document.querySelector('.sidebar-btn'));
-      } else {
-        dot.className = 'status-dot red';
-        label.textContent = 'WhatsApp';
-        btn.textContent = 'Conectar';
-        btn.onclick = openQRModal;
+      if (dot) {
+        if (connected) {
+          dot.className = 'status-dot green pulse';
+          label.textContent = 'WhatsApp activo';
+          btn.textContent = 'Ver';
+          btn.onclick = () => showSection('home', document.querySelector('.sidebar-btn'));
+        } else {
+          dot.className = 'status-dot red';
+          label.textContent = 'WhatsApp';
+          btn.textContent = 'Conectar';
+          btn.onclick = openQRModal;
+        }
+      }
+      // Update Home card badge + button
+      const homeWaBadge = document.getElementById('homeWaBadge');
+      const homeWaBtn = document.getElementById('homeWaConnectBtn');
+      if (homeWaBadge) {
+        homeWaBadge.textContent = connected ? 'Conectado' : 'No conectado';
+        homeWaBadge.style.background = connected ? 'rgba(52,211,153,.1)' : 'rgba(239,68,68,.1)';
+        homeWaBadge.style.color = connected ? '#34D399' : '#EF4444';
+      }
+      if (homeWaBtn) {
+        if (connected) {
+          homeWaBtn.textContent = 'Reconectar';
+          homeWaBtn.style.background = 'rgba(52,211,153,.15)';
+          homeWaBtn.style.color = '#34D399';
+        } else {
+          homeWaBtn.textContent = 'Vincular WhatsApp';
+          homeWaBtn.style.background = '#25D366';
+          homeWaBtn.style.color = 'white';
+        }
       }
       // Update Conexiones section badge
       const connWaBadge = document.getElementById('connWaStatus');
@@ -5493,11 +5524,6 @@
         connWaBadge.textContent = connected ? 'Conectado' : 'No conectado';
         connWaBadge.style.background = connected ? 'rgba(37,211,102,.12)' : 'rgba(239,68,68,.1)';
         connWaBadge.style.color = connected ? '#25D366' : '#EF4444';
-      }
-      // Update Calendar badge
-      const connCalBadge = document.getElementById('connCalStatus');
-      if (connCalBadge) {
-        // Will be updated by loadCalendarStatus()
       }
     }
 
@@ -5620,7 +5646,7 @@
     <div id="conversationsView" style="display:none;">
       <div class="contacts-layout">
         <!-- Conversations List -->
-        <div class="card fade-in">
+        <div class="card">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Conversaciones de WhatsApp</h2>
           <input type="text" class="search-bar" id="contactSearch" placeholder="Buscar contacto..." oninput="applyContactFilter()">
           <div class="filter-tabs" id="filterTabs">
@@ -5638,7 +5664,7 @@
         </div>
 
         <!-- CRM Panel -->
-        <div class="card fade-in">
+        <div class="card">
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Información del Contacto</h2>
           <div class="empty-state" id="emptyState">
             <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
@@ -6381,7 +6407,7 @@
   <div id="section-documents" class="page-section section-hidden">
     <div style="max-width:1000px;margin:0 auto;padding:40px 24px 80px;">
   <div class="container">
-    <div class="card fade-in">
+    <div class="card">
       <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> Documentos y Recursos</h2>
 
       <div class="tabs">
