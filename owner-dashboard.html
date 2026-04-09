@@ -3366,7 +3366,7 @@
 
     async function loadConversations() {
       try {
-        const res = await fetch('https://api.miia-app.com/api/conversations');
+        const res = await fetch(`${BACKEND_URL}/api/conversations?uid=${currentUser.uid}`);
         const data = await res.json();
         if (!data || !Array.isArray(data)) {
           document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><p>Sin conversaciónes aún</p></div>';
@@ -4958,7 +4958,7 @@
       // Cargar todo en paralelo
       await Promise.all([
         loadPipeline(),
-        loadConversations(),
+        loadAnalyticsConversations(),
         loadNightly(),
         loadPatterns(),
         loadMetrics()
@@ -5012,18 +5012,18 @@
     }
 
     // ── Conversaciones ──
-    async function loadConversations() {
+    async function loadAnalyticsConversations() {
       try {
         const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/analytics/conversations`);
         analyticsData.conversations = await res.json();
-        renderConversations();
+        renderAnalyticsConversations();
       } catch (e) {
         console.error('[ANALYTICS] Error conversations:', e);
         document.getElementById('anConversations').innerHTML = '<div class="an-empty">Error cargando conversaciones</div>';
       }
     }
 
-    function renderConversations() {
+    function renderAnalyticsConversations() {
       const convs = analyticsData.conversations || [];
       const container = document.getElementById('anConversations');
 
