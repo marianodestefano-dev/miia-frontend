@@ -2441,7 +2441,7 @@
     let currentDealTab = 'pending';
 
     function loadDeals() {
-      // Real-time listener
+      // Real-time listener with error handling
       db.collection('deals')
         .where('client_uid', '==', currentUser.uid)
         .onSnapshot(snapshot => {
@@ -2450,6 +2450,9 @@
           renderDeals();
           updateDealStats();
           updateStatCards();
+        }, error => {
+          console.warn('[DEALS] Error en listener:', error.message);
+          // No bloquear — simplemente no hay deals aún
         });
     }
 
