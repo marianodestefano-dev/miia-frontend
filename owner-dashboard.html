@@ -1706,6 +1706,28 @@
           </div>
         </div>
 
+        <!-- ── 6. INSTAGRAM DMs ── -->
+        <div class="card" style="display:flex;flex-direction:column;gap:16px;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg, rgba(131,58,180,.12), rgba(253,29,29,.12), rgba(252,176,69,.12));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#igGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <defs><linearGradient id="igGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#833AB4"/><stop offset="50%" stop-color="#FD1D1D"/><stop offset="100%" stop-color="#FCB045"/></linearGradient></defs>
+                <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/>
+              </svg>
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">Instagram DMs</h3>
+                <span id="connIgStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">No conectado</span>
+              </div>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA responde los mensajes directos de Instagram de tu negocio. Atiende leads, responde preguntas y vende 24/7 en Instagram.</p>
+            </div>
+          </div>
+          <button id="igConnectBtn" onclick="connectInstagram()" style="width:100%;padding:10px;background:linear-gradient(135deg, rgba(131,58,180,.1), rgba(253,29,29,.1));color:#833AB4;border:1px solid rgba(131,58,180,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;">
+            Conectar Instagram
+          </button>
+        </div>
+
       </div><!-- end grid -->
 
       <!-- ═══ PRIVACIDAD Y DATOS ═══ -->
@@ -3027,6 +3049,8 @@
           }
         }
       } catch (_) {}
+      // Verificar estado de Instagram
+      checkInstagramStatus();
     }
 
     // ═══ AI PROVIDER CONFIG ═══
@@ -5465,9 +5489,19 @@
     window.addEventListener('DOMContentLoaded', function() {
       const hash = window.location.hash.replace('#', '');
       const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'analytics', 'documents'];
-      if (hash && validSections.includes(hash)) {
-        const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
-        showSection(hash, btn);
+      if (hash && validSections.includes(hash.split('?')[0])) {
+        const sectionName = hash.split('?')[0];
+        const btn = document.querySelector(`.sidebar-btn[onclick*="${sectionName}"]`);
+        showSection(sectionName, btn);
+      }
+      // Detectar retorno de OAuth Instagram
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('instagram') === 'connected') {
+        showSection('connections');
+        setTimeout(() => { alert('Instagram conectado exitosamente. MIIA ya responde tus DMs.'); }, 500);
+      } else if (urlParams.get('instagram') === 'error') {
+        showSection('connections');
+        setTimeout(() => { alert('Error conectando Instagram: ' + (urlParams.get('msg') || 'Reintentá desde Conexiones.')); }, 500);
       }
     });
 
@@ -5516,6 +5550,49 @@
         connWaBadge.style.color = connected ? '#25D366' : '#EF4444';
       }
     }
+
+    // ═══ INSTAGRAM DMs ═══
+    async function checkInstagramStatus() {
+      if (!currentUser) return;
+      try {
+        const resp = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/instagram/status`);
+        const data = await resp.json();
+        const badge = document.getElementById('connIgStatus');
+        const btn = document.getElementById('igConnectBtn');
+        if (data.connected) {
+          if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(52,211,153,.1)'; badge.style.color = '#34D399'; }
+          if (btn) { btn.textContent = 'Desconectar Instagram'; btn.onclick = disconnectInstagram; btn.style.background = 'rgba(239,68,68,.08)'; btn.style.color = '#EF4444'; btn.style.borderColor = 'rgba(239,68,68,.2)'; }
+        } else {
+          if (badge) { badge.textContent = 'No conectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#EF4444'; }
+          if (btn) { btn.textContent = 'Conectar Instagram'; btn.onclick = connectInstagram; btn.style.background = 'linear-gradient(135deg, rgba(131,58,180,.1), rgba(253,29,29,.1))'; btn.style.color = '#833AB4'; btn.style.borderColor = 'rgba(131,58,180,.25)'; }
+        }
+      } catch (e) { console.warn('[IG] Error checking status:', e.message); }
+    }
+
+    async function connectInstagram() {
+      if (!currentUser) return;
+      try {
+        const resp = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/instagram/connect-url`);
+        const data = await resp.json();
+        if (data.url) {
+          window.open(data.url, '_blank', 'width=600,height=700');
+        } else {
+          alert(data.error || 'Error obteniendo URL de conexión');
+        }
+      } catch (e) { alert('Error conectando Instagram: ' + e.message); }
+    }
+
+    async function disconnectInstagram() {
+      if (!currentUser) return;
+      if (!confirm('¿Desconectar Instagram? MIIA dejará de responder DMs.')) return;
+      try {
+        await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/instagram`, { method: 'DELETE' });
+        checkInstagramStatus();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    // Verificar al cargar conexiones
+    // (se llama desde initConnections o al mostrar la sección)
 
     // openQRModal alias (maps to checkWhatsAppStatus)
     function openQRModal() {
