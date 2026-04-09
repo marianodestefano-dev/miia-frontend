@@ -18,7 +18,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260408">
+  <link rel="stylesheet" href="styles.css?v=20260408b">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <style>
     /* Design tokens moved to styles.css */
@@ -1135,6 +1135,7 @@
         <button class="sidebar-btn" onclick="showSection('analytics', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
           <span class="sidebar-label">Analytics</span>
+        </button>
         <button class="sidebar-btn" onclick="showSection('documents', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
           <span class="sidebar-label">Documentos</span>
@@ -2991,27 +2992,8 @@
 
     // ═══ LINK WHATSAPP DESDE CONEXIONES ═══
     async function linkWhatsAppFromConnections() {
-      try {
-        const uid = currentUser ? currentUser.uid : '';
-        const res = await fetch(`${API}/api/status?uid=${uid}`);
-        const data = await res.json();
-        if (data.connected) {
-          showWhatsAppModal();
-        } else {
-          // Ir directo a la sección de negocios donde está el QR
-          showSection('businesses');
-          // Esperar a que la sección cargue y abrir QR
-          setTimeout(() => {
-            const qrModal = document.getElementById('qrModal');
-            if (qrModal) {
-              qrModal.classList.remove('hidden');
-              connectWhatsApp();
-            }
-          }, 500);
-        }
-      } catch (e) {
-        showSection('businesses');
-      }
+      // Abre el modal QR directamente desde cualquier sección
+      openQRModal();
     }
 
     // ═══ CONNECTIONS INIT ═══
@@ -5529,7 +5511,12 @@
 
     // openQRModal alias (maps to checkWhatsAppStatus)
     function openQRModal() {
-      checkWhatsAppStatus();
+      // Abrir el modal QR real y conectar WhatsApp
+      const qrModal = document.getElementById('qrModal');
+      if (qrModal) {
+        qrModal.classList.remove('hidden');
+        connectWhatsApp();
+      }
     }
   </script>
   <script src="toast.js"></script>
