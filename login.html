@@ -185,6 +185,21 @@
     .forgot-link { display: block; text-align: right; font-size: .73rem; color: var(--text-muted); text-decoration: none; margin-top: 4px; }
     .forgot-link:hover { color: #9F67FF; }
 
+    /* OTP styles */
+    .otp-input-group { display: flex; gap: 8px; justify-content: center; margin: 16px 0; }
+    .otp-input-group input {
+      width: 44px; height: 52px; text-align: center;
+      font-size: 1.4rem; font-weight: 800; letter-spacing: 0;
+      border-radius: var(--r-md); border: 1.5px solid var(--border-md);
+      background: var(--bg-card); color: var(--text-white);
+      font-family: 'Inter', monospace; transition: all .2s;
+    }
+    .otp-input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,229,255,.15); outline: none; }
+    .otp-step { transition: opacity .3s ease; }
+    .otp-step.hidden { display: none; }
+    .otp-badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 14px; background: rgba(124,58,237,.1); border: 1px solid rgba(124,58,237,.25); border-radius: var(--r-full); color: #9F67FF; font-size: .72rem; font-weight: 600; margin-bottom: 14px; }
+    .otp-badge svg { width: 13px; height: 13px; }
+
     /* Verify overlay */
     .verify-overlay {
       display: none; position: fixed; inset: 0;
@@ -286,6 +301,7 @@
       <div class="tabs">
         <button class="tab active" onclick="switchTab('login', this)">Iniciar Sesión</button>
         <button class="tab" onclick="switchTab('register', this)">Registrarse</button>
+        <button class="tab" onclick="switchTab('otp', this)">Código</button>
       </div>
 
       <!-- Login Form -->
@@ -315,6 +331,68 @@
           Estamos preparando todo para que tu experiencia sea perfecta.<br>
           El registro estar&aacute; disponible muy pronto.
         </p>
+      </div>
+
+      <!-- OTP Form -->
+      <div id="otpForm" class="hidden">
+        <div class="otp-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Acceso para agentes
+        </div>
+
+        <!-- Step 1: Email -->
+        <div id="otpStep1" class="otp-step">
+          <p style="font-size:.84rem;color:var(--text-body);margin-bottom:14px;line-height:1.6;">
+            Ingresa el email donde recibiste tu código de acceso.
+          </p>
+          <div class="form-group">
+            <label>Email</label>
+            <input type="email" id="otpEmail" required placeholder="tu@email.com">
+          </div>
+          <button type="button" class="btn-submit" onclick="otpStep1Next()">Continuar</button>
+        </div>
+
+        <!-- Step 2: OTP Code -->
+        <div id="otpStep2" class="otp-step hidden">
+          <p style="font-size:.84rem;color:var(--text-body);margin-bottom:6px;line-height:1.6;">
+            Ingresa el código de 6 dígitos enviado a:
+          </p>
+          <p id="otpEmailDisplay" style="font-weight:700;color:#9F67FF;font-size:.88rem;margin-bottom:14px;"></p>
+          <div class="otp-input-group">
+            <input type="text" maxlength="1" class="otp-digit" data-idx="0" inputmode="numeric" autocomplete="one-time-code">
+            <input type="text" maxlength="1" class="otp-digit" data-idx="1" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-digit" data-idx="2" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-digit" data-idx="3" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-digit" data-idx="4" inputmode="numeric">
+            <input type="text" maxlength="1" class="otp-digit" data-idx="5" inputmode="numeric">
+          </div>
+          <button type="button" class="btn-submit" id="otpVerifyBtn" onclick="verifyOtp()" disabled>Verificar código</button>
+          <p style="text-align:center;margin-top:10px;">
+            <a href="#" style="font-size:.76rem;color:var(--text-muted);text-decoration:none;" onclick="otpGoBack(event)">← Cambiar email</a>
+          </p>
+        </div>
+
+        <!-- Step 3: Set Password (optional, post-login) -->
+        <div id="otpStep3" class="otp-step hidden">
+          <div style="text-align:center;margin-bottom:16px;">
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.25);display:inline-flex;align-items:center;justify-content:center;margin-bottom:10px;">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <h3 style="color:var(--text-white);font-size:1.1rem;margin:0 0 4px;">Bienvenido!</h3>
+            <p style="font-size:.82rem;color:var(--text-body);">Crea tu contraseña para no depender del código.</p>
+          </div>
+          <div class="form-group">
+            <label>Nueva contraseña</label>
+            <div class="password-wrapper">
+              <input type="password" id="otpNewPassword" placeholder="Mínimo 6 caracteres" minlength="6">
+              <button type="button" class="toggle-pw" onclick="togglePassword('otpNewPassword', this)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+            </div>
+          </div>
+          <button type="button" class="btn-submit" onclick="setAgentPassword()">Guardar contraseña</button>
+          <button type="button" class="btn-submit" style="margin-top:8px;background:var(--bg-card);border:1px solid var(--border-md);color:var(--text-body);" onclick="skipPassword()">Ahora no, ir al dashboard</button>
+        </div>
       </div>
 
       <div class="divider">O continúa con</div>
@@ -387,6 +465,7 @@
       el.classList.add('active');
       document.getElementById('loginForm').classList.toggle('hidden', tab !== 'login');
       document.getElementById('registerForm').classList.toggle('hidden', tab !== 'register');
+      document.getElementById('otpForm').classList.toggle('hidden', tab !== 'otp');
       document.getElementById('errorMessage').style.display = 'none';
       document.getElementById('successMessage').style.display = 'none';
     }
@@ -544,7 +623,7 @@
         const user = userCredential.user;
         const inviteSnap = await db.collection('users').where('email','==',email).where('invite_pending','==',true).limit(1).get();
         const now = new Date();
-        const trialEnd = new Date(now.getTime() + 7*24*60*60*1000);
+        const trialEnd = new Date(now.getTime() + 15*24*60*60*1000);
         if (!inviteSnap.empty) {
           const inviteDoc = inviteSnap.docs[0];
           await db.collection('users').doc(user.uid).set({ ...inviteDoc.data(), uid: user.uid, name, whatsapp, invite_pending: false, last_login: now });
@@ -602,7 +681,7 @@
             showError('El registro no est\u00e1 disponible a\u00fan. MIIA est\u00e1 en construcci\u00f3n. Muy pronto estar\u00e1 lista.');
             return;
             const now = new Date();
-            const trialEnd = new Date(now.getTime() + 7*24*60*60*1000);
+            const trialEnd = new Date(now.getTime() + 15*24*60*60*1000);
             await db.collection('users').doc(user.uid).set({
               uid: user.uid, name: user.displayName, email: user.email, photo: user.photoURL,
               role: 'client', plan: 'trial', plan_start_date: now, plan_end_date: trialEnd,
@@ -670,6 +749,127 @@
       if (!pendingVerifyUser) return;
       try { await pendingVerifyUser.sendEmailVerification(); document.getElementById('verifyMsg').textContent = 'Email reenviado.'; }
       catch(e) { document.getElementById('verifyMsg').textContent = 'Error: ' + e.message; }
+    }
+
+    // ═══ OTP AGENT LOGIN ═══════════════════════════════════
+
+    // Auto-advance + paste support for OTP digits
+    document.addEventListener('DOMContentLoaded', () => {
+      const digits = document.querySelectorAll('.otp-digit');
+      digits.forEach((input, i) => {
+        input.addEventListener('input', (e) => {
+          const val = e.target.value.replace(/\D/g, '');
+          e.target.value = val.charAt(0) || '';
+          if (val && i < 5) digits[i + 1].focus();
+          checkOtpComplete();
+        });
+        input.addEventListener('keydown', (e) => {
+          if (e.key === 'Backspace' && !e.target.value && i > 0) digits[i - 1].focus();
+        });
+        // Paste support: paste full code into first input
+        input.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/\D/g, '').slice(0, 6);
+          for (let j = 0; j < 6; j++) digits[j].value = pasted.charAt(j) || '';
+          if (pasted.length >= 6) digits[5].focus();
+          checkOtpComplete();
+        });
+      });
+    });
+
+    function checkOtpComplete() {
+      const digits = document.querySelectorAll('.otp-digit');
+      const code = Array.from(digits).map(d => d.value).join('');
+      document.getElementById('otpVerifyBtn').disabled = code.length < 6;
+    }
+
+    function getOtpCode() {
+      return Array.from(document.querySelectorAll('.otp-digit')).map(d => d.value).join('');
+    }
+
+    function otpStep1Next() {
+      const email = document.getElementById('otpEmail').value.trim();
+      if (!email || !email.includes('@')) { showError('Ingresa un email válido.'); return; }
+      document.getElementById('otpEmailDisplay').textContent = email;
+      document.getElementById('otpStep1').classList.add('hidden');
+      document.getElementById('otpStep2').classList.remove('hidden');
+      document.querySelectorAll('.otp-digit').forEach(d => d.value = '');
+      document.querySelectorAll('.otp-digit')[0].focus();
+    }
+
+    function otpGoBack(e) {
+      e.preventDefault();
+      document.getElementById('otpStep2').classList.add('hidden');
+      document.getElementById('otpStep1').classList.remove('hidden');
+    }
+
+    let _otpToken = null; // Firebase ID token post-OTP
+
+    async function verifyOtp() {
+      const email = document.getElementById('otpEmail').value.trim();
+      const code = getOtpCode();
+      if (code.length < 6) { showError('Ingresa el código completo de 6 dígitos.'); return; }
+
+      const btn = document.getElementById('otpVerifyBtn');
+      btn.disabled = true; btn.textContent = 'Verificando...';
+
+      try {
+        const resp = await fetch(API_BASE + '/api/auth/verify-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, otpCode: code })
+        });
+        const data = await resp.json();
+        if (!resp.ok) { showError(data.error || 'Error verificando código.'); btn.disabled = false; btn.textContent = 'Verificar código'; return; }
+
+        // Login con custom token
+        const userCred = await auth.signInWithCustomToken(data.customToken);
+        _otpToken = await userCred.user.getIdToken();
+        localStorage.setItem('miia_user', JSON.stringify({ uid: data.uid, email: data.email, logged_in: true }));
+
+        showSuccess('Código verificado!');
+
+        // Mostrar step 3 (set password)
+        document.getElementById('otpStep2').classList.add('hidden');
+        document.getElementById('otpStep3').classList.remove('hidden');
+
+      } catch (err) {
+        console.error('[OTP]', err);
+        showError('Error de conexión. Intenta de nuevo.');
+        btn.disabled = false; btn.textContent = 'Verificar código';
+      }
+    }
+
+    async function setAgentPassword() {
+      const pw = document.getElementById('otpNewPassword').value;
+      if (!pw || pw.length < 6) { showError('La contraseña debe tener al menos 6 caracteres.'); return; }
+
+      try {
+        const resp = await fetch(API_BASE + '/api/auth/set-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + _otpToken },
+          body: JSON.stringify({ newPassword: pw })
+        });
+        const data = await resp.json();
+        if (!resp.ok) { showError(data.error || 'Error guardando contraseña.'); return; }
+
+        showSuccess('Contraseña creada! Redirigiendo...');
+        setTimeout(() => { window.location.href = 'agent-dashboard.html'; }, 1000);
+      } catch (err) {
+        showError('Error de conexión.');
+      }
+    }
+
+    function skipPassword() {
+      window.location.href = 'agent-dashboard.html';
+    }
+
+    // Auto-switch to OTP tab if ?tab=otp
+    if (new URLSearchParams(window.location.search).get('tab') === 'otp') {
+      document.addEventListener('DOMContentLoaded', () => {
+        const otpBtn = document.querySelector('.tab:nth-child(3)');
+        if (otpBtn) switchTab('otp', otpBtn);
+      });
     }
 
     auth.onAuthStateChanged(user => {

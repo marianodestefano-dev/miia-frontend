@@ -2007,7 +2007,7 @@
     }
 
     const PLAN_NAMES = {
-      trial: 'Trial 7 días',
+      trial: 'Trial 15 días',
       monthly: 'Mensual',
       quarterly: 'Trimestral',
       semestral: 'Semestral',
@@ -2062,7 +2062,7 @@
       // Si no existe el doc, crearlo con defaults (solo para el propio usuario, no en adminView)
       if (!doc.exists && !adminView) {
         const now = new Date();
-        const trialEnd = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+        const trialEnd = new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000);
         await db.collection('users').doc(user.uid).set({
           uid: user.uid,
           name: user.displayName || '',
@@ -2335,9 +2335,13 @@
         tbody.innerHTML = '';
 
         agents.forEach(agent => {
-          const statusBadge = agent.invite_pending
-            ? '<span class="badge badge-pending">Invitado</span>'
+          const isPending = agent.otp_pending || agent.invite_pending;
+          const statusBadge = isPending
+            ? '<span class="badge badge-pending">Código enviado</span>'
             : '<span class="badge badge-active">Activo</span>';
+          const resendBtn = isPending
+            ? `<button class="btn-small" style="background:#7C3AED;color:#fff;border:none;margin-right:6px;" onclick="resendOtp('${agent.email}')">Reenviar código</button>`
+            : '';
 
           tbody.innerHTML += `
             <tr>
@@ -2351,7 +2355,7 @@
                 </div>
               </td>
               <td>${statusBadge}</td>
-              <td><button class="btn-small btn-danger" onclick="removeAgent('${agent.id}')">Eliminar</button></td>
+              <td>${resendBtn}<button class="btn-small btn-danger" onclick="removeAgent('${agent.id}')">Eliminar</button></td>
             </tr>
           `;
         });
@@ -2417,36 +2421,62 @@
         return;
       }
 
-      // Check if email already exists
-      const existing = await db.collection('users').where('email', '==', email).get();
-      if (!existing.empty) {
-        showToast('Ya existe un usuario con ese email.', 'warning');
-        return;
-      }
+      const btn = document.getElementById('addAgentBtn');
+      btn.disabled = true;
+      btn.textContent = 'Enviando código...';
 
       try {
-        await db.collection('users').add({
-          name: name,
-          email: email,
-          role: 'agent',
-          parent_client_uid: currentUser.uid,
-          plan: currentUserData.plan,
-          payment_status: 'active',
-          approved: true,
-          invite_pending: true,
-          gemini_api_key: '',
-          agents_limit: 1,
-          discount_percent: 0,
-          whatsapp: '',
-          registered_at: new Date(),
-          last_login: null
+        // Enviar OTP al agente via backend (crea usuario + envía email)
+        const token = await firebase.auth().currentUser.getIdToken();
+        const resp = await fetch(API_BASE + '/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ agentEmail: email })
         });
+        const data = await resp.json();
+
+        if (!resp.ok) {
+          showToast(data.error || 'Error enviando código', 'error');
+          btn.disabled = false; btn.textContent = '+ Agregar';
+          return;
+        }
+
+        // Actualizar nombre del agente en Firestore (el endpoint solo usa email)
+        const agentSnap = await db.collection('users').where('email', '==', email.toLowerCase()).limit(1).get();
+        if (!agentSnap.empty) {
+          await agentSnap.docs[0].ref.update({ name, parent_client_uid: currentUser.uid });
+        }
+
+        showToast(data.otpCode
+          ? `Código generado: ${data.otpCode} (SMTP no configurado — dáselo manualmente)`
+          : `Código enviado a ${email}`, 'success');
 
         nameInput.value = '';
         emailInput.value = '';
         loadAgents();
       } catch (error) {
-        showToast('Error al agregar agente: ' + error.message, 'error');
+        showToast('Error: ' + error.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '+ Agregar';
+      }
+    }
+
+    async function resendOtp(agentEmail) {
+      try {
+        const token = await firebase.auth().currentUser.getIdToken();
+        const resp = await fetch(API_BASE + '/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ agentEmail })
+        });
+        const data = await resp.json();
+        if (!resp.ok) { showToast(data.error || 'Error', 'error'); return; }
+        showToast(data.otpCode
+          ? `Nuevo código: ${data.otpCode}`
+          : `Nuevo código enviado a ${agentEmail}`, 'success');
+      } catch (e) {
+        showToast('Error: ' + e.message, 'error');
       }
     }
 
