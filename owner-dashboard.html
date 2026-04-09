@@ -2153,6 +2153,9 @@
       // Check WhatsApp status on load — actualiza badge home + sidebar + conexiones
       initHomeWaStatus();
 
+      // Cargar stats reales del home (conversaciones, leads, ventas)
+      updateStatCards();
+
       // Setup UI (no-op: fade-in removed)
 
       // Restore section from hash AFTER render is complete
@@ -2568,17 +2571,21 @@
     }
 
     function updateStatCards() {
-      const won = allDeals.filter(d => d.status === 'won');
-      const pending = allDeals.filter(d => d.status === 'pending');
-
-      document.getElementById('statLeads').textContent = allDeals.length;
-      document.getElementById('statPresales').textContent = pending.length;
-      document.getElementById('statSales').textContent = won.length;
-      document.getElementById('statConversations').textContent = allDeals.filter(d => {
-        const today = new Date().toDateString();
-        const dealDate = d.created_at?.toDate ? d.created_at.toDate().toDateString() : '';
-        return dealDate === today;
-      }).length;
+      // Stats reales desde el backend (contact_index + sesiones)
+      if (!currentUser) return;
+      fetch(`${API}/api/tenant/${currentUser.uid}/home-stats`)
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('statConversations').textContent = data.conversationsToday || 0;
+          document.getElementById('statLeads').textContent = data.activeLeads || 0;
+          document.getElementById('statPresales').textContent = data.presales || 0;
+          document.getElementById('statSales').textContent = data.salesClosed || 0;
+          console.log('[HOME-STATS] ✅ Stats actualizadas:', data);
+        })
+        .catch(e => {
+          console.warn('[HOME-STATS] Error cargando stats:', e.message);
+          // Fallback: mantener los 0 que ya están
+        });
     }
 
     function switchDealTab(tab) {
@@ -2741,13 +2748,13 @@
         display: flex; align-items: center; justify-content: center;
       `;
       modal.innerHTML = `
-        <div style="background: rgba(9,9,15,0.85); border-radius: 16px; padding: 40px; text-align: center; max-width: 400px; box-shadow: 0 20px 60px rgba(102,126,234,0.18);">
+        <div style="background: var(--bg-surface, #1e2a45); border: 1px solid var(--border-color, #2d3748); border-radius: 16px; padding: 40px; text-align: center; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.4);">
           <div style="font-size: 3rem; margin-bottom: 16px;">✅</div>
-          <h2 style="color: #1a1a2e; font-size: 1.4rem; margin-bottom: 8px;">WhatsApp Conectado</h2>
-          <p style="color: #4a4a6a; margin-bottom: 24px;">Tu sesión está activa y lista para usar.</p>
+          <h2 style="color: var(--text-dark, #e8eaed); font-size: 1.4rem; margin-bottom: 8px;">WhatsApp Conectado</h2>
+          <p style="color: var(--text-muted, #9aa0a6); margin-bottom: 24px;">Tu sesión está activa y lista para usar.</p>
           <div style="display: flex; gap: 12px;">
-            <button onclick="this.closest('div').parentElement.remove()" style="flex: 1; padding: 12px; border: 1px solid #ddd; border-radius: 8px; background: rgba(9,9,15,0.85); cursor: pointer;">Cerrar</button>
-            <button onclick="desvinculateWhatsApp()" style="flex: 1; padding: 12px; border: none; border-radius: 8px; background: #e74c3c; color: white; cursor: pointer; font-weight: 600;">Desvincular</button>
+            <button onclick="this.closest('div').parentElement.parentElement.remove()" style="flex: 1; padding: 12px; border: 1px solid var(--border-color, #2d3748); border-radius: 8px; background: var(--bg-primary, #1a1a2e); color: var(--text-dark, #e8eaed); cursor: pointer; font-family: inherit;">Cerrar</button>
+            <button onclick="desvinculateWhatsApp()" style="flex: 1; padding: 12px; border: none; border-radius: 8px; background: #e74c3c; color: white; cursor: pointer; font-weight: 600; font-family: inherit;">Desvincular</button>
           </div>
         </div>
       `;
@@ -5634,14 +5641,35 @@
     // Verificar al cargar conexiones
     // (se llama desde initConnections o al mostrar la sección)
 
-    // openQRModal alias (maps to checkWhatsAppStatus)
+    // openQRModal — verifica estado WA antes de mostrar QR
     function openQRModal() {
-      // Abrir el modal QR real y conectar WhatsApp
-      const qrModal = document.getElementById('qrModal');
-      if (qrModal) {
-        qrModal.classList.remove('hidden');
-        connectWhatsApp();
-      }
+      const uid = currentUser ? currentUser.uid : '';
+      if (!uid) return;
+
+      // Verificar si ya está conectado ANTES de mostrar QR
+      fetch(`${API}/api/status?uid=${uid}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.connected) {
+            // Ya conectado → mostrar modal de "Conectado" con opción de desvincular
+            showWhatsAppModal();
+          } else {
+            // No conectado → mostrar QR
+            const qrModal = document.getElementById('qrModal');
+            if (qrModal) {
+              qrModal.classList.remove('hidden');
+              connectWhatsApp();
+            }
+          }
+        })
+        .catch(() => {
+          // Error de red → mostrar QR igual
+          const qrModal = document.getElementById('qrModal');
+          if (qrModal) {
+            qrModal.classList.remove('hidden');
+            connectWhatsApp();
+          }
+        });
     }
   </script>
   <script src="toast.js"></script>
