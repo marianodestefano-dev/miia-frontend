@@ -179,6 +179,9 @@ a:hover { color: var(--cyan); text-decoration: none; }
 .page-section:not(.section-hidden) .container { opacity: 1 !important; visibility: visible !important; }
 .page-section:not(.section-hidden) { opacity: 1 !important; visibility: visible !important; }
 .page-section:not(.section-hidden) * { visibility: visible !important; }
+/* NUCLEAR: Tabs de negocios — tab-content siempre renderizado, tab-panel activo siempre visible */
+.page-section:not(.section-hidden) .tab-content { display: block !important; opacity: 1 !important; }
+.page-section:not(.section-hidden) .tab-panel.active { display: block !important; opacity: 1 !important; min-height: 100px !important; }
 
 /* ═══ NAVBAR (landing) ═══ */
 #navbar {

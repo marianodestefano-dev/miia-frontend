@@ -671,8 +671,8 @@
       border-radius: 0 0 var(--radius-lg) var(--radius-lg);
       padding: 32px; min-height: 500px;
     }
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
+    .tab-panel { display: none !important; visibility: hidden !important; height: 0 !important; overflow: hidden !important; }
+    .tab-panel.active { display: block !important; visibility: visible !important; height: auto !important; overflow: visible !important; }
 
     /* ═══ SECTION TITLES ═══ */
     .section-title { font-size: 1.3rem; font-weight: 700; color: var(--text-dark); margin-bottom: 8px; }
@@ -914,11 +914,12 @@
       border-bottom-color: var(--primary);
     }
 
-    .tab-content {
+    /* Documents tab-content — scoped para no afectar tabs de negocios */
+    #section-documents .tab-content {
       display: none;
     }
 
-    .tab-content.active {
+    #section-documents .tab-content.active {
       display: block;
     }
 
@@ -3861,10 +3862,13 @@
 
     // ═══ TABS ═══
     function switchBizTab(tabId, evt) {
-      document.querySelectorAll('#tabsContainer .tab-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('#tabsContainer .tab-panel').forEach(p => {
+        p.classList.remove('active');
+        p.style.display = 'none';
+      });
       document.querySelectorAll('#tabsContainer .tab-btn').forEach(b => b.classList.remove('active'));
       const panel = document.getElementById('tab-' + tabId);
-      if (panel) panel.classList.add('active');
+      if (panel) { panel.classList.add('active'); panel.style.display = 'block'; panel.style.visibility = 'visible'; panel.style.opacity = '1'; }
       const btn = evt && evt.target ? evt.target : null;
       if (btn) btn.classList.add('active');
       if (tabId === 'schedule') loadScheduleConfig();
@@ -3926,6 +3930,12 @@
     if (perfilPanel) perfilPanel.classList.add('active');
     const firstBtn = document.querySelector('.tab-btn');
     if (firstBtn) firstBtn.classList.add('active');
+
+    // SAFETY NET: forzar visibilidad de tab-content y panel activo
+    const tabContent = document.querySelector('#tabsContainer .tab-content');
+    if (tabContent) { tabContent.style.display = 'block'; tabContent.style.opacity = '1'; tabContent.style.visibility = 'visible'; }
+    const activePanel = document.querySelector('#tabsContainer .tab-panel.active');
+    if (activePanel) { activePanel.style.display = 'block'; activePanel.style.opacity = '1'; activePanel.style.visibility = 'visible'; }
 
     // Populate profile tab with biz data
     if (biz) populateProfileTab(biz);
