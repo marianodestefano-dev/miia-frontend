@@ -4369,10 +4369,10 @@
     try {
       const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/products`);
       const data = await res.json();
-      products = data.length > 0 ? data : PRODUCT_EXAMPLES.map(e => ({ ...e, id: null }));
+      products = data.length > 0 ? data : [{ name: '', description: '', price: '', pricePromo: '', stock: '', id: null }];
       renderProducts();
     } catch (e) {
-      products = PRODUCT_EXAMPLES.map(e => ({ ...e, id: null }));
+      products = [{ name: '', description: '', price: '', pricePromo: '', stock: '', id: null }];
       renderProducts();
     }
   }
@@ -4748,7 +4748,7 @@
     { id: 'paypal',         name: 'PayPal',                   type: 'link',          country: 'ALL', icon: '🅿️', enabled: false, payment_link: '' },
     { id: 'stripe',         name: 'Stripe',                   type: 'link',          country: 'ALL', icon: '💠', enabled: false, payment_link: '' },
     { id: 'cripto',         name: 'Criptomonedas',            type: 'cripto',        country: 'ALL', icon: '₿',  enabled: false, wallet_address: '', network: '', coin: '' },
-    { id: 'efectivo',       name: 'Efectivo en local',        type: 'instrucciones', country: 'ALL', icon: '💵', enabled: false, reference_code: '', instructions: '' },
+    { id: 'efectivo',       name: 'Efectivo en local',        type: 'efectivo',      country: 'ALL', icon: '💵', enabled: false, instructions: '', branches: [] },
     { id: 'qr',             name: 'QR Genérico',              type: 'qr',            country: 'ALL', icon: '📱', enabled: false, qr_image_base64: '', qr_description: '' }
   ];
 
@@ -4789,6 +4789,27 @@
                 <input type="text" id="prefcode-${m.id}" placeholder="${refPlaceholders[m.id]||'Código'}" value="${esc(m.reference_code||'')}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.85rem;margin-bottom:6px;">` : '') +
                `<p class="payment-label">Instrucciones para el cliente</p>
                 <textarea id="pinstr-${m.id}" placeholder="${instrPlaceholders[m.id]||''}" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-body);font-size:0.85rem;resize:vertical;min-height:60px;font-family:inherit;">${esc(m.instructions||'')}</textarea>`;
+      }
+      case 'efectivo': {
+        const branches = m.branches || [];
+        const branchesHtml = branches.map((b, i) => `
+          <div class="branch-item" style="background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.1);border-radius:8px;padding:10px;margin-bottom:8px;">
+            <div style="display:flex;gap:6px;margin-bottom:6px;">
+              <input type="text" placeholder="Nombre sucursal" value="${esc(b.name||'')}" style="flex:1;padding:6px 8px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.82rem;" data-branch="${i}" data-field="name">
+              <button onclick="removeBranch('${m.id}',${i})" style="padding:4px 8px;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:6px;cursor:pointer;font-size:0.75rem;">X</button>
+            </div>
+            <input type="text" placeholder="Dirección completa (calle, número, piso, oficina)" value="${esc(b.address||'')}" style="width:100%;padding:6px 8px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.82rem;margin-bottom:6px;box-sizing:border-box;" data-branch="${i}" data-field="address">
+            <div style="display:flex;gap:6px;">
+              <input type="text" placeholder="Ciudad" value="${esc(b.city||'')}" style="flex:1;padding:6px 8px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.82rem;" data-branch="${i}" data-field="city">
+              <input type="text" placeholder="País" value="${esc(b.country||'')}" style="flex:1;padding:6px 8px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.82rem;" data-branch="${i}" data-field="country">
+            </div>
+            <input type="text" placeholder="Horario (Ej: L-V 9:00 a 18:00)" value="${esc(b.hours||'')}" style="width:100%;padding:6px 8px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.82rem;margin-top:6px;box-sizing:border-box;" data-branch="${i}" data-field="hours">
+          </div>`).join('');
+        return `<p class="payment-label">Instrucciones generales</p>
+                <textarea id="pinstr-${m.id}" placeholder="Ej: Aceptamos pago en efectivo. Consultá la sucursal más cercana." style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:8px;background:rgba(5,5,8,0.8);color:var(--text-body);font-size:0.85rem;resize:vertical;min-height:50px;font-family:inherit;margin-bottom:10px;">${esc(m.instructions||'')}</textarea>
+                <p class="payment-label">Sucursales / Puntos de cobro</p>
+                <div id="pbranches-${m.id}">${branchesHtml}</div>
+                <button onclick="addBranch('${m.id}')" style="padding:6px 14px;background:rgba(0,229,255,0.08);color:var(--primary);border:1px solid rgba(0,229,255,0.2);border-radius:6px;cursor:pointer;font-size:0.82rem;margin-top:4px;">+ Agregar sucursal</button>`;
       }
       case 'qr': {
         const preview = m.qr_image_base64 ? `<img src="${m.qr_image_base64}" style="width:80px;height:80px;object-fit:contain;border-radius:8px;margin-top:6px;display:block;">` : '';
@@ -4883,7 +4904,40 @@
         m.network = document.getElementById('pnet-' + m.id)?.value || '';
         m.coin = document.getElementById('pcoin-' + m.id)?.value || '';
         break;
+      case 'efectivo': {
+        m.instructions = document.getElementById('pinstr-' + m.id)?.value || '';
+        const branchContainer = document.getElementById('pbranches-' + m.id);
+        if (branchContainer) {
+          const items = branchContainer.querySelectorAll('.branch-item');
+          m.branches = [];
+          items.forEach(item => {
+            const branch = {};
+            item.querySelectorAll('input[data-field]').forEach(inp => {
+              branch[inp.dataset.field] = inp.value;
+            });
+            if (branch.name || branch.address || branch.city) m.branches.push(branch);
+          });
+        }
+        break;
+      }
     }
+  }
+
+  function addBranch(methodId) {
+    const m = paymentMethods.find(x => x.id === methodId);
+    if (!m) return;
+    if (!m.branches) m.branches = [];
+    readMethodFields(m);
+    m.branches.push({ name: '', address: '', city: '', country: '', hours: '' });
+    document.getElementById('pfields-' + methodId).innerHTML = getMethodFields(m);
+  }
+
+  function removeBranch(methodId, index) {
+    const m = paymentMethods.find(x => x.id === methodId);
+    if (!m || !m.branches) return;
+    readMethodFields(m);
+    m.branches.splice(index, 1);
+    document.getElementById('pfields-' + methodId).innerHTML = getMethodFields(m);
   }
 
   async function loadPaymentMethods() {
@@ -5304,7 +5358,8 @@
       const section = document.getElementById('section-documents');
       section.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
       section.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-      event.target.classList.add('active');
+      const clickedBtn = event.target.closest('.tab') || event.target;
+      clickedBtn.classList.add('active');
       document.getElementById(tab).classList.add('active');
     }
 
@@ -5680,6 +5735,9 @@
     
   <div id="section-contacts" class="page-section section-hidden">
     <div style="max-width:1200px;margin:0 auto;padding:40px 24px 80px;">
+    <button class="biz-back-btn" onclick="showSection('dashboard')" title="Volver al dashboard" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Volver
+    </button>
     <!-- View tabs -->
     <div class="view-tabs">
       <button class="view-tab active" onclick="switchContactsView('groups',this)">Grupos de Contacto</button>
@@ -6190,7 +6248,7 @@
           </div>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje fuera de horario</label>
-            <input type="text" id="scheduleOffMsg" placeholder="Mensaje fuera de horario" value="Gracias por escribir. Nuestro horario de atención es de lunes a viernes de 9:00 a 21:00. Te responderemos a primera hora." style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+            <input type="text" id="scheduleOffMsg" placeholder="Ej: Gracias por escribir. Nuestro horario de atención es de lunes a viernes de 9:00 a 21:00." value="" style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
           </div>
           <div style="display:flex;align-items:center;gap:10px;">
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);">¿Responder fuera de horario?</label>
@@ -6225,11 +6283,11 @@
           </div>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje 1er seguimiento</label>
-            <input type="text" id="followupMsg1" placeholder="Primer mensaje de seguimiento" value="Hola, ¿pudiste revisar la información que te envié? Quedo atento a cualquier consulta." style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+            <input type="text" id="followupMsg1" placeholder="Ej: Hola, ¿pudiste revisar la info? Quedo atento a cualquier consulta." value="" style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
           </div>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje último seguimiento</label>
-            <input type="text" id="followupMsgLast" placeholder="Último mensaje de seguimiento" value="Solo quería saber si seguís interesado. Si no es el momento, no hay problema. ¡Éxitos!" style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
+            <input type="text" id="followupMsgLast" placeholder="Ej: Solo quería saber si seguís interesado. Si no es el momento, no hay problema." value="" style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
           </div>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Después del último intento sin respuesta</label>
@@ -6248,12 +6306,12 @@
           </h4>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Señales de INTERÉS (lead caliente)</label>
-            <textarea id="intentHot" rows="3" placeholder="Ej: me interesa, quiero cotización, cuánto cuesta..." style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;font-family:inherit;">me interesa, quiero cotización, cuánto cuesta, necesito información, agendemos, demo, presupuesto, precio</textarea>
+            <textarea id="intentHot" rows="3" placeholder="Ej: me interesa, quiero cotización, cuánto cuesta, necesito información, agendemos, demo, presupuesto, precio" style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
             <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Separadas por coma. MIIA etiqueta como HOT y notifica al vendedor.</p>
           </div>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Señales de NO interés (lead frío)</label>
-            <textarea id="intentCold" rows="3" placeholder="Ej: no me interesa, ahora no, ya tengo proveedor..." style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;font-family:inherit;">no me interesa, ahora no, ya tengo, no necesito, dejame en paz, no gracias, otro momento</textarea>
+            <textarea id="intentCold" rows="3" placeholder="Ej: no me interesa, ahora no, ya tengo, no necesito, dejame en paz, no gracias, otro momento" style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);resize:vertical;box-sizing:border-box;font-family:inherit;"></textarea>
             <p style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;">Separadas por coma. MIIA respeta el silencio y no vuelve a contactar.</p>
           </div>
           <div>
@@ -6302,7 +6360,7 @@
               <span><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="9" cy="16" r="1"/><circle cx="15" cy="16" r="1"/><path d="M12 2v4M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
               <div style="flex:1;">
                 <h4 style="color:var(--text-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">Humanizador de respuestas</h4>
-                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">Hace que MIIA introduzca pequeños errores tipográficos ocasionales (2% de mensajes) y tome pausas variables antes de responder. Útil para que WhatsApp no detecte comportamiento automático.</p>
+                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">Hace que MIIA introduzca pequeños errores tipográficos (2% de mensajes) y minúsculas iniciales (7% de mensajes), además de pausas variables antes de responder. Útil para que WhatsApp no detecte comportamiento automático.</p>
               </div>
               <label class="toggle-switch" style="flex-shrink:0;">
                 <input type="checkbox" id="humanizerToggle" onchange="saveHumanizerPref(this.checked)">
@@ -6549,6 +6607,9 @@
 
   <div id="section-documents" class="page-section section-hidden">
     <div style="max-width:1000px;margin:0 auto;padding:40px 24px 80px;">
+    <button class="biz-back-btn" onclick="showSection('dashboard')" title="Volver al dashboard" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Volver
+    </button>
   <div class="container">
     <div class="card">
       <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg> Documentos y Recursos</h2>
@@ -6626,10 +6687,10 @@
       <!-- Tab 3: Archivos -->
       <div id="knowledge" class="tab-content">
         <h3 style="color: var(--text-dark); font-size: 1.1rem; margin-bottom: 16px;">Subir Archivos de Conocimiento</h3>
-        <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 0.9rem;">Sube catálogos, PDFs o documentos con información sobre tu negocio. MIIA los usará para responder mejor a tus clientes.</p>
+        <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 0.9rem;">Sube catálogos, PDFs, imágenes de brochures, planes o documentos con información sobre tu negocio. MIIA los usará para responder mejor a tus clientes.</p>
         <label class="file-input-label">
           <svg style="width:16px;height:16px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Seleccionar Archivo
-          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt" onchange="uploadFile(event)">
+          <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.webp,.gif" onchange="uploadFile(event)">
         </label>
 
         <div id="knowledgeList" style="margin-top: 24px;">
