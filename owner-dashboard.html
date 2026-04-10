@@ -560,6 +560,11 @@
     .toggle-slider:before { content:''; position:absolute; width:18px; height:18px; left:3px; bottom:3px; background:white; border-radius:50%; transition:transform 0.3s; }
     .toggle-switch input:checked + .toggle-slider { background:var(--primary); }
     .toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); }
+    /* Toggle proactivo: verde=activo, rojo=desactivado */
+    .toggle-slider.proactive-toggle { background:#ef4444; }
+    .toggle-switch input:checked + .toggle-slider.proactive-toggle { background:#22c55e; }
+    /* Tab activo de contactos */
+    .contact-view-tab.active { border-bottom-color:var(--primary) !important; color:var(--text-dark) !important; }
 
     .contacts-table { width:100%; border-collapse:collapse; font-size:0.88rem; }
     .contacts-table th { text-align:left; padding:10px 8px; color:var(--text-muted); font-size:0.8rem; text-transform:uppercase; border-bottom:2px solid rgba(0,229,255,0.08); }
@@ -1138,11 +1143,7 @@
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
           <span class="sidebar-label">Estadísticas</span>
         </button>
-        <!-- Documentos movido DENTRO de cada negocio — ya no es menú suelto -->
-        <button class="sidebar-btn" onclick="showSection('agents', this)">
-          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-          <span class="sidebar-label">Agentes</span>
-        </button>
+        <!-- Documentos y Agentes movidos DENTRO de cada negocio — ya no son menú suelto -->
         <button class="sidebar-btn" onclick="showSection('plans', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           <span class="sidebar-label">Mi Plan</span>
@@ -2570,6 +2571,77 @@
       }
     }
 
+    // ═══ AGENTES DENTRO DEL NEGOCIO ═══
+    async function addBizAgent() {
+      const name = document.getElementById('bizAgentName').value.trim();
+      const phone = document.getElementById('bizAgentPhone').value.trim();
+      const email = document.getElementById('bizAgentEmail').value.trim();
+      if (!name || !email) { showToast('Nombre y email son requeridos', 'warning'); return; }
+      // Reusa la lógica de addAgent pero pasa el bizId
+      document.getElementById('agentName').value = name;
+      document.getElementById('agentPhone').value = phone;
+      document.getElementById('agentEmail').value = email;
+      await addAgent();
+      document.getElementById('bizAgentName').value = '';
+      document.getElementById('bizAgentPhone').value = '';
+      document.getElementById('bizAgentEmail').value = '';
+      loadBizAgents();
+    }
+
+    async function loadBizAgents() {
+      const tbody = document.getElementById('bizAgentsBody');
+      if (!tbody) return;
+      try {
+        const snapshot = await db.collection('users')
+          .where('parent_client_uid', '==', currentUser.uid)
+          .get();
+        const agents = [];
+        snapshot.forEach(doc => agents.push({ uid: doc.id, ...doc.data() }));
+        document.getElementById('bizAgentsUsed').textContent = agents.length;
+        document.getElementById('bizAgentsLimit').textContent = currentUserData?.agents_limit || 999;
+        if (agents.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:30px;color:var(--text-muted);">No hay agentes en este negocio aún</td></tr>';
+          return;
+        }
+        tbody.innerHTML = agents.map(a => `<tr>
+          <td style="padding:10px 12px;">${esc(a.name || '—')}</td>
+          <td style="padding:10px 12px;">${esc(a.phone || '—')}</td>
+          <td style="padding:10px 12px;"><span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.78rem;font-weight:600;background:${a.otp_verified ? '#dcfce7' : '#fef3c7'};color:${a.otp_verified ? '#166534' : '#92400e'};">${a.otp_verified ? 'Activo' : 'Pendiente'}</span></td>
+          <td style="padding:10px 12px;"><button class="btn-icon danger" onclick="removeAgent('${a.uid}')">🗑</button></td>
+        </tr>`).join('');
+      } catch (e) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--text-muted);">Error cargando agentes</td></tr>';
+      }
+    }
+
+    async function showContactPickerForBizAgent() {
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/equipo/contacts`, {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error('Error cargando equipo');
+        const contacts = await res.json();
+        if (contacts.length === 0) {
+          showToast('No hay contactos en el grupo Equipo. Agrega contactos primero.', 'warning');
+          return;
+        }
+        const options = contacts.map(c => `${c.name || c.phone} (Equipo) — ${c.phone}`).join('\n');
+        const selection = prompt(`Selecciona un contacto del equipo:\n\n${options}\n\nEscribí el teléfono:`);
+        if (!selection) return;
+        const match = contacts.find(c => c.phone === selection.trim() || (c.name && c.name.toLowerCase() === selection.trim().toLowerCase()));
+        if (match) {
+          document.getElementById('bizAgentName').value = match.name || '';
+          document.getElementById('bizAgentPhone').value = match.phone || '';
+          showToast(`"${match.name || match.phone}" seleccionado. Completá el email.`, 'info');
+        } else {
+          document.getElementById('bizAgentPhone').value = selection.trim();
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
     async function resendOtp(agentEmail) {
       try {
         const token = await firebase.auth().currentUser.getIdToken();
@@ -3529,8 +3601,14 @@
     }
 
     function switchContactsView(view, btn) {
-      document.querySelectorAll('.view-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.contact-view-tab').forEach(t => {
+        t.classList.remove('active');
+        t.style.borderBottomColor = 'transparent';
+        t.style.color = 'var(--text-muted)';
+      });
       btn.classList.add('active');
+      btn.style.borderBottomColor = 'var(--primary)';
+      btn.style.color = 'var(--text-dark)';
       document.getElementById('groupsView').style.display = view === 'groups' ? '' : 'none';
       document.getElementById('conversationsView').style.display = view === 'conversations' ? '' : 'none';
     }
@@ -3694,18 +3772,24 @@
 
     // ── Groups ──
     async function loadGroups() {
-      if (!currentUser) return;
+      if (!currentUser) { console.warn('[GROUPS] No hay usuario logueado'); return; }
       try {
+        console.log('[GROUPS] Cargando grupos para', currentUser.uid);
         const token = await auth.currentUser.getIdToken();
         const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups`, {
           headers: { Authorization: 'Bearer ' + token }
         });
-        if (!res.ok) throw new Error(await res.text());
+        if (!res.ok) {
+          const errText = await res.text();
+          console.error('[GROUPS] Error HTTP:', res.status, errText);
+          throw new Error(errText);
+        }
         groups = await res.json();
+        console.log('[GROUPS] ✅ Cargados', groups.length, 'grupos');
         renderGroupCards();
       } catch (err) {
-        console.error('loadGroups error:', err);
-        document.getElementById('groupCards').innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">⚠️</div><p>Error al cargar grupos</p></div>`;
+        console.error('[GROUPS] ❌ Error cargando grupos:', err);
+        document.getElementById('groupCards').innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><div class="empty-state-icon">⚠️</div><p>Error al cargar grupos: ${err.message || 'desconocido'}</p><button class="btn-secondary" onclick="loadGroups()" style="margin-top:8px;">Reintentar</button></div>`;
       }
     }
 
@@ -3716,15 +3800,15 @@
         return;
       }
       container.innerHTML = groups.map(g => {
-        const autoB = `<span class="group-badge ${g.autoRespond ? 'on' : 'off'}">${g.autoRespond ? '✓ Auto' : '— Auto'}</span>`;
-        const proaB = `<span class="group-badge ${g.proactiveEnabled ? 'on' : 'off'}">${g.proactiveEnabled ? '✓ Proactivo' : '— Proactivo'}</span>`;
+        const proactiveColor = g.proactiveEnabled ? '#22c55e' : '#ef4444';
+        const proactiveLabel = g.proactiveEnabled ? '✓ Proactivo' : '— Proactivo';
         const tonePreview = g.tone ? g.tone.slice(0, 60) + (g.tone.length > 60 ? '…' : '') : '<em style="color:var(--text-muted)">Sin tono configurado</em>';
         return `<div class="group-card" onclick="openGroup('${g.id}')">
           <div class="group-card-icon">${g.icon || '👥'}</div>
           <h3>${esc(g.name)}</h3>
           <div class="group-card-meta" style="margin-bottom:8px;">${g.contactCount ?? 0} contacto(s)</div>
           <div style="margin-bottom:8px;font-size:0.82rem;color:var(--text-muted);">${tonePreview}</div>
-          <div>${autoB}${proaB}</div>
+          <div><span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.78rem;font-weight:600;background:${proactiveColor}15;color:${proactiveColor};border:1px solid ${proactiveColor}30;">${proactiveLabel}</span></div>
         </div>`;
       }).join('');
     }
@@ -3795,7 +3879,7 @@
         const token = await auth.currentUser.getIdToken();
         const body = {
           tone: document.getElementById('cfgTone').value.trim(),
-          autoRespond: document.getElementById('cfgAutoRespond').checked,
+          autoRespond: false,
           proactiveEnabled: document.getElementById('cfgProactive').checked
         };
         const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${groupId}`, {
@@ -3834,7 +3918,6 @@
       const g = groups.find(x => x.id === groupId);
       if (!g) return;
       document.getElementById('groupDetailTitle').textContent = (g.icon || '👥') + ' ' + g.name;
-      document.getElementById('cfgAutoRespond').checked = !!g.autoRespond;
       document.getElementById('cfgProactive').checked = !!g.proactiveEnabled;
       document.getElementById('cfgTone').value = g.tone || '';
       document.getElementById('groupCardsSection').style.display = 'none';
@@ -3873,33 +3956,43 @@
     function renderGroupContacts() {
       const tbody = document.getElementById('groupContactsBody');
       if (!groupContacts || groupContacts.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Sin contactos. Agrega el primero.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:20px;">Sin contactos. Agrega el primero.</td></tr>';
         return;
       }
       const otherGroups = groups.filter(g => g.id !== currentGroupId);
       const isEquipo = currentGroupId === 'equipo';
+      const relationLabels = { hijo:'Hijo/a', esposo:'Esposo/a', padre:'Padre/Madre', hermano:'Hermano/a', primo:'Primo/a', tio:'Tío/a', abuelo:'Abuelo/a', sobrino:'Sobrino/a', 'cuñado':'Cuñado/a', suegro:'Suegro/a', amigo:'Amigo/a', colega:'Colega', vecino:'Vecino/a', otro:'Otro' };
       tbody.innerHTML = groupContacts.map(c => {
         const moveOptions = otherGroups.map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join('');
         const agentBtn = isEquipo ? `<button class="btn-icon" title="Hacer agente" style="background:var(--gradient-main);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:0.78rem;cursor:pointer;white-space:nowrap;" onclick="promoteToAgent('${esc(c.phone)}', '${esc(c.name || '')}')">🤝 Agente</button>` : '';
+        const relLabel = c.relation ? (relationLabels[c.relation] || c.relation) : '—';
+        const nickDisplay = c.nickname ? `<span style="color:var(--text-muted);font-size:0.78rem;display:block;">"${esc(c.nickname)}"</span>` : '';
         return `<tr>
           <td>${esc(c.phone)}</td>
-          <td>${esc(c.name || '—')}</td>
-          <td style="max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(c.notes || '—')}</td>
+          <td>${esc(c.name || '—')}${nickDisplay}</td>
+          <td style="font-size:0.83rem;">${esc(relLabel)}</td>
           <td>
             <label class="toggle-switch">
-              <input type="checkbox" ${c.proactiveEnabled ? 'checked' : ''} onchange="toggleContactProactive('${c.phone}', this.checked)">
-              <span class="toggle-slider"></span>
+              <input type="checkbox" ${c.proactiveEnabled ? 'checked' : ''} onchange="toggleContactProactive('${esc(c.phone)}', this.checked)">
+              <span class="toggle-slider proactive-toggle"></span>
             </label>
           </td>
           <td>
-            ${otherGroups.length > 0 ? `<select style="font-size:0.8rem;padding:4px 6px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:transparent;color:var(--text-dark);" onchange="moveContact('${c.phone}', this.value); this.value=''">
+            <label class="toggle-switch">
+              <input type="checkbox" ${c.emergencyContact ? 'checked' : ''} onchange="toggleContactEmergency('${esc(c.phone)}', this.checked)">
+              <span class="toggle-slider proactive-toggle"></span>
+            </label>
+          </td>
+          <td>
+            ${otherGroups.length > 0 ? `<select style="font-size:0.8rem;padding:4px 6px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-surface);color:var(--text-dark);" onchange="moveContact('${esc(c.phone)}', this.value); this.value=''">
               <option value="">Mover a...</option>${moveOptions}
             </select>` : '<span style="color:var(--text-muted);font-size:0.8rem;">—</span>'}
           </td>
           <td>
-            <div class="actions">
+            <div class="actions" style="display:flex;gap:4px;">
+              <button class="btn-icon" title="Editar" onclick="openEditContact('${esc(c.phone)}')" style="background:none;border:1px solid var(--border-color);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.78rem;">✏️</button>
               ${agentBtn}
-              <button class="btn-icon danger" title="Eliminar" onclick="removeContactFromGroup('${c.phone}')">🗑</button>
+              <button class="btn-icon danger" title="Eliminar" onclick="removeContactFromGroup('${esc(c.phone)}')">🗑</button>
             </div>
           </td>
         </tr>`;
@@ -3989,6 +4082,9 @@
             phone,
             name: document.getElementById('newContactName').value.trim(),
             notes: document.getElementById('newContactNotes').value.trim(),
+            relation: document.getElementById('newContactRelation')?.value || '',
+            nickname: document.getElementById('newContactNickname')?.value?.trim() || '',
+            likes: document.getElementById('newContactLikes')?.value?.trim() || '',
             proactiveEnabled: false
           })
         });
@@ -4072,6 +4168,84 @@
       }
     }
 
+    // ═══ TOGGLE CONTACTO EMERGENCIA ═══
+    async function toggleContactEmergency(phone, enabled) {
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${currentGroupId}/contacts/${encodeURIComponent(phone)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ emergencyContact: enabled })
+        });
+        if (!res.ok) throw new Error(await res.text());
+        const c = groupContacts.find(x => x.phone === phone);
+        if (c) c.emergencyContact = enabled;
+        showToast(enabled ? 'Contacto de seguridad activado' : 'Contacto de seguridad desactivado', 'success');
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
+    // ═══ EDITAR CONTACTO INDIVIDUAL ═══
+    let _editingPhone = null;
+    function openEditContact(phone) {
+      const c = groupContacts.find(x => x.phone === phone);
+      if (!c) return;
+      _editingPhone = phone;
+      document.getElementById('editContactName').value = c.name || '';
+      document.getElementById('editContactNickname').value = c.nickname || '';
+      document.getElementById('editContactRelation').value = c.relation || '';
+      document.getElementById('editContactLikes').value = c.likes || '';
+      document.getElementById('editContactFandom').value = c.fandom || '';
+      document.getElementById('editContactNotes').value = c.notes || '';
+      document.getElementById('editContactEmergency').checked = !!c.emergencyContact;
+      const modal = document.getElementById('editContactModal');
+      modal.style.display = 'flex';
+      // Cerrar al clickear overlay
+      modal.onclick = function(e) { if (e.target === modal) closeEditContactModal(); };
+    }
+
+    function closeEditContactModal() {
+      document.getElementById('editContactModal').style.display = 'none';
+      _editingPhone = null;
+    }
+
+    async function saveEditedContact() {
+      if (!_editingPhone) return;
+      const data = {
+        name: document.getElementById('editContactName').value.trim(),
+        nickname: document.getElementById('editContactNickname').value.trim(),
+        relation: document.getElementById('editContactRelation').value,
+        likes: document.getElementById('editContactLikes').value.trim(),
+        fandom: document.getElementById('editContactFandom').value.trim(),
+        notes: document.getElementById('editContactNotes').value.trim(),
+        emergencyContact: document.getElementById('editContactEmergency').checked
+      };
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${currentGroupId}/contacts/${encodeURIComponent(_editingPhone)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error(await res.text());
+        // Actualizar local
+        const c = groupContacts.find(x => x.phone === _editingPhone);
+        if (c) Object.assign(c, data);
+        renderGroupContacts();
+        closeEditContactModal();
+        showToast('Contacto actualizado', 'success');
+        // También actualizar contact_index
+        fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-index/${encodeURIComponent(_editingPhone)}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ name: data.name, nickname: data.nickname, relation: data.relation, likes: data.likes, fandom: data.fandom })
+        }).catch(() => {});
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
+    }
+
     // Close group modal on overlay click
     document.addEventListener('DOMContentLoaded', function() {
       const gm = document.getElementById('createGroupModal');
@@ -4107,6 +4281,7 @@
       const btn = evt && evt.target ? evt.target : null;
       if (btn) btn.classList.add('active');
       if (tabId === 'schedule') loadScheduleConfig();
+      if (tabId === 'agents') loadBizAgents();
     }
   // ═══ BUSINESS LIST ═══
   async function loadBusinesses() {
@@ -6026,13 +6201,10 @@
     
   <div id="section-contacts" class="page-section section-hidden">
     <div style="max-width:1200px;margin:0 auto;padding:40px 24px 80px;">
-    <button class="biz-back-btn" onclick="showSection('dashboard')" title="Volver al dashboard" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Volver
-    </button>
-    <!-- View tabs -->
-    <div class="view-tabs">
-      <button class="view-tab active" onclick="switchContactsView('groups',this)">Grupos de Contacto</button>
-      <button class="view-tab" onclick="switchContactsView('conversations',this)">Conversaciones</button>
+    <!-- View tabs — estilo limpio, sin globo -->
+    <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border-color);">
+      <button class="contact-view-tab active" onclick="switchContactsView('groups',this)" style="padding:12px 24px;border:none;background:transparent;color:var(--text-muted);font-size:0.95rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;">Grupos de Contacto</button>
+      <button class="contact-view-tab" onclick="switchContactsView('conversations',this)" style="padding:12px 24px;border:none;background:transparent;color:var(--text-muted);font-size:0.95rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;">Conversaciones</button>
     </div>
 
     <!-- ══════════ GROUPS VIEW ══════════ -->
@@ -6054,34 +6226,30 @@
 
       <!-- Group detail -->
       <div id="groupDetailView" style="display:none;">
-        <div class="group-detail-header">
-          <button class="btn-secondary" onclick="backToGroups()">← Volver</button>
-          <h2 id="groupDetailTitle">Grupo</h2>
+        <div class="group-detail-header" style="display:flex;align-items:center;gap:12px;margin-bottom:20px;">
+          <button class="biz-back-btn" onclick="backToGroups()" title="Volver" style="display:inline-flex;align-items:center;padding:6px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <h2 id="groupDetailTitle" style="margin:0;flex:1;">Grupo</h2>
           <button class="btn-primary" onclick="openEditGroupModal()">Editar</button>
           <button class="btn-danger" onclick="deleteGroup(currentGroupId)">Eliminar</button>
         </div>
 
-        <!-- Config -->
+        <!-- Config: Mensajes proactivos como título principal -->
         <div class="group-config">
-          <div class="toggle-row">
-            <span style="font-weight:600;color:var(--text-dark);font-size:0.9rem;">Respuesta automática</span>
-            <label class="toggle-switch">
-              <input type="checkbox" id="cfgAutoRespond">
-              <span class="toggle-slider"></span>
-            </label>
-          </div>
-          <div class="toggle-row">
-            <span style="font-weight:600;color:var(--text-dark);font-size:0.9rem;">Mensajes proactivos</span>
-            <label class="toggle-switch">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <h3 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-dark);">Mensajes proactivos</h3>
+            <label class="toggle-switch" style="--toggle-on:#22c55e;--toggle-off:#ef4444;">
               <input type="checkbox" id="cfgProactive">
-              <span class="toggle-slider"></span>
+              <span class="toggle-slider proactive-toggle"></span>
             </label>
           </div>
-          <div class="toggle-row" style="flex-direction:column;align-items:flex-start;gap:8px;">
+          <input type="hidden" id="cfgAutoRespond" value="false">
+          <div style="margin-bottom:16px;">
             <span style="font-weight:600;color:var(--text-dark);font-size:0.9rem;">Tono / Instrucciones</span>
-            <textarea id="cfgTone" rows="3" style="width:100%;padding:8px 10px;border:1px solid rgba(0,229,255,0.2);border-radius:var(--radius-sm);font-family:inherit;font-size:0.88rem;resize:vertical;" placeholder="Ej: Habla de forma profesional y cordial..."></textarea>
+            <textarea id="cfgTone" rows="3" style="width:100%;margin-top:8px;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);font-family:inherit;font-size:0.88rem;resize:vertical;background:var(--bg-surface);color:var(--text-dark);" placeholder="Ej: Habla de forma profesional y cordial..."></textarea>
           </div>
-          <div style="margin-top:14px;">
+          <div>
             <button class="btn-primary" onclick="updateGroupConfig(currentGroupId)">Guardar configuración</button>
           </div>
         </div>
@@ -6098,14 +6266,15 @@
               <tr>
                 <th>Teléfono</th>
                 <th>Nombre</th>
-                <th>Notas</th>
+                <th>Relación</th>
                 <th>Proactivo</th>
+                <th>Seguridad</th>
                 <th>Mover a</th>
                 <th>Acciones</th>
               </tr>
             </thead>
             <tbody id="groupContactsBody">
-              <tr><td colspan="6" style="text-align:center;color:var(--text-muted);padding:20px;">Cargando...</td></tr>
+              <tr><td colspan="7" style="text-align:center;color:var(--text-muted);padding:20px;">Cargando...</td></tr>
             </tbody>
           </table>
         </div>
@@ -6113,7 +6282,7 @@
         <!-- Add contact inline form -->
         <div class="add-contact-form" id="addContactForm">
           <h4>Nuevo contacto</h4>
-          <div class="inline-grid">
+          <div class="inline-grid" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));gap:12px;">
             <div class="form-group" style="margin-bottom:0;">
               <label>Teléfono *</label>
               <input type="tel" id="newContactPhone" placeholder="5491112345678">
@@ -6123,13 +6292,85 @@
               <input type="text" id="newContactName" placeholder="Nombre">
             </div>
             <div class="form-group" style="margin-bottom:0;">
-              <label>Notas</label>
-              <input type="text" id="newContactNotes" placeholder="Opcional">
+              <label>Relación</label>
+              <select id="newContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);font-size:0.88rem;">
+                <option value="">— Seleccionar —</option>
+                <option value="hijo">Hijo/a</option>
+                <option value="esposo">Esposo/a</option>
+                <option value="padre">Padre/Madre</option>
+                <option value="hermano">Hermano/a</option>
+                <option value="primo">Primo/a</option>
+                <option value="tio">Tío/a</option>
+                <option value="abuelo">Abuelo/a</option>
+                <option value="sobrino">Sobrino/a</option>
+                <option value="cuñado">Cuñado/a</option>
+                <option value="suegro">Suegro/a</option>
+                <option value="amigo">Amigo/a</option>
+                <option value="colega">Colega</option>
+                <option value="vecino">Vecino/a</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Apodo</label>
+              <input type="text" id="newContactNickname" placeholder="Ej: Tito, Mamá">
             </div>
           </div>
-          <div style="display:flex;gap:8px;">
+          <div class="inline-grid" style="grid-template-columns:1fr 1fr;gap:12px;margin-top:12px;">
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Gustos / Preferencias</label>
+              <input type="text" id="newContactLikes" placeholder="Ej: Le gusta el fútbol, hincha de Boca">
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label>Notas</label>
+              <input type="text" id="newContactNotes" placeholder="Información adicional">
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;">
             <button class="btn-primary" onclick="addContactToGroup()">Agregar</button>
             <button class="btn-secondary" onclick="toggleAddContactForm()">Cancelar</button>
+          </div>
+        </div>
+
+        <!-- Edit contact modal -->
+        <div id="editContactModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;">
+          <div style="background:var(--bg-card);border-radius:12px;padding:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;">
+            <h3 style="margin:0 0 16px;color:var(--text-dark);">Editar contacto</h3>
+            <div class="form-group"><label>Nombre</label><input type="text" id="editContactName"></div>
+            <div class="form-group"><label>Apodo</label><input type="text" id="editContactNickname" placeholder="Ej: Tito, Mamá"></div>
+            <div class="form-group"><label>Relación</label>
+              <select id="editContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);">
+                <option value="">— Seleccionar —</option>
+                <option value="hijo">Hijo/a</option>
+                <option value="esposo">Esposo/a</option>
+                <option value="padre">Padre/Madre</option>
+                <option value="hermano">Hermano/a</option>
+                <option value="primo">Primo/a</option>
+                <option value="tio">Tío/a</option>
+                <option value="abuelo">Abuelo/a</option>
+                <option value="sobrino">Sobrino/a</option>
+                <option value="cuñado">Cuñado/a</option>
+                <option value="suegro">Suegro/a</option>
+                <option value="amigo">Amigo/a</option>
+                <option value="colega">Colega</option>
+                <option value="vecino">Vecino/a</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Gustos / Preferencias</label><input type="text" id="editContactLikes" placeholder="Ej: Le gusta cocinar, fan de Star Wars"></div>
+            <div class="form-group"><label>Fanatismo</label><input type="text" id="editContactFandom" placeholder="Ej: Hincha de Boca, fan de F1"></div>
+            <div class="form-group"><label>Notas</label><textarea id="editContactNotes" rows="2" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);font-family:inherit;resize:vertical;"></textarea></div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+              <label class="toggle-switch" style="flex-shrink:0;">
+                <input type="checkbox" id="editContactEmergency">
+                <span class="toggle-slider proactive-toggle"></span>
+              </label>
+              <span style="font-size:0.88rem;color:var(--text-dark);">Contacto de seguridad / emergencia</span>
+            </div>
+            <div style="display:flex;gap:8px;justify-content:flex-end;">
+              <button class="btn-secondary" onclick="closeEditContactModal()">Cancelar</button>
+              <button class="btn-primary" onclick="saveEditedContact()">Guardar</button>
+            </div>
           </div>
         </div>
       </div>
@@ -6286,6 +6527,7 @@
 <div class="tabs-container" id="tabsContainer">
   <div class="tabs-nav">
     <button class="tab-btn active" onclick="switchBizTab('perfil', event)">Perfil</button>
+    <button class="tab-btn" onclick="switchBizTab('agents', event)">Agentes</button>
     <button class="tab-btn" onclick="switchBizTab('products', event)">Productos</button>
     <button class="tab-btn" onclick="switchBizTab('recognize', event)">Como Reconocer</button>
     <button class="tab-btn" onclick="switchBizTab('expert', event)">Chat Experto</button>
@@ -6297,6 +6539,37 @@
   </div>
 
   <div class="tab-content">
+
+    <!-- ════ TAB: AGENTES (dentro del negocio) ════ -->
+    <div id="tab-agents" class="tab-panel">
+      <h3 class="section-title">Agentes de este negocio</h3>
+      <p class="section-desc">Agrega personas de tu equipo como agentes. Cada agente tendrá su propia MIIA con el cerebro de este negocio.</p>
+      <div class="agents-counter" style="margin-bottom:16px;">
+        Agentes: <strong><span id="bizAgentsUsed">0</span> / <span id="bizAgentsLimit">999</span></strong>
+      </div>
+      <table class="agents-table" style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+        <thead>
+          <tr>
+            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-color);color:var(--text-muted);font-weight:600;">Agente</th>
+            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-color);color:var(--text-muted);font-weight:600;">Teléfono</th>
+            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-color);color:var(--text-muted);font-weight:600;">Estado</th>
+            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-color);color:var(--text-muted);font-weight:600;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="bizAgentsBody">
+          <tr><td colspan="4" style="text-align:center;padding:30px;color:var(--text-muted);">No hay agentes en este negocio aún</td></tr>
+        </tbody>
+      </table>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:8px;margin-top:16px;align-items:end;">
+        <div class="form-group" style="margin:0;"><label style="font-size:0.8rem;">Nombre</label><input type="text" id="bizAgentName" placeholder="Nombre del agente"></div>
+        <div class="form-group" style="margin:0;"><label style="font-size:0.8rem;">Teléfono</label><input type="tel" id="bizAgentPhone" placeholder="5491155667788"></div>
+        <div class="form-group" style="margin:0;"><label style="font-size:0.8rem;">Email</label><input type="email" id="bizAgentEmail" placeholder="Email del agente"></div>
+        <button class="btn-primary" onclick="addBizAgent()" style="height:38px;">+ Agregar</button>
+      </div>
+      <div style="margin-top:12px;">
+        <button class="btn-secondary" style="font-size:0.85rem;" onclick="showContactPickerForBizAgent()">👥 Seleccionar del equipo</button>
+      </div>
+    </div>
 
     <!-- ════ TAB 0: PERFIL ════ -->
     <div id="tab-perfil" class="tab-panel active">
@@ -6460,18 +6733,63 @@
       </div>
     </div>
 
-    <!-- ════ TAB 4: DOCUMENTOS ════ -->
+    <!-- ════ TAB 4: DOCUMENTOS (contenido directo, sin redirect) ════ -->
     <div id="tab-docs" class="tab-panel">
-      <div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+      <div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);border-radius:12px;padding:16px 20px;margin-bottom:24px;">
         <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;margin:0;">
           <strong style="color:var(--text-dark);">Tip:</strong> Usá el <strong>Chat Experto</strong> de este negocio para pedirle a MIIA que te ayude a crear cotizaciones personalizadas. Compartile un Excel o describile tu estructura de precios, y MIIA aprenderá a generar cotizaciones automáticas con todas las variables de tu negocio.
         </p>
       </div>
-      <div class="docs-link-card">
-        <div class="icon"><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></div>
-        <h3>Documentos y Archivos de Conocimiento</h3>
-        <p>Los archivos que subas aquí serán estudiados por MIIA y formarán parte de su cerebro. Incluye cotizaciones, templates y archivos de referencia.</p>
-        <a href="#" id="docsLink" onclick="showSection('documents')">Gestionar Documentos</a>
+
+      <!-- ═══ COTIZACIONES ═══ -->
+      <div style="margin-bottom:32px;">
+        <h3 style="color:var(--text-dark);font-size:1.1rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border-color);">📋 Cotizaciones</h3>
+        <div class="form-row">
+          <div class="form-group"><label>Nombre del Cliente</label><input type="text" id="bizQuoteClient" placeholder="Ej: Juan Pérez"></div>
+          <div class="form-group"><label>Producto/Servicio</label><input type="text" id="bizQuoteProduct" placeholder="Ej: Desarrollo Web"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label>Precio (USD)</label><input type="number" id="bizQuotePrice" placeholder="1000" min="0" step="0.01"></div>
+          <div class="form-group"><label>Fecha de Vencimiento</label><input type="date" id="bizQuoteExpiry"></div>
+        </div>
+        <div class="form-group"><label>Descripción</label><textarea id="bizQuoteDesc" placeholder="Detalla lo que incluye la cotización..."></textarea></div>
+        <button class="btn-primary" onclick="generateQuotePDF()">📥 Descargar PDF</button>
+        <div id="bizQuotesList" style="margin-top:16px;">
+          <h4 style="color:var(--text-dark);margin-bottom:8px;">Cotizaciones Recientes</h4>
+          <div class="item-list" id="bizQuotesListItems">
+            <p style="color:var(--text-muted);text-align:center;padding:12px;">Sin cotizaciones aún</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ TEMPLATES ═══ -->
+      <div style="margin-bottom:32px;">
+        <h3 style="color:var(--text-dark);font-size:1.1rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border-color);">💬 Templates</h3>
+        <div class="form-group"><label>Nombre del Template</label><input type="text" id="bizTemplateName" placeholder="Ej: Saludo inicial"></div>
+        <div class="form-group"><label>Texto del Template</label><textarea id="bizTemplateText" placeholder="Escribe el mensaje que MIIA usará como respuesta..."></textarea></div>
+        <button class="btn-primary" onclick="createTemplate()">✅ Guardar Template</button>
+        <div id="bizTemplatesList" style="margin-top:16px;">
+          <h4 style="color:var(--text-dark);margin-bottom:8px;">Mis Templates</h4>
+          <div class="item-list" id="bizTemplatesListItems">
+            <p style="color:var(--text-muted);text-align:center;padding:12px;">Sin templates aún</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══ ARCHIVOS ═══ -->
+      <div>
+        <h3 style="color:var(--text-dark);font-size:1.1rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border-color);">📁 Archivos de Conocimiento</h3>
+        <p style="color:var(--text-muted);margin-bottom:16px;font-size:0.9rem;">Sube catálogos, PDFs, imágenes de brochures, planes o documentos con información sobre tu negocio. MIIA los usará para responder mejor a tus clientes.</p>
+        <label class="file-input-label" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--gradient-main);color:#fff;border-radius:8px;cursor:pointer;font-size:0.88rem;">
+          <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Seleccionar Archivo
+          <input type="file" id="bizFileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.webp,.gif" onchange="uploadFile(event)" style="display:none;">
+        </label>
+        <div id="bizKnowledgeList" style="margin-top:16px;">
+          <h4 style="color:var(--text-dark);margin-bottom:8px;">Archivos Subidos</h4>
+          <div class="item-list" id="bizKnowledgeListItems">
+            <p style="color:var(--text-muted);text-align:center;padding:12px;">Sin archivos aún</p>
+          </div>
+        </div>
       </div>
     </div>
 
