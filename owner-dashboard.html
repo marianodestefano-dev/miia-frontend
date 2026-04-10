@@ -1404,23 +1404,28 @@
           <thead>
             <tr>
               <th>Agente</th>
+              <th>Teléfono</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
           <tbody id="agentsBody">
             <tr id="noAgentsRow">
-              <td colspan="3" style="text-align: center; padding: 30px; color: var(--text-muted);">
+              <td colspan="4" style="text-align: center; padding: 30px; color: var(--text-muted);">
                 No hay agentes en tu equipo aún
               </td>
             </tr>
           </tbody>
         </table>
 
-        <div class="add-agent-form" id="addAgentForm">
+        <div class="add-agent-form" id="addAgentForm" style="grid-template-columns:1fr 1fr 1fr auto;">
           <input type="text" id="agentName" placeholder="Nombre del agente">
+          <input type="tel" id="agentPhone" placeholder="Teléfono (ej: 5491155667788)">
           <input type="email" id="agentEmail" placeholder="Email del agente">
           <button class="btn-add" id="addAgentBtn" onclick="addAgent()">+ Agregar</button>
+        </div>
+        <div style="margin-top:12px;">
+          <button class="btn-secondary" style="font-size:0.85rem;" onclick="showContactPickerForAgent()">👥 Seleccionar de contactos</button>
         </div>
         <p id="agentLimitMsg" class="hidden" style="color: #f39c12; font-size: 0.85rem; margin-top: 12px; text-align: center;"></p>
       </div>
@@ -2405,6 +2410,7 @@
                   </div>
                 </div>
               </td>
+              <td style="color:var(--text-muted);font-size:0.88rem;">${agent.phone || '—'}</td>
               <td>${statusBadge}</td>
               <td>${resendBtn}<button class="btn-small btn-danger" onclick="removeAgent('${agent.id}')">Eliminar</button></td>
             </tr>
@@ -2453,8 +2459,10 @@
 
     async function addAgent() {
       const nameInput = document.getElementById('agentName');
+      const phoneInput = document.getElementById('agentPhone');
       const emailInput = document.getElementById('agentEmail');
       const name = nameInput.value.trim();
+      const phone = phoneInput.value.trim();
       const email = emailInput.value.trim();
 
       if (!name || !email) {
@@ -2492,10 +2500,12 @@
           return;
         }
 
-        // Actualizar nombre del agente en Firestore (el endpoint solo usa email)
+        // Actualizar nombre + teléfono del agente en Firestore
         const agentSnap = await db.collection('users').where('email', '==', email.toLowerCase()).limit(1).get();
         if (!agentSnap.empty) {
-          await agentSnap.docs[0].ref.update({ name, parent_client_uid: currentUser.uid });
+          const updateData = { name, parent_client_uid: currentUser.uid };
+          if (phone) updateData.phone = phone;
+          await agentSnap.docs[0].ref.update(updateData);
         }
 
         showToast(data.otpCode
@@ -2503,6 +2513,7 @@
           : `Código enviado a ${email}`, 'success');
 
         nameInput.value = '';
+        phoneInput.value = '';
         emailInput.value = '';
         loadAgents();
       } catch (error) {
@@ -2510,6 +2521,52 @@
       } finally {
         btn.disabled = false;
         btn.textContent = '+ Agregar';
+      }
+    }
+
+    async function showContactPickerForAgent() {
+      // Load all contacts from all groups and show a picker
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups`, {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error('Error cargando grupos');
+        const grps = await res.json();
+
+        // Collect contacts from equipo group
+        let contacts = [];
+        for (const g of grps) {
+          const cRes = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${g.id}/contacts`, {
+            headers: { Authorization: 'Bearer ' + token }
+          });
+          if (cRes.ok) {
+            const cs = await cRes.json();
+            cs.forEach(c => contacts.push({ ...c, groupName: g.name }));
+          }
+        }
+
+        if (contacts.length === 0) {
+          showToast('No hay contactos en tus grupos. Agrega contactos primero en Contactos.', 'warning');
+          return;
+        }
+
+        // Build a simple selection dialog
+        const options = contacts.map(c => `${c.name || c.phone} (${c.groupName}) — ${c.phone}`).join('\n');
+        const selection = prompt(`Selecciona un contacto (copia el teléfono):\n\n${options}\n\nEscribí el teléfono:`);
+        if (!selection) return;
+
+        const match = contacts.find(c => c.phone === selection.trim() || (c.name && c.name.toLowerCase() === selection.trim().toLowerCase()));
+        if (match) {
+          document.getElementById('agentName').value = match.name || '';
+          document.getElementById('agentPhone').value = match.phone || '';
+          showToast(`Contacto "${match.name || match.phone}" seleccionado. Completá el email y hacé click en Agregar.`, 'info');
+        } else {
+          document.getElementById('agentPhone').value = selection.trim();
+          showToast('Teléfono cargado. Completá nombre, email y hacé click en Agregar.', 'info');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
       }
     }
 
@@ -4317,21 +4374,9 @@
   }
 
   function updateWaBanner() {
+    // Banner is now HIDDEN globally — status is shown ONLY in sidebar footer
     const banner = document.getElementById('waBanner');
-    const text = document.getElementById('waStatusText');
-    const btn = document.getElementById('waActionBtn');
-    btn.classList.remove('hidden');
-    if (waConnected) {
-      banner.className = 'wa-banner connected';
-      text.textContent = 'WhatsApp conectado';
-      btn.textContent = 'Desvincular';
-      btn.className = 'wa-btn-disconnect';
-    } else {
-      banner.className = 'wa-banner disconnected';
-      text.textContent = 'WhatsApp no conectado';
-      btn.textContent = 'Conectar';
-      btn.className = 'wa-btn-connect';
-    }
+    if (banner) banner.style.display = 'none';
     updateSidebarWaStatus(waConnected);
   }
 
@@ -4766,23 +4811,88 @@
     msgs.scrollTop = msgs.scrollHeight;
   }
 
+  let _expertPendingFile = null; // { name, type, base64, textContent }
+
+  function handleExpertFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      showToast('Archivo muy grande (máx 10MB)', 'warning');
+      input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const base64 = e.target.result;
+      _expertPendingFile = { name: file.name, type: file.type, base64 };
+
+      // For text-based files, also extract text content
+      if (file.type === 'text/plain' || file.name.endsWith('.csv') || file.name.endsWith('.txt')) {
+        const textReader = new FileReader();
+        textReader.onload = function(te) {
+          _expertPendingFile.textContent = te.target.result;
+          showFilePreview();
+        };
+        textReader.readAsText(file);
+      } else {
+        showFilePreview();
+      }
+    };
+    reader.readAsDataURL(file);
+
+    function showFilePreview() {
+      document.getElementById('expertFilePreview').style.display = 'flex';
+      document.getElementById('expertFileName').textContent = '📄 ' + file.name;
+    }
+  }
+
+  function clearExpertFile() {
+    _expertPendingFile = null;
+    document.getElementById('expertFileInput').value = '';
+    document.getElementById('expertFilePreview').style.display = 'none';
+  }
+
   async function sendExpertMessage() {
     const input = document.getElementById('expertInput');
     const message = input.value.trim();
-    if (!message) return;
+    const hasFile = !!_expertPendingFile;
+
+    if (!message && !hasFile) return;
     input.value = '';
 
-    addChatMessage('expertMessages', 'user', message);
-    expertSessionMessages.push({ role: 'user', content: message });
+    // Build user message with file context
+    let userContent = message;
+    let fileDescription = '';
+    if (hasFile) {
+      fileDescription = `[Archivo adjunto: ${_expertPendingFile.name} (${_expertPendingFile.type})]`;
+      if (_expertPendingFile.textContent) {
+        fileDescription += '\n--- Contenido del archivo ---\n' + _expertPendingFile.textContent.slice(0, 5000);
+        if (_expertPendingFile.textContent.length > 5000) fileDescription += '\n... (truncado)';
+      }
+      userContent = message ? `${message}\n\n${fileDescription}` : fileDescription;
+    }
+
+    addChatMessage('expertMessages', 'user', message || fileDescription);
+    expertSessionMessages.push({ role: 'user', content: userContent });
+
+    // Clear file after sending
+    const sentFile = _expertPendingFile;
+    clearExpertFile();
 
     const isLearn = message.toUpperCase().startsWith('APRENDE:');
 
     try {
       if (isLearn) {
+        const learnContent = message.replace(/^APRENDE:/i, '').trim();
+        const fullContent = sentFile && sentFile.textContent
+          ? `${learnContent}\n\n${sentFile.textContent.slice(0, 5000)}`
+          : learnContent;
         const res = await fetch(`${BACKEND_URL}/api/train`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message: message.replace(/^APRENDE:/i, '').trim() })
+          body: JSON.stringify({ message: fullContent })
         });
         const data = await res.json();
         const reply = data.response || '✅ Guardado.';
@@ -4793,10 +4903,17 @@
         else showToast('❌ No se guardó', 'error');
       } else {
         const history = expertSessionMessages.slice(-20);
+        const payload = { message: userContent, history };
+
+        // If file is an image, include base64 for AI vision
+        if (sentFile && sentFile.type && sentFile.type.startsWith('image/')) {
+          payload.imageBase64 = sentFile.base64;
+        }
+
         const res = await fetch(`${BACKEND_URL}/api/admin-chat`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ message, history })
+          body: JSON.stringify(payload)
         });
         const data = await res.json();
         const reply = data.response || 'Sin respuesta.';
@@ -6132,8 +6249,8 @@
 
     </div><!-- end section-contacts -->
 
-<!-- ═══ WHATSAPP STATUS BANNER — GLOBAL (visible en todas las secciones) ═══ -->
-<div id="waBanner" class="wa-banner disconnected" style="max-width:1100px;margin:0 auto;padding:0 20px;position:fixed;top:0;left:240px;right:0;z-index:100;">
+<!-- ═══ WHATSAPP STATUS BANNER — dentro del contenido, NO fixed ═══ -->
+<div id="waBanner" class="wa-banner disconnected" style="display:none;">
   <span id="waStatusText">Verificando WhatsApp...</span>
   <button id="waActionBtn" class="wa-btn-connect hidden" onclick="toggleWhatsApp()">Conectar</button>
 </div>
@@ -6325,9 +6442,15 @@
               <div class="message-bubble">Hola! Soy MIIA. Estoy lista para aprender sobre tu negocio.<br><br>Puedes explicarme como ofrecer tus productos, como cerrar ventas, como manejar objeciones... todo lo que necesite saber para atender a tus clientes.</div>
             </div>
           </div>
-          <div class="chat-input">
-            <input type="text" id="expertInput" placeholder="Preguntale o conversá... Para guardar: 'APRENDE: [info]'" onkeypress="if(event.key==='Enter')sendExpertMessage()">
+          <div class="chat-input" style="display:flex;gap:8px;align-items:center;">
+            <label for="expertFileInput" style="cursor:pointer;font-size:1.3rem;padding:6px 10px;border-radius:8px;background:var(--bg-hover);transition:all 0.2s;" title="Adjuntar archivo (imagen, PDF, Excel...)">📎</label>
+            <input type="file" id="expertFileInput" accept="image/*,.pdf,.xlsx,.xls,.csv,.doc,.docx,.txt" style="display:none;" onchange="handleExpertFile(this)">
+            <input type="text" id="expertInput" placeholder="Preguntale o conversá... Para guardar: 'APRENDE: [info]'" onkeypress="if(event.key==='Enter')sendExpertMessage()" style="flex:1;">
             <button onclick="sendExpertMessage()">Enviar</button>
+          </div>
+          <div id="expertFilePreview" style="display:none;padding:8px 12px;margin-top:6px;background:var(--bg-hover);border-radius:8px;font-size:0.85rem;color:var(--text-muted);">
+            <span id="expertFileName"></span>
+            <button onclick="clearExpertFile()" style="margin-left:8px;background:none;border:none;color:var(--danger);cursor:pointer;font-weight:700;">✕</button>
           </div>
         </div>
       </div>
