@@ -1136,12 +1136,9 @@
         </button>
         <button class="sidebar-btn" onclick="showSection('analytics', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
-          <span class="sidebar-label">Analytics</span>
+          <span class="sidebar-label">Estadísticas</span>
         </button>
-        <button class="sidebar-btn" onclick="showSection('documents', this)">
-          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-          <span class="sidebar-label">Documentos</span>
-        </button>
+        <!-- Documentos movido DENTRO de cada negocio — ya no es menú suelto -->
         <button class="sidebar-btn" onclick="showSection('agents', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
           <span class="sidebar-label">Agentes</span>
@@ -1538,6 +1535,24 @@
           <button onclick="linkWhatsAppFromConnections()" style="width:100%;padding:10px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.18)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
             Vincular WhatsApp
           </button>
+          <!-- Barra de progreso de mining (oculta hasta que empiece) -->
+          <div id="miningProgressContainer" style="display:none;margin-top:4px;padding:12px;background:rgba(37,211,102,.05);border:1px solid rgba(37,211,102,.15);border-radius:10px;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+              <span style="font-size:0.8rem;font-weight:600;color:var(--text-dark);display:flex;align-items:center;gap:6px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+                Analizando historial
+              </span>
+              <span id="miningProgressStats" style="font-size:0.72rem;color:var(--text-muted);"></span>
+            </div>
+            <div style="width:100%;height:6px;background:rgba(37,211,102,.12);border-radius:99px;overflow:hidden;">
+              <div id="miningProgressBar" style="width:0%;height:100%;background:linear-gradient(90deg,#25D366,#128C7E);border-radius:99px;transition:width 0.5s ease;"></div>
+            </div>
+            <p id="miningProgressDetail" style="font-size:0.72rem;color:var(--text-muted);margin:6px 0 0;"></p>
+          </div>
+          <!-- Mining completo -->
+          <div id="miningCompleteContainer" style="display:none;margin-top:4px;padding:10px 12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:10px;">
+            <span style="font-size:0.8rem;color:#25D366;font-weight:600;" id="miningCompleteText"></span>
+          </div>
         </div>
 
         <!-- ── 2. IA ── -->
@@ -1931,6 +1946,39 @@
 
       socket.on('whatsapp_disconnected', (data) => {
         updateSidebarWaStatus(false);
+      });
+
+      // Unirse al room del tenant para recibir eventos en tiempo real
+      if (currentUserUid) {
+        socket.emit('join_tenant_room', currentUserUid);
+      }
+
+      // ═══ MINING: Barra de progreso en conexiones ═══
+      socket.on('adn_mining_progress', (data) => {
+        const container = document.getElementById('miningProgressContainer');
+        const completeContainer = document.getElementById('miningCompleteContainer');
+        if (!container) return;
+        container.style.display = 'block';
+        if (completeContainer) completeContainer.style.display = 'none';
+        const total = (data.leads || 0) + (data.clients || 0) + (data.skipped || 0);
+        const useful = (data.leads || 0) + (data.clients || 0);
+        // Estimación de progreso (no sabemos el total exacto, usamos barra indeterminada con %)
+        const pct = Math.min(95, total * 2); // Crece con cada contacto procesado
+        document.getElementById('miningProgressBar').style.width = pct + '%';
+        document.getElementById('miningProgressStats').textContent = `${useful} contactos indexados`;
+        document.getElementById('miningProgressDetail').textContent = `${data.leads || 0} leads, ${data.clients || 0} clientes, ${data.skipped || 0} omitidos`;
+      });
+
+      socket.on('adn_mining_complete', (data) => {
+        const container = document.getElementById('miningProgressContainer');
+        const completeContainer = document.getElementById('miningCompleteContainer');
+        if (container) container.style.display = 'none';
+        if (completeContainer) {
+          completeContainer.style.display = 'block';
+          const total = (data.leads || 0) + (data.clients || 0);
+          document.getElementById('miningCompleteText').textContent =
+            `\u2705 Historial analizado: ${data.leads || 0} leads y ${data.clients || 0} clientes indexados`;
+        }
       });
 
       console.log('[Socket.IO] Conectado al servidor en tiempo real');
@@ -3524,12 +3572,22 @@
       const docId = currentUser.uid + '_' + phone;
       const doc = await db.collection('contacts').doc(docId).get();
       const data = doc.exists ? doc.data() : {};
-      document.getElementById('contactName').value = name;
+      // También cargar desde contact_index para datos más ricos
+      let indexData = {};
+      try {
+        const indexDoc = await db.collection('users').doc(currentUser.uid)
+          .collection('contact_index').doc(phone).get();
+        if (indexDoc.exists) indexData = indexDoc.data();
+      } catch (_) {}
+      document.getElementById('contactName').value = data.name || indexData.name || name;
+      document.getElementById('contactNickname').value = data.nickname || indexData.nickname || '';
       document.getElementById('contactPhone').value = phone;
       document.getElementById('contactEmail').value = data.email || '';
-      document.getElementById('contactType').value = data.contactType || getContactType(phone);
-      document.getElementById('contactStatus').value = data.status || 'lead';
-      document.getElementById('contactNotes').value = data.notes || '';
+      document.getElementById('contactType').value = data.contactType || indexData.type || getContactType(phone);
+      document.getElementById('contactStatus').value = data.status || indexData.stage || 'nuevo';
+      document.getElementById('contactPreferences').value = data.preferences || indexData.preferences || '';
+      document.getElementById('contactFandom').value = data.fandom || indexData.fandom || '';
+      document.getElementById('contactNotes').value = data.notes || indexData.notes || '';
       document.getElementById('emptyState').style.display = 'none';
       document.getElementById('crmForm').classList.add('active');
     }
@@ -3540,19 +3598,38 @@
       try {
         const docId = currentUser.uid + '_' + selectedPhone;
         const newType = document.getElementById('contactType').value;
-        await db.collection('contacts').doc(docId).set({
+        const contactData = {
           client_uid: currentUser.uid,
           phone: selectedPhone,
-          email: document.getElementById('contactEmail').value,
+          name: document.getElementById('contactName').value || '',
+          nickname: document.getElementById('contactNickname').value || '',
+          email: document.getElementById('contactEmail').value || '',
           contactType: newType,
           status: document.getElementById('contactStatus').value,
-          notes: document.getElementById('contactNotes').value,
+          preferences: document.getElementById('contactPreferences').value || '',
+          fandom: document.getElementById('contactFandom').value || '',
+          notes: document.getElementById('contactNotes').value || '',
           updated_at: new Date()
-        }, { merge: true });
+        };
+        // Guardar en contacts (CRM legacy)
+        await db.collection('contacts').doc(docId).set(contactData, { merge: true });
+        // También actualizar contact_index para que MIIA use estos datos
+        await db.collection('users').doc(currentUser.uid)
+          .collection('contact_index').doc(selectedPhone)
+          .set({
+            name: contactData.name,
+            nickname: contactData.nickname,
+            type: newType,
+            preferences: contactData.preferences,
+            fandom: contactData.fandom,
+            notes: contactData.notes,
+            stage: contactData.status,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
         contactTypes[selectedPhone] = newType;
         updateCounts();
         applyContactFilter();
-        showToast('Contacto guardado exitosamente', 'success');
+        showToast('Contacto guardado', 'success');
       } catch (error) {
         showToast('Error: ' + error.message, 'error');
       }
@@ -3743,8 +3820,10 @@
         return;
       }
       const otherGroups = groups.filter(g => g.id !== currentGroupId);
+      const isEquipo = currentGroupId === 'equipo';
       tbody.innerHTML = groupContacts.map(c => {
         const moveOptions = otherGroups.map(g => `<option value="${g.id}">${esc(g.name)}</option>`).join('');
+        const agentBtn = isEquipo ? `<button class="btn-icon" title="Hacer agente" style="background:var(--gradient-main);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:0.78rem;cursor:pointer;white-space:nowrap;" onclick="promoteToAgent('${esc(c.phone)}', '${esc(c.name || '')}')">🤝 Agente</button>` : '';
         return `<tr>
           <td>${esc(c.phone)}</td>
           <td>${esc(c.name || '—')}</td>
@@ -3762,11 +3841,73 @@
           </td>
           <td>
             <div class="actions">
+              ${agentBtn}
               <button class="btn-icon danger" title="Eliminar" onclick="removeContactFromGroup('${c.phone}')">🗑</button>
             </div>
           </td>
         </tr>`;
       }).join('');
+    }
+
+    async function promoteToAgent(phone, name) {
+      // Promote a contact from Equipo group to Agent
+      const agentName = name || phone;
+      if (!confirm(`¿Hacer a ${agentName} agente de tu negocio?`)) return;
+
+      // Check agent limit
+      try {
+        const snapshot = await db.collection('users')
+          .where('parent_client_uid', '==', currentUser.uid)
+          .get();
+        const limit = currentUserData.agents_limit || 1;
+        if (snapshot.size >= limit) {
+          showToast(`Límite de agentes alcanzado (${limit}). Mejorá tu plan para agregar más.`, 'warning');
+          return;
+        }
+      } catch (err) {
+        console.error('[promoteToAgent] Error checking limit:', err);
+      }
+
+      // Prompt for email (agents need email for login)
+      const email = prompt(`Email de ${agentName} (necesario para que acceda como agente):`);
+      if (!email || !email.includes('@')) {
+        showToast('Se necesita un email válido para crear el agente.', 'warning');
+        return;
+      }
+
+      try {
+        const token = await firebase.auth().currentUser.getIdToken();
+        const resp = await fetch(API_BASE + '/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ agentEmail: email })
+        });
+        const data = await resp.json();
+
+        if (!resp.ok) {
+          showToast(data.error || 'Error creando agente', 'error');
+          return;
+        }
+
+        // Update agent name + phone in Firestore
+        const agentSnap = await db.collection('users').where('email', '==', email.toLowerCase()).limit(1).get();
+        if (!agentSnap.empty) {
+          await agentSnap.docs[0].ref.update({
+            name: agentName,
+            phone: phone,
+            parent_client_uid: currentUser.uid
+          });
+        }
+
+        showToast(data.otpCode
+          ? `Agente creado. Código: ${data.otpCode} (dáselo a ${agentName})`
+          : `Agente creado. Código enviado a ${email}`, 'success');
+
+        // Reload agents section
+        loadAgents();
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error');
+      }
     }
 
     function toggleAddContactForm() {
@@ -4222,13 +4363,18 @@
     document.getElementById('waTabCode').style.color = isQR ? 'var(--text-muted)' : 'white';
   }
 
+  let _pairingInProgress = false;
   async function requestPairingCode() {
+    if (_pairingInProgress) return; // Bloquear clics múltiples
     const phone = document.getElementById('pairingPhone').value.replace(/\D/g, '');
     if (!phone || phone.length < 10) {
       document.getElementById('pairingError').style.display = '';
       document.getElementById('pairingError').textContent = 'Ingresá un número válido (ej: 5491112345678)';
       return;
     }
+    _pairingInProgress = true;
+    const btn = event.target.closest('button');
+    if (btn) { btn.disabled = true; btn.textContent = 'Generando...'; btn.style.opacity = '0.6'; }
     document.getElementById('pairingError').style.display = 'none';
     document.getElementById('pairingCodeDisplay').style.display = 'none';
     document.getElementById('pairingCodeValue').textContent = '...';
@@ -4246,19 +4392,32 @@
       if (data.code) {
         document.getElementById('pairingCodeDisplay').style.display = '';
         document.getElementById('pairingCodeValue').textContent = data.code;
+        // El código dura ~60s — después de 65s, permitir regenerar
+        setTimeout(() => {
+          _pairingInProgress = false;
+          if (btn) { btn.disabled = false; btn.textContent = 'Regenerar código'; btn.style.opacity = '1'; }
+        }, 65000);
       } else {
         document.getElementById('pairingError').style.display = '';
         document.getElementById('pairingError').textContent = data.error || 'Error generando código. Intentá con QR.';
+        _pairingInProgress = false;
+        if (btn) { btn.disabled = false; btn.textContent = 'Generar código'; btn.style.opacity = '1'; }
       }
     } catch (e) {
       document.getElementById('pairingError').style.display = '';
       document.getElementById('pairingError').textContent = 'Error de conexión: ' + e.message;
+      _pairingInProgress = false;
+      if (btn) { btn.disabled = false; btn.textContent = 'Generar código'; btn.style.opacity = '1'; }
     }
   }
 
+  let _qrConnecting = false;
   async function connectWhatsApp() {
+    if (_qrConnecting) return; // Bloquear clics múltiples
+    _qrConnecting = true;
     if (!currentUser || !currentUser.uid) {
       alert('Error: No estás autenticado. Recarga la página.');
+      _qrConnecting = false;
       return;
     }
     try {
@@ -4275,11 +4434,13 @@
         const error = await initRes.json();
         alert('Error al iniciar WhatsApp: ' + (error.error || 'Error desconocido'));
         document.getElementById('qrModal').classList.add('hidden');
+        _qrConnecting = false;
         return;
       }
     } catch (e) {
       alert('Error al conectar WhatsApp: ' + e.message);
       document.getElementById('qrModal').classList.add('hidden');
+      _qrConnecting = false;
       return;
     }
 
@@ -4318,16 +4479,24 @@
           clearInterval(pollInterval);
           clearInterval(countdownTimer);
           waConnected = true;
+          _qrConnecting = false;
           updateWaBanner();
           document.getElementById('qrModal').classList.add('hidden');
         }
       } catch (e) {
         console.error('[QR POLL] Error:', e.message);
       }
-      if (pollCount > 180) {
+      if (pollCount > 120) {
         clearInterval(pollInterval);
         clearInterval(countdownTimer);
-        document.getElementById('qrCode').innerHTML = '<p style="color: var(--text-muted);">Timeout. Cierra y vuelve a intentar.</p>';
+        document.getElementById('qrCode').innerHTML = `
+          <div style="text-align:center;padding:30px 20px;">
+            <div style="font-size:2rem;margin-bottom:12px;">⚠️</div>
+            <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;">Hubo un problema conectando con WhatsApp. Esto puede pasar si el servidor está reiniciando.</p>
+            <button onclick="_qrConnecting=false;connectWhatsApp()" style="padding:10px 24px;background:#25D366;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.88rem;">
+              Reintentar conexión
+            </button>
+          </div>`;
       }
     }, 1000);
   }
@@ -5133,12 +5302,17 @@
           </div>
           ${stage.leads.length === 0
             ? '<div style="font-size:0.72rem;color:var(--text-mid);padding:8px 0;">Sin leads</div>'
-            : stage.leads.slice(0, 8).map(l => `
+            : stage.leads.slice(0, 8).map(l => {
+              const isPhone = /^\d{8,}$/.test(l.name);
+              const displayName = isPhone ? '+' + l.name : l.name;
+              const phoneHint = isPhone ? '' : (l.phone && l.phone !== l.name ? `<div style="font-size:0.62rem;color:var(--text-mid);opacity:0.7;">+${l.phone}</div>` : '');
+              return `
               <div class="an-lead-card">
-                <div class="an-lead-name">${l.name}</div>
+                <div class="an-lead-name">${displayName}</div>
+                ${phoneHint}
                 <div class="an-lead-meta">${l.lastActivity ? timeAgo(l.lastActivity) : 'Sin actividad'}</div>
               </div>
-            `).join('') + (stage.leads.length > 8 ? `<div style="font-size:0.68rem;color:#E879F9;padding:4px;">+${stage.leads.length - 8} más</div>` : '')
+            `;}).join('') + (stage.leads.length > 8 ? `<div style="font-size:0.68rem;color:#E879F9;padding:4px;">+${stage.leads.length - 8} más</div>` : '')
           }
         </div>
       `).join('');
@@ -5875,7 +6049,11 @@
           <form class="crm-form" id="crmForm" onsubmit="saveContact(event)">
             <div class="form-group">
               <label>Nombre</label>
-              <input type="text" id="contactName" disabled placeholder="Nombre del contacto" style="background: var(--bg-light); color: var(--text-muted);">
+              <input type="text" id="contactName" placeholder="Nombre del contacto">
+            </div>
+            <div class="form-group">
+              <label>Apodo</label>
+              <input type="text" id="contactNickname" placeholder="Cómo le dicen (opcional)">
             </div>
             <div class="form-group">
               <label>Teléfono</label>
@@ -5889,21 +6067,34 @@
               <label>Tipo de contacto</label>
               <select id="contactType">
                 <option value="lead">🟡 Lead</option>
-                <option value="cliente">🟢 Cliente</option>
+                <option value="client">🟢 Cliente</option>
+                <option value="familia">👪 Familia</option>
+                <option value="equipo">👥 Equipo</option>
+                <option value="group">🤝 Amigo/Conocido</option>
                 <option value="otro">⚪ Otro</option>
               </select>
             </div>
             <div class="form-group">
               <label>Estado</label>
               <select id="contactStatus">
-                <option value="lead">🟡 Lead</option>
-                <option value="client">🟢 Cliente</option>
-                <option value="lost">🔴 Perdido</option>
+                <option value="nuevo">🟡 Nuevo</option>
+                <option value="en_conversacion">💬 En conversación</option>
+                <option value="cotizacion_enviada">📋 Cotización enviada</option>
+                <option value="cerrado">🟢 Cerrado</option>
+                <option value="perdido">🔴 Perdido</option>
               </select>
             </div>
             <div class="form-group">
+              <label>Gustos y preferencias</label>
+              <textarea id="contactPreferences" placeholder="Qué le gusta, qué prefiere, hobbies... MIIA usará esto para personalizar la comunicación" rows="2"></textarea>
+            </div>
+            <div class="form-group">
+              <label>Fanatismo / Pasiones</label>
+              <input type="text" id="contactFandom" placeholder="Ej: hincha de Boca, fan de F1, vegano...">
+            </div>
+            <div class="form-group">
               <label>Notas</label>
-              <textarea id="contactNotes" placeholder="Agrega notas sobre este contacto..."></textarea>
+              <textarea id="contactNotes" placeholder="Notas adicionales sobre este contacto..."></textarea>
             </div>
             <button type="submit" class="btn-save">Guardar cambios</button>
           </form>
@@ -5941,12 +6132,13 @@
 
     </div><!-- end section-contacts -->
 
-  <div id="section-businesses" class="page-section section-hidden">
-<!-- ═══ WHATSAPP STATUS BANNER ═══ -->
-<div id="waBanner" class="wa-banner disconnected" style="max-width:1100px;margin:20px auto 0;padding:0 20px;">
+<!-- ═══ WHATSAPP STATUS BANNER — GLOBAL (visible en todas las secciones) ═══ -->
+<div id="waBanner" class="wa-banner disconnected" style="max-width:1100px;margin:0 auto;padding:0 20px;position:fixed;top:0;left:240px;right:0;z-index:100;">
   <span id="waStatusText">Verificando WhatsApp...</span>
   <button id="waActionBtn" class="wa-btn-connect hidden" onclick="toggleWhatsApp()">Conectar</button>
 </div>
+
+  <div id="section-businesses" class="page-section section-hidden">
 
 <!-- ═══ BUSINESS LIST VIEW ═══ -->
 <div id="businessListView">
@@ -6147,10 +6339,15 @@
 
     <!-- ════ TAB 4: DOCUMENTOS ════ -->
     <div id="tab-docs" class="tab-panel">
+      <div style="background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.15);border-radius:12px;padding:16px 20px;margin-bottom:20px;">
+        <p style="font-size:0.88rem;color:var(--text-muted);line-height:1.6;margin:0;">
+          <strong style="color:var(--text-dark);">Tip:</strong> Usá el <strong>Chat Experto</strong> de este negocio para pedirle a MIIA que te ayude a crear cotizaciones personalizadas. Compartile un Excel o describile tu estructura de precios, y MIIA aprenderá a generar cotizaciones automáticas con todas las variables de tu negocio.
+        </p>
+      </div>
       <div class="docs-link-card">
         <div class="icon"><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M16 13H8M16 17H8M10 9H8"/></svg></div>
         <h3>Documentos y Archivos de Conocimiento</h3>
-        <p>Los archivos que subas aqui seran estudiados por MIIA y formaran parte de su cerebro. Incluye cotizaciónes, templates y archivos de referencia.</p>
+        <p>Los archivos que subas aquí serán estudiados por MIIA y formarán parte de su cerebro. Incluye cotizaciones, templates y archivos de referencia.</p>
         <a href="#" id="docsLink" onclick="showSection('documents')">Gestionar Documentos</a>
       </div>
     </div>
