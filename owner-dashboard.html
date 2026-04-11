@@ -1151,6 +1151,10 @@
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           <span class="sidebar-label">Mi Plan</span>
         </button>
+        <button class="sidebar-btn" onclick="showSection('security', this)">
+          <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span class="sidebar-label">Seguridad</span>
+        </button>
         <button class="sidebar-btn" onclick="showSection('connections', this)">
           <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
           <span class="sidebar-label">Conexiones</span>
@@ -1834,6 +1838,76 @@
 
     </div>
   </div><!-- end section-connections -->
+
+  <!-- ═══ SECTION: SEGURIDAD ═══ -->
+  <div id="section-security" class="page-section section-hidden">
+    <h2 class="section-title">🛡️ Contactos de Seguridad</h2>
+    <p class="section-desc">Designa protectores y protegidos. MIIA les avisara si detecta emergencias (SOS, caida, inactividad).</p>
+
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:24px;">
+      <!-- MIS PROTECTORES -->
+      <div class="card" style="border-radius:12px; padding:20px;">
+        <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:12px;">👤 Mis Protectores</h3>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">Personas que me cuidan — reciben alertas si me pasa algo.</p>
+        <div id="protectorsListContainer" style="min-height:60px;">
+          <p style="color:var(--text-muted); font-size:0.9rem;" id="protectorsEmpty">Cargando...</p>
+        </div>
+      </div>
+
+      <!-- MIS PROTEGIDOS -->
+      <div class="card" style="border-radius:12px; padding:20px;">
+        <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:12px;">🧒 Mis Protegidos</h3>
+        <p style="color:var(--text-muted); font-size:0.85rem; margin-bottom:16px;">Personas a las que cuido — recibo alertas sobre ellos.</p>
+        <div id="protectedListContainer" style="min-height:60px;">
+          <p style="color:var(--text-muted); font-size:0.9rem;" id="protectedEmpty">Cargando...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AGREGAR CONTACTO DE SEGURIDAD -->
+    <div class="card" style="border-radius:12px; padding:20px; margin-bottom:24px;">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:12px;">➕ Agregar contacto de seguridad</h3>
+      <div style="display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:12px; align-items:end;">
+        <div>
+          <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Telefono (con codigo pais)</label>
+          <input type="text" id="securityPhone" placeholder="+5491155..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); font-size:0.9rem;">
+        </div>
+        <div>
+          <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Nombre</label>
+          <input type="text" id="securityName" placeholder="Mama, Papa..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); font-size:0.9rem;">
+        </div>
+        <div>
+          <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Nivel de acceso</label>
+          <select id="securityLevel" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); font-size:0.9rem;">
+            <option value="emergencies_only">Solo emergencias</option>
+            <option value="agenda_visible">Agenda visible</option>
+            <option value="full_supervision">Supervision completa</option>
+          </select>
+        </div>
+        <button onclick="addSecurityContact()" class="btn-primary" style="padding:8px 20px; border-radius:8px; font-size:0.9rem; white-space:nowrap;">Enviar solicitud</button>
+      </div>
+      <p style="color:var(--text-muted); font-size:0.8rem; margin-top:8px;">Se genera un codigo OTP que el contacto debe confirmar por WhatsApp.</p>
+    </div>
+
+    <!-- NIVELES EXPLICADOS -->
+    <div class="card" style="border-radius:12px; padding:20px;">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:12px;">📋 Niveles de acceso</h3>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px;">
+        <div style="padding:12px; background:rgba(239,68,68,0.08); border-radius:8px; border-left:3px solid #ef4444;">
+          <strong style="font-size:0.9rem;">🔴 Solo emergencias</strong>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">SOS, caidas, inactividad prolongada. Nada mas.</p>
+        </div>
+        <div style="padding:12px; background:rgba(245,158,11,0.08); border-radius:8px; border-left:3px solid #f59e0b;">
+          <strong style="font-size:0.9rem;">🟡 Agenda visible</strong>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Ve citas y recordatorios del protegido + emergencias.</p>
+        </div>
+        <div style="padding:12px; background:rgba(52,211,153,0.08); border-radius:8px; border-left:3px solid #34d399;">
+          <strong style="font-size:0.9rem;">🟢 Supervision completa</strong>
+          <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Agenda, resumenes de actividad, puede enviar mensajes via MIIA.</p>
+        </div>
+      </div>
+    </div>
+  </div><!-- end section-security -->
 
   <!-- Paywall Overlay -->
   <div class="paywall-overlay" id="paywallOverlay">
@@ -3248,6 +3322,147 @@
 
     // ═══ CONNECTIONS INIT ═══
     let connectionsLoaded = false;
+    // ═══ CONTACTOS DE SEGURIDAD ═══
+    let securityContactsLoaded = false;
+
+    async function initSecurityContacts() {
+      if (securityContactsLoaded) return;
+      securityContactsLoaded = true;
+      await loadSecurityContacts();
+    }
+
+    async function loadSecurityContacts() {
+      const user = firebase.auth().currentUser;
+      if (!user) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/tenant/${user.uid}/security-contacts`, {
+          headers: { 'Authorization': `Bearer ${await user.getIdToken()}` }
+        });
+        if (!res.ok) throw new Error('Error cargando');
+        const data = await res.json();
+        const contacts = data.contacts || [];
+
+        const protectors = contacts.filter(c => c.direction === 'protegido'); // yo soy protegido → ellos son mis protectores
+        const protecteds = contacts.filter(c => c.direction === 'protector'); // yo soy protector → ellos son mis protegidos
+
+        renderSecurityList('protectorsListContainer', 'protectorsEmpty', protectors, 'protector');
+        renderSecurityList('protectedListContainer', 'protectedEmpty', protecteds, 'protegido');
+      } catch (e) {
+        console.error('[SECURITY] Error:', e);
+        document.getElementById('protectorsEmpty').textContent = 'Error al cargar';
+        document.getElementById('protectedEmpty').textContent = 'Error al cargar';
+      }
+    }
+
+    function renderSecurityList(containerId, emptyId, contacts, type) {
+      const container = document.getElementById(containerId);
+      if (!contacts.length) {
+        container.innerHTML = `<p style="color:var(--text-muted); font-size:0.9rem;">No hay ${type === 'protector' ? 'protectores' : 'protegidos'} configurados.</p>`;
+        return;
+      }
+      const levelIcons = { emergencies_only: '🔴', agenda_visible: '🟡', full_supervision: '🟢' };
+      const levelNames = { emergencies_only: 'Solo emergencias', agenda_visible: 'Agenda visible', full_supervision: 'Supervision completa' };
+      const statusBadge = (s) => s === 'active' ? '<span style="color:#34d399; font-size:0.8rem;">✅ Activo</span>' :
+        s === 'pending' ? '<span style="color:#f59e0b; font-size:0.8rem;">⏳ Pendiente</span>' :
+        '<span style="color:#ef4444; font-size:0.8rem;">❌ Rechazado</span>';
+
+      container.innerHTML = contacts.map(c => `
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border:1px solid var(--border-color); border-radius:8px; margin-bottom:8px;">
+          <div>
+            <strong style="font-size:0.95rem;">${c.partnerName || 'Sin nombre'}</strong>
+            <span style="color:var(--text-muted); font-size:0.8rem; margin-left:8px;">${c.partnerPhone || ''}</span>
+            <br>
+            <span style="font-size:0.8rem;">${levelIcons[c.level] || ''} ${levelNames[c.level] || c.level}</span>
+            <span style="margin-left:12px;">${statusBadge(c.status)}</span>
+          </div>
+          <div style="display:flex; gap:6px;">
+            ${c.status === 'pending' && type === 'protector' ? `
+              <button onclick="respondSecurity('${c.relationId}', 'accepted')" style="padding:4px 10px; border-radius:6px; background:#34d399; color:white; border:none; font-size:0.8rem; cursor:pointer;">Aceptar</button>
+              <button onclick="respondSecurity('${c.relationId}', 'rejected')" style="padding:4px 10px; border-radius:6px; background:#ef4444; color:white; border:none; font-size:0.8rem; cursor:pointer;">Rechazar</button>
+            ` : ''}
+            ${c.status === 'active' ? `
+              <select onchange="changeSecurity('${c.relationId}', this.value)" style="padding:4px 8px; border-radius:6px; border:1px solid var(--border-color); font-size:0.8rem;">
+                <option value="emergencies_only" ${c.level === 'emergencies_only' ? 'selected' : ''}>Emergencias</option>
+                <option value="agenda_visible" ${c.level === 'agenda_visible' ? 'selected' : ''}>Agenda</option>
+                <option value="full_supervision" ${c.level === 'full_supervision' ? 'selected' : ''}>Completa</option>
+              </select>
+              <button onclick="removeSecurity('${c.relationId}')" style="padding:4px 10px; border-radius:6px; background:var(--bg-hover); border:1px solid var(--border-color); font-size:0.8rem; cursor:pointer;" title="Desvincular">🔓</button>
+            ` : ''}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    async function addSecurityContact() {
+      const user = firebase.auth().currentUser;
+      if (!user) return;
+      const phone = document.getElementById('securityPhone').value.replace(/[^0-9]/g, '');
+      const name = document.getElementById('securityName').value.trim();
+      const level = document.getElementById('securityLevel').value;
+      if (!phone || phone.length < 8) return alert('Ingresa un telefono valido con codigo de pais');
+      if (!name) return alert('Ingresa un nombre para identificar al contacto');
+
+      try {
+        const res = await fetch(`${API_BASE}/api/tenant/${user.uid}/security-contacts`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${await user.getIdToken()}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ partnerPhone: phone, partnerName: name, level, direction: 'protector' })
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Error');
+        alert(`Solicitud enviada! ${data.otp ? 'Codigo OTP: ' + data.otp + ' — el contacto debe enviarlo por WhatsApp a MIIA.' : ''}`);
+        document.getElementById('securityPhone').value = '';
+        document.getElementById('securityName').value = '';
+        securityContactsLoaded = false;
+        await initSecurityContacts();
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    }
+
+    async function respondSecurity(relationId, status) {
+      const user = firebase.auth().currentUser;
+      if (!user) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/tenant/${user.uid}/security-contacts/${relationId}/respond`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${await user.getIdToken()}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        if (!res.ok) throw new Error('Error');
+        securityContactsLoaded = false;
+        await initSecurityContacts();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    async function changeSecurity(relationId, newLevel) {
+      const user = firebase.auth().currentUser;
+      if (!user) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/tenant/${user.uid}/security-contacts/${relationId}/level`, {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${await user.getIdToken()}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ level: newLevel })
+        });
+        if (!res.ok) throw new Error('Error');
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
+    async function removeSecurity(relationId) {
+      if (!confirm('Desvincular este contacto de seguridad?')) return;
+      const user = firebase.auth().currentUser;
+      if (!user) return;
+      try {
+        const res = await fetch(`${API_BASE}/api/tenant/${user.uid}/security-contacts/${relationId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${await user.getIdToken()}` }
+        });
+        if (!res.ok) throw new Error('Error');
+        securityContactsLoaded = false;
+        await initSecurityContacts();
+      } catch (e) { alert('Error: ' + e.message); }
+    }
+
     async function initConnections() {
       if (connectionsLoaded) return;
       connectionsLoaded = true;
@@ -6031,6 +6246,7 @@
       if (name === 'documents') initDocuments();
       if (name === 'analytics') initAnalytics();
       if (name === 'connections') initConnections();
+      if (name === 'security') initSecurityContacts();
 
       document.querySelectorAll('.sidebar-nav .sidebar-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');

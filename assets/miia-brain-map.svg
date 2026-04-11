@@ -1,6 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1100" viewBox="0 0 1200 1100" font-family="'Segoe UI', system-ui, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="1300" viewBox="0 0 1400 1300" font-family="'Segoe UI', system-ui, sans-serif">
   <defs>
-    <!-- Brand MIIA: cian → violeta → rojo -->
     <linearGradient id="brand" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#00E5FF"/>
       <stop offset="50%" stop-color="#7C3AED"/>
@@ -11,250 +10,386 @@
       <stop offset="50%" stop-color="#7C3AED"/>
       <stop offset="100%" stop-color="#FF1744"/>
     </linearGradient>
-    <linearGradient id="cyan-violet" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#00E5FF"/>
-      <stop offset="100%" stop-color="#7C3AED"/>
-    </linearGradient>
-    <linearGradient id="violet-red" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#7C3AED"/>
-      <stop offset="100%" stop-color="#FF1744"/>
-    </linearGradient>
     <filter id="glow">
       <feGaussianBlur stdDeviation="3" result="blur"/>
       <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
     <filter id="shadow">
-      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.15"/>
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.2"/>
     </filter>
+    <!-- Flechas -->
+    <marker id="arrow-cyan" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#00E5FF" opacity="0.7"/>
+    </marker>
+    <marker id="arrow-violet" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#7C3AED" opacity="0.7"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#FF1744" opacity="0.7"/>
+    </marker>
+    <marker id="arrow-green" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#34D399" opacity="0.7"/>
+    </marker>
+    <marker id="arrow-orange" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
+      <path d="M0,0 L8,3 L0,6" fill="#F59E0B" opacity="0.7"/>
+    </marker>
   </defs>
 
   <!-- Background -->
-  <rect width="1200" height="1100" fill="#0f0f23" rx="16"/>
+  <rect width="1400" height="1300" fill="#0f0f23" rx="16"/>
 
   <!-- Title -->
-  <text x="600" y="50" text-anchor="middle" fill="url(#brand-h)" font-size="32" font-weight="700" letter-spacing="2">MIIA BRAIN MAP</text>
-  <text x="600" y="72" text-anchor="middle" fill="#9aa0a6" font-size="12">Arquitectura Cerebral Completa</text>
+  <text x="700" y="45" text-anchor="middle" fill="url(#brand-h)" font-size="30" font-weight="700" letter-spacing="3">MIIA BRAIN MAP v2.0</text>
+  <text x="700" y="67" text-anchor="middle" fill="#9aa0a6" font-size="12">Flujo real de datos — cada flecha muestra QUE viaja entre modulos</text>
 
-  <!-- ═══ CENTRO: MIIA CORE ═══ -->
-  <circle cx="600" cy="420" r="70" fill="none" stroke="url(#brand)" stroke-width="3" filter="glow"/>
-  <circle cx="600" cy="420" r="65" fill="#1a1a2e"/>
-  <text x="600" y="410" text-anchor="middle" fill="#00E5FF" font-size="22" font-weight="700">MIIA</text>
-  <text x="600" y="432" text-anchor="middle" fill="#e8eaed" font-size="11">Cerebro Central</text>
-  <text x="600" y="448" text-anchor="middle" fill="#9aa0a6" font-size="9">prompt_builder.js</text>
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- CAPA DE LABELS (capas visuales) -->
+  <!-- ═══════════════════════════════════════════ -->
+  <text x="30" y="115" fill="#2d3748" font-size="11" font-weight="700" letter-spacing="2">CAPA ENTRADA</text>
+  <line x1="30" y1="120" x2="170" y2="120" stroke="#2d3748" stroke-width="1"/>
+  <text x="30" y="345" fill="#2d3748" font-size="11" font-weight="700" letter-spacing="2">CAPA PROCESAMIENTO</text>
+  <line x1="30" y1="350" x2="220" y2="350" stroke="#2d3748" stroke-width="1"/>
+  <text x="30" y="605" fill="#2d3748" font-size="11" font-weight="700" letter-spacing="2">CAPA DECISION</text>
+  <line x1="30" y1="610" x2="170" y2="610" stroke="#2d3748" stroke-width="1"/>
+  <text x="30" y="830" fill="#2d3748" font-size="11" font-weight="700" letter-spacing="2">CAPA AUTONOMA</text>
+  <line x1="30" y1="835" x2="170" y2="835" stroke="#2d3748" stroke-width="1"/>
 
-  <!-- ═══ LÍNEAS DE CONEXIÓN (primero, detrás de los nodos) ═══ -->
-  <!-- Core → WhatsApp Engine -->
-  <line x1="530" y1="420" x2="200" y2="200" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
-  <!-- Core → AI Providers -->
-  <line x1="670" y1="420" x2="1000" y2="200" stroke="#7C3AED" stroke-width="1.5" opacity="0.4"/>
-  <!-- Core → Protection -->
-  <line x1="530" y1="450" x2="180" y2="600" stroke="#FF1744" stroke-width="1.5" opacity="0.4"/>
-  <!-- Core → Agenda -->
-  <line x1="600" y1="490" x2="600" y2="700" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
-  <!-- Core → Prompts -->
-  <line x1="540" y1="390" x2="350" y2="350" stroke="#7C3AED" stroke-width="1.5" opacity="0.4"/>
-  <!-- Core → Postprocess -->
-  <line x1="660" y1="390" x2="850" y2="350" stroke="#FF1744" stroke-width="1.5" opacity="0.4"/>
-  <!-- Core → Sports -->
-  <line x1="670" y1="450" x2="1020" y2="600" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
-  <!-- Core → Integrations -->
-  <line x1="600" y1="350" x2="600" y2="160" stroke="#7C3AED" stroke-width="1.5" opacity="0.4"/>
-  <!-- Core → Dashboard -->
-  <line x1="530" y1="400" x2="200" y2="420" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
-  <!-- Core → Learning -->
-  <line x1="670" y1="400" x2="1000" y2="420" stroke="#7C3AED" stroke-width="1.5" opacity="0.4"/>
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- CONEXIONES (dibujadas primero, quedan detras) -->
+  <!-- ═══════════════════════════════════════════ -->
 
-  <!-- ═══ NODO 1: WhatsApp Engine (arriba-izquierda) ═══ -->
-  <rect x="80" y="140" width="240" height="120" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
-  <text x="200" y="168" text-anchor="middle" fill="#00E5FF" font-size="14" font-weight="700">WhatsApp Engine</text>
-  <text x="200" y="188" text-anchor="middle" fill="#e8eaed" font-size="10">tenant_manager.js</text>
-  <text x="200" y="205" text-anchor="middle" fill="#9aa0a6" font-size="9">tenant_message_handler.js</text>
-  <text x="100" y="225" fill="#5f6368" font-size="9">Baileys + Multi-tenant</text>
-  <text x="100" y="238" fill="#5f6368" font-size="9">Audio transcription</text>
-  <text x="100" y="251" fill="#5f6368" font-size="9">Human delay + Anti-detect</text>
+  <!-- === FLUJO PRINCIPAL: Mensaje entrante → Respuesta === -->
 
-  <!-- ═══ NODO 2: AI Providers (arriba-derecha) ═══ -->
-  <rect x="880" y="140" width="240" height="120" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
-  <text x="1000" y="168" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">AI Providers</text>
-  <text x="1000" y="188" text-anchor="middle" fill="#e8eaed" font-size="10">Gemini Flash + Pro</text>
-  <text x="1000" y="205" text-anchor="middle" fill="#9aa0a6" font-size="9">Google Search grounding</text>
-  <text x="900" y="225" fill="#5f6368" font-size="9">Hybrid routing (Opus)</text>
-  <text x="900" y="238" fill="#5f6368" font-size="9">Content Safety Shield</text>
-  <text x="900" y="251" fill="#5f6368" font-size="9">Auto-fallback providers</text>
+  <!-- 1. WhatsApp → TMH: mensaje raw + metadata -->
+  <path d="M300,210 L400,370" fill="none" stroke="#00E5FF" stroke-width="2" opacity="0.5" marker-end="url(#arrow-cyan)"/>
+  <text x="320" y="280" fill="#00E5FF" font-size="8" transform="rotate(32,320,280)" opacity="0.8">mensaje + JID + audio</text>
 
-  <!-- ═══ NODO 3: Prompt System (izquierda-centro) ═══ -->
-  <rect x="220" y="300" width="240" height="140" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
-  <text x="340" y="325" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">Prompt System</text>
-  <text x="340" y="342" text-anchor="middle" fill="#e8eaed" font-size="10">ADN + Vademecum + Builder</text>
-  <text x="240" y="362" fill="#5f6368" font-size="9">Owner Self-Chat</text>
-  <text x="240" y="375" fill="#5f6368" font-size="9">Agent Self-Chat (business-only)</text>
-  <text x="240" y="388" fill="#5f6368" font-size="9">Lead / Family / Equipo</text>
-  <text x="240" y="401" fill="#5f6368" font-size="9">Group Dynamic Prompts</text>
-  <text x="240" y="414" fill="#5f6368" font-size="9">Enterprise Lead / Outreach</text>
-  <text x="240" y="427" fill="#5f6368" font-size="9">Sports / Elderly / Invoked</text>
+  <!-- 2. TMH → Contact Classification: quien es este? -->
+  <path d="M400,420 L170,520" fill="none" stroke="#7C3AED" stroke-width="1.5" opacity="0.4" marker-end="url(#arrow-violet)"/>
+  <text x="250" y="460" fill="#7C3AED" font-size="8" transform="rotate(20,250,460)" opacity="0.8">basePhone</text>
 
-  <!-- ═══ NODO 4: Postprocess + Safety (derecha-centro) ═══ -->
-  <rect x="740" y="300" width="240" height="120" rx="12" fill="#1a1a2e" stroke="#FF1744" stroke-width="1.5" filter="shadow"/>
-  <text x="860" y="325" text-anchor="middle" fill="#FF1744" font-size="14" font-weight="700">Postprocess + Safety</text>
-  <text x="860" y="342" text-anchor="middle" fill="#e8eaed" font-size="10">miia_postprocess.js</text>
-  <text x="760" y="362" fill="#5f6368" font-size="9">Identity audit (no revelar IA)</text>
-  <text x="760" y="375" fill="#5f6368" font-size="9">Trigger audit (HOLA/CHAU MIIA)</text>
-  <text x="760" y="388" fill="#5f6368" font-size="9">Promesa rota detection</text>
-  <text x="760" y="401" fill="#5f6368" font-size="9">Tag processing + rescue</text>
-  <text x="760" y="414" fill="#5f6368" font-size="9">Split-smart multi-bubble</text>
+  <!-- 3. Contact Classification → TMH: chatType + contexto -->
+  <path d="M200,510 L430,410" fill="none" stroke="#7C3AED" stroke-width="1.5" opacity="0.4" marker-end="url(#arrow-violet)" stroke-dasharray="4"/>
+  <text x="290" y="440" fill="#7C3AED" font-size="8" transform="rotate(-14,290,440)" opacity="0.8">chatType, grupo, negocio</text>
 
-  <!-- ═══ NODO 5: Protection (abajo-izquierda) ═══ -->
-  <rect x="60" y="540" width="240" height="140" rx="12" fill="#1a1a2e" stroke="#FF1744" stroke-width="1.5" filter="shadow"/>
-  <text x="180" y="565" text-anchor="middle" fill="#FF1744" font-size="14" font-weight="700">Protection Layer</text>
-  <text x="180" y="582" text-anchor="middle" fill="#e8eaed" font-size="10">protection_manager.js</text>
-  <text x="80" y="602" fill="#5f6368" font-size="9">Kids mode (auto-detect)</text>
-  <text x="80" y="615" fill="#5f6368" font-size="9">Elderly mode (auto-detect)</text>
-  <text x="80" y="628" fill="#5f6368" font-size="9">Security Contacts (NEW)</text>
-  <text x="80" y="641" fill="#00E5FF" font-size="9" font-weight="600">Protector/Protegido bidireccional</text>
-  <text x="80" y="654" fill="#5f6368" font-size="9">OTP vinculacion + 3 niveles</text>
-  <text x="80" y="667" fill="#5f6368" font-size="9">SOS + Fall detection alerts</text>
+  <!-- 4. TMH → Protection: es menor/adulto mayor? -->
+  <path d="M420,430 L170,640" fill="none" stroke="#FF1744" stroke-width="1.5" opacity="0.4" marker-end="url(#arrow-red)"/>
+  <text x="250" y="545" fill="#FF1744" font-size="8" transform="rotate(38,250,545)" opacity="0.7">check proteccion</text>
 
-  <!-- ═══ NODO 6: Agenda + Calendar (abajo-centro) ═══ -->
-  <rect x="460" y="660" width="280" height="130" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
-  <text x="600" y="685" text-anchor="middle" fill="#00E5FF" font-size="14" font-weight="700">Agenda + Calendar</text>
-  <text x="600" y="702" text-anchor="middle" fill="#e8eaed" font-size="10">google_calendar.js + miia_agenda</text>
-  <text x="480" y="722" fill="#5f6368" font-size="9">Google Calendar sync (push only)</text>
-  <text x="480" y="735" fill="#5f6368" font-size="9">Pre-recordatorio 10 min</text>
-  <text x="480" y="748" fill="#5f6368" font-size="9">Late reminder with apology</text>
-  <text x="480" y="761" fill="#5f6368" font-size="9">Tags: AGENDAR_EVENTO / SOLICITAR_TURNO</text>
-  <text x="480" y="774" fill="#FF1744" font-size="9" font-weight="600">TODO: Calendar pull sync</text>
+  <!-- 5. TMH → Prompt System: construir prompt -->
+  <path d="M560,380 L700,380" fill="none" stroke="#7C3AED" stroke-width="2" opacity="0.5" marker-end="url(#arrow-violet)"/>
+  <text x="610" y="373" fill="#7C3AED" font-size="8" opacity="0.8">chatType + cerebro + historial</text>
 
-  <!-- ═══ NODO 7: Sports Engine (abajo-derecha) ═══ -->
-  <rect x="900" y="540" width="240" height="130" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
-  <text x="1020" y="565" text-anchor="middle" fill="#00E5FF" font-size="14" font-weight="700">Sports Engine</text>
-  <text x="1020" y="582" text-anchor="middle" fill="#e8eaed" font-size="10">10 adapters + registry</text>
-  <text x="920" y="602" fill="#5f6368" font-size="9">Futbol / F1 / Tenis / NBA</text>
-  <text x="920" y="615" fill="#5f6368" font-size="9">MLB / UFC / Rugby / Boxeo</text>
-  <text x="920" y="628" fill="#5f6368" font-size="9">Golf / Ciclismo</text>
-  <text x="920" y="641" fill="#5f6368" font-size="9">Emotion levels + rate limiting</text>
-  <text x="920" y="654" fill="#5f6368" font-size="9">buildSportsPrompt()</text>
+  <!-- 6. Prompt System → AI Providers: prompt completo -->
+  <path d="M900,380 L1020,260" fill="none" stroke="#7C3AED" stroke-width="2" opacity="0.5" marker-end="url(#arrow-violet)"/>
+  <text x="940" y="310" fill="#7C3AED" font-size="8" transform="rotate(-42,940,310)" opacity="0.8">systemPrompt + messages[]</text>
 
-  <!-- ═══ NODO 8: Integrations (arriba-centro) ═══ -->
-  <rect x="460" y="100" width="280" height="100" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
-  <text x="600" y="125" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">Proactive Integrations</text>
-  <text x="480" y="145" fill="#5f6368" font-size="9">Clima (OpenWeather)</text>
-  <text x="480" y="158" fill="#5f6368" font-size="9">Bolsa/Crypto (Alpha Vantage)</text>
-  <text x="480" y="171" fill="#5f6368" font-size="9">Nightly Brain (resumen diario)</text>
-  <text x="650" y="145" fill="#5f6368" font-size="9">Pattern Engine</text>
-  <text x="650" y="158" fill="#5f6368" font-size="9">Biological Clock</text>
-  <text x="650" y="171" fill="#5f6368" font-size="9">Feature Announcer</text>
-  <text x="480" y="188" fill="#5f6368" font-size="9">Email Reports (biweekly)</text>
+  <!-- 7. AI Providers → Postprocess: respuesta IA raw -->
+  <path d="M1100,280 L1100,480" fill="none" stroke="#FF1744" stroke-width="2" opacity="0.5" marker-end="url(#arrow-red)"/>
+  <text x="1110" y="380" fill="#FF1744" font-size="8" opacity="0.8">texto IA raw</text>
 
-  <!-- ═══ NODO 9: Dashboard (izquierda-medio) ═══ -->
-  <rect x="40" y="370" width="180" height="120" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
-  <text x="130" y="395" text-anchor="middle" fill="#00E5FF" font-size="13" font-weight="700">Dashboard</text>
-  <text x="60" y="415" fill="#5f6368" font-size="9">Owner dashboard</text>
-  <text x="60" y="428" fill="#5f6368" font-size="9">Admin dashboard</text>
-  <text x="60" y="441" fill="#5f6368" font-size="9">Agent dashboard</text>
-  <text x="60" y="454" fill="#5f6368" font-size="9">Training / Contacts</text>
-  <text x="60" y="467" fill="#5f6368" font-size="9">PWA Mini App</text>
-  <text x="60" y="480" fill="#5f6368" font-size="9">Railway Logs viewer</text>
+  <!-- 8. Postprocess → WhatsApp: mensaje limpio -->
+  <path d="M1000,560 C800,620 500,500 350,230" fill="none" stroke="#00E5FF" stroke-width="2" opacity="0.4" marker-end="url(#arrow-cyan)"/>
+  <text x="650" y="520" fill="#00E5FF" font-size="8" opacity="0.8">burbujas split + emojis estado</text>
 
-  <!-- ═══ NODO 10: Learning Engine (derecha-medio) ═══ -->
-  <rect x="900" y="370" width="240" height="120" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
-  <text x="1020" y="395" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">Learning Engine</text>
-  <text x="920" y="415" fill="#5f6368" font-size="9">ADN Learning Vivo</text>
-  <text x="920" y="428" fill="#5f6368" font-size="9">Chat Experto training</text>
-  <text x="920" y="441" fill="#5f6368" font-size="9">Document upload + parsing</text>
-  <text x="920" y="454" fill="#5f6368" font-size="9">History mining enriched</text>
-  <text x="920" y="467" fill="#5f6368" font-size="9">Approval system (keys)</text>
-  <text x="920" y="480" fill="#5f6368" font-size="9">Nightly brain rebuild</text>
+  <!-- === FLUJO TAGS: Postprocess extrae tags === -->
 
-  <!-- ═══ NODO: Contact Classification (abajo-izquierda-medio) ═══ -->
-  <rect x="60" y="720" width="220" height="110" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
-  <text x="170" y="745" text-anchor="middle" fill="#7C3AED" font-size="13" font-weight="700">Contact Classification</text>
-  <text x="80" y="765" fill="#5f6368" font-size="9">LID (Lead Identification)</text>
-  <text x="80" y="778" fill="#5f6368" font-size="9">Smart trigger detection</text>
-  <text x="80" y="791" fill="#5f6368" font-size="9">Contact groups dynamic</text>
-  <text x="80" y="804" fill="#5f6368" font-size="9">Auto-classify + contact_index</text>
-  <text x="80" y="817" fill="#5f6368" font-size="9">Business cascade (multi-biz)</text>
+  <!-- 9. Postprocess → Agenda: tag AGENDAR_EVENTO -->
+  <path d="M1050,570 L780,720" fill="none" stroke="#34D399" stroke-width="1.5" opacity="0.4" marker-end="url(#arrow-green)"/>
+  <text x="940" y="640" fill="#34D399" font-size="8" transform="rotate(30,940,640)" opacity="0.8">AGENDAR_EVENTO</text>
 
-  <!-- ═══ NODO: Outreach + CRM (derecha-abajo) ═══ -->
-  <rect x="900" y="720" width="240" height="100" rx="12" fill="#1a1a2e" stroke="#FF1744" stroke-width="1.5" filter="shadow"/>
-  <text x="1020" y="745" text-anchor="middle" fill="#FF1744" font-size="13" font-weight="700">Outreach + CRM</text>
-  <text x="920" y="765" fill="#5f6368" font-size="9">Outreach engine (proactive leads)</text>
-  <text x="920" y="778" fill="#5f6368" font-size="9">Web scraper + YouTube</text>
-  <text x="920" y="791" fill="#5f6368" font-size="9">Followup humanized (63-97 min)</text>
-  <text x="920" y="804" fill="#5f6368" font-size="9">Enterprise lead flow</text>
+  <!-- 10. Postprocess → Learning: tag + approval key -->
+  <path d="M1150,570 L1200,700" fill="none" stroke="#F59E0B" stroke-width="1.5" opacity="0.4" marker-end="url(#arrow-orange)"/>
+  <text x="1190" y="635" fill="#F59E0B" font-size="8" opacity="0.8">approval keys</text>
 
-  <!-- Conexiones secundarias (dependencias internas) -->
-  <line x1="300" y1="440" x2="220" y2="540" stroke="#FF1744" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
-  <line x1="860" y1="420" x2="920" y2="540" stroke="#00E5FF" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
-  <line x1="180" y1="490" x2="170" y2="720" stroke="#7C3AED" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
-  <line x1="1020" y1="670" x2="1020" y2="720" stroke="#FF1744" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
-  <!-- Briefing → Integrations -->
-  <line x1="440" y1="585" x2="460" y2="200" stroke="#00E5FF" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
-  <!-- Nightly → Learning -->
-  <line x1="860" y1="830" x2="1020" y2="490" stroke="#7C3AED" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
+  <!-- === FLUJO CALENDARIO === -->
 
-  <!-- ═══ NODO: Morning Briefing (centro-abajo-izq) ═══ -->
-  <rect x="320" y="545" width="220" height="100" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
-  <text x="430" y="568" text-anchor="middle" fill="#00E5FF" font-size="13" font-weight="700">Morning Briefing</text>
-  <text x="430" y="585" text-anchor="middle" fill="#e8eaed" font-size="9">8:30 AM Colombia</text>
-  <text x="340" y="602" fill="#5f6368" font-size="9">Leads con pendientes</text>
-  <text x="340" y="615" fill="#5f6368" font-size="9">Aprobaciones de aprendizaje</text>
-  <text x="340" y="628" fill="#5f6368" font-size="9">Contactos sin identificar (LID)</text>
-  <text x="340" y="641" fill="#5f6368" font-size="9">Novedades regulatorias</text>
+  <!-- 11. Google Calendar → Agenda: sync cada 15min -->
+  <path d="M870,180 L750,700" fill="none" stroke="#00E5FF" stroke-width="1.5" opacity="0.3" marker-end="url(#arrow-cyan)" stroke-dasharray="6,3"/>
+  <text x="830" y="440" fill="#00E5FF" font-size="8" transform="rotate(77,830,440)" opacity="0.7">sync 15min (pull)</text>
 
-  <!-- ═══ NODO: Nightly Brain (centro-abajo-der) ═══ -->
-  <rect x="720" y="795" width="220" height="90" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
-  <text x="830" y="818" text-anchor="middle" fill="#7C3AED" font-size="13" font-weight="700">Nightly Brain</text>
-  <text x="830" y="835" text-anchor="middle" fill="#e8eaed" font-size="9">23:00 PM — Opus analiza el dia</text>
-  <text x="740" y="852" fill="#5f6368" font-size="9">Leads calientes + oportunidades</text>
-  <text x="740" y="865" fill="#5f6368" font-size="9">Patrones + sugerencias para manana</text>
-  <text x="740" y="878" fill="#5f6368" font-size="9">Resumen emocional del dia</text>
+  <!-- 12. Agenda → WhatsApp: recordatorios -->
+  <path d="M650,720 C500,680 380,400 300,230" fill="none" stroke="#00E5FF" stroke-width="1.5" opacity="0.3" marker-end="url(#arrow-cyan)" stroke-dasharray="6,3"/>
+  <text x="430" y="580" fill="#00E5FF" font-size="8" transform="rotate(-50,430,580)" opacity="0.7">pre-recordatorio 10min</text>
 
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <!-- ═══ LEYENDA COMPLETA ═══ -->
-  <!-- ═══════════════════════════════════════════════════════════ -->
-  <rect x="40" y="920" width="1120" height="160" rx="12" fill="#12122a" stroke="#2d3748" stroke-width="1"/>
-  <text x="600" y="945" text-anchor="middle" fill="#e8eaed" font-size="14" font-weight="700">LEYENDA</text>
+  <!-- === FLUJO DASHBOARD === -->
 
-  <!-- Columna 1: Colores de nodo -->
-  <text x="70" y="968" fill="#e8eaed" font-size="11" font-weight="600">COLORES DE NODO</text>
-  <rect x="70" y="976" width="14" height="14" rx="3" fill="none" stroke="#00E5FF" stroke-width="2"/>
-  <text x="92" y="988" fill="#00E5FF" font-size="10">Cian (#00E5FF)</text>
-  <text x="200" y="988" fill="#9aa0a6" font-size="9">= Comunicacion + Tiempo real</text>
-  <rect x="70" y="996" width="14" height="14" rx="3" fill="none" stroke="#7C3AED" stroke-width="2"/>
-  <text x="92" y="1008" fill="#7C3AED" font-size="10">Violeta (#7C3AED)</text>
-  <text x="210" y="1008" fill="#9aa0a6" font-size="9">= Inteligencia + Procesamiento</text>
-  <rect x="70" y="1016" width="14" height="14" rx="3" fill="none" stroke="#FF1744" stroke-width="2"/>
-  <text x="92" y="1028" fill="#FF1744" font-size="10">Rojo (#FF1744)</text>
-  <text x="200" y="1028" fill="#9aa0a6" font-size="9">= Seguridad + Auditoria + Ventas</text>
-  <circle cx="77" cy="1050" r="7" fill="none" stroke="url(#brand)" stroke-width="2"/>
-  <text x="92" y="1053" fill="#e8eaed" font-size="10">Gradiente brand</text>
-  <text x="200" y="1053" fill="#9aa0a6" font-size="9">= Nucleo central MIIA</text>
+  <!-- 13. Dashboard → REST API → Firestore -->
+  <path d="M600,180 L600,370" fill="none" stroke="#00E5FF" stroke-width="1.5" opacity="0.3" marker-end="url(#arrow-cyan)" stroke-dasharray="4"/>
+  <text x="610" y="275" fill="#00E5FF" font-size="8" opacity="0.7">REST API (CRUD)</text>
 
-  <!-- Columna 2: Tipos de linea -->
-  <text x="450" y="968" fill="#e8eaed" font-size="11" font-weight="600">TIPOS DE LINEA</text>
-  <line x1="450" y1="983" x2="510" y2="983" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
-  <text x="520" y="988" fill="#9aa0a6" font-size="10">Linea solida = Conexion directa (datos en tiempo real)</text>
-  <line x1="450" y1="1003" x2="510" y2="1003" stroke="#7C3AED" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
-  <text x="520" y="1008" fill="#9aa0a6" font-size="10">Linea punteada = Dependencia interna (uso indirecto)</text>
-  <line x1="450" y1="1023" x2="510" y2="1023" stroke="url(#brand)" stroke-width="3"/>
-  <text x="520" y="1028" fill="#9aa0a6" font-size="10">Anillo gradiente = Cerebro central, conecta con TODO</text>
+  <!-- === FLUJOS AUTONOMOS === -->
 
-  <!-- Columna 3: Iconos de estado -->
-  <text x="450" y="1048" fill="#e8eaed" font-size="11" font-weight="600">CICLO DIARIO</text>
-  <text x="450" y="1065" fill="#00E5FF" font-size="10">8:30 AM</text>
-  <text x="510" y="1065" fill="#9aa0a6" font-size="9">Morning Briefing (leads, pendientes, LID)</text>
-  <text x="450" y="1078" fill="#7C3AED" font-size="10">23:00 PM</text>
-  <text x="510" y="1078" fill="#9aa0a6" font-size="9">Nightly Brain (Opus analiza TODO el dia)</text>
+  <!-- 14. Morning Briefing → WhatsApp: informe 8:30 AM -->
+  <path d="M300,900 C200,600 200,350 270,230" fill="none" stroke="#34D399" stroke-width="1.5" opacity="0.35" marker-end="url(#arrow-green)" stroke-dasharray="6,3"/>
+  <text x="180" y="560" fill="#34D399" font-size="8" transform="rotate(-70,180,560)" opacity="0.7">informe matutino</text>
 
-  <!-- Columna 3: Stats -->
-  <text x="830" y="968" fill="#e8eaed" font-size="11" font-weight="600">ESTADISTICAS</text>
-  <text x="830" y="988" fill="#9aa0a6" font-size="10">14 modulos principales</text>
-  <text x="830" y="1005" fill="#9aa0a6" font-size="10">50+ funciones activas</text>
-  <text x="830" y="1022" fill="#9aa0a6" font-size="10">10 deportes con adapters</text>
-  <text x="830" y="1039" fill="#9aa0a6" font-size="10">3 capas de seguridad (Kids/Elderly/Security)</text>
-  <text x="830" y="1056" fill="#9aa0a6" font-size="10">2 resumenes diarios (8:30 AM + 11 PM)</text>
-  <text x="830" y="1073" fill="#9aa0a6" font-size="10">Calendar sync bidireccional (push + pull 15min)</text>
+  <!-- 15. Morning Briefing ← Agenda: pendientes del dia -->
+  <path d="M680,740 C500,800 380,860 350,890" fill="none" stroke="#34D399" stroke-width="1" opacity="0.25" marker-end="url(#arrow-green)" stroke-dasharray="4"/>
+  <text x="510" y="810" fill="#34D399" font-size="7" opacity="0.6">pendientes dia</text>
+
+  <!-- 16. Morning Briefing ← Contact Class: LID pendientes -->
+  <path d="M160,610 L260,890" fill="none" stroke="#7C3AED" stroke-width="1" opacity="0.25" marker-end="url(#arrow-violet)" stroke-dasharray="4"/>
+  <text x="170" y="760" fill="#7C3AED" font-size="7" transform="rotate(70,170,760)" opacity="0.6">LID sin identificar</text>
+
+  <!-- 17. Nightly Brain → Learning: resumen del dia -->
+  <path d="M780,920 L1180,770" fill="none" stroke="#F59E0B" stroke-width="1.5" opacity="0.35" marker-end="url(#arrow-orange)" stroke-dasharray="6,3"/>
+  <text x="980" y="830" fill="#F59E0B" font-size="8" transform="rotate(-20,980,830)" opacity="0.7">cerebro actualizado</text>
+
+  <!-- 18. Nightly Brain ← TMH conversations: lee todo el dia -->
+  <path d="M500,400 C450,600 550,800 650,900" fill="none" stroke="#F59E0B" stroke-width="1" opacity="0.25" marker-end="url(#arrow-orange)" stroke-dasharray="4"/>
+  <text x="470" y="650" fill="#F59E0B" font-size="7" transform="rotate(60,470,650)" opacity="0.6">conversations[]</text>
+
+  <!-- 19. Sports Engine → AI Providers: prompt emotivo -->
+  <path d="M1050,1010 L1100,280" fill="none" stroke="#7C3AED" stroke-width="1" opacity="0.25" marker-end="url(#arrow-violet)" stroke-dasharray="4"/>
+  <text x="1070" y="640" fill="#7C3AED" font-size="7" transform="rotate(-85,1070,640)" opacity="0.6">buildSportsPrompt</text>
+
+  <!-- 20. Sports Engine → WhatsApp: mensaje emotivo -->
+  <path d="M950,1010 C600,950 350,500 290,230" fill="none" stroke="#00E5FF" stroke-width="1.5" opacity="0.3" marker-end="url(#arrow-cyan)" stroke-dasharray="6,3"/>
+  <text x="550" y="750" fill="#00E5FF" font-size="7" transform="rotate(-35,550,750)" opacity="0.6">mensaje emotivo contacto</text>
+
+  <!-- 21. Outreach → WhatsApp: followup leads -->
+  <path d="M1200,1020 C1300,700 600,300 340,220" fill="none" stroke="#FF1744" stroke-width="1" opacity="0.25" marker-end="url(#arrow-red)" stroke-dasharray="4"/>
+  <text x="1050" y="650" fill="#FF1744" font-size="7" opacity="0.5">followup humanizado</text>
+
+  <!-- 22. Security → WhatsApp: alertas SOS/caida -->
+  <path d="M170,720 L280,225" fill="none" stroke="#FF1744" stroke-width="1.5" opacity="0.35" marker-end="url(#arrow-red)" stroke-dasharray="6,3"/>
+  <text x="190" y="460" fill="#FF1744" font-size="7" transform="rotate(-68,190,460)" opacity="0.7">alerta SOS + email</text>
+
+  <!-- 23. Learning → Prompt System: cerebro enriquecido -->
+  <path d="M1150,700 C1050,550 950,420 900,400" fill="none" stroke="#F59E0B" stroke-width="1.5" opacity="0.35" marker-end="url(#arrow-orange)" stroke-dasharray="4"/>
+  <text x="1060" y="530" fill="#F59E0B" font-size="8" transform="rotate(-40,1060,530)" opacity="0.7">business_cerebro</text>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- NODOS -->
+  <!-- ═══════════════════════════════════════════ -->
+
+  <!-- ═══ CAPA ENTRADA ═══ -->
+
+  <!-- NODO: WhatsApp Engine -->
+  <rect x="120" y="130" width="260" height="110" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="2" filter="shadow"/>
+  <circle cx="145" cy="155" r="10" fill="#00E5FF" opacity="0.2"/>
+  <text x="145" y="159" text-anchor="middle" fill="#00E5FF" font-size="12">1</text>
+  <text x="165" y="160" fill="#00E5FF" font-size="15" font-weight="700">WhatsApp Engine</text>
+  <text x="140" y="180" fill="#e8eaed" font-size="10">tenant_manager.js + Baileys</text>
+  <text x="140" y="198" fill="#5f6368" font-size="9">Recibe mensajes (texto, audio, imagen)</text>
+  <text x="140" y="212" fill="#5f6368" font-size="9">Envia respuestas (split-smart, delays)</text>
+  <text x="140" y="226" fill="#5f6368" font-size="9">Multi-tenant, reconexion auto, QR</text>
+
+  <!-- NODO: Dashboard -->
+  <rect x="440" y="130" width="260" height="90" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
+  <circle cx="465" cy="155" r="10" fill="#00E5FF" opacity="0.2"/>
+  <text x="465" y="159" text-anchor="middle" fill="#00E5FF" font-size="12">2</text>
+  <text x="485" y="160" fill="#00E5FF" font-size="15" font-weight="700">Dashboard Web</text>
+  <text x="460" y="180" fill="#e8eaed" font-size="10">Owner / Admin / Agent views</text>
+  <text x="460" y="198" fill="#5f6368" font-size="9">CRUD negocios, training, contactos</text>
+  <text x="460" y="212" fill="#5f6368" font-size="9">REST API → server.js → Firestore</text>
+
+  <!-- NODO: External APIs (Calendar, etc) -->
+  <rect x="760" y="130" width="230" height="90" rx="12" fill="#1a1a2e" stroke="#34D399" stroke-width="1.5" filter="shadow"/>
+  <circle cx="785" cy="155" r="10" fill="#34D399" opacity="0.2"/>
+  <text x="785" y="159" text-anchor="middle" fill="#34D399" font-size="12">3</text>
+  <text x="805" y="160" fill="#34D399" font-size="15" font-weight="700">APIs Externas</text>
+  <text x="780" y="180" fill="#e8eaed" font-size="10">Google Calendar, OpenWeather</text>
+  <text x="780" y="198" fill="#5f6368" font-size="9">Sync cada 15min → miia_agenda</text>
+  <text x="780" y="212" fill="#5f6368" font-size="9">OpenF1, NewsAPI, CoinGecko</text>
+
+  <!-- NODO: AI Providers -->
+  <rect x="1040" y="130" width="260" height="150" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="2" filter="shadow"/>
+  <circle cx="1065" cy="155" r="10" fill="#7C3AED" opacity="0.2"/>
+  <text x="1065" y="159" text-anchor="middle" fill="#7C3AED" font-size="12">4</text>
+  <text x="1085" y="160" fill="#7C3AED" font-size="15" font-weight="700">AI Providers</text>
+  <text x="1060" y="180" fill="#e8eaed" font-size="10">Gemini Flash + Pro + Opus</text>
+  <text x="1060" y="198" fill="#5f6368" font-size="9">Google Search grounding</text>
+  <text x="1060" y="212" fill="#5f6368" font-size="9">Content Safety Shield</text>
+  <text x="1060" y="226" fill="#5f6368" font-size="9">Auto-fallback entre proveedores</text>
+  <text x="1060" y="240" fill="#5f6368" font-size="9">Audio transcription (Whisper)</text>
+  <text x="1060" y="256" fill="#5f6368" font-size="9">Recibe: systemPrompt + messages[]</text>
+  <text x="1060" y="270" fill="#5f6368" font-size="9">Devuelve: texto raw con tags</text>
+
+  <!-- ═══ CAPA PROCESAMIENTO ═══ -->
+
+  <!-- NODO: TMH (Cerebro central) -->
+  <rect x="380" y="360" width="200" height="100" rx="14" fill="#1a1a2e" stroke="url(#brand)" stroke-width="2.5" filter="glow"/>
+  <circle cx="405" cy="385" r="10" fill="url(#brand)" opacity="0.3"/>
+  <text x="405" y="389" text-anchor="middle" fill="white" font-size="11" font-weight="700">5</text>
+  <text x="425" y="390" fill="url(#brand-h)" font-size="14" font-weight="700">TMH (Cerebro)</text>
+  <text x="400" y="410" fill="#e8eaed" font-size="9">tenant_message_handler.js</text>
+  <text x="400" y="425" fill="#9aa0a6" font-size="8">Orquesta TODO el pipeline</text>
+  <text x="400" y="438" fill="#9aa0a6" font-size="8">Pasos 0→12 por cada mensaje</text>
+  <text x="400" y="451" fill="#9aa0a6" font-size="8">Decide chatType, prompt, modelo</text>
+
+  <!-- NODO: Prompt System -->
+  <rect x="680" y="360" width="240" height="100" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="2" filter="shadow"/>
+  <circle cx="705" cy="385" r="10" fill="#7C3AED" opacity="0.2"/>
+  <text x="705" y="389" text-anchor="middle" fill="#7C3AED" font-size="12">6</text>
+  <text x="725" y="390" fill="#7C3AED" font-size="14" font-weight="700">Prompt System</text>
+  <text x="700" y="410" fill="#e8eaed" font-size="9">prompt_builder.js + ADN + Vademecum</text>
+  <text x="700" y="425" fill="#5f6368" font-size="8">buildOwnerSelfChat / LeadPrompt</text>
+  <text x="700" y="438" fill="#5f6368" font-size="8">buildAgentSelfChat (business-only)</text>
+  <text x="700" y="451" fill="#5f6368" font-size="8">buildSportsPrompt / GroupPrompt</text>
+
+  <!-- ═══ CAPA DECISION ═══ -->
+
+  <!-- NODO: Contact Classification -->
+  <rect x="60" y="500" width="230" height="120" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
+  <circle cx="85" cy="525" r="10" fill="#7C3AED" opacity="0.2"/>
+  <text x="85" y="529" text-anchor="middle" fill="#7C3AED" font-size="12">7</text>
+  <text x="105" y="530" fill="#7C3AED" font-size="13" font-weight="700">Contact Classification</text>
+  <text x="80" y="548" fill="#e8eaed" font-size="9">LID + contact_index + cascada</text>
+  <text x="80" y="565" fill="#5f6368" font-size="8">Identifica: lead, cliente, familia, equipo</text>
+  <text x="80" y="578" fill="#5f6368" font-size="8">Smart triggers (Hola/Chau MIIA)</text>
+  <text x="80" y="591" fill="#5f6368" font-size="8">Multi-negocio: WhatsApp → IA → manual</text>
+  <text x="80" y="604" fill="#5f6368" font-size="8">Devuelve chatType al TMH</text>
+
+  <!-- NODO: Protection Layer -->
+  <rect x="60" y="640" width="230" height="130" rx="12" fill="#1a1a2e" stroke="#FF1744" stroke-width="2" filter="shadow"/>
+  <circle cx="85" cy="665" r="10" fill="#FF1744" opacity="0.2"/>
+  <text x="85" y="669" text-anchor="middle" fill="#FF1744" font-size="12">8</text>
+  <text x="105" y="670" fill="#FF1744" font-size="13" font-weight="700">Protection Layer</text>
+  <text x="80" y="688" fill="#e8eaed" font-size="9">protection_manager.js + security</text>
+  <text x="80" y="705" fill="#5f6368" font-size="8">Kids mode (auto-detect, filtra contenido)</text>
+  <text x="80" y="718" fill="#5f6368" font-size="8">Elderly mode (simplifica, monitorea)</text>
+  <text x="80" y="731" fill="#00E5FF" font-size="8" font-weight="600">Security Contacts (bidireccional)</text>
+  <text x="80" y="744" fill="#5f6368" font-size="8">3 niveles + OTP + alertas email</text>
+  <text x="80" y="757" fill="#5f6368" font-size="8">SOS / caida → protector + email</text>
+
+  <!-- NODO: Postprocess + Safety -->
+  <rect x="980" y="480" width="260" height="120" rx="12" fill="#1a1a2e" stroke="#FF1744" stroke-width="2" filter="shadow"/>
+  <circle cx="1005" cy="505" r="10" fill="#FF1744" opacity="0.2"/>
+  <text x="1005" y="509" text-anchor="middle" fill="#FF1744" font-size="12">9</text>
+  <text x="1025" y="510" fill="#FF1744" font-size="14" font-weight="700">Postprocess + Safety</text>
+  <text x="1000" y="528" fill="#e8eaed" font-size="9">miia_postprocess.js</text>
+  <text x="1000" y="545" fill="#5f6368" font-size="8">Identity audit (no revelar IA a leads)</text>
+  <text x="1000" y="558" fill="#5f6368" font-size="8">Extrae tags: AGENDAR, SOLICITAR, APRENDER</text>
+  <text x="1000" y="571" fill="#5f6368" font-size="8">Promesa rota detection + veto</text>
+  <text x="1000" y="584" fill="#5f6368" font-size="8">Split-smart multi-burbuja + emojis estado</text>
+
+  <!-- ═══ CAPA ALMACENAMIENTO/SALIDA ═══ -->
+
+  <!-- NODO: Agenda + Calendar -->
+  <rect x="580" y="680" width="280" height="110" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
+  <circle cx="605" cy="705" r="10" fill="#00E5FF" opacity="0.2"/>
+  <text x="605" y="709" text-anchor="middle" fill="#00E5FF" font-size="12">10</text>
+  <text x="625" y="710" fill="#00E5FF" font-size="14" font-weight="700">Agenda + Calendar</text>
+  <text x="600" y="728" fill="#e8eaed" font-size="9">miia_agenda + Google Calendar sync</text>
+  <text x="600" y="745" fill="#5f6368" font-size="8">Pre-recordatorio 10min → WhatsApp</text>
+  <text x="600" y="758" fill="#5f6368" font-size="8">Late reminder con disculpa</text>
+  <text x="600" y="771" fill="#5f6368" font-size="8">Owner-created events: ignoran safe hours</text>
+  <text x="600" y="784" fill="#5f6368" font-size="8">Recibe de: Postprocess (tags) + GCal (sync)</text>
+
+  <!-- NODO: Learning Engine -->
+  <rect x="1080" y="680" width="260" height="110" rx="12" fill="#1a1a2e" stroke="#F59E0B" stroke-width="1.5" filter="shadow"/>
+  <circle cx="1105" cy="705" r="10" fill="#F59E0B" opacity="0.2"/>
+  <text x="1105" y="709" text-anchor="middle" fill="#F59E0B" font-size="12">11</text>
+  <text x="1125" y="710" fill="#F59E0B" font-size="14" font-weight="700">Learning Engine</text>
+  <text x="1100" y="728" fill="#e8eaed" font-size="9">ADN Vivo + Chat Experto + Docs</text>
+  <text x="1100" y="745" fill="#5f6368" font-size="8">Approval keys del owner (si/no)</text>
+  <text x="1100" y="758" fill="#5f6368" font-size="8">Nightly brain le escribe cerebro nuevo</text>
+  <text x="1100" y="771" fill="#5f6368" font-size="8">Alimenta Prompt System con business_cerebro</text>
+  <text x="1100" y="784" fill="#5f6368" font-size="8">History mining enriquecido</text>
+
+  <!-- ═══ CAPA AUTONOMA (cron jobs, no dependen de mensajes) ═══ -->
+
+  <!-- NODO: Morning Briefing -->
+  <rect x="180" y="860" width="280" height="110" rx="12" fill="#1a1a2e" stroke="#34D399" stroke-width="2" filter="shadow"/>
+  <circle cx="205" cy="885" r="10" fill="#34D399" opacity="0.2"/>
+  <text x="205" y="889" text-anchor="middle" fill="#34D399" font-size="12">12</text>
+  <text x="225" y="890" fill="#34D399" font-size="14" font-weight="700">Morning Briefing</text>
+  <text x="200" y="908" fill="#e8eaed" font-size="9">8:30 AM Colombia — SIEMPRE envia algo</text>
+  <text x="200" y="925" fill="#5f6368" font-size="8">Lee: Agenda (pendientes) + Contacts (LID)</text>
+  <text x="200" y="938" fill="#5f6368" font-size="8">Lee: Learning (approvals) + Scraper (noticias)</text>
+  <text x="200" y="951" fill="#5f6368" font-size="8">Envia: informe o saludo IA a self-chat</text>
+  <text x="200" y="964" fill="#5f6368" font-size="8">Formato: texto / audio TTS / PDF (config)</text>
+
+  <!-- NODO: Nightly Brain -->
+  <rect x="550" y="860" width="280" height="110" rx="12" fill="#1a1a2e" stroke="#F59E0B" stroke-width="2" filter="shadow"/>
+  <circle cx="575" cy="885" r="10" fill="#F59E0B" opacity="0.2"/>
+  <text x="575" y="889" text-anchor="middle" fill="#F59E0B" font-size="12">13</text>
+  <text x="595" y="890" fill="#F59E0B" font-size="14" font-weight="700">Nightly Brain</text>
+  <text x="570" y="908" fill="#e8eaed" font-size="9">23:00 PM — Opus analiza TODO el dia</text>
+  <text x="570" y="925" fill="#5f6368" font-size="8">Lee: TMH conversations[] (todos los chats)</text>
+  <text x="570" y="938" fill="#5f6368" font-size="8">Escribe: Learning Engine (cerebro actualizado)</text>
+  <text x="570" y="951" fill="#5f6368" font-size="8">Detecta: leads calientes, oportunidades</text>
+  <text x="570" y="964" fill="#5f6368" font-size="8">Genera: patrones + sugerencias para manana</text>
+
+  <!-- NODO: Sports Engine -->
+  <rect x="910" y="980" width="240" height="110" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
+  <circle cx="935" cy="1005" r="10" fill="#00E5FF" opacity="0.2"/>
+  <text x="935" y="1009" text-anchor="middle" fill="#00E5FF" font-size="12">14</text>
+  <text x="955" y="1010" fill="#00E5FF" font-size="13" font-weight="700">Sports Engine</text>
+  <text x="930" y="1028" fill="#e8eaed" font-size="9">10 adapters + sport_registry</text>
+  <text x="930" y="1045" fill="#5f6368" font-size="8">Poll APIs (OpenF1, MLB, Gemini search)</text>
+  <text x="930" y="1058" fill="#5f6368" font-size="8">Usa AI Providers para buildSportsPrompt</text>
+  <text x="930" y="1071" fill="#5f6368" font-size="8">Envia via WhatsApp al contacto</text>
+  <text x="930" y="1084" fill="#5f6368" font-size="8">Rate limit: 5 msg/evento, 5min entre msgs</text>
+
+  <!-- NODO: Outreach + CRM -->
+  <rect x="1160" y="860" width="200" height="100" rx="12" fill="#1a1a2e" stroke="#FF1744" stroke-width="1.5" filter="shadow"/>
+  <circle cx="1185" cy="885" r="10" fill="#FF1744" opacity="0.2"/>
+  <text x="1185" y="889" text-anchor="middle" fill="#FF1744" font-size="12">15</text>
+  <text x="1205" y="890" fill="#FF1744" font-size="13" font-weight="700">Outreach + CRM</text>
+  <text x="1180" y="908" fill="#e8eaed" font-size="9">Lead followup proactivo</text>
+  <text x="1180" y="925" fill="#5f6368" font-size="8">Web scraper + YouTube detector</text>
+  <text x="1180" y="938" fill="#5f6368" font-size="8">Followup 63-97min humanizado</text>
+  <text x="1180" y="951" fill="#5f6368" font-size="8">Enterprise lead flow</text>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- LEYENDA COMPLETA -->
+  <!-- ═══════════════════════════════════════════ -->
+  <rect x="40" y="1110" width="1320" height="170" rx="12" fill="#12122a" stroke="#2d3748" stroke-width="1"/>
+  <text x="700" y="1135" text-anchor="middle" fill="url(#brand-h)" font-size="16" font-weight="700">LEYENDA — Como leer este mapa</text>
+
+  <!-- Col 1: Colores -->
+  <text x="70" y="1158" fill="#e8eaed" font-size="11" font-weight="600">COLORES DE BORDE</text>
+  <rect x="70" y="1165" width="12" height="12" rx="2" fill="none" stroke="#00E5FF" stroke-width="2"/>
+  <text x="90" y="1175" fill="#00E5FF" font-size="10">Cian</text>
+  <text x="140" y="1175" fill="#9aa0a6" font-size="9">= Comunicacion en tiempo real (WhatsApp, Calendar, recordatorios)</text>
+  <rect x="70" y="1182" width="12" height="12" rx="2" fill="none" stroke="#7C3AED" stroke-width="2"/>
+  <text x="90" y="1192" fill="#7C3AED" font-size="10">Violeta</text>
+  <text x="150" y="1192" fill="#9aa0a6" font-size="9">= Inteligencia (IA, prompts, clasificacion, procesamiento)</text>
+  <rect x="70" y="1199" width="12" height="12" rx="2" fill="none" stroke="#FF1744" stroke-width="2"/>
+  <text x="90" y="1209" fill="#FF1744" font-size="10">Rojo</text>
+  <text x="130" y="1209" fill="#9aa0a6" font-size="9">= Seguridad + Auditoria (postprocess, proteccion, ventas)</text>
+  <rect x="70" y="1216" width="12" height="12" rx="2" fill="none" stroke="#34D399" stroke-width="2"/>
+  <text x="90" y="1226" fill="#34D399" font-size="10">Verde</text>
+  <text x="140" y="1226" fill="#9aa0a6" font-size="9">= Automatizaciones proactivas (briefing, agenda, tags)</text>
+  <rect x="70" y="1233" width="12" height="12" rx="2" fill="none" stroke="#F59E0B" stroke-width="2"/>
+  <text x="90" y="1243" fill="#F59E0B" font-size="10">Naranja</text>
+  <text x="155" y="1243" fill="#9aa0a6" font-size="9">= Aprendizaje (nightly brain, cerebro, approvals)</text>
+  <rect x="70" y="1250" width="12" height="12" rx="2" fill="none" stroke="url(#brand)" stroke-width="2"/>
+  <text x="90" y="1260" fill="#e8eaed" font-size="10">Gradiente</text>
+  <text x="160" y="1260" fill="#9aa0a6" font-size="9">= TMH — Cerebro central que orquesta TODO</text>
+
+  <!-- Col 2: Flechas -->
+  <text x="560" y="1158" fill="#e8eaed" font-size="11" font-weight="600">TIPOS DE FLECHA</text>
+  <line x1="560" y1="1172" x2="620" y2="1172" stroke="#00E5FF" stroke-width="2" opacity="0.6" marker-end="url(#arrow-cyan)"/>
+  <text x="635" y="1176" fill="#9aa0a6" font-size="10">Solida = Flujo principal (mensaje entrante → respuesta)</text>
+  <line x1="560" y1="1192" x2="620" y2="1192" stroke="#7C3AED" stroke-width="1.5" opacity="0.4" stroke-dasharray="6,3" marker-end="url(#arrow-violet)"/>
+  <text x="635" y="1196" fill="#9aa0a6" font-size="10">Punteada = Flujo autonomo (cron jobs, sync periodico)</text>
+  <line x1="560" y1="1212" x2="620" y2="1212" stroke="#F59E0B" stroke-width="1" opacity="0.3" stroke-dasharray="4" marker-end="url(#arrow-orange)"/>
+  <text x="635" y="1216" fill="#9aa0a6" font-size="10">Fina punteada = Dependencia interna (lee datos de otro modulo)</text>
+
+  <!-- Col 2: Flujo principal -->
+  <text x="560" y="1240" fill="#e8eaed" font-size="11" font-weight="600">FLUJO PRINCIPAL (un mensaje)</text>
+  <text x="560" y="1258" fill="#9aa0a6" font-size="9">WhatsApp (1) → TMH (5) → Classification (7) → Prompt (6) → AI (4) → Postprocess (9) → WhatsApp (1)</text>
+
+  <!-- Col 3: Ciclo -->
+  <text x="1020" y="1158" fill="#e8eaed" font-size="11" font-weight="600">CICLO DIARIO</text>
+  <text x="1020" y="1178" fill="#34D399" font-size="10">8:30 AM</text>
+  <text x="1080" y="1178" fill="#9aa0a6" font-size="9">Morning Briefing (12)</text>
+  <text x="1020" y="1195" fill="#9aa0a6" font-size="10">Todo el dia</text>
+  <text x="1095" y="1195" fill="#9aa0a6" font-size="9">TMH procesa mensajes (5)</text>
+  <text x="1020" y="1212" fill="#00E5FF" font-size="10">Cada 15min</text>
+  <text x="1100" y="1212" fill="#9aa0a6" font-size="9">Google Calendar sync (3→10)</text>
+  <text x="1020" y="1229" fill="#00E5FF" font-size="10">Cada 30s</text>
+  <text x="1090" y="1229" fill="#9aa0a6" font-size="9">Sports Engine poll (14)</text>
+  <text x="1020" y="1246" fill="#F59E0B" font-size="10">23:00 PM</text>
+  <text x="1080" y="1246" fill="#9aa0a6" font-size="9">Nightly Brain (13)</text>
+
+  <!-- Stats -->
+  <text x="1020" y="1268" fill="#5f6368" font-size="9">15 modulos | 23 conexiones mapeadas | 5 capas</text>
 
   <!-- Footer -->
-  <text x="600" y="1095" text-anchor="middle" fill="#3a3a4a" font-size="9">MIIA Brain Map v1.1 — Abril 2026 — (c) Mariano De Stefano</text>
+  <text x="700" y="1295" text-anchor="middle" fill="#3a3a4a" font-size="9">MIIA Brain Map v2.0 — Abril 2026 — (c) Mariano De Stefano</text>
 </svg>
