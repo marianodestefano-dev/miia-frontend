@@ -560,9 +560,9 @@
     .toggle-slider:before { content:''; position:absolute; width:18px; height:18px; left:3px; bottom:3px; background:white; border-radius:50%; transition:transform 0.3s; }
     .toggle-switch input:checked + .toggle-slider { background:var(--primary); }
     .toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); }
-    /* Toggle proactivo: verde=activo, rojo=desactivado */
-    .toggle-slider.proactive-toggle { background:#ef4444; }
-    .toggle-switch input:checked + .toggle-slider.proactive-toggle { background:#22c55e; }
+    /* Toggle proactivo: verde=activo, rojo=desactivado — ALTO CONTRASTE */
+    .toggle-slider.proactive-toggle { background:#dc2626 !important; box-shadow:0 0 0 1px rgba(0,0,0,.1), 0 2px 4px rgba(220,38,38,.3); }
+    .toggle-switch input:checked + .toggle-slider.proactive-toggle { background:#16a34a !important; box-shadow:0 0 0 1px rgba(0,0,0,.1), 0 2px 4px rgba(22,163,74,.3); }
     /* Tab activo de contactos */
     .contact-view-tab.active { border-bottom-color:var(--primary) !important; color:var(--text-dark) !important; }
 
@@ -6293,8 +6293,8 @@
             </div>
             <div class="form-group" style="margin-bottom:0;">
               <label>Relación</label>
-              <select id="newContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);font-size:0.88rem;">
-                <option value="">— Seleccionar —</option>
+              <select id="newContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);font-size:0.88rem;-webkit-appearance:menulist;appearance:menulist;">
+                <option value="" style="color:#6b7280;">— Seleccionar —</option>
                 <option value="hijo">Hijo/a</option>
                 <option value="esposo">Esposo/a</option>
                 <option value="padre">Padre/Madre</option>
@@ -6339,8 +6339,8 @@
             <div class="form-group"><label>Nombre</label><input type="text" id="editContactName"></div>
             <div class="form-group"><label>Apodo</label><input type="text" id="editContactNickname" placeholder="Ej: Tito, Mamá"></div>
             <div class="form-group"><label>Relación</label>
-              <select id="editContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);">
-                <option value="">— Seleccionar —</option>
+              <select id="editContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);-webkit-appearance:menulist;appearance:menulist;">
+                <option value="" style="color:#6b7280;">— Seleccionar —</option>
                 <option value="hijo">Hijo/a</option>
                 <option value="esposo">Esposo/a</option>
                 <option value="padre">Padre/Madre</option>
