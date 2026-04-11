@@ -199,6 +199,10 @@
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
         Conexiones
       </button>
+      <button class="sidebar-btn" onclick="showAdminSection('logs', this)">
+        <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Logs
+      </button>
 
       <div style="border-top:1px solid var(--border-color);margin:12px 0;"></div>
 
@@ -719,6 +723,50 @@
 
       </div>
     </div><!-- end admin-section-configuración -->
+
+    <!-- ═══ SECTION: LOGS (Railway) ═══ -->
+    <div id="admin-section-logs" class="page-section section-hidden" style="padding:28px 24px 60px; max-width:1400px;">
+      <div style="margin-bottom:20px;">
+        <h1 style="font-size:1.5rem;font-weight:800;color:var(--text-dark);margin-bottom:6px;display:flex;align-items:center;gap:10px;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          Logs del Servidor
+        </h1>
+        <p style="color:var(--text-muted);font-size:0.88rem;">Logs en tiempo real desde Railway. Usa los filtros para buscar errores, eventos específicos o revisar el historial.</p>
+      </div>
+
+      <!-- Controles -->
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;align-items:center;">
+        <select id="logType" onchange="loadRailwayLogs()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;cursor:pointer;">
+          <option value="deploy">Deploy Logs</option>
+          <option value="build">Build Logs</option>
+          <option value="http">HTTP Logs</option>
+        </select>
+        <select id="logDeployment" onchange="loadRailwayLogs()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;cursor:pointer;max-width:280px;">
+          <option value="">Último deployment</option>
+        </select>
+        <select id="logLimit" onchange="loadRailwayLogs()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;cursor:pointer;">
+          <option value="100">100 líneas</option>
+          <option value="200" selected>200 líneas</option>
+          <option value="500">500 líneas</option>
+          <option value="1000">1000 líneas</option>
+          <option value="2000">2000 líneas</option>
+        </select>
+        <input type="text" id="logFilter" placeholder="Filtrar... (ej: ERROR, AGENDA, FOLLOWUP)" oninput="filterLogs()" style="flex:1;min-width:200px;padding:8px 14px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;">
+        <button onclick="loadRailwayLogs()" style="padding:8px 18px;border-radius:8px;border:none;background:var(--primary);color:white;font-weight:600;font-size:0.85rem;cursor:pointer;">🔄 Recargar</button>
+        <button onclick="downloadLogs()" style="padding:8px 18px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-weight:600;font-size:0.85rem;cursor:pointer;">⬇️ Descargar</button>
+      </div>
+
+      <!-- Stats rápidas -->
+      <div id="logStats" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;"></div>
+
+      <!-- Log viewer -->
+      <div id="logViewer" style="background:#0d1117;border:1px solid var(--border-color);border-radius:12px;padding:16px;font-family:'Fira Code','Cascadia Code','Consolas',monospace;font-size:0.78rem;line-height:1.6;color:#c9d1d9;max-height:70vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;">
+        <div style="color:#8b949e;text-align:center;padding:40px;">Cargando logs...</div>
+      </div>
+
+      <!-- Info de deployment -->
+      <div id="logDeployInfo" style="margin-top:10px;font-size:0.78rem;color:var(--text-muted);"></div>
+    </div><!-- end admin-section-logs -->
 
 <!-- ═══ QR MODAL ═══ -->
 <div id="qrModal" style="position:fixed;inset:0;background:var(--overlay-bg);display:flex;align-items:center;justify-content:center;z-index:300;backdrop-filter:blur(4px);" onclick="if(event.target===this)document.getElementById('qrModal').classList.add('hidden')" class="hidden">
@@ -2226,6 +2274,168 @@
       resultDiv.textContent = 'Error de conexión: ' + e.message;
     }
   }
+
+  // ═══ RAILWAY LOGS ═══
+  let _allLogs = [];
+  let _logDeploymentsLoaded = false;
+
+  async function loadRailwayDeployments() {
+    if (_logDeploymentsLoaded) return;
+    try {
+      const token = await firebase.auth().currentUser?.getIdToken();
+      const resp = await fetch(`${API}/api/admin/railway-deployments?limit=10`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (!resp.ok) return;
+      const data = await resp.json();
+      const select = document.getElementById('logDeployment');
+      (data.deployments || []).forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        const date = new Date(d.createdAt).toLocaleString('es-CO', { day:'2-digit', month:'2-digit', hour:'2-digit', minute:'2-digit' });
+        const statusEmoji = d.status === 'SUCCESS' ? '✅' : d.status === 'BUILDING' ? '🔨' : d.status === 'DEPLOYING' ? '🚀' : '⚪';
+        opt.textContent = `${statusEmoji} ${date} — ${d.status}`;
+        select.appendChild(opt);
+      });
+      _logDeploymentsLoaded = true;
+    } catch (e) {
+      console.warn('Error cargando deployments:', e);
+    }
+  }
+
+  async function loadRailwayLogs() {
+    const viewer = document.getElementById('logViewer');
+    viewer.innerHTML = '<div style="color:#8b949e;text-align:center;padding:40px;">⏳ Cargando logs...</div>';
+
+    const type = document.getElementById('logType').value;
+    const deploymentId = document.getElementById('logDeployment').value;
+    const limit = document.getElementById('logLimit').value;
+
+    try {
+      const token = await firebase.auth().currentUser?.getIdToken();
+      const params = new URLSearchParams({ type, limit });
+      if (deploymentId) params.set('deploymentId', deploymentId);
+
+      const resp = await fetch(`${API}/api/admin/railway-logs?${params}`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!resp.ok) {
+        const err = await resp.json().catch(() => ({}));
+        viewer.innerHTML = `<div style="color:#f87171;text-align:center;padding:40px;">❌ ${err.error || 'Error cargando logs'}\n\n${resp.status === 503 ? 'Configurá RAILWAY_API_TOKEN en Railway → Variables.' : ''}</div>`;
+        return;
+      }
+
+      const data = await resp.json();
+      _allLogs = data.logs || [];
+
+      document.getElementById('logDeployInfo').textContent = `Deployment: ${data.deploymentId || '?'} | Tipo: ${data.type} | ${_allLogs.length} líneas`;
+
+      renderLogs(_allLogs);
+      updateLogStats(_allLogs);
+    } catch (e) {
+      viewer.innerHTML = `<div style="color:#f87171;text-align:center;padding:40px;">❌ Error de conexión: ${e.message}</div>`;
+    }
+  }
+
+  function renderLogs(logs) {
+    const viewer = document.getElementById('logViewer');
+    if (!logs.length) {
+      viewer.innerHTML = '<div style="color:#8b949e;text-align:center;padding:40px;">Sin logs disponibles</div>';
+      return;
+    }
+
+    const filterText = (document.getElementById('logFilter').value || '').toLowerCase();
+    const filtered = filterText ? logs.filter(l => {
+      const text = (l.message || l.path || '').toLowerCase();
+      return text.includes(filterText);
+    }) : logs;
+
+    const type = document.getElementById('logType').value;
+    let html;
+
+    if (type === 'http') {
+      html = filtered.map(l => {
+        const time = new Date(l.timestamp).toLocaleTimeString('es-CO');
+        const statusColor = l.httpStatus >= 500 ? '#f87171' : l.httpStatus >= 400 ? '#fbbf24' : '#34d399';
+        return `<span style="color:#8b949e">${time}</span> <span style="color:${statusColor};font-weight:bold">${l.httpStatus}</span> <span style="color:#79c0ff">${l.method}</span> ${l.path || ''} <span style="color:#8b949e">${l.totalDuration || ''}ms</span>`;
+      }).join('\n');
+    } else {
+      html = filtered.map(l => {
+        const time = l.timestamp ? new Date(l.timestamp).toLocaleTimeString('es-CO') : '';
+        const msg = escapeHtml(l.message || '');
+        // Colorear por severidad/contenido
+        let color = '#c9d1d9';
+        if (l.severity === 'error' || /❌|ERROR|CRITICAL/i.test(msg)) color = '#f87171';
+        else if (l.severity === 'warn' || /⚠️|WARN|WARNING/i.test(msg)) color = '#fbbf24';
+        else if (/✅|SUCCESS|Iniciado|Conectado/i.test(msg)) color = '#34d399';
+        else if (/\[AGENDA\]|\[FOLLOWUP\]|\[NIGHTLY\]/i.test(msg)) color = '#a78bfa';
+        else if (/\[TM\]|\[TENANT\]/i.test(msg)) color = '#79c0ff';
+        return `<span style="color:#8b949e">${time}</span> <span style="color:${color}">${msg}</span>`;
+      }).join('\n');
+    }
+
+    viewer.innerHTML = html || '<div style="color:#8b949e;text-align:center;padding:20px;">Sin resultados para el filtro</div>';
+    document.getElementById('logDeployInfo').textContent += ` | Mostrando: ${filtered.length}`;
+  }
+
+  function filterLogs() {
+    renderLogs(_allLogs);
+  }
+
+  function updateLogStats(logs) {
+    const statsDiv = document.getElementById('logStats');
+    const errors = logs.filter(l => /❌|ERROR|CRITICAL/i.test(l.message || '') || l.severity === 'error').length;
+    const warns = logs.filter(l => /⚠️|WARN/i.test(l.message || '') || l.severity === 'warn').length;
+    const agenda = logs.filter(l => /\[AGENDA\]/i.test(l.message || '')).length;
+    const followup = logs.filter(l => /\[FOLLOWUP\]/i.test(l.message || '')).length;
+    const crypto = logs.filter(l => /crypto|Bad MAC|cannot attribute/i.test(l.message || '')).length;
+
+    const badge = (label, count, color) => count > 0
+      ? `<div style="padding:4px 12px;border-radius:20px;background:${color}15;color:${color};font-size:0.78rem;font-weight:600;border:1px solid ${color}30;">${label}: ${count}</div>`
+      : '';
+
+    statsDiv.innerHTML = [
+      badge('❌ Errores', errors, '#ef4444'),
+      badge('⚠️ Warnings', warns, '#f59e0b'),
+      badge('📅 Agenda', agenda, '#8b5cf6'),
+      badge('📤 Followup', followup, '#3b82f6'),
+      badge('🔐 Crypto', crypto, '#ec4899'),
+      `<div style="padding:4px 12px;border-radius:20px;background:rgba(107,114,128,0.1);color:var(--text-muted);font-size:0.78rem;">Total: ${logs.length}</div>`
+    ].filter(Boolean).join('');
+  }
+
+  function downloadLogs() {
+    if (!_allLogs.length) return;
+    const type = document.getElementById('logType').value;
+    let content;
+    if (type === 'http') {
+      content = _allLogs.map(l => `${l.timestamp}\t${l.httpStatus}\t${l.method}\t${l.path}\t${l.totalDuration}ms\t${l.srcIp}`).join('\n');
+    } else {
+      content = _allLogs.map(l => `${l.timestamp}\t[${l.severity || 'info'}]\t${l.message}`).join('\n');
+    }
+    const blob = new Blob([content], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `miia-${type}-logs-${new Date().toISOString().split('T')[0]}.log`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  // Auto-cargar logs y deployments cuando se entra a la sección
+  const _origShowAdminSection = showAdminSection;
+  showAdminSection = function(name, btn) {
+    _origShowAdminSection(name, btn);
+    if (name === 'logs') {
+      loadRailwayDeployments();
+      loadRailwayLogs();
+    }
+  };
 </script>
 
     <footer class="page-footer">
