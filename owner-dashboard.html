@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="dark">
+<html lang="es" data-theme="light">
 <head>
   <script>
-    // Apply saved theme BEFORE paint to prevent flash
-    (function(){var t=localStorage.getItem('miia-theme');if(t)document.documentElement.setAttribute('data-theme',t);})();
+    // Forzar tema claro siempre (dark mode eliminado por decisión de Mariano)
+    (function(){document.documentElement.setAttribute('data-theme','light');})();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1280, initial-scale=0.5, maximum-scale=2.0, user-scalable=yes">
@@ -561,8 +561,11 @@
     .toggle-switch input:checked + .toggle-slider { background:var(--primary); }
     .toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); }
     /* Toggle proactivo: verde=activo, rojo=desactivado — ALTO CONTRASTE */
-    .toggle-slider.proactive-toggle { background:#dc2626 !important; box-shadow:0 0 0 1px rgba(0,0,0,.1), 0 2px 4px rgba(220,38,38,.3); }
-    .toggle-switch input:checked + .toggle-slider.proactive-toggle { background:#16a34a !important; box-shadow:0 0 0 1px rgba(0,0,0,.1), 0 2px 4px rgba(22,163,74,.3); }
+    .toggle-slider.proactive-toggle { background:#dc2626 !important; box-shadow:0 0 0 2px rgba(220,38,38,.25) !important; }
+    .toggle-slider.proactive-toggle:before { background:#fff !important; box-shadow:0 1px 3px rgba(0,0,0,.3) !important; }
+    .toggle-switch input:checked + .toggle-slider.proactive-toggle { background:#16a34a !important; box-shadow:0 0 0 2px rgba(22,163,74,.25) !important; }
+    label.toggle-switch .toggle-slider.proactive-toggle { background:#dc2626 !important; }
+    label.toggle-switch input:checked + .toggle-slider.proactive-toggle { background:#16a34a !important; }
     /* Tab activo de contactos */
     .contact-view-tab.active { border-bottom-color:var(--primary) !important; color:var(--text-dark) !important; }
 
@@ -1156,11 +1159,13 @@
 
       <!-- Footer: Theme toggle + WA status + profile -->
       <div class="sidebar-footer">
-        <!-- Theme Toggle -->
+        <!-- Theme Toggle (desactivado — solo tema claro por ahora) -->
+        <!--
         <button class="theme-toggle" onclick="toggleTheme()" id="themeToggleBtn">
-          <span class="theme-toggle-icon" id="themeIcon">🌙</span>
-          <span class="sidebar-label" id="themeLabel">Tema oscuro</span>
+          <span class="theme-toggle-icon" id="themeIcon">☀️</span>
+          <span class="sidebar-label" id="themeLabel">Tema claro</span>
         </button>
+        -->
         <!-- WhatsApp Status -->
         <div class="sidebar-wa-status" id="sidebarWaStatus">
           <span class="status-dot red" id="sidebarWaDot"></span>
@@ -3593,11 +3598,12 @@
     let groupContacts = [];
     let editingGroupId = null;
 
+    let conversationsLoaded = false;
     function initContacts() {
       if (contactsLoaded) return;
       contactsLoaded = true;
       loadGroups();
-      loadConversations();
+      // Conversaciones se cargan lazy al hacer click en ese tab (no al abrir contactos)
     }
 
     function switchContactsView(view, btn) {
@@ -3611,6 +3617,11 @@
       btn.style.color = 'var(--text-dark)';
       document.getElementById('groupsView').style.display = view === 'groups' ? '' : 'none';
       document.getElementById('conversationsView').style.display = view === 'conversations' ? '' : 'none';
+      // Lazy load: conversaciones solo al hacer click en el tab
+      if (view === 'conversations' && !conversationsLoaded) {
+        conversationsLoaded = true;
+        loadConversations();
+      }
     }
 
     async function loadConversations() {
@@ -3633,13 +3644,17 @@
 
     async function loadContactTypes() {
       if (!currentUser) return;
-      const snapshot = await db.collection('contacts')
-        .where('client_uid', '==', currentUser.uid)
-        .get();
-      snapshot.forEach(doc => {
-        const d = doc.data();
-        if (d.phone && d.contactType) contactTypes[d.phone] = d.contactType;
-      });
+      try {
+        // Cargar desde contact_index (estructura actual) en vez de colección legacy 'contacts'
+        const snapshot = await db.collection('users').doc(currentUser.uid)
+          .collection('contact_index').get();
+        snapshot.forEach(doc => {
+          const d = doc.data();
+          if (d.type) contactTypes[doc.id] = d.type;
+        });
+      } catch (e) {
+        console.warn('loadContactTypes: sin datos de contactos', e.message);
+      }
     }
 
     function getContactType(phone) {
@@ -3880,7 +3895,8 @@
         const body = {
           tone: document.getElementById('cfgTone').value.trim(),
           autoRespond: false,
-          proactiveEnabled: document.getElementById('cfgProactive').checked
+          proactiveEnabled: document.getElementById('cfgProactive').checked,
+          humanDelayEnabled: document.getElementById('cfgHumanDelay').checked
         };
         const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${groupId}`, {
           method: 'PUT',
@@ -3919,6 +3935,7 @@
       if (!g) return;
       document.getElementById('groupDetailTitle').textContent = (g.icon || '👥') + ' ' + g.name;
       document.getElementById('cfgProactive').checked = !!g.proactiveEnabled;
+      document.getElementById('cfgHumanDelay').checked = g.humanDelayEnabled !== false; // default: on
       document.getElementById('cfgTone').value = g.tone || '';
       document.getElementById('groupCardsSection').style.display = 'none';
       document.getElementById('groupDetailView').style.display = '';
@@ -6241,6 +6258,16 @@
             <h3 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-dark);">Mensajes proactivos</h3>
             <label class="toggle-switch" style="--toggle-on:#22c55e;--toggle-off:#ef4444;">
               <input type="checkbox" id="cfgProactive">
+              <span class="toggle-slider proactive-toggle"></span>
+            </label>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+            <div>
+              <h3 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-dark);">Simular delay humano</h3>
+              <span style="font-size:0.78rem;color:var(--text-muted);">MIIA simula leer y escribir como humano (delays naturales)</span>
+            </div>
+            <label class="toggle-switch" style="--toggle-on:#22c55e;--toggle-off:#ef4444;">
+              <input type="checkbox" id="cfgHumanDelay" checked>
               <span class="toggle-slider proactive-toggle"></span>
             </label>
           </div>
