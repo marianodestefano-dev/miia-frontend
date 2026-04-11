@@ -5506,6 +5506,8 @@
       if (c.timezone) document.getElementById('scheduleTZ').value = c.timezone;
       if (c.offHoursMessage) document.getElementById('scheduleOffMsg').value = c.offHoursMessage;
       if (c.autoReplyOffHours) document.getElementById('scheduleAutoReply').checked = true;
+      if (c.followupStartHour !== undefined) document.getElementById('followupStartHour').value = c.followupStartHour;
+      if (c.followupEndHour !== undefined) document.getElementById('followupEndHour').value = c.followupEndHour;
       if (c.followupDays) document.getElementById('followupDays').value = c.followupDays;
       if (c.followupMax) document.getElementById('followupMax').value = c.followupMax;
       if (c.followupMsg1) document.getElementById('followupMsg1').value = c.followupMsg1;
@@ -5534,6 +5536,8 @@
         timezone: document.getElementById('scheduleTZ').value,
         offHoursMessage: document.getElementById('scheduleOffMsg').value,
         autoReplyOffHours: document.getElementById('scheduleAutoReply').checked,
+        followupStartHour: parseInt(document.getElementById('followupStartHour').value) || 8,
+        followupEndHour: parseInt(document.getElementById('followupEndHour').value) || 19,
         followupDays: parseInt(document.getElementById('followupDays').value) || 3,
         followupMax: parseInt(document.getElementById('followupMax').value) || 3,
         followupMsg1: document.getElementById('followupMsg1').value,
@@ -6932,6 +6936,15 @@
           </h4>
           <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:end;">
             <div>
+              <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Horario de seguimiento</label>
+              <div style="display:flex;align-items:center;gap:6px;">
+                <input type="number" id="followupStartHour" value="8" min="0" max="23" style="width:55px;padding:8px 10px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
+                <span style="font-size:0.88rem;color:var(--text-muted);">a</span>
+                <input type="number" id="followupEndHour" value="19" min="0" max="23" style="width:55px;padding:8px 10px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
+                <span style="font-size:0.88rem;color:var(--text-muted);">hs</span>
+              </div>
+            </div>
+            <div>
               <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Seguimiento cada</label>
               <div style="display:flex;align-items:center;gap:6px;">
                 <input type="number" id="followupDays" value="3" placeholder="3" min="1" max="30" style="width:60px;padding:8px 10px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.9rem;background:var(--bg-card);color:var(--text-dark);text-align:center;">
@@ -6946,6 +6959,7 @@
               </div>
             </div>
           </div>
+          <p style="font-size:0.78rem;color:var(--text-muted);margin:0;">MIIA no hace seguimiento domingos ni festivos de tu país. Horario default: 8 a 19hs.</p>
           <div>
             <label style="font-size:0.85rem;font-weight:600;color:var(--text-dark);display:block;margin-bottom:4px;">Mensaje 1er seguimiento</label>
             <input type="text" id="followupMsg1" placeholder="Ej: Hola, ¿pudiste revisar la info? Quedo atento a cualquier consulta." value="" style="width:100%;padding:10px 14px;border:1px solid rgba(0,229,255,0.12);border-radius:8px;font-size:0.88rem;background:var(--bg-card);color:var(--text-dark);box-sizing:border-box;">
