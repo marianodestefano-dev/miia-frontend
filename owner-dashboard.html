@@ -1638,7 +1638,7 @@
           </div>
         </div>
 
-        <!-- ── 4. EMAIL / SMTP ── -->
+        <!-- ── 4. EMAIL ── -->
         <div class="card" style="display:flex;flex-direction:column;gap:16px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
@@ -1647,55 +1647,68 @@
             <div style="flex:1;">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
                 <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">Correo Electrónico</h3>
-                <span style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(245,158,11,.1);color:#f59e0b;font-weight:600;">SMTP / IMAP</span>
+                <span id="connEmailStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">No conectado</span>
               </div>
-              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA enviará cotizaciónes, respuestas y confirmaciones por email en tu nombre. Con IMAP también aprende del contenido de tu bandeja.</p>
+              <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA puede leer, enviar y gestionar tus correos desde WhatsApp. Pedile "mis correos", "leé el 2" o "eliminá el 1 y el 3".</p>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <input type="email" id="emailFrom" placeholder="Tu email (ej: tu@gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;width:100%;box-sizing:border-box;">
-            <div style="display:grid;grid-template-columns:1fr 72px;gap:8px;">
-              <input type="text" id="smtpHost" placeholder="SMTP Host (ej: smtp.gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
-              <input type="number" id="smtpPort" placeholder="587" value="587" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+
+          <!-- Gmail API conectado (via Google Calendar OAuth) -->
+          <div id="emailGmailConnected" style="display:none;">
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(66,133,244,.08);border:1px solid rgba(66,133,244,.2);border-radius:10px;">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <div style="flex:1;">
+                <span style="font-size:0.85rem;font-weight:600;color:#4285F4;">Gmail conectado via Google</span>
+                <p style="font-size:0.73rem;color:var(--text-muted);margin:2px 0 0;">MIIA puede leer, enviar y eliminar correos automaticamente. No necesitas configurar nada mas.</p>
+              </div>
             </div>
-            <input type="text" id="smtpUser" placeholder="Usuario SMTP" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;width:100%;box-sizing:border-box;">
-            <input type="password" id="smtpPass" placeholder="Contraseña o App Password" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;width:100%;box-sizing:border-box;">
-            <div style="display:flex;gap:8px;">
-              <button onclick="saveEmailConfig()" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar</button>
-              <button onclick="sendTestEmail()" id="emailTestBtn" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-family:inherit;">Enviar prueba</button>
-            </div>
-            <div id="emailStatus" style="font-size:0.78rem;color:var(--text-muted);"></div>
+            <p style="font-size:0.73rem;color:var(--text-muted);margin-top:8px;text-align:center;">La conexion se hizo al conectar Google Calendar (misma autorizacion)</p>
           </div>
-          <!-- IMAP — Gestión de email por WhatsApp -->
-          <div style="padding-top:14px;border-top:1px solid var(--border-glass);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
-              <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Lectura de email (IMAP)</span>
-              <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
-                <input type="checkbox" id="emailLearningToggle" onchange="saveImapConfig()" style="accent-color:var(--primary);">
-                <span style="font-size:0.75rem;color:var(--text-muted);">Aprendizaje</span>
-              </label>
+
+          <!-- Sin Google — mostrar opcion de conectar + SMTP/IMAP manual -->
+          <div id="emailNotConnected">
+            <div style="padding:12px 16px;background:rgba(66,133,244,.06);border:1px solid rgba(66,133,244,.15);border-radius:10px;margin-bottom:14px;">
+              <p style="font-size:0.82rem;color:var(--text-dark);font-weight:600;margin:0 0 4px;">Forma mas facil: conectar Google</p>
+              <p style="font-size:0.75rem;color:var(--text-muted);margin:0 0 8px;">Si conectas Google Calendar arriba, MIIA accede a tu Gmail automaticamente. Un solo click, sin contrasenas.</p>
+              <a href="#" onclick="connectCalendar(event)" style="display:block;text-align:center;padding:8px;background:rgba(66,133,244,.1);color:#4285F4;border:1px solid rgba(66,133,244,.25);border-radius:8px;font-weight:600;font-size:0.82rem;cursor:pointer;text-decoration:none;">Conectar con Google</a>
             </div>
-            <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;">MIIA podrá leer, buscar y eliminar correos desde WhatsApp. Pedile "mis correos" o "leé el 2".</p>
-            <input type="text" id="imapHost" placeholder="IMAP Host (ej: imap.gmail.com)" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:6px;box-sizing:border-box;">
-            <input type="email" id="imapUser" placeholder="Usuario IMAP (ej: tu@gmail.com)" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:6px;box-sizing:border-box;">
-            <input type="password" id="imapPass" placeholder="Contraseña o App Password" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box;">
-            <div style="display:flex;gap:8px;">
-              <button onclick="saveImapConfig()" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar IMAP</button>
-              <button onclick="testImapConnection()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Probar conexion</button>
-            </div>
-            <details style="margin-top:8px;">
-              <summary style="font-size:0.75rem;color:var(--primary);cursor:pointer;font-weight:600;">Gmail: como configurar App Password</summary>
-              <ol style="font-size:0.73rem;color:var(--text-muted);line-height:1.6;padding-left:18px;margin-top:6px;">
-                <li>Ir a <a href="https://myaccount.google.com/security" target="_blank" style="color:var(--primary);">myaccount.google.com/security</a></li>
-                <li>Activar <strong>Verificacion en 2 pasos</strong> (si no la tenias)</li>
-                <li>En Seguridad, buscar <strong>"Contrasenas de aplicaciones"</strong></li>
-                <li>Crear una nueva: nombre <strong>"MIIA"</strong></li>
-                <li>Copiar la contrasena de 16 caracteres generada</li>
-                <li>Pegar aca arriba en "Contrasena o App Password"</li>
-              </ol>
-              <p style="font-size:0.73rem;color:var(--text-muted);margin-top:4px;">Host IMAP: <strong>imap.gmail.com</strong> | SMTP: <strong>smtp.gmail.com</strong></p>
+
+            <details style="margin-bottom:10px;">
+              <summary style="font-size:0.82rem;color:var(--text-dark);cursor:pointer;font-weight:600;">Alternativa: configuracion manual (SMTP + IMAP)</summary>
+              <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+                <input type="email" id="emailFrom" placeholder="Tu email (ej: tu@gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;width:100%;box-sizing:border-box;">
+                <div style="display:grid;grid-template-columns:1fr 72px;gap:8px;">
+                  <input type="text" id="smtpHost" placeholder="SMTP Host (ej: smtp.gmail.com)" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+                  <input type="number" id="smtpPort" placeholder="587" value="587" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;">
+                </div>
+                <input type="text" id="smtpUser" placeholder="Usuario SMTP" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;width:100%;box-sizing:border-box;">
+                <input type="password" id="smtpPass" placeholder="Contrasena o App Password" style="background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:9px 12px;font-size:0.85rem;font-family:inherit;outline:none;width:100%;box-sizing:border-box;">
+                <div style="display:flex;gap:8px;">
+                  <button onclick="saveEmailConfig()" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar</button>
+                  <button onclick="sendTestEmail()" id="emailTestBtn" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:9px;font-size:0.82rem;cursor:pointer;font-family:inherit;">Enviar prueba</button>
+                </div>
+                <div id="emailStatus" style="font-size:0.78rem;color:var(--text-muted);"></div>
+
+                <!-- IMAP -->
+                <div style="padding-top:14px;border-top:1px solid var(--border-glass);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+                    <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Lectura de email (IMAP)</span>
+                    <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+                      <input type="checkbox" id="emailLearningToggle" onchange="saveImapConfig()" style="accent-color:var(--primary);">
+                      <span style="font-size:0.75rem;color:var(--text-muted);">Aprendizaje</span>
+                    </label>
+                  </div>
+                  <input type="text" id="imapHost" placeholder="IMAP Host (ej: imap.gmail.com)" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:6px;box-sizing:border-box;">
+                  <input type="email" id="imapUser" placeholder="Usuario IMAP (ej: tu@gmail.com)" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:6px;box-sizing:border-box;">
+                  <input type="password" id="imapPass" placeholder="Contrasena o App Password" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box;">
+                  <div style="display:flex;gap:8px;">
+                    <button onclick="saveImapConfig()" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar IMAP</button>
+                    <button onclick="testImapConnection()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Probar conexion</button>
+                  </div>
+                  <div id="imapStatus" style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;"></div>
+                </div>
+              </div>
             </details>
-            <div id="imapStatus" style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;"></div>
           </div>
         </div>
 
@@ -3760,17 +3773,30 @@
         const connectedSection = document.getElementById('calendarConnectedSection');
 
         const calBadge = document.getElementById('connCalStatus');
+        // Email section: mostrar Gmail conectado o config manual
+        const emailGmailEl = document.getElementById('emailGmailConnected');
+        const emailNotConnEl = document.getElementById('emailNotConnected');
+        const emailBadge = document.getElementById('connEmailStatus');
+
         if (data.connected) {
           statusEl.innerHTML = '<span style="color:#4ade80;font-size:0.82rem;">✅ Google Calendar conectado</span>';
           connectSection.style.display = 'none';
           connectedSection.style.display = 'flex';
           document.getElementById('calendarAutoToggle').checked = !!data.calendarEnabled;
           if (calBadge) { calBadge.textContent = 'Conectado'; calBadge.style.background = 'rgba(66,133,244,.12)'; calBadge.style.color = '#4285F4'; }
+          // Gmail via OAuth activo
+          if (emailGmailEl) emailGmailEl.style.display = 'block';
+          if (emailNotConnEl) emailNotConnEl.style.display = 'none';
+          if (emailBadge) { emailBadge.textContent = 'Gmail via Google'; emailBadge.style.background = 'rgba(66,133,244,.12)'; emailBadge.style.color = '#4285F4'; }
         } else {
           statusEl.innerHTML = '';
           connectSection.style.display = 'block';
           connectedSection.style.display = 'none';
           if (calBadge) { calBadge.textContent = 'No conectado'; calBadge.style.background = 'rgba(239,68,68,.1)'; calBadge.style.color = '#EF4444'; }
+          // Mostrar config manual
+          if (emailGmailEl) emailGmailEl.style.display = 'none';
+          if (emailNotConnEl) emailNotConnEl.style.display = 'block';
+          if (emailBadge) { emailBadge.textContent = 'No conectado'; emailBadge.style.background = 'rgba(239,68,68,.1)'; emailBadge.style.color = '#EF4444'; }
         }
       } catch (_) {}
     }
