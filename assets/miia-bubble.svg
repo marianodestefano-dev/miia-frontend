@@ -31,5 +31,5 @@
   <!-- Fondo interior blanco -->
   <circle cx="48" cy="48" r="40" fill="white"/>
   <!-- Emoji MIIA saludando — grande, centrado -->
-  <text x="48" y="62" text-anchor="middle" font-size="50" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji">🙋‍♀️</text>
+  <text x="48" y="64" text-anchor="middle" font-size="62" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji">🙋‍♀️</text>
 </svg>

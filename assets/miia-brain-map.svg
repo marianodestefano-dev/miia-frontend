@@ -1,0 +1,260 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1100" viewBox="0 0 1200 1100" font-family="'Segoe UI', system-ui, sans-serif">
+  <defs>
+    <!-- Brand MIIA: cian → violeta → rojo -->
+    <linearGradient id="brand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="50%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#FF1744"/>
+    </linearGradient>
+    <linearGradient id="brand-h" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="50%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#FF1744"/>
+    </linearGradient>
+    <linearGradient id="cyan-violet" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00E5FF"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+    <linearGradient id="violet-red" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#FF1744"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-opacity="0.15"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="1100" fill="#0f0f23" rx="16"/>
+
+  <!-- Title -->
+  <text x="600" y="50" text-anchor="middle" fill="url(#brand-h)" font-size="32" font-weight="700" letter-spacing="2">MIIA BRAIN MAP</text>
+  <text x="600" y="72" text-anchor="middle" fill="#9aa0a6" font-size="12">Arquitectura Cerebral Completa</text>
+
+  <!-- ═══ CENTRO: MIIA CORE ═══ -->
+  <circle cx="600" cy="420" r="70" fill="none" stroke="url(#brand)" stroke-width="3" filter="glow"/>
+  <circle cx="600" cy="420" r="65" fill="#1a1a2e"/>
+  <text x="600" y="410" text-anchor="middle" fill="#00E5FF" font-size="22" font-weight="700">MIIA</text>
+  <text x="600" y="432" text-anchor="middle" fill="#e8eaed" font-size="11">Cerebro Central</text>
+  <text x="600" y="448" text-anchor="middle" fill="#9aa0a6" font-size="9">prompt_builder.js</text>
+
+  <!-- ═══ LÍNEAS DE CONEXIÓN (primero, detrás de los nodos) ═══ -->
+  <!-- Core → WhatsApp Engine -->
+  <line x1="530" y1="420" x2="200" y2="200" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
+  <!-- Core → AI Providers -->
+  <line x1="670" y1="420" x2="1000" y2="200" stroke="#7C3AED" stroke-width="1.5" opacity="0.4"/>
+  <!-- Core → Protection -->
+  <line x1="530" y1="450" x2="180" y2="600" stroke="#FF1744" stroke-width="1.5" opacity="0.4"/>
+  <!-- Core → Agenda -->
+  <line x1="600" y1="490" x2="600" y2="700" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
+  <!-- Core → Prompts -->
+  <line x1="540" y1="390" x2="350" y2="350" stroke="#7C3AED" stroke-width="1.5" opacity="0.4"/>
+  <!-- Core → Postprocess -->
+  <line x1="660" y1="390" x2="850" y2="350" stroke="#FF1744" stroke-width="1.5" opacity="0.4"/>
+  <!-- Core → Sports -->
+  <line x1="670" y1="450" x2="1020" y2="600" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
+  <!-- Core → Integrations -->
+  <line x1="600" y1="350" x2="600" y2="160" stroke="#7C3AED" stroke-width="1.5" opacity="0.4"/>
+  <!-- Core → Dashboard -->
+  <line x1="530" y1="400" x2="200" y2="420" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
+  <!-- Core → Learning -->
+  <line x1="670" y1="400" x2="1000" y2="420" stroke="#7C3AED" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- ═══ NODO 1: WhatsApp Engine (arriba-izquierda) ═══ -->
+  <rect x="80" y="140" width="240" height="120" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
+  <text x="200" y="168" text-anchor="middle" fill="#00E5FF" font-size="14" font-weight="700">WhatsApp Engine</text>
+  <text x="200" y="188" text-anchor="middle" fill="#e8eaed" font-size="10">tenant_manager.js</text>
+  <text x="200" y="205" text-anchor="middle" fill="#9aa0a6" font-size="9">tenant_message_handler.js</text>
+  <text x="100" y="225" fill="#5f6368" font-size="9">Baileys + Multi-tenant</text>
+  <text x="100" y="238" fill="#5f6368" font-size="9">Audio transcription</text>
+  <text x="100" y="251" fill="#5f6368" font-size="9">Human delay + Anti-detect</text>
+
+  <!-- ═══ NODO 2: AI Providers (arriba-derecha) ═══ -->
+  <rect x="880" y="140" width="240" height="120" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
+  <text x="1000" y="168" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">AI Providers</text>
+  <text x="1000" y="188" text-anchor="middle" fill="#e8eaed" font-size="10">Gemini Flash + Pro</text>
+  <text x="1000" y="205" text-anchor="middle" fill="#9aa0a6" font-size="9">Google Search grounding</text>
+  <text x="900" y="225" fill="#5f6368" font-size="9">Hybrid routing (Opus)</text>
+  <text x="900" y="238" fill="#5f6368" font-size="9">Content Safety Shield</text>
+  <text x="900" y="251" fill="#5f6368" font-size="9">Auto-fallback providers</text>
+
+  <!-- ═══ NODO 3: Prompt System (izquierda-centro) ═══ -->
+  <rect x="220" y="300" width="240" height="140" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
+  <text x="340" y="325" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">Prompt System</text>
+  <text x="340" y="342" text-anchor="middle" fill="#e8eaed" font-size="10">ADN + Vademecum + Builder</text>
+  <text x="240" y="362" fill="#5f6368" font-size="9">Owner Self-Chat</text>
+  <text x="240" y="375" fill="#5f6368" font-size="9">Agent Self-Chat (business-only)</text>
+  <text x="240" y="388" fill="#5f6368" font-size="9">Lead / Family / Equipo</text>
+  <text x="240" y="401" fill="#5f6368" font-size="9">Group Dynamic Prompts</text>
+  <text x="240" y="414" fill="#5f6368" font-size="9">Enterprise Lead / Outreach</text>
+  <text x="240" y="427" fill="#5f6368" font-size="9">Sports / Elderly / Invoked</text>
+
+  <!-- ═══ NODO 4: Postprocess + Safety (derecha-centro) ═══ -->
+  <rect x="740" y="300" width="240" height="120" rx="12" fill="#1a1a2e" stroke="#FF1744" stroke-width="1.5" filter="shadow"/>
+  <text x="860" y="325" text-anchor="middle" fill="#FF1744" font-size="14" font-weight="700">Postprocess + Safety</text>
+  <text x="860" y="342" text-anchor="middle" fill="#e8eaed" font-size="10">miia_postprocess.js</text>
+  <text x="760" y="362" fill="#5f6368" font-size="9">Identity audit (no revelar IA)</text>
+  <text x="760" y="375" fill="#5f6368" font-size="9">Trigger audit (HOLA/CHAU MIIA)</text>
+  <text x="760" y="388" fill="#5f6368" font-size="9">Promesa rota detection</text>
+  <text x="760" y="401" fill="#5f6368" font-size="9">Tag processing + rescue</text>
+  <text x="760" y="414" fill="#5f6368" font-size="9">Split-smart multi-bubble</text>
+
+  <!-- ═══ NODO 5: Protection (abajo-izquierda) ═══ -->
+  <rect x="60" y="540" width="240" height="140" rx="12" fill="#1a1a2e" stroke="#FF1744" stroke-width="1.5" filter="shadow"/>
+  <text x="180" y="565" text-anchor="middle" fill="#FF1744" font-size="14" font-weight="700">Protection Layer</text>
+  <text x="180" y="582" text-anchor="middle" fill="#e8eaed" font-size="10">protection_manager.js</text>
+  <text x="80" y="602" fill="#5f6368" font-size="9">Kids mode (auto-detect)</text>
+  <text x="80" y="615" fill="#5f6368" font-size="9">Elderly mode (auto-detect)</text>
+  <text x="80" y="628" fill="#5f6368" font-size="9">Security Contacts (NEW)</text>
+  <text x="80" y="641" fill="#00E5FF" font-size="9" font-weight="600">Protector/Protegido bidireccional</text>
+  <text x="80" y="654" fill="#5f6368" font-size="9">OTP vinculacion + 3 niveles</text>
+  <text x="80" y="667" fill="#5f6368" font-size="9">SOS + Fall detection alerts</text>
+
+  <!-- ═══ NODO 6: Agenda + Calendar (abajo-centro) ═══ -->
+  <rect x="460" y="660" width="280" height="130" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
+  <text x="600" y="685" text-anchor="middle" fill="#00E5FF" font-size="14" font-weight="700">Agenda + Calendar</text>
+  <text x="600" y="702" text-anchor="middle" fill="#e8eaed" font-size="10">google_calendar.js + miia_agenda</text>
+  <text x="480" y="722" fill="#5f6368" font-size="9">Google Calendar sync (push only)</text>
+  <text x="480" y="735" fill="#5f6368" font-size="9">Pre-recordatorio 10 min</text>
+  <text x="480" y="748" fill="#5f6368" font-size="9">Late reminder with apology</text>
+  <text x="480" y="761" fill="#5f6368" font-size="9">Tags: AGENDAR_EVENTO / SOLICITAR_TURNO</text>
+  <text x="480" y="774" fill="#FF1744" font-size="9" font-weight="600">TODO: Calendar pull sync</text>
+
+  <!-- ═══ NODO 7: Sports Engine (abajo-derecha) ═══ -->
+  <rect x="900" y="540" width="240" height="130" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
+  <text x="1020" y="565" text-anchor="middle" fill="#00E5FF" font-size="14" font-weight="700">Sports Engine</text>
+  <text x="1020" y="582" text-anchor="middle" fill="#e8eaed" font-size="10">10 adapters + registry</text>
+  <text x="920" y="602" fill="#5f6368" font-size="9">Futbol / F1 / Tenis / NBA</text>
+  <text x="920" y="615" fill="#5f6368" font-size="9">MLB / UFC / Rugby / Boxeo</text>
+  <text x="920" y="628" fill="#5f6368" font-size="9">Golf / Ciclismo</text>
+  <text x="920" y="641" fill="#5f6368" font-size="9">Emotion levels + rate limiting</text>
+  <text x="920" y="654" fill="#5f6368" font-size="9">buildSportsPrompt()</text>
+
+  <!-- ═══ NODO 8: Integrations (arriba-centro) ═══ -->
+  <rect x="460" y="100" width="280" height="100" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
+  <text x="600" y="125" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">Proactive Integrations</text>
+  <text x="480" y="145" fill="#5f6368" font-size="9">Clima (OpenWeather)</text>
+  <text x="480" y="158" fill="#5f6368" font-size="9">Bolsa/Crypto (Alpha Vantage)</text>
+  <text x="480" y="171" fill="#5f6368" font-size="9">Nightly Brain (resumen diario)</text>
+  <text x="650" y="145" fill="#5f6368" font-size="9">Pattern Engine</text>
+  <text x="650" y="158" fill="#5f6368" font-size="9">Biological Clock</text>
+  <text x="650" y="171" fill="#5f6368" font-size="9">Feature Announcer</text>
+  <text x="480" y="188" fill="#5f6368" font-size="9">Email Reports (biweekly)</text>
+
+  <!-- ═══ NODO 9: Dashboard (izquierda-medio) ═══ -->
+  <rect x="40" y="370" width="180" height="120" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
+  <text x="130" y="395" text-anchor="middle" fill="#00E5FF" font-size="13" font-weight="700">Dashboard</text>
+  <text x="60" y="415" fill="#5f6368" font-size="9">Owner dashboard</text>
+  <text x="60" y="428" fill="#5f6368" font-size="9">Admin dashboard</text>
+  <text x="60" y="441" fill="#5f6368" font-size="9">Agent dashboard</text>
+  <text x="60" y="454" fill="#5f6368" font-size="9">Training / Contacts</text>
+  <text x="60" y="467" fill="#5f6368" font-size="9">PWA Mini App</text>
+  <text x="60" y="480" fill="#5f6368" font-size="9">Railway Logs viewer</text>
+
+  <!-- ═══ NODO 10: Learning Engine (derecha-medio) ═══ -->
+  <rect x="900" y="370" width="240" height="120" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
+  <text x="1020" y="395" text-anchor="middle" fill="#7C3AED" font-size="14" font-weight="700">Learning Engine</text>
+  <text x="920" y="415" fill="#5f6368" font-size="9">ADN Learning Vivo</text>
+  <text x="920" y="428" fill="#5f6368" font-size="9">Chat Experto training</text>
+  <text x="920" y="441" fill="#5f6368" font-size="9">Document upload + parsing</text>
+  <text x="920" y="454" fill="#5f6368" font-size="9">History mining enriched</text>
+  <text x="920" y="467" fill="#5f6368" font-size="9">Approval system (keys)</text>
+  <text x="920" y="480" fill="#5f6368" font-size="9">Nightly brain rebuild</text>
+
+  <!-- ═══ NODO: Contact Classification (abajo-izquierda-medio) ═══ -->
+  <rect x="60" y="720" width="220" height="110" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
+  <text x="170" y="745" text-anchor="middle" fill="#7C3AED" font-size="13" font-weight="700">Contact Classification</text>
+  <text x="80" y="765" fill="#5f6368" font-size="9">LID (Lead Identification)</text>
+  <text x="80" y="778" fill="#5f6368" font-size="9">Smart trigger detection</text>
+  <text x="80" y="791" fill="#5f6368" font-size="9">Contact groups dynamic</text>
+  <text x="80" y="804" fill="#5f6368" font-size="9">Auto-classify + contact_index</text>
+  <text x="80" y="817" fill="#5f6368" font-size="9">Business cascade (multi-biz)</text>
+
+  <!-- ═══ NODO: Outreach + CRM (derecha-abajo) ═══ -->
+  <rect x="900" y="720" width="240" height="100" rx="12" fill="#1a1a2e" stroke="#FF1744" stroke-width="1.5" filter="shadow"/>
+  <text x="1020" y="745" text-anchor="middle" fill="#FF1744" font-size="13" font-weight="700">Outreach + CRM</text>
+  <text x="920" y="765" fill="#5f6368" font-size="9">Outreach engine (proactive leads)</text>
+  <text x="920" y="778" fill="#5f6368" font-size="9">Web scraper + YouTube</text>
+  <text x="920" y="791" fill="#5f6368" font-size="9">Followup humanized (63-97 min)</text>
+  <text x="920" y="804" fill="#5f6368" font-size="9">Enterprise lead flow</text>
+
+  <!-- Conexiones secundarias (dependencias internas) -->
+  <line x1="300" y1="440" x2="220" y2="540" stroke="#FF1744" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
+  <line x1="860" y1="420" x2="920" y2="540" stroke="#00E5FF" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
+  <line x1="180" y1="490" x2="170" y2="720" stroke="#7C3AED" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
+  <line x1="1020" y1="670" x2="1020" y2="720" stroke="#FF1744" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
+  <!-- Briefing → Integrations -->
+  <line x1="440" y1="585" x2="460" y2="200" stroke="#00E5FF" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
+  <!-- Nightly → Learning -->
+  <line x1="860" y1="830" x2="1020" y2="490" stroke="#7C3AED" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
+
+  <!-- ═══ NODO: Morning Briefing (centro-abajo-izq) ═══ -->
+  <rect x="320" y="545" width="220" height="100" rx="12" fill="#1a1a2e" stroke="#00E5FF" stroke-width="1.5" filter="shadow"/>
+  <text x="430" y="568" text-anchor="middle" fill="#00E5FF" font-size="13" font-weight="700">Morning Briefing</text>
+  <text x="430" y="585" text-anchor="middle" fill="#e8eaed" font-size="9">8:30 AM Colombia</text>
+  <text x="340" y="602" fill="#5f6368" font-size="9">Leads con pendientes</text>
+  <text x="340" y="615" fill="#5f6368" font-size="9">Aprobaciones de aprendizaje</text>
+  <text x="340" y="628" fill="#5f6368" font-size="9">Contactos sin identificar (LID)</text>
+  <text x="340" y="641" fill="#5f6368" font-size="9">Novedades regulatorias</text>
+
+  <!-- ═══ NODO: Nightly Brain (centro-abajo-der) ═══ -->
+  <rect x="720" y="795" width="220" height="90" rx="12" fill="#1a1a2e" stroke="#7C3AED" stroke-width="1.5" filter="shadow"/>
+  <text x="830" y="818" text-anchor="middle" fill="#7C3AED" font-size="13" font-weight="700">Nightly Brain</text>
+  <text x="830" y="835" text-anchor="middle" fill="#e8eaed" font-size="9">23:00 PM — Opus analiza el dia</text>
+  <text x="740" y="852" fill="#5f6368" font-size="9">Leads calientes + oportunidades</text>
+  <text x="740" y="865" fill="#5f6368" font-size="9">Patrones + sugerencias para manana</text>
+  <text x="740" y="878" fill="#5f6368" font-size="9">Resumen emocional del dia</text>
+
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <!-- ═══ LEYENDA COMPLETA ═══ -->
+  <!-- ═══════════════════════════════════════════════════════════ -->
+  <rect x="40" y="920" width="1120" height="160" rx="12" fill="#12122a" stroke="#2d3748" stroke-width="1"/>
+  <text x="600" y="945" text-anchor="middle" fill="#e8eaed" font-size="14" font-weight="700">LEYENDA</text>
+
+  <!-- Columna 1: Colores de nodo -->
+  <text x="70" y="968" fill="#e8eaed" font-size="11" font-weight="600">COLORES DE NODO</text>
+  <rect x="70" y="976" width="14" height="14" rx="3" fill="none" stroke="#00E5FF" stroke-width="2"/>
+  <text x="92" y="988" fill="#00E5FF" font-size="10">Cian (#00E5FF)</text>
+  <text x="200" y="988" fill="#9aa0a6" font-size="9">= Comunicacion + Tiempo real</text>
+  <rect x="70" y="996" width="14" height="14" rx="3" fill="none" stroke="#7C3AED" stroke-width="2"/>
+  <text x="92" y="1008" fill="#7C3AED" font-size="10">Violeta (#7C3AED)</text>
+  <text x="210" y="1008" fill="#9aa0a6" font-size="9">= Inteligencia + Procesamiento</text>
+  <rect x="70" y="1016" width="14" height="14" rx="3" fill="none" stroke="#FF1744" stroke-width="2"/>
+  <text x="92" y="1028" fill="#FF1744" font-size="10">Rojo (#FF1744)</text>
+  <text x="200" y="1028" fill="#9aa0a6" font-size="9">= Seguridad + Auditoria + Ventas</text>
+  <circle cx="77" cy="1050" r="7" fill="none" stroke="url(#brand)" stroke-width="2"/>
+  <text x="92" y="1053" fill="#e8eaed" font-size="10">Gradiente brand</text>
+  <text x="200" y="1053" fill="#9aa0a6" font-size="9">= Nucleo central MIIA</text>
+
+  <!-- Columna 2: Tipos de linea -->
+  <text x="450" y="968" fill="#e8eaed" font-size="11" font-weight="600">TIPOS DE LINEA</text>
+  <line x1="450" y1="983" x2="510" y2="983" stroke="#00E5FF" stroke-width="1.5" opacity="0.4"/>
+  <text x="520" y="988" fill="#9aa0a6" font-size="10">Linea solida = Conexion directa (datos en tiempo real)</text>
+  <line x1="450" y1="1003" x2="510" y2="1003" stroke="#7C3AED" stroke-width="1" opacity="0.25" stroke-dasharray="4"/>
+  <text x="520" y="1008" fill="#9aa0a6" font-size="10">Linea punteada = Dependencia interna (uso indirecto)</text>
+  <line x1="450" y1="1023" x2="510" y2="1023" stroke="url(#brand)" stroke-width="3"/>
+  <text x="520" y="1028" fill="#9aa0a6" font-size="10">Anillo gradiente = Cerebro central, conecta con TODO</text>
+
+  <!-- Columna 3: Iconos de estado -->
+  <text x="450" y="1048" fill="#e8eaed" font-size="11" font-weight="600">CICLO DIARIO</text>
+  <text x="450" y="1065" fill="#00E5FF" font-size="10">8:30 AM</text>
+  <text x="510" y="1065" fill="#9aa0a6" font-size="9">Morning Briefing (leads, pendientes, LID)</text>
+  <text x="450" y="1078" fill="#7C3AED" font-size="10">23:00 PM</text>
+  <text x="510" y="1078" fill="#9aa0a6" font-size="9">Nightly Brain (Opus analiza TODO el dia)</text>
+
+  <!-- Columna 3: Stats -->
+  <text x="830" y="968" fill="#e8eaed" font-size="11" font-weight="600">ESTADISTICAS</text>
+  <text x="830" y="988" fill="#9aa0a6" font-size="10">14 modulos principales</text>
+  <text x="830" y="1005" fill="#9aa0a6" font-size="10">50+ funciones activas</text>
+  <text x="830" y="1022" fill="#9aa0a6" font-size="10">10 deportes con adapters</text>
+  <text x="830" y="1039" fill="#9aa0a6" font-size="10">3 capas de seguridad (Kids/Elderly/Security)</text>
+  <text x="830" y="1056" fill="#9aa0a6" font-size="10">2 resumenes diarios (8:30 AM + 11 PM)</text>
+  <text x="830" y="1073" fill="#9aa0a6" font-size="10">Calendar sync bidireccional (push + pull 15min)</text>
+
+  <!-- Footer -->
+  <text x="600" y="1095" text-anchor="middle" fill="#3a3a4a" font-size="9">MIIA Brain Map v1.1 — Abril 2026 — (c) Mariano De Stefano</text>
+</svg>
