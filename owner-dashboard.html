@@ -1666,22 +1666,35 @@
             </div>
             <div id="emailStatus" style="font-size:0.78rem;color:var(--text-muted);"></div>
           </div>
-          <!-- IMAP -->
+          <!-- IMAP — Gestión de email por WhatsApp -->
           <div style="padding-top:14px;border-top:1px solid var(--border-glass);">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
-              <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Aprendizaje por IMAP</span>
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+              <span style="font-size:0.85rem;color:var(--text-dark);font-weight:600;">Lectura de email (IMAP)</span>
               <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
                 <input type="checkbox" id="emailLearningToggle" onchange="saveImapConfig()" style="accent-color:var(--primary);">
-                <span style="font-size:0.75rem;color:var(--text-muted);">Activo</span>
+                <span style="font-size:0.75rem;color:var(--text-muted);">Aprendizaje</span>
               </label>
             </div>
-            <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;">MIIA revisará tu bandeja cada 30 min y aprenderá del contexto de tus emails.</p>
+            <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:8px;">MIIA podrá leer, buscar y eliminar correos desde WhatsApp. Pedile "mis correos" o "leé el 2".</p>
             <input type="text" id="imapHost" placeholder="IMAP Host (ej: imap.gmail.com)" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:6px;box-sizing:border-box;">
-            <input type="password" id="imapPass" placeholder="Contraseña IMAP" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box;">
+            <input type="email" id="imapUser" placeholder="Usuario IMAP (ej: tu@gmail.com)" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:6px;box-sizing:border-box;">
+            <input type="password" id="imapPass" placeholder="Contraseña o App Password" style="width:100%;background:var(--bg-surface);color:var(--text-dark);border:1px solid var(--border-glass);border-radius:8px;padding:8px 12px;font-size:0.82rem;font-family:inherit;outline:none;margin-bottom:8px;box-sizing:border-box;">
             <div style="display:flex;gap:8px;">
-              <button onclick="saveImapConfig()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Guardar IMAP</button>
-              <button onclick="scanEmailsNow()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Escanear ahora</button>
+              <button onclick="saveImapConfig()" style="flex:1;background:var(--gradient-main);color:white;border:none;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-weight:600;font-family:inherit;">Guardar IMAP</button>
+              <button onclick="testImapConnection()" style="flex:1;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Probar conexion</button>
             </div>
+            <details style="margin-top:8px;">
+              <summary style="font-size:0.75rem;color:var(--primary);cursor:pointer;font-weight:600;">Gmail: como configurar App Password</summary>
+              <ol style="font-size:0.73rem;color:var(--text-muted);line-height:1.6;padding-left:18px;margin-top:6px;">
+                <li>Ir a <a href="https://myaccount.google.com/security" target="_blank" style="color:var(--primary);">myaccount.google.com/security</a></li>
+                <li>Activar <strong>Verificacion en 2 pasos</strong> (si no la tenias)</li>
+                <li>En Seguridad, buscar <strong>"Contrasenas de aplicaciones"</strong></li>
+                <li>Crear una nueva: nombre <strong>"MIIA"</strong></li>
+                <li>Copiar la contrasena de 16 caracteres generada</li>
+                <li>Pegar aca arriba en "Contrasena o App Password"</li>
+              </ol>
+              <p style="font-size:0.73rem;color:var(--text-muted);margin-top:4px;">Host IMAP: <strong>imap.gmail.com</strong> | SMTP: <strong>smtp.gmail.com</strong></p>
+            </details>
             <div id="imapStatus" style="font-size:0.78rem;color:var(--text-muted);margin-top:6px;"></div>
           </div>
         </div>
@@ -3666,22 +3679,51 @@
         const res = await fetch(API + '/api/email/imap-config');
         const data = await res.json();
         if (data.imapHost) document.getElementById('imapHost').value = data.imapHost;
+        if (data.imapUser) document.getElementById('imapUser').value = data.imapUser;
         document.getElementById('emailLearningToggle').checked = !!data.emailLearningEnabled;
         if (data.lastEmailCheck) {
-          document.getElementById('imapStatus').textContent = `Última revisión: ${new Date(data.lastEmailCheck).toLocaleString('es-ES')}`;
+          document.getElementById('imapStatus').textContent = 'Ultima revision: ' + new Date(data.lastEmailCheck).toLocaleString('es-ES');
         }
       } catch (_) {}
     }
 
     async function saveImapConfig() {
       const imapHost = document.getElementById('imapHost').value.trim();
+      const imapUser = document.getElementById('imapUser').value.trim();
       const imapPass = document.getElementById('imapPass').value;
-      const imapUser = document.getElementById('smtpUser').value.trim() || document.getElementById('emailFrom').value.trim();
       const emailLearningEnabled = document.getElementById('emailLearningToggle').checked;
+      if (!imapHost || !imapUser) {
+        showToast('Completa host y usuario IMAP', 'warning');
+        return;
+      }
       try {
         await fetch(API + '/api/email/imap-config', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ imapHost, imapUser, imapPass, emailLearningEnabled }) });
-        showToast('✅ Config IMAP guardada', 'success');
+        showToast('Config IMAP guardada', 'success');
       } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+
+    async function testImapConnection() {
+      const imapHost = document.getElementById('imapHost').value.trim();
+      const imapUser = document.getElementById('imapUser').value.trim();
+      const imapPass = document.getElementById('imapPass').value;
+      if (!imapHost || !imapUser || !imapPass) {
+        showToast('Completa todos los campos IMAP', 'warning');
+        return;
+      }
+      document.getElementById('imapStatus').textContent = 'Probando conexion...';
+      try {
+        const res = await fetch(API + '/api/email/test-imap', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ imapHost, imapUser, imapPass }) });
+        const data = await res.json();
+        if (data.ok) {
+          document.getElementById('imapStatus').innerHTML = '<span style="color:#10b981;">Conexion exitosa (' + (data.messageCount || 0) + ' emails)</span>';
+          showToast('Conexion IMAP exitosa', 'success');
+        } else {
+          document.getElementById('imapStatus').innerHTML = '<span style="color:#ef4444;">' + (data.error || 'No se pudo conectar') + '</span>';
+          showToast('Error IMAP: ' + (data.error || 'fallo'), 'error');
+        }
+      } catch (e) {
+        document.getElementById('imapStatus').innerHTML = '<span style="color:#ef4444;">Error de red</span>';
+      }
     }
 
     async function scanEmailsNow() {
