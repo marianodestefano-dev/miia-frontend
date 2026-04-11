@@ -2283,7 +2283,7 @@
     if (_logDeploymentsLoaded) return;
     try {
       const token = await firebase.auth().currentUser?.getIdToken();
-      const resp = await fetch(`${API}/api/admin/railway-deployments?limit=10`, {
+      const resp = await fetch(`${BACKEND_URL}/api/admin/railway-deployments?limit=10`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (!resp.ok) return;
@@ -2316,7 +2316,7 @@
       const params = new URLSearchParams({ type, limit });
       if (deploymentId) params.set('deploymentId', deploymentId);
 
-      const resp = await fetch(`${API}/api/admin/railway-logs?${params}`, {
+      const resp = await fetch(`${BACKEND_URL}/api/admin/railway-logs?${params}`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
 
