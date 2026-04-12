@@ -5894,9 +5894,26 @@
     }
   }
 
-  // ═══ RESERVATIONS LIST ═══
+  // ═══ RESERVATIONS DASHBOARD (R4) ═══
+  function switchReservationTab(tab) {
+    ['active','favorites','network','history'].forEach(t => {
+      const panel = document.getElementById(`resPanel${t.charAt(0).toUpperCase() + t.slice(1)}`);
+      const btn = document.getElementById(`resTab${t.charAt(0).toUpperCase() + t.slice(1)}`);
+      if (panel) panel.style.display = t === tab ? 'block' : 'none';
+      if (btn) {
+        btn.style.background = t === tab ? 'var(--accent-primary)' : 'transparent';
+        btn.style.color = t === tab ? 'white' : 'var(--text-muted)';
+      }
+    });
+    if (tab === 'active') { loadReservations(); loadPendingRatings(); }
+    if (tab === 'favorites') loadFavorites();
+    if (tab === 'network') loadMiiaNetwork();
+    if (tab === 'history') loadReservationHistory();
+  }
+
   async function loadReservations() {
     const container = document.getElementById('reservationsList');
+    const empty = document.getElementById('resEmptyActive');
     container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">Cargando...</p>';
     try {
       const resp = await fetch(`${API_BASE}/api/reservations?limit=10`, {
@@ -5904,18 +5921,120 @@
       });
       const data = await resp.json();
       if (!data.ok || !data.reservations?.length) {
-        container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">No hay reservas. Pedile a MIIA: "reservame mesa en..."</p>';
+        container.innerHTML = '';
+        empty.style.display = 'block';
         return;
       }
+      empty.style.display = 'none';
       const statusEmoji = { searching: '🔍', pending: '⏳', confirmed: '✅', cancelled: '❌', completed: '🏁' };
-      container.innerHTML = data.reservations.map(r =>
-        `<div style="padding:10px 14px;background:rgba(0,229,255,0.04);border:1px solid var(--border-color);border-radius:8px;margin-bottom:6px;">
+      const statusColor = { confirmed: '#34D399', pending: '#fbbf24', cancelled: '#f87171', completed: '#9aa0a6' };
+      container.innerHTML = data.reservations.map(r => {
+        const source = r.source === 'miia_network' ? '<span style="background:rgba(59,91,255,0.15);color:var(--accent-primary);padding:2px 6px;border-radius:4px;font-size:0.7rem;font-weight:700;margin-left:6px;">🤖 MIIA</span>' : '';
+        return `<div style="padding:12px 14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;margin-bottom:8px;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--accent-primary)'" onmouseout="this.style.borderColor='var(--border-color)'">
           <div style="display:flex;justify-content:space-between;align-items:center;">
-            <strong style="color:var(--text-dark);font-size:0.88rem;">${statusEmoji[r.status] || '📋'} ${r.businessName || 'Sin nombre'}</strong>
-            <span style="color:var(--text-muted);font-size:0.78rem;">${r.date || ''} ${r.time || ''}</span>
+            <strong style="color:var(--text-dark);font-size:0.88rem;">${statusEmoji[r.status] || '📋'} ${r.businessName || 'Sin nombre'}${source}</strong>
+            <span style="color:${statusColor[r.status] || 'var(--text-muted)'};font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:12px;background:${statusColor[r.status] ? statusColor[r.status] + '15' : 'transparent'};">${(r.status || '').toUpperCase()}</span>
+          </div>
+          <div style="color:var(--text-muted);font-size:0.78rem;margin-top:6px;display:flex;gap:12px;flex-wrap:wrap;">
+            <span>📅 ${r.date || '?'} ${r.time || ''}</span>
+            <span>📍 ${r.businessAddress || '?'}</span>
+            <span>👥 ${r.partySize || 1}</span>
+          </div>
+          ${r.status === 'confirmed' ? `<div style="margin-top:8px;display:flex;gap:6px;">
+            <button onclick="cancelReservation('${r.id}')" style="padding:4px 10px;font-size:0.75rem;border:1px solid #f87171;color:#f87171;background:transparent;border-radius:6px;cursor:pointer;">Cancelar</button>
+          </div>` : ''}
+          ${r.status === 'completed' && !r.personalRating ? `<div style="margin-top:8px;">
+            <span style="font-size:0.78rem;color:var(--text-muted);">Calificar: </span>
+            ${[1,2,3,4,5].map(s => `<span onclick="rateReservation('${r.id}', ${s})" style="cursor:pointer;font-size:1.1rem;opacity:0.5;transition:opacity .2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.5">⭐</span>`).join('')}
+          </div>` : ''}
+        </div>`;
+      }).join('');
+    } catch(e) {
+      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+    }
+  }
+
+  async function loadPendingRatings() {
+    try {
+      const resp = await fetch(`${API_BASE}/api/reservations/pending-rating`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}` }
+      });
+      const data = await resp.json();
+      const banner = document.getElementById('pendingRatingBanner');
+      const list = document.getElementById('pendingRatingList');
+      if (!data.success || !data.data?.length) { banner.style.display = 'none'; return; }
+      banner.style.display = 'block';
+      list.innerHTML = data.data.slice(0, 3).map(r =>
+        `<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(0,0,0,0.06);">
+          <span style="font-size:0.82rem;color:var(--text-dark);">${r.businessName || '?'} (${r.date || '?'})</span>
+          <span>${[1,2,3,4,5].map(s => `<span onclick="rateReservation('${r.id}', ${s})" style="cursor:pointer;font-size:0.9rem;opacity:0.6;transition:opacity .2s;" onmouseover="this.style.opacity=1" onmouseout="this.style.opacity=0.6">⭐</span>`).join('')}</span>
+        </div>`
+      ).join('');
+    } catch(e) { console.warn('Error loading pending ratings:', e); }
+  }
+
+  async function loadFavorites() {
+    const container = document.getElementById('favoritesList');
+    const empty = document.getElementById('resEmptyFavorites');
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">Cargando favoritos...</p>';
+    try {
+      const resp = await fetch(`${API_BASE}/api/reservations/favorites`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}` }
+      });
+      const data = await resp.json();
+      if (!data.ok || !data.favorites?.length) {
+        container.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+      container.innerHTML = data.favorites.map(f => {
+        const stars = f.rating ? '⭐'.repeat(Math.min(Math.round(f.rating), 5)) : '';
+        return `<div style="padding:12px 14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;margin-bottom:8px;transition:border-color .2s;" onmouseover="this.style.borderColor='#fbbf24'" onmouseout="this.style.borderColor='var(--border-color)'">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="color:var(--text-dark);font-size:0.88rem;">⭐ ${f.name || '?'}</strong>
+            <span style="font-size:0.78rem;color:var(--text-muted);">${f.visitCount || 0} visitas</span>
           </div>
           <div style="color:var(--text-muted);font-size:0.78rem;margin-top:4px;">
-            📍 ${r.businessAddress || '?'} | 👥 ${r.partySize || 1} | ${r.status}
+            ${stars} ${f.rating ? `${f.rating}/5` : ''} | ${f.type || ''} | 📍 ${f.address || '?'}
+          </div>
+          ${f.phone ? `<div style="margin-top:6px;"><span style="font-size:0.75rem;color:var(--accent-primary);cursor:pointer;" onclick="navigator.clipboard.writeText('${f.phone}');showToast('Teléfono copiado','success')">📞 ${f.phone}</span></div>` : ''}
+        </div>`;
+      }).join('');
+    } catch(e) {
+      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+    }
+  }
+
+  async function loadMiiaNetwork() {
+    const container = document.getElementById('networkList');
+    const empty = document.getElementById('resEmptyNetwork');
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">Buscando negocios MIIA...</p>';
+    try {
+      const type = document.getElementById('networkTypeFilter')?.value || '';
+      const resp = await fetch(`${API_BASE}/api/miia-network/search?type=${type}`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}` }
+      });
+      const data = await resp.json();
+      if (!data.success || !data.data?.length) {
+        container.innerHTML = '';
+        empty.style.display = 'block';
+        return;
+      }
+      empty.style.display = 'none';
+      container.innerHTML = data.data.map(b =>
+        `<div style="padding:12px 14px;background:linear-gradient(135deg,rgba(59,91,255,0.04),rgba(255,26,140,0.04));border:1px solid rgba(59,91,255,0.2);border-radius:10px;margin-bottom:8px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="color:var(--text-dark);font-size:0.88rem;">🤖 ${b.name}</strong>
+            <span style="background:var(--accent-primary);color:white;padding:2px 8px;border-radius:12px;font-size:0.7rem;font-weight:700;">MIIA</span>
+          </div>
+          <div style="color:var(--text-muted);font-size:0.78rem;margin-top:4px;">
+            ${b.type || ''} | 📍 ${b.address || '?'} ${b.rating ? `| ⭐ ${b.rating}/5` : ''}
+          </div>
+          ${b.description ? `<p style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;line-height:1.4;">${b.description.substring(0, 100)}${b.description.length > 100 ? '...' : ''}</p>` : ''}
+          <div style="margin-top:8px;">
+            <span style="font-size:0.75rem;color:var(--accent-primary);font-weight:600;">✨ Reserva automática disponible</span>
+            ${b.autoConfirm ? '<span style="font-size:0.75rem;color:#34D399;margin-left:8px;">✓ Confirmación inmediata</span>' : ''}
           </div>
         </div>`
       ).join('');
@@ -5924,28 +6043,59 @@
     }
   }
 
-  async function loadFavorites() {
-    const container = document.getElementById('reservationsList');
-    container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">Cargando favoritos...</p>';
+  async function loadReservationHistory() {
+    const container = document.getElementById('historyList');
+    const empty = document.getElementById('resEmptyHistory');
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">Cargando historial...</p>';
     try {
-      const resp = await fetch(`${API_BASE}/api/reservations/favorites`, {
+      const resp = await fetch(`${API_BASE}/api/reservations?limit=20`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}` }
       });
       const data = await resp.json();
-      if (!data.ok || !data.favorites?.length) {
-        container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">No hay favoritos. Cuando hagas reservas, tus lugares se guardan automáticamente.</p>';
+      if (!data.ok || !data.reservations?.length) {
+        container.innerHTML = '';
+        empty.style.display = 'block';
         return;
       }
-      container.innerHTML = data.favorites.map(f =>
-        `<div style="padding:10px 14px;background:rgba(0,229,255,0.04);border:1px solid var(--border-color);border-radius:8px;margin-bottom:6px;">
-          <strong style="color:var(--text-dark);font-size:0.88rem;">⭐ ${f.name || '?'}</strong>
-          <span style="color:var(--text-muted);font-size:0.78rem;margin-left:8px;">${f.type || ''} ${f.rating ? `(${f.rating}/5)` : ''}</span>
-          <div style="color:var(--text-muted);font-size:0.78rem;margin-top:2px;">📍 ${f.address || '?'} | Visitas: ${f.visitCount || 0}</div>
+      empty.style.display = 'none';
+      const statusEmoji = { searching: '🔍', pending: '⏳', confirmed: '✅', cancelled: '❌', completed: '🏁' };
+      container.innerHTML = data.reservations.map(r =>
+        `<div style="padding:10px 14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;margin-bottom:6px;opacity:${r.status === 'cancelled' ? '0.5' : '1'};">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <span style="color:var(--text-dark);font-size:0.85rem;">${statusEmoji[r.status] || '📋'} ${r.businessName || '?'}</span>
+            <span style="color:var(--text-muted);font-size:0.75rem;">${r.date || ''}</span>
+          </div>
+          ${r.personalRating ? `<div style="margin-top:2px;font-size:0.78rem;">Tu rating: ${'⭐'.repeat(r.personalRating)}</div>` : ''}
         </div>`
       ).join('');
     } catch(e) {
       container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
     }
+  }
+
+  async function cancelReservation(id) {
+    if (!confirm('¿Estás seguro de cancelar esta reserva?')) return;
+    try {
+      await fetch(`${API_BASE}/api/reservations/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}` }
+      });
+      showToast('Reserva cancelada', 'success');
+      loadReservations();
+    } catch(e) { showToast('Error al cancelar: ' + e.message, 'error'); }
+  }
+
+  async function rateReservation(id, rating) {
+    try {
+      await fetch(`${API_BASE}/api/reservations/${id}/rate`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ rating })
+      });
+      showToast(`Calificado con ${'⭐'.repeat(rating)}`, 'success');
+      loadReservations();
+      loadPendingRatings();
+    } catch(e) { showToast('Error al calificar: ' + e.message, 'error'); }
   }
 
   // ═══ VOICE CONFIG ═══
@@ -5971,6 +6121,9 @@
   function initConfigTab() {
     checkGoogleConnection();
     loadVoiceConfig();
+    // R4: Cargar reservas activas por defecto
+    loadReservations();
+    loadPendingRatings();
   }
 
   // ═══ SCHEDULE CONFIG ═══
@@ -7584,7 +7737,7 @@
           </div>
         </div>
 
-        <!-- ═══ RESERVAS CONFIG ═══ -->
+        <!-- ═══ RESERVAS DASHBOARD (R4) ═══ -->
         <div class="payment-card" style="margin-top:20px;">
           <div class="payment-card-header" style="align-items:flex-start;gap:16px;flex-direction:column;">
             <div style="display:flex;align-items:center;gap:12px;width:100%;">
@@ -7594,11 +7747,57 @@
                 <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">Gestioná tus reservas y negocios favoritos. Pedile a MIIA por WhatsApp: "reservame mesa en..." y ella busca, compara y agenda.</p>
               </div>
             </div>
-            <div style="display:flex;gap:10px;width:100%;">
-              <button onclick="loadReservations()" class="btn-sm" style="padding:8px 16px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">Ver reservas</button>
-              <button onclick="loadFavorites()" class="btn-sm btn-outline" style="padding:8px 16px;font-size:0.82rem;">Ver favoritos</button>
+
+            <!-- Sub-tabs de reservas -->
+            <div style="display:flex;gap:4px;width:100%;background:var(--card-bg);border-radius:10px;padding:3px;border:1px solid var(--border-color);">
+              <button onclick="switchReservationTab('active')" id="resTabActive" class="btn-sm" style="flex:1;padding:8px 12px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.78rem;transition:all .2s;">Activas</button>
+              <button onclick="switchReservationTab('favorites')" id="resTabFavorites" class="btn-sm" style="flex:1;padding:8px 12px;background:transparent;color:var(--text-muted);border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.78rem;transition:all .2s;">Favoritos ⭐</button>
+              <button onclick="switchReservationTab('network')" id="resTabNetwork" class="btn-sm" style="flex:1;padding:8px 12px;background:transparent;color:var(--text-muted);border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.78rem;transition:all .2s;">Red MIIA 🤖</button>
+              <button onclick="switchReservationTab('history')" id="resTabHistory" class="btn-sm" style="flex:1;padding:8px 12px;background:transparent;color:var(--text-muted);border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.78rem;transition:all .2s;">Historial</button>
             </div>
-            <div id="reservationsList" style="width:100%;margin-top:8px;"></div>
+
+            <!-- Panel: Reservas activas -->
+            <div id="resPanelActive" style="width:100%;margin-top:8px;">
+              <div id="pendingRatingBanner" style="display:none;background:linear-gradient(135deg,rgba(255,193,7,0.1),rgba(255,152,0,0.1));border:1px solid rgba(255,193,7,0.3);border-radius:10px;padding:12px;margin-bottom:12px;">
+                <p style="font-size:0.82rem;color:var(--text-dark);font-weight:600;margin-bottom:6px;">⭐ Tenés reservas por calificar</p>
+                <div id="pendingRatingList"></div>
+              </div>
+              <div id="reservationsList" style="width:100%;"></div>
+              <p id="resEmptyActive" style="display:none;color:var(--text-muted);font-size:0.82rem;">No hay reservas activas. Pedile a MIIA: "reservame mesa en..."</p>
+            </div>
+
+            <!-- Panel: Favoritos -->
+            <div id="resPanelFavorites" style="width:100%;margin-top:8px;display:none;">
+              <div id="favoritesList" style="width:100%;"></div>
+              <p id="resEmptyFavorites" style="display:none;color:var(--text-muted);font-size:0.82rem;">No hay favoritos. Cuando hagas reservas, tus lugares se guardan automáticamente.</p>
+            </div>
+
+            <!-- Panel: Red MIIA -->
+            <div id="resPanelNetwork" style="width:100%;margin-top:8px;display:none;">
+              <div style="background:linear-gradient(135deg,rgba(59,91,255,0.08),rgba(255,26,140,0.08));border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid rgba(59,91,255,0.2);">
+                <p style="font-size:0.82rem;color:var(--text-dark);margin-bottom:6px;"><strong>🤖 Red MIIA</strong> — Negocios que usan MIIA. Las reservas se hacen automáticamente vía WhatsApp.</p>
+                <div style="display:flex;gap:8px;margin-top:8px;">
+                  <select id="networkTypeFilter" onchange="loadMiiaNetwork()" style="flex:1;padding:6px 10px;font-size:0.82rem;border-radius:8px;border:1px solid var(--border-color);background:var(--card-bg);color:var(--text-dark);">
+                    <option value="">Todos los tipos</option>
+                    <option value="restaurant">Restaurantes</option>
+                    <option value="doctor">Médicos</option>
+                    <option value="salon">Peluquerías</option>
+                    <option value="dentist">Dentistas</option>
+                    <option value="hotel">Hoteles</option>
+                    <option value="spa">Spa</option>
+                    <option value="gym">Gimnasios</option>
+                  </select>
+                </div>
+              </div>
+              <div id="networkList" style="width:100%;"></div>
+              <p id="resEmptyNetwork" style="display:none;color:var(--text-muted);font-size:0.82rem;">No hay negocios MIIA en tu zona todavía. ¡Pronto habrá más!</p>
+            </div>
+
+            <!-- Panel: Historial -->
+            <div id="resPanelHistory" style="width:100%;margin-top:8px;display:none;">
+              <div id="historyList" style="width:100%;"></div>
+              <p id="resEmptyHistory" style="display:none;color:var(--text-muted);font-size:0.82rem;">Sin historial de reservas.</p>
+            </div>
           </div>
         </div>
 
