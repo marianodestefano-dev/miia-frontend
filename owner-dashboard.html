@@ -5030,6 +5030,21 @@
     if (m) { m.classList.add('hidden'); m.style.cssText = ''; }
   }
 
+  // Bind click listener directo al botón (no depende de onclick del HTML)
+  document.addEventListener('DOMContentLoaded', function() {
+    var waBtn = document.getElementById('homeWaConnectBtn');
+    if (waBtn) {
+      waBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        console.log('[QR-BIND] Click detectado en homeWaConnectBtn');
+        openQRModal();
+      });
+      console.log('[QR-BIND] ✅ Listener agregado a homeWaConnectBtn');
+    } else {
+      console.error('[QR-BIND] ❌ homeWaConnectBtn NO encontrado');
+    }
+  });
+
   async function connectWhatsApp() {
     if (_qrConnecting) return; // Bloquear clics múltiples
     _qrConnecting = true;
