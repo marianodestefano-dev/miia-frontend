@@ -1818,9 +1818,10 @@
   }
 
   // ─── Docs upload ──────────────────────────
-  async function adminUploadTrainingDocs(event) {
-    const files = Array.from(event.target.files);
-    if (!files.length) return;
+  async function adminUploadTrainingDocs() {
+    const input = document.getElementById('adminDocUploadInput');
+    const files = Array.from(input.files);
+    if (!files.length) { showToast('Seleccioná al menos un archivo primero', 'warning'); return; }
     const statusEl = document.getElementById('adminDocUploadStatus');
     statusEl.textContent = `Subiendo ${files.length} archivo(s)...`;
     const fd = new FormData();
@@ -1830,7 +1831,7 @@
       const data = await res.json();
       statusEl.textContent = data.success ? `✅ ${files.length} archivo(s) subido(s). MIIA está aprendiendo.` : ('Error: ' + (data.error||'desconocido'));
     } catch (e) { statusEl.textContent = 'Error: ' + e.message; }
-    event.target.value = '';
+    input.value = '';
   }
 
   // ─── Humanizer ────────────────────────────

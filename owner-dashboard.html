@@ -2730,7 +2730,7 @@
         tbody.innerHTML = agents.map(a => `<tr>
           <td style="padding:10px 12px;">${esc(a.name || '—')}</td>
           <td style="padding:10px 12px;">${esc(a.phone || '—')}</td>
-          <td style="padding:10px 12px;"><span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.78rem;font-weight:600;background:${a.otp_verified ? '#dcfce7' : '#fef3c7'};color:${a.otp_verified ? '#166534' : '#92400e'};">${a.otp_verified ? 'Activo' : 'Pendiente'}</span></td>
+          <td style="padding:10px 12px;"><span style="display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.78rem;font-weight:600;background:${a.otp_verified ? 'var(--green-600)' : 'var(--amber-600)'};color:${a.otp_verified ? 'var(--green-400)' : 'var(--amber-400)'};">${a.otp_verified ? 'Activo' : 'Pendiente'}</span></td>
           <td style="padding:10px 12px;"><button class="btn-icon danger" onclick="removeAgent('${a.uid}')">🗑</button></td>
         </tr>`).join('');
       } catch (e) {
@@ -4590,7 +4590,7 @@
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
           body: JSON.stringify({ name: data.name, nickname: data.nickname, relation: data.relation, likes: data.likes, fandom: data.fandom })
-        }).catch(() => {});
+        }).catch(err => console.warn('[contact-index] update failed:', err.message));
       } catch (err) {
         showToast('Error: ' + err.message, 'error');
       }
