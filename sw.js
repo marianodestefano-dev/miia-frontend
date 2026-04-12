@@ -3,7 +3,7 @@
 // (c) 2024-2026 Mariano De Stefano. All rights reserved.
 // ════════════════════════════════════════════════════════════════════════════
 
-const CACHE_NAME = 'miia-v2';
+const CACHE_NAME = 'miia-v3';
 const STATIC_ASSETS = [
   '/miia-logo.svg',
   '/miia-logo.png',
@@ -37,18 +37,25 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// Fetch: NETWORK-FIRST for everything, cache as fallback only
+// Fetch: HTML always from network (NEVER cache). Static assets: network-first with cache fallback.
 self.addEventListener('fetch', (event) => {
+  const url = new URL(event.request.url);
+
+  // HTML pages: ALWAYS network, NEVER cache — prevents stale dashboard
+  if (event.request.mode === 'navigate' || url.pathname.endsWith('.html')) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Everything else: network-first with cache fallback
   event.respondWith(
     fetch(event.request).then((response) => {
-      // Cache successful GET responses for offline fallback
       if (response.ok && event.request.method === 'GET') {
         const clone = response.clone();
         caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
       }
       return response;
     }).catch(() => {
-      // Offline: try cache
       return caches.match(event.request);
     })
   );
