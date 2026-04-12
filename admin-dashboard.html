@@ -204,7 +204,7 @@
         Logs
       </button>
 
-      <div style="border-top:1px solid var(--border-color);margin:12px 0;"></div>
+      <div style="border-top:1px solid var(--border-glass);margin:12px 0;"></div>
 
       <button class="sidebar-btn" onclick="window.location.href='owner-dashboard.html'" style="background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(124,58,237,0.08));border:1px solid rgba(0,229,255,0.2);">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -537,7 +537,7 @@
                 <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;">Selecciona o crea una sesion para chatear</p>
               </div>
               <div style="display:flex;gap:8px;">
-                <input type="text" id="adminExpertInput" placeholder="Escribi para entrenar a MIIA..." style="flex:1;padding:10px 12px;border:1px solid rgba(0,229,255,0.15);border-radius:8px;font-size:0.9rem;color:var(--text-dark);background:var(--surface);">
+                <input type="text" id="adminExpertInput" placeholder="Escribi para entrenar a MIIA..." style="flex:1;padding:10px 12px;border:1px solid rgba(0,229,255,0.15);border-radius:8px;font-size:0.9rem;color:var(--text-dark);background:var(--bg-surface);">
                 <button class="btn-sm btn-primary" onclick="adminSendExpertMessage()">Enviar</button>
               </div>
             </div>
@@ -547,7 +547,7 @@
                 <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;">Escribe como si fueras un lead para probar MIIA</p>
               </div>
               <div style="display:flex;gap:8px;">
-                <input type="text" id="adminTestInput" placeholder="Simula un mensaje de lead..." style="flex:1;padding:10px 12px;border:1px solid rgba(0,229,255,0.15);border-radius:8px;font-size:0.9rem;color:var(--text-dark);background:var(--surface);">
+                <input type="text" id="adminTestInput" placeholder="Simula un mensaje de lead..." style="flex:1;padding:10px 12px;border:1px solid rgba(0,229,255,0.15);border-radius:8px;font-size:0.9rem;color:var(--text-dark);background:var(--bg-surface);">
                 <button class="btn-sm btn-primary" onclick="adminSendTestMessage()">Enviar</button>
                 <button class="btn-sm btn-outline" onclick="adminResetTest()">Reset</button>
               </div>
@@ -562,7 +562,7 @@
             <div id="trainHumanizer" class="train-panel" style="display:none;">
               <div style="display:flex;align-items:center;gap:12px;">
                 <label style="font-size:0.9rem;font-weight:600;color:var(--text-dark);">Humanizador de mensajes</label>
-                <div style="position:relative;width:44px;height:24px;cursor:pointer;" onclick="adminSaveHumanizerPref()">
+                <div style="position:relative;width:44px;height:24px;cursor:pointer;" onclick="var cb=document.getElementById('adminHumanizerToggle');cb.checked=!cb.checked;adminSaveHumanizerPref(cb.checked)">
                   <input type="checkbox" id="adminHumanizerToggle" style="opacity:0;width:0;height:0;">
                   <span id="adminHumanizerTrack" style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,229,255,0.15);border-radius:24px;transition:0.3s;"></span>
                 </div>
@@ -835,31 +835,31 @@
 
       <!-- Controles -->
       <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:16px;align-items:center;">
-        <select id="logType" onchange="loadRailwayLogs()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;cursor:pointer;">
+        <select id="logType" onchange="loadRailwayLogs()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;cursor:pointer;">
           <option value="deploy">Deploy Logs</option>
           <option value="build">Build Logs</option>
           <option value="http">HTTP Logs</option>
         </select>
-        <select id="logDeployment" onchange="loadRailwayLogs()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;cursor:pointer;max-width:280px;">
+        <select id="logDeployment" onchange="loadRailwayLogs()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;cursor:pointer;max-width:280px;">
           <option value="">Último deployment</option>
         </select>
-        <select id="logLimit" onchange="loadRailwayLogs()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;cursor:pointer;">
+        <select id="logLimit" onchange="loadRailwayLogs()" style="padding:8px 14px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;cursor:pointer;">
           <option value="100">100 líneas</option>
           <option value="200" selected>200 líneas</option>
           <option value="500">500 líneas</option>
           <option value="1000">1000 líneas</option>
           <option value="2000">2000 líneas</option>
         </select>
-        <input type="text" id="logFilter" placeholder="Filtrar... (ej: ERROR, AGENDA, FOLLOWUP)" oninput="filterLogs()" style="flex:1;min-width:200px;padding:8px 14px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;">
+        <input type="text" id="logFilter" placeholder="Filtrar... (ej: ERROR, AGENDA, FOLLOWUP)" oninput="filterLogs()" style="flex:1;min-width:200px;padding:8px 14px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-surface);color:var(--text-dark);font-size:0.85rem;">
         <button onclick="loadRailwayLogs()" style="padding:8px 18px;border-radius:8px;border:none;background:var(--primary);color:white;font-weight:600;font-size:0.85rem;cursor:pointer;">🔄 Recargar</button>
-        <button onclick="downloadLogs()" style="padding:8px 18px;border-radius:8px;border:1px solid var(--border-color);background:var(--bg-surface);color:var(--text-dark);font-weight:600;font-size:0.85rem;cursor:pointer;">⬇️ Descargar</button>
+        <button onclick="downloadLogs()" style="padding:8px 18px;border-radius:8px;border:1px solid var(--border-glass);background:var(--bg-surface);color:var(--text-dark);font-weight:600;font-size:0.85rem;cursor:pointer;">⬇️ Descargar</button>
       </div>
 
       <!-- Stats rápidas -->
       <div id="logStats" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;"></div>
 
       <!-- Log viewer -->
-      <div id="logViewer" style="background:var(--surface);border:1px solid var(--border-color);border-radius:12px;padding:16px;font-family:'Fira Code','Cascadia Code','Consolas',monospace;font-size:0.78rem;line-height:1.6;color:var(--tx-body);max-height:70vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;">
+      <div id="logViewer" style="background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:12px;padding:16px;font-family:'Fira Code','Cascadia Code','Consolas',monospace;font-size:0.78rem;line-height:1.6;color:var(--tx-body);max-height:70vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;">
         <div style="color:var(--tx-body);text-align:center;padding:40px;">Cargando logs...</div>
       </div>
 
@@ -978,7 +978,7 @@
       const r = await fetch('https://api.miia-app.com/api/is-admin', { headers: { Authorization: 'Bearer ' + token } });
       const d = await r.json();
       return d.isAdmin === true;
-    } catch (_) { return false; }
+    } catch (e) { console.error('[ADMIN] checkIsAdmin error:', e.message); return false; }
   }
 
   // Auth guard
@@ -1384,7 +1384,7 @@
     setTimeout(() => html.classList.remove('theme-transitioning'), 400);
     const user = auth.currentUser;
     if (user) {
-      db.collection('users').doc(user.uid).update({ themePreference: next }).catch(() => {});
+      dbFs.collection('users').doc(user.uid).update({ themePreference: next }).catch(() => {});
     }
   }
 
@@ -1900,7 +1900,7 @@
   // Restore section from hash
   window.addEventListener('DOMContentLoaded', function() {
     const hash = window.location.hash.replace('#', '');
-    const valid = ['summary','clients','contacts','payments','connections'];
+    const valid = ['summary','clients','contacts','payments','connections','logs'];
     if (hash && valid.includes(hash)) {
       const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
       showAdminSection(hash, btn);
@@ -2050,7 +2050,7 @@
   const origShowSection = showAdminSection;
   showAdminSection = function(name, btn) {
     origShowSection(name, btn);
-    if (name !== 'clientes') adminCloseClientPanel();
+    if (name !== 'clients') adminCloseClientPanel();
   };
 
   // Admin Google Calendar
