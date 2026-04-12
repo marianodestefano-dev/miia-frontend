@@ -5007,6 +5007,7 @@
 
   // openQRModal — muestra el modal QR forzando estilos inline
   function openQRModal() {
+    alert('CLICK FUNCIONA - abriendo QR modal');
     const uid = currentUser ? currentUser.uid : '';
     if (!uid) { alert('No estás autenticado. Recargá la página.'); return; }
     _qrConnecting = false;
