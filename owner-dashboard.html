@@ -776,6 +776,7 @@
     .chat-input button { padding: 10px 24px; background: var(--gradient-main); color: white; border: none; border-radius: var(--radius-full); font-weight: 600; cursor: pointer; }
 
     @keyframes fadeInUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); } 50% { box-shadow: 0 0 0 10px rgba(239,68,68,0); } }
 
     /* ═══ TEST CHAT (simpler, no sessions) ═══ */
     .test-chat { height: 500px; border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; }
@@ -6116,6 +6117,150 @@
     } catch(e) { showToast('Error al guardar', 'error'); }
   }
 
+  // ═══ SPEECH-TO-TEXT (Web Speech API) ═══
+  let speechRecognition = null;
+  let isListening = false;
+  let voiceTranscriptText = '';
+
+  function initSpeechRecognition() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      console.warn('[VOICE] Speech Recognition no soportado en este navegador');
+      return null;
+    }
+    const recognition = new SpeechRecognition();
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    recognition.lang = 'es-ES';
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event) => {
+      let finalText = '';
+      let interimText = '';
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalText += transcript + ' ';
+        } else {
+          interimText += transcript;
+        }
+      }
+      if (finalText) voiceTranscriptText += finalText;
+      const display = document.getElementById('voiceTranscript');
+      display.innerHTML = `${voiceTranscriptText}<span style="color:var(--text-muted);font-style:italic;">${interimText}</span>`;
+      document.getElementById('voiceActions').style.display = voiceTranscriptText.trim() ? 'flex' : 'none';
+    };
+
+    recognition.onerror = (event) => {
+      console.error('[VOICE] Speech error:', event.error);
+      if (event.error === 'not-allowed') {
+        showToast('Permiso de micrófono denegado. Activalo en la configuración del navegador.', 'error');
+      } else if (event.error !== 'aborted') {
+        showToast(`Error de voz: ${event.error}`, 'error');
+      }
+      stopListening();
+    };
+
+    recognition.onend = () => {
+      if (isListening) {
+        // Auto-restart if still supposed to be listening
+        try { recognition.start(); } catch(e) { stopListening(); }
+      }
+    };
+
+    return recognition;
+  }
+
+  function toggleVoiceDictation() {
+    if (isListening) {
+      stopListening();
+    } else {
+      startListening();
+    }
+  }
+
+  function startListening() {
+    if (!speechRecognition) {
+      speechRecognition = initSpeechRecognition();
+      if (!speechRecognition) {
+        showToast('Tu navegador no soporta reconocimiento de voz. Usá Chrome o Edge.', 'error');
+        return;
+      }
+    }
+    isListening = true;
+    try {
+      speechRecognition.start();
+    } catch(e) {
+      // Already started
+    }
+    const btn = document.getElementById('voiceDictateBtn');
+    const icon = document.getElementById('micIcon');
+    const status = document.getElementById('voiceStatus');
+    btn.style.borderColor = '#ef4444';
+    btn.style.background = 'rgba(239,68,68,0.1)';
+    btn.style.animation = 'pulse 1.5s infinite';
+    icon.style.color = '#ef4444';
+    status.textContent = '🔴 Escuchando... Hablá ahora';
+    status.style.color = '#ef4444';
+  }
+
+  function stopListening() {
+    isListening = false;
+    if (speechRecognition) {
+      try { speechRecognition.stop(); } catch(e) {}
+    }
+    const btn = document.getElementById('voiceDictateBtn');
+    const icon = document.getElementById('micIcon');
+    const status = document.getElementById('voiceStatus');
+    btn.style.borderColor = 'var(--border-color)';
+    btn.style.background = 'var(--card-bg)';
+    btn.style.animation = 'none';
+    icon.style.color = 'var(--text-muted)';
+    status.textContent = voiceTranscriptText.trim() ? 'Dictado listo. Tocá "Enviar a MIIA" o seguí hablando.' : 'Tocá el micrófono para empezar';
+    status.style.color = 'var(--text-muted)';
+  }
+
+  function clearVoiceTranscript() {
+    voiceTranscriptText = '';
+    document.getElementById('voiceTranscript').innerHTML = '';
+    document.getElementById('voiceActions').style.display = 'none';
+    document.getElementById('voiceResponse').style.display = 'none';
+  }
+
+  async function sendVoiceCommand() {
+    const text = voiceTranscriptText.trim();
+    if (!text) { showToast('No hay texto para enviar', 'info'); return; }
+
+    stopListening();
+    const responseDiv = document.getElementById('voiceResponse');
+    const responseText = document.getElementById('voiceResponseText');
+    responseDiv.style.display = 'block';
+    responseText.textContent = 'Procesando...';
+
+    try {
+      // Enviar como mensaje de self-chat al backend
+      const resp = await fetch(`${API_BASE}/api/voice-command`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('miia_token')}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ text, source: 'voice_dashboard' })
+      });
+      const data = await resp.json();
+      if (data.success) {
+        responseText.textContent = data.response || 'Comando enviado a MIIA por WhatsApp.';
+        showToast('Comando de voz enviado', 'success');
+      } else {
+        responseText.textContent = `Error: ${data.error || 'No se pudo procesar'}`;
+        showToast('Error al enviar comando', 'error');
+      }
+    } catch(e) {
+      responseText.textContent = `Error: ${e.message}`;
+      showToast('Error de conexión', 'error');
+    }
+  }
+
   // ═══ INIT CONFIG CHECKS ═══
   // Se llama cuando el tab-config se abre
   function initConfigTab() {
@@ -7801,14 +7946,14 @@
           </div>
         </div>
 
-        <!-- ═══ VOICE CONFIG ═══ -->
+        <!-- ═══ VOICE CONFIG + SPEECH-TO-TEXT ═══ -->
         <div class="payment-card" style="margin-top:20px;">
           <div class="payment-card-header" style="align-items:flex-start;gap:16px;flex-direction:column;">
             <div style="display:flex;align-items:center;gap:12px;width:100%;">
               <span><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></span>
               <div style="flex:1;">
                 <h4 style="color:var(--text-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">Voz</h4>
-                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">MIIA puede responder con voz (ElevenLabs TTS). Configurá la voz, velocidad y cuándo usar audio vs texto.</p>
+                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">MIIA puede responder con voz y también podés dictarle comandos por voz desde acá.</p>
               </div>
               <label class="toggle-switch" style="flex-shrink:0;">
                 <input type="checkbox" id="voiceToggle" onchange="saveVoicePref(this.checked)">
@@ -7816,8 +7961,33 @@
               </label>
             </div>
             <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,229,255,0.06);border-radius:8px;width:100%;">
-              <span style="font-size:0.85rem;color:var(--text-muted);">TTS:</span>
+              <span style="font-size:0.85rem;color:var(--text-muted);">TTS (ElevenLabs):</span>
               <span id="voiceLabel" style="font-size:0.85rem;font-weight:700;color:var(--primary);">Cargando...</span>
+            </div>
+
+            <!-- Dictado por voz (Speech-to-Text) -->
+            <div style="width:100%;margin-top:12px;padding:14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;">
+              <p style="font-size:0.82rem;color:var(--text-dark);font-weight:600;margin-bottom:8px;">🎙️ Dictado por voz → MIIA</p>
+              <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px;line-height:1.4;">Hablá y MIIA ejecuta: "Escribí en la hoja de cálculo ventas de hoy", "Agendame una cita mañana a las 3", "Mandá un email a Juan"...</p>
+
+              <div style="display:flex;align-items:center;gap:12px;">
+                <button id="voiceDictateBtn" onclick="toggleVoiceDictation()" style="width:56px;height:56px;border-radius:50%;border:2px solid var(--border-color);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;">
+                  <svg id="micIcon" style="width:24px;height:24px;color:var(--text-muted);transition:color .3s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+                </button>
+                <div style="flex:1;">
+                  <div id="voiceStatus" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px;">Tocá el micrófono para empezar</div>
+                  <div id="voiceTranscript" style="min-height:36px;padding:8px 12px;background:rgba(0,0,0,0.03);border-radius:8px;font-size:0.85rem;color:var(--text-dark);border:1px solid var(--border-color);max-height:120px;overflow-y:auto;"></div>
+                </div>
+              </div>
+
+              <div id="voiceActions" style="display:none;margin-top:10px;display:flex;gap:8px;">
+                <button onclick="sendVoiceCommand()" style="flex:1;padding:8px 14px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">Enviar a MIIA</button>
+                <button onclick="clearVoiceTranscript()" style="padding:8px 14px;background:transparent;color:var(--text-muted);border:1px solid var(--border-color);border-radius:8px;cursor:pointer;font-size:0.82rem;">Limpiar</button>
+              </div>
+              <div id="voiceResponse" style="display:none;margin-top:10px;padding:10px 14px;background:linear-gradient(135deg,rgba(59,91,255,0.06),rgba(255,26,140,0.06));border-radius:10px;border:1px solid rgba(59,91,255,0.15);">
+                <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">Respuesta de MIIA:</p>
+                <p id="voiceResponseText" style="font-size:0.85rem;color:var(--text-dark);line-height:1.5;"></p>
+              </div>
             </div>
           </div>
         </div>
