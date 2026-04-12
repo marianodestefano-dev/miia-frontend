@@ -4632,6 +4632,7 @@
       if (btn) btn.classList.add('active');
       if (tabId === 'schedule') loadScheduleConfig();
       if (tabId === 'agents') loadBizAgents();
+      if (tabId === 'config') initConfigTab();
     }
   // ═══ BUSINESS LIST ═══
   async function loadBusinesses() {
@@ -5821,6 +5822,155 @@
     } catch(e) {
       showToast('Error al guardar preferencia', 'error');
     }
+  }
+
+  // ═══ GOOGLE CONNECTION STATUS ═══
+  async function checkGoogleConnection() {
+    try {
+      const doc = await db.collection('users').doc(currentUser.uid).get();
+      const tokens = doc.data()?.googleTokens;
+      const label = document.getElementById('googleConnLabel');
+      const btnDisc = document.getElementById('btnDisconnectGoogle');
+      if (tokens && tokens.access_token) {
+        label.textContent = '✅ Conectado';
+        label.style.color = '#34D399';
+        if (btnDisc) btnDisc.style.display = 'inline-block';
+      } else {
+        label.textContent = '❌ No conectado';
+        label.style.color = '#f87171';
+        if (btnDisc) btnDisc.style.display = 'none';
+      }
+    } catch(e) {
+      console.error('Error checking Google connection:', e);
+    }
+  }
+
+  function connectGoogle() {
+    const token = localStorage.getItem('miia_token');
+    if (!token) return showToast('Sesión no válida', 'error');
+    window.open(`${API_BASE}/api/auth/google?token=${token}`, '_blank');
+    showToast('Se abrió la ventana de Google. Autorizá y volvé acá.', 'info');
+    setTimeout(checkGoogleConnection, 5000);
+  }
+
+  async function disconnectGoogle() {
+    if (!confirm('¿Desconectar Google? MIIA dejará de acceder a Calendar, Gmail, Sheets, etc.')) return;
+    try {
+      const resp = await fetch(`${API_BASE}/api/calendar/disconnect`, {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}` }
+      });
+      if (resp.ok) {
+        showToast('Google desconectado', 'info');
+        checkGoogleConnection();
+      }
+    } catch(e) { showToast('Error desconectando', 'error'); }
+  }
+
+  // ═══ SHEETS LIST ═══
+  async function loadSheetsList() {
+    const container = document.getElementById('sheetsList');
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">Cargando...</p>';
+    try {
+      const resp = await fetch(`${API_BASE}/api/sheets/list?limit=10`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}` }
+      });
+      const data = await resp.json();
+      if (!data.ok || !data.spreadsheets?.length) {
+        container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">No se encontraron hojas. Conectá Google primero.</p>';
+        return;
+      }
+      container.innerHTML = data.spreadsheets.map(s =>
+        `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,229,255,0.04);border:1px solid var(--border-color);border-radius:8px;margin-bottom:6px;">
+          <div>
+            <strong style="color:var(--text-dark);font-size:0.88rem;">${s.name || s.id}</strong>
+            <span style="color:var(--text-muted);font-size:0.78rem;margin-left:8px;">${s.modifiedTime ? new Date(s.modifiedTime).toLocaleDateString() : ''}</span>
+          </div>
+          <a href="https://docs.google.com/spreadsheets/d/${s.id}" target="_blank" style="color:var(--accent-primary);font-size:0.82rem;text-decoration:none;">Abrir ↗</a>
+        </div>`
+      ).join('');
+    } catch(e) {
+      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+    }
+  }
+
+  // ═══ RESERVATIONS LIST ═══
+  async function loadReservations() {
+    const container = document.getElementById('reservationsList');
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">Cargando...</p>';
+    try {
+      const resp = await fetch(`${API_BASE}/api/reservations?limit=10`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}` }
+      });
+      const data = await resp.json();
+      if (!data.ok || !data.reservations?.length) {
+        container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">No hay reservas. Pedile a MIIA: "reservame mesa en..."</p>';
+        return;
+      }
+      const statusEmoji = { searching: '🔍', pending: '⏳', confirmed: '✅', cancelled: '❌', completed: '🏁' };
+      container.innerHTML = data.reservations.map(r =>
+        `<div style="padding:10px 14px;background:rgba(0,229,255,0.04);border:1px solid var(--border-color);border-radius:8px;margin-bottom:6px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <strong style="color:var(--text-dark);font-size:0.88rem;">${statusEmoji[r.status] || '📋'} ${r.businessName || 'Sin nombre'}</strong>
+            <span style="color:var(--text-muted);font-size:0.78rem;">${r.date || ''} ${r.time || ''}</span>
+          </div>
+          <div style="color:var(--text-muted);font-size:0.78rem;margin-top:4px;">
+            📍 ${r.businessAddress || '?'} | 👥 ${r.partySize || 1} | ${r.status}
+          </div>
+        </div>`
+      ).join('');
+    } catch(e) {
+      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+    }
+  }
+
+  async function loadFavorites() {
+    const container = document.getElementById('reservationsList');
+    container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">Cargando favoritos...</p>';
+    try {
+      const resp = await fetch(`${API_BASE}/api/reservations/favorites`, {
+        headers: { 'Authorization': `Bearer ${localStorage.getItem('miia_token')}` }
+      });
+      const data = await resp.json();
+      if (!data.ok || !data.favorites?.length) {
+        container.innerHTML = '<p style="color:var(--text-muted);font-size:0.82rem;">No hay favoritos. Cuando hagas reservas, tus lugares se guardan automáticamente.</p>';
+        return;
+      }
+      container.innerHTML = data.favorites.map(f =>
+        `<div style="padding:10px 14px;background:rgba(0,229,255,0.04);border:1px solid var(--border-color);border-radius:8px;margin-bottom:6px;">
+          <strong style="color:var(--text-dark);font-size:0.88rem;">⭐ ${f.name || '?'}</strong>
+          <span style="color:var(--text-muted);font-size:0.78rem;margin-left:8px;">${f.type || ''} ${f.rating ? `(${f.rating}/5)` : ''}</span>
+          <div style="color:var(--text-muted);font-size:0.78rem;margin-top:2px;">📍 ${f.address || '?'} | Visitas: ${f.visitCount || 0}</div>
+        </div>`
+      ).join('');
+    } catch(e) {
+      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+    }
+  }
+
+  // ═══ VOICE CONFIG ═══
+  async function loadVoiceConfig() {
+    try {
+      const doc = await db.collection('users').doc(currentUser.uid).get();
+      const voiceEnabled = doc.data()?.tts_enabled || false;
+      document.getElementById('voiceToggle').checked = voiceEnabled;
+      document.getElementById('voiceLabel').textContent = voiceEnabled ? 'Activado' : 'Desactivado';
+    } catch(e) { console.error('Error loading voice config:', e); }
+  }
+
+  async function saveVoicePref(enabled) {
+    try {
+      await db.collection('users').doc(currentUser.uid).update({ tts_enabled: enabled });
+      document.getElementById('voiceLabel').textContent = enabled ? 'Activado' : 'Desactivado';
+      showToast(enabled ? 'Voz activada' : 'Voz desactivada', enabled ? 'success' : 'info');
+    } catch(e) { showToast('Error al guardar', 'error'); }
+  }
+
+  // ═══ INIT CONFIG CHECKS ═══
+  // Se llama cuando el tab-config se abre
+  function initConfigTab() {
+    checkGoogleConnection();
+    loadVoiceConfig();
   }
 
   // ═══ SCHEDULE CONFIG ═══
@@ -7394,6 +7544,83 @@
             <strong style="color:var(--text-dark);">Tip:</strong> También puedes activar o desactivar el humanizador enviando un mensaje a MIIA por WhatsApp:<br>
             <code style="background:rgba(0,0,0,0.3);padding:2px 8px;border-radius:4px;font-size:0.8rem;">"desactivar humanizador"</code> o <code style="background:rgba(0,0,0,0.3);padding:2px 8px;border-radius:4px;font-size:0.8rem;">"activar humanizador"</code>
           </p>
+        </div>
+
+        <!-- ═══ GOOGLE SERVICES CONNECTION ═══ -->
+        <div class="payment-card" style="margin-top:20px;">
+          <div class="payment-card-header" style="align-items:flex-start;gap:16px;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:12px;width:100%;">
+              <span><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+              <div style="flex:1;">
+                <h4 style="color:var(--text-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">Conexiones Google</h4>
+                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">Calendar, Gmail, Sheets, Docs, Drive, Contacts. Conectá tu cuenta de Google para que MIIA gestione tu agenda, emails, hojas de cálculo, documentos y contactos.</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;width:100%;">
+              <div id="googleConnStatus" style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,229,255,0.06);border-radius:8px;flex:1;">
+                <span style="font-size:0.85rem;color:var(--text-muted);">Estado:</span>
+                <span id="googleConnLabel" style="font-size:0.85rem;font-weight:700;color:var(--primary);">Verificando...</span>
+              </div>
+              <button onclick="connectGoogle()" class="btn-sm" style="padding:8px 16px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">Conectar Google</button>
+              <button onclick="disconnectGoogle()" class="btn-sm btn-outline" style="padding:8px 16px;font-size:0.82rem;display:none;" id="btnDisconnectGoogle">Desconectar</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ GOOGLE SHEETS EMBED ═══ -->
+        <div class="payment-card" style="margin-top:20px;">
+          <div class="payment-card-header" style="align-items:flex-start;gap:16px;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:12px;width:100%;">
+              <span><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg></span>
+              <div style="flex:1;">
+                <h4 style="color:var(--text-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">Google Sheets</h4>
+                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">Accedé a tus hojas de cálculo directamente desde el dashboard. También podés gestionar hojas desde WhatsApp con comandos de voz o texto.</p>
+              </div>
+            </div>
+            <div id="sheetsListContainer" style="width:100%;">
+              <button onclick="loadSheetsList()" class="btn-sm" style="padding:8px 16px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">Cargar mis hojas</button>
+              <div id="sheetsList" style="margin-top:12px;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ RESERVAS CONFIG ═══ -->
+        <div class="payment-card" style="margin-top:20px;">
+          <div class="payment-card-header" style="align-items:flex-start;gap:16px;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:12px;width:100%;">
+              <span><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></span>
+              <div style="flex:1;">
+                <h4 style="color:var(--text-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">Reservas</h4>
+                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">Gestioná tus reservas y negocios favoritos. Pedile a MIIA por WhatsApp: "reservame mesa en..." y ella busca, compara y agenda.</p>
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;width:100%;">
+              <button onclick="loadReservations()" class="btn-sm" style="padding:8px 16px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">Ver reservas</button>
+              <button onclick="loadFavorites()" class="btn-sm btn-outline" style="padding:8px 16px;font-size:0.82rem;">Ver favoritos</button>
+            </div>
+            <div id="reservationsList" style="width:100%;margin-top:8px;"></div>
+          </div>
+        </div>
+
+        <!-- ═══ VOICE CONFIG ═══ -->
+        <div class="payment-card" style="margin-top:20px;">
+          <div class="payment-card-header" style="align-items:flex-start;gap:16px;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:12px;width:100%;">
+              <span><svg style="width:32px;height:32px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg></span>
+              <div style="flex:1;">
+                <h4 style="color:var(--text-dark);font-weight:700;font-size:1rem;margin-bottom:4px;">Voz</h4>
+                <p style="color:var(--text-muted);font-size:0.82rem;line-height:1.5;">MIIA puede responder con voz (ElevenLabs TTS). Configurá la voz, velocidad y cuándo usar audio vs texto.</p>
+              </div>
+              <label class="toggle-switch" style="flex-shrink:0;">
+                <input type="checkbox" id="voiceToggle" onchange="saveVoicePref(this.checked)">
+                <span class="toggle-track"></span>
+              </label>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,229,255,0.06);border-radius:8px;width:100%;">
+              <span style="font-size:0.85rem;color:var(--text-muted);">TTS:</span>
+              <span id="voiceLabel" style="font-size:0.85rem;font-weight:700;color:var(--primary);">Cargando...</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
