@@ -8076,31 +8076,14 @@
       </button>
     </div>
 
-    <!-- Panel QR -->
+    <!-- Panel QR (IDs movidos al modal dinámico) -->
     <div id="waPanelQR">
       <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:12px;text-align:center;">Abrí WhatsApp → Dispositivos vinculados → Vincular dispositivo → escaneá</p>
-      <div id="qrCode"><p style="color:var(--text-muted);text-align:center;">Generando QR...</p></div>
+      <div><p style="color:var(--text-muted);text-align:center;">Generando QR...</p></div>
     </div>
 
-    <!-- Panel Código -->
-    <div id="waPanelCode" style="display:none;">
-      <p style="color:var(--text-muted);font-size:0.85rem;margin-bottom:16px;text-align:center;">
-        Ingresá tu número de WhatsApp en formato internacional (sin + ni espacios).<br>
-        Luego en tu celular: WhatsApp → Dispositivos vinculados → Vincular con número de teléfono → ingresá el código de 8 dígitos.
-      </p>
-      <div style="display:flex;gap:8px;margin-bottom:12px;">
-        <input id="pairingPhone" type="tel" placeholder="ej: 5491112345678" style="flex:1;padding:10px 12px;background:var(--card-bg);border:1px solid var(--border-glass);border-radius:8px;color:var(--text-primary);font-size:0.9rem;outline:none;">
-        <button onclick="requestPairingCode()" style="padding:10px 16px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">
-          Generar código
-        </button>
-      </div>
-      <div id="pairingCodeDisplay" style="display:none;text-align:center;padding:20px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:12px;">
-        <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:8px;">Tu código de vinculación (válido ~60s):</p>
-        <div id="pairingCodeValue" style="font-size:2.2rem;font-weight:800;letter-spacing:8px;color:var(--indigo);font-family:monospace;"></div>
-        <p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;">Ingresalo en WhatsApp → Dispositivos vinculados → Vincular con número de teléfono</p>
-      </div>
-      <div id="pairingError" style="display:none;color:var(--red-400);font-size:0.82rem;text-align:center;margin-top:8px;"></div>
-    </div>
+    <!-- Panel Código (IDs movidos al modal dinámico) -->
+    <div style="display:none;"></div>
 
     <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="closeQRModal()">Cerrar</button>
   </div>
