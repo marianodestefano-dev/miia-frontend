@@ -5013,8 +5013,8 @@
     _qrConnecting = false;
     const qrModal = document.getElementById('qrModal');
     if (qrModal) {
-      qrModal.classList.remove('hidden');
-      qrModal.style.display = 'flex';
+      qrModal.className = 'modal-overlay';
+      qrModal.style.cssText = 'display:flex !important;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:9999;';
       connectWhatsApp();
     } else {
       console.error('[QR] Modal qrModal NO encontrado en DOM');
@@ -8012,7 +8012,7 @@
 </div>
 
 <!-- ═══ QR MODAL ═══ -->
-<div id="qrModal" class="modal-overlay hidden" onclick="if(event.target===this){_qrConnecting=false;this.classList.add('hidden');this.style.display='none'}">
+<div id="qrModal" class="modal-overlay hidden" onclick="if(event.target===this){_qrConnecting=false;this.className='modal-overlay hidden';this.style.cssText=''}">
   <div class="modal-card" style="max-width:420px;width:100%">
     <h3>Conectar WhatsApp</h3>
 
@@ -8052,7 +8052,7 @@
       <div id="pairingError" style="display:none;color:var(--red-400);font-size:0.82rem;text-align:center;margin-top:8px;"></div>
     </div>
 
-    <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="_qrConnecting=false;var m=document.getElementById('qrModal');m.classList.add('hidden');m.style.display='none'">Cerrar</button>
+    <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="_qrConnecting=false;var m=document.getElementById('qrModal');m.className='modal-overlay hidden';m.style.cssText=''">Cerrar</button>
   </div>
 </div>
 
