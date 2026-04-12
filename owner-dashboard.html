@@ -368,6 +368,14 @@
       font-family: inherit;
       font-size: 0.95rem;
       color: var(--text-dark);
+      background: var(--bg-card, var(--surface));
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-muted);
+      font-style: italic;
+      opacity: 0.7;
     }
 
     .form-group textarea {
@@ -424,6 +432,9 @@
     .contact-type-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; margin-left:6px; }
     .type-lead { background:rgba(245,158,11,0.12); color:#d97706; }
     .type-cliente { background:rgba(37,211,102,0.12); color:#16a34a; }
+    .type-familia { background:rgba(168,85,247,0.12); color:#a855f7; }
+    .type-equipo { background:rgba(59,130,246,0.12); color:#3b82f6; }
+    .type-group { background:rgba(236,72,153,0.12); color:#ec4899; }
     .type-otro { background:rgba(136,136,164,0.12); color:var(--text-muted); }
 
     @media (max-width: 768px) {
@@ -954,6 +965,14 @@
       font-family: inherit;
       font-size: 0.95rem;
       color: var(--text-dark);
+      background: var(--bg-card, var(--surface));
+    }
+
+    .form-group input::placeholder,
+    .form-group textarea::placeholder {
+      color: var(--text-muted);
+      font-style: italic;
+      opacity: 0.7;
     }
 
     .form-group textarea {
@@ -3945,16 +3964,20 @@
     }
 
     function updateCounts() {
-      let leads = 0, clientes = 0, otros = 0;
+      let leads = 0, clientes = 0, familia = 0, equipo = 0, otros = 0;
       allConversations.forEach(c => {
         const type = getContactType(c.phoneNumber || c.phone);
         if (type === 'lead') leads++;
-        else if (type === 'cliente') clientes++;
+        else if (type === 'client' || type === 'cliente') clientes++;
+        else if (type === 'familia') familia++;
+        else if (type === 'equipo' || type === 'group') equipo++;
         else otros++;
       });
       document.getElementById('countAll').textContent = allConversations.length;
       document.getElementById('countLead').textContent = leads;
       document.getElementById('countCliente').textContent = clientes;
+      document.getElementById('countFamilia').textContent = familia;
+      document.getElementById('countEquipo').textContent = equipo;
       document.getElementById('countOtro').textContent = otros;
     }
 
@@ -3971,7 +3994,11 @@
         const phone = c.phoneNumber || c.phone || '';
         const name = c.name || '';
         const type = getContactType(phone);
-        if (activeFilter !== 'all' && type !== activeFilter) return false;
+        if (activeFilter !== 'all') {
+          if (activeFilter === 'cliente' && type !== 'client' && type !== 'cliente') return false;
+          else if (activeFilter === 'equipo' && type !== 'equipo' && type !== 'group') return false;
+          else if (activeFilter !== 'cliente' && activeFilter !== 'equipo' && type !== activeFilter) return false;
+        }
         if (q && !name.toLowerCase().includes(q) && !phone.includes(q)) return false;
         return true;
       });
@@ -3984,8 +4011,8 @@
         container.innerHTML = '<div class="empty-state"><p>Sin contactos en este grupo</p></div>';
         return;
       }
-      const typeClass = { lead:'type-lead', cliente:'type-cliente', otro:'type-otro' };
-      const typeLabel = { lead:'Lead', cliente:'Cliente', otro:'Otro' };
+      const typeClass = { lead:'type-lead', client:'type-cliente', cliente:'type-cliente', familia:'type-familia', equipo:'type-equipo', group:'type-group', otro:'type-otro' };
+      const typeLabel = { lead:'Lead', client:'Cliente', cliente:'Cliente', familia:'Familia', equipo:'Equipo', group:'Amigo', otro:'Otro' };
       container.innerHTML = list.map(conv => {
         const phone = conv.phoneNumber || conv.phone || '';
         const name = conv.name || 'Sin nombre';
@@ -4175,10 +4202,11 @@
     async function updateGroupConfig(groupId) {
       try {
         const token = await auth.currentUser.getIdToken();
+        const proactiveChecked = document.getElementById('cfgProactive').checked;
         const body = {
           tone: document.getElementById('cfgTone').value.trim(),
           autoRespond: false,
-          proactiveEnabled: document.getElementById('cfgProactive').checked,
+          proactiveEnabled: proactiveChecked,
           humanDelayEnabled: document.getElementById('cfgHumanDelay').checked
         };
         const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${groupId}`, {
@@ -4189,6 +4217,29 @@
         if (!res.ok) throw new Error(await res.text());
         const g = groups.find(x => x.id === groupId);
         if (g) Object.assign(g, body);
+
+        // PROPAGACIÓN: Si proactivo del grupo cambió, sincronizar TODOS los contactos del grupo
+        if (proactiveChecked && groupContacts.length > 0) {
+          let synced = 0;
+          for (const c of groupContacts) {
+            if (!c.proactiveEnabled) {
+              try {
+                await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${groupId}/contacts/${encodeURIComponent(c.phone)}`, {
+                  method: 'PUT',
+                  headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+                  body: JSON.stringify({ proactiveEnabled: true })
+                });
+                c.proactiveEnabled = true;
+                synced++;
+              } catch (_) {}
+            }
+          }
+          if (synced > 0) {
+            await loadGroupContacts();
+            renderGroupDetail(g);
+          }
+        }
+
         showToast('Configuración guardada', 'success');
       } catch (err) {
         showToast('Error: ' + err.message, 'error');
@@ -4385,7 +4436,7 @@
             relation: document.getElementById('newContactRelation')?.value || '',
             nickname: document.getElementById('newContactNickname')?.value?.trim() || '',
             likes: document.getElementById('newContactLikes')?.value?.trim() || '',
-            proactiveEnabled: false
+            proactiveEnabled: document.getElementById('cfgProactive')?.checked || false
           })
         });
         if (!res.ok) throw new Error(await res.text());
@@ -6702,6 +6753,8 @@
             <button class="filter-tab active" onclick="setFilter('all',this)">Todos <span class="count" id="countAll">0</span></button>
             <button class="filter-tab" onclick="setFilter('lead',this)">Leads <span class="count" id="countLead">0</span></button>
             <button class="filter-tab" onclick="setFilter('cliente',this)">Clientes <span class="count" id="countCliente">0</span></button>
+            <button class="filter-tab" onclick="setFilter('familia',this)">Familia <span class="count" id="countFamilia">0</span></button>
+            <button class="filter-tab" onclick="setFilter('equipo',this)">Equipo <span class="count" id="countEquipo">0</span></button>
             <button class="filter-tab" onclick="setFilter('otro',this)">Otros <span class="count" id="countOtro">0</span></button>
           </div>
           <div class="conversations-list" id="conversationsList">
@@ -6717,7 +6770,7 @@
           <h2><svg style="width:18px;height:18px;vertical-align:middle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Información del Contacto</h2>
           <div class="empty-state" id="emptyState">
             <div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
-            <p>Selecciona un contacto para editar su información</p>
+            <p>Selecciona un contacto de la lista para ver y editar su información (tipo, nombre, notas, etc.)</p>
           </div>
           <form class="crm-form" id="crmForm" onsubmit="saveContact(event)">
             <div class="form-group">
