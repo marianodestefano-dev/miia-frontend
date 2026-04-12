@@ -696,6 +696,20 @@
         }
       }
 
+      // WhatsApp badge: check if owner's WhatsApp is connected
+      if (userData.parent_client_uid) {
+        try {
+          const parentDoc = await db.collection('users').doc(userData.parent_client_uid).get();
+          const parentData = parentDoc.exists ? parentDoc.data() : {};
+          const waBadge = document.getElementById('agentWaBadge');
+          if (parentData.whatsapp_connected_at) {
+            waBadge.textContent = 'Conectado';
+            waBadge.style.background = 'rgba(37,211,102,.1)';
+            waBadge.style.color = '#25D366';
+          }
+        } catch (_) {}
+      }
+
       // Update localStorage for businesses.html compat
       localStorage.setItem('miia_user', JSON.stringify({
         uid: userData.uid,
@@ -898,7 +912,7 @@
       if (sec) sec.classList.remove('section-hidden');
       document.querySelectorAll('.sidebar-nav .sidebar-btn').forEach(b => b.classList.remove('active'));
       if (btn) btn.classList.add('active');
-      if (name === 'conexiónes') { agentLoadCalendarStatus(); agentLoadAiConfig(); }
+      if (name === 'connections' || name === 'conexiónes') { agentLoadCalendarStatus(); agentLoadAiConfig(); }
     }
 
     // ── Google Calendar del agente ──
