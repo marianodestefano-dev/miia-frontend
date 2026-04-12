@@ -189,7 +189,7 @@
       </button>
       <button class="sidebar-btn" onclick="showAdminSection('contacts', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Contactos
+        Sesiones WA
       </button>
       <button class="sidebar-btn" onclick="showAdminSection('payments', this)">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
@@ -208,7 +208,7 @@
 
       <button class="sidebar-btn" onclick="window.location.href='owner-dashboard.html'" style="background:linear-gradient(135deg,rgba(0,229,255,0.08),rgba(124,58,237,0.08));border:1px solid rgba(0,229,255,0.2);">
         <svg class="sidebar-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-        Mi Panel Owner
+        MIIA CENTER
       </button>
     </nav>
 
@@ -1058,8 +1058,7 @@
   }
 
   function renderUsers(filtered) {
-    const myEmail = auth.currentUser?.email;
-    const list = (filtered || users).filter(u => u.email !== myEmail);
+    const list = filtered || users;
     const planNames = { trial:'Trial', monthly:'Mensual', quarterly:'Trimestral', semestral:'Semestral', annual:'Anual' };
     const tbody = document.getElementById('usersTableBody');
     if (list.length === 0) { tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-muted);">No hay usuarios</td></tr>'; return; }
@@ -1092,7 +1091,7 @@
   }
 
   function updateDashboard() {
-    const clients = users.filter(u => u.role !== 'admin');
+    const clients = users;
     const total = clients.length;
     const active = clients.filter(u => u.payment_status === 'active').length;
     const trial = clients.filter(u => !u.plan || u.plan === 'trial').length;

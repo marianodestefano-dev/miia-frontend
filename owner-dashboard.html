@@ -4322,21 +4322,32 @@
         const agentBtn = isEquipo ? `<button class="btn-icon" title="Hacer agente" style="background:var(--gradient-main);color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:0.78rem;cursor:pointer;white-space:nowrap;" onclick="promoteToAgent('${esc(c.phone)}', '${esc(c.name || '')}')">🤝 Agente</button>` : '';
         const relLabel = c.relation ? (relationLabels[c.relation] || c.relation) : '—';
         const nickDisplay = c.nickname ? `<span style="color:var(--text-muted);font-size:0.78rem;display:block;">"${esc(c.nickname)}"</span>` : '';
+        const ocupDisplay = c.ocupacion ? `<span style="color:var(--text-muted);font-size:0.75rem;display:block;">${esc(c.ocupacion)}</span>` : '';
+        const proactiveColor = c.proactiveEnabled ? 'var(--green-600)' : 'var(--red-600)';
+        const proactiveText = c.proactiveEnabled ? 'ON' : 'OFF';
+        const emergencyColor = c.emergencyContact ? 'var(--green-600)' : 'var(--red-600)';
+        const emergencyText = c.emergencyContact ? 'ON' : 'OFF';
         return `<tr>
-          <td>${esc(c.phone)}</td>
-          <td>${esc(c.name || '—')}${nickDisplay}</td>
+          <td style="font-size:0.8rem;">${esc(c.phone)}</td>
+          <td>${esc(c.name || '—')}${nickDisplay}${ocupDisplay}</td>
           <td style="font-size:0.83rem;">${esc(relLabel)}</td>
-          <td>
-            <label class="toggle-switch">
-              <input type="checkbox" ${c.proactiveEnabled ? 'checked' : ''} onchange="toggleContactProactive('${esc(c.phone)}', this.checked)">
-              <span class="toggle-slider proactive-toggle"></span>
-            </label>
+          <td style="text-align:center;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
+              <label class="toggle-switch" style="--toggle-on:var(--green-500);--toggle-off:var(--red-500);">
+                <input type="checkbox" ${c.proactiveEnabled ? 'checked' : ''} onchange="toggleContactProactive('${esc(c.phone)}', this.checked)">
+                <span class="toggle-slider proactive-toggle"></span>
+              </label>
+              <span style="font-size:0.72rem;font-weight:700;color:${proactiveColor};">${proactiveText}</span>
+            </div>
           </td>
-          <td>
-            <label class="toggle-switch">
-              <input type="checkbox" ${c.emergencyContact ? 'checked' : ''} onchange="toggleContactEmergency('${esc(c.phone)}', this.checked)">
-              <span class="toggle-slider proactive-toggle"></span>
-            </label>
+          <td style="text-align:center;">
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
+              <label class="toggle-switch" style="--toggle-on:var(--green-500);--toggle-off:var(--red-500);">
+                <input type="checkbox" ${c.emergencyContact ? 'checked' : ''} onchange="toggleContactEmergency('${esc(c.phone)}', this.checked)">
+                <span class="toggle-slider proactive-toggle"></span>
+              </label>
+              <span style="font-size:0.72rem;font-weight:700;color:${emergencyColor};">${emergencyText}</span>
+            </div>
           </td>
           <td>
             ${otherGroups.length > 0 ? `<select style="font-size:0.8rem;padding:4px 6px;border:1px solid var(--border-glass);border-radius:6px;background:var(--bg-surface);color:var(--text-dark);" onchange="moveContact('${esc(c.phone)}', this.value); this.value=''">
@@ -4550,6 +4561,9 @@
       document.getElementById('editContactName').value = c.name || '';
       document.getElementById('editContactNickname').value = c.nickname || '';
       document.getElementById('editContactRelation').value = c.relation || '';
+      document.getElementById('editContactOcupacion').value = c.ocupacion || '';
+      document.getElementById('editContactEdad').value = c.edad || '';
+      document.getElementById('editContactCumpleanos').value = c.cumpleanos || '';
       document.getElementById('editContactLikes').value = c.likes || '';
       document.getElementById('editContactFandom').value = c.fandom || '';
       document.getElementById('editContactNotes').value = c.notes || '';
@@ -4571,6 +4585,9 @@
         name: document.getElementById('editContactName').value.trim(),
         nickname: document.getElementById('editContactNickname').value.trim(),
         relation: document.getElementById('editContactRelation').value,
+        ocupacion: document.getElementById('editContactOcupacion').value.trim(),
+        edad: document.getElementById('editContactEdad').value ? parseInt(document.getElementById('editContactEdad').value) : '',
+        cumpleanos: document.getElementById('editContactCumpleanos').value || '',
         likes: document.getElementById('editContactLikes').value.trim(),
         fandom: document.getElementById('editContactFandom').value.trim(),
         notes: document.getElementById('editContactNotes').value.trim(),
@@ -7085,8 +7102,8 @@
                 <th>Teléfono</th>
                 <th>Nombre</th>
                 <th>Relación</th>
-                <th>Proactivo</th>
-                <th>Seguridad</th>
+                <th style="text-align:center;">Proactivo</th>
+                <th style="text-align:center;">Seguridad</th>
                 <th>Mover a</th>
                 <th>Acciones</th>
               </tr>
@@ -7151,7 +7168,7 @@
         </div>
 
         <!-- Edit contact modal -->
-        <div id="editContactModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center;">
+        <div id="editContactModal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.5);align-items:center;justify-content:center;">
           <div style="background:var(--bg-card);border-radius:12px;padding:24px;max-width:500px;width:90%;max-height:80vh;overflow-y:auto;">
             <h3 style="margin:0 0 16px;color:var(--text-dark);">Editar contacto</h3>
             <div class="form-group"><label>Nombre</label><input type="text" id="editContactName"></div>
@@ -7174,6 +7191,11 @@
                 <option value="vecino">Vecino/a</option>
                 <option value="otro">Otro</option>
               </select>
+            </div>
+            <div class="form-group"><label>Ocupaci&oacute;n</label><input type="text" id="editContactOcupacion" placeholder="Ej: M&eacute;dico, Abogada, Docente"></div>
+            <div style="display:flex;gap:12px;">
+              <div class="form-group" style="flex:1;"><label>Edad</label><input type="number" id="editContactEdad" placeholder="Ej: 35" min="0" max="150" style="width:100%;padding:8px 10px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);"></div>
+              <div class="form-group" style="flex:2;"><label>Cumplea&ntilde;os</label><input type="date" id="editContactCumpleanos" style="width:100%;padding:8px 10px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);"></div>
             </div>
             <div class="form-group"><label>Gustos / Preferencias</label><input type="text" id="editContactLikes" placeholder="Ej: Le gusta cocinar, fan de Star Wars"></div>
             <div class="form-group"><label>Fanatismo</label><input type="text" id="editContactFandom" placeholder="Ej: Hincha de Boca, fan de F1"></div>
