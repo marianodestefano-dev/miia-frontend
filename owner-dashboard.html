@@ -6994,33 +6994,20 @@
     // openQRModal — verifica estado WA antes de mostrar QR
     function openQRModal() {
       const uid = currentUser ? currentUser.uid : '';
-      if (!uid) return;
-      _qrConnecting = false; // Reset flag para que connectWhatsApp() no se bloquee
+      console.log('[QR] openQRModal llamado, uid:', uid);
+      if (!uid) { console.warn('[QR] No uid, abortando'); return; }
+      _qrConnecting = false;
 
-      // Verificar si ya está conectado ANTES de mostrar QR
-      fetch(`${API}/api/status?uid=${uid}`)
-        .then(r => r.json())
-        .then(data => {
-          if (data.connected) {
-            // Ya conectado → mostrar modal de "Conectado" con opción de desvincular
-            showWhatsAppModal();
-          } else {
-            // No conectado → mostrar QR
-            const qrModal = document.getElementById('qrModal');
-            if (qrModal) {
-              qrModal.classList.remove('hidden');
-              connectWhatsApp();
-            }
-          }
-        })
-        .catch(() => {
-          // Error de red → mostrar QR igual
-          const qrModal = document.getElementById('qrModal');
-          if (qrModal) {
-            qrModal.classList.remove('hidden');
-            connectWhatsApp();
-          }
-        });
+      // Mostrar modal QR directamente sin verificar status
+      // (el status check anterior colgaba y no mostraba nada)
+      const qrModal = document.getElementById('qrModal');
+      if (qrModal) {
+        console.log('[QR] Mostrando modal QR...');
+        qrModal.classList.remove('hidden');
+        connectWhatsApp();
+      } else {
+        console.error('[QR] Modal qrModal NO encontrado en DOM');
+      }
     }
   </script>
   <script src="toast.js"></script>
