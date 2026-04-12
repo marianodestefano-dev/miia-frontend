@@ -1037,7 +1037,7 @@
       }
       // Sincronizar la card de conexiónes con el estado real
       adminUpdateWaBanner();
-    } catch (_) {}
+    } catch (e) { console.warn('[ADMIN]', e.message || e); }
   }
 
   // Refrescar estado de WhatsApp cada 10s (sidebar + card de conexiónes)
@@ -1294,7 +1294,7 @@
       const res = await fetch(`${BACKEND_URL}/api/stats`);
       const stats = await res.json();
       document.getElementById('brainConvos').textContent = stats.totalConversations || 0;
-    } catch (_) {}
+    } catch (e) { console.warn('[ADMIN]', e.message || e); }
   }
 
   async function forceADNMining() {
@@ -1370,7 +1370,7 @@
       if (el) { el.style.color = waOk ? '#16a34a' : '#ef4444'; el.textContent = waOk ? '✅ Conectado' : '❌ Desconectado'; }
       const conv = document.getElementById('sysConvCount');
       if (conv) conv.textContent = data.conversationCount || 0;
-    } catch (_) {}
+    } catch (e) { console.warn('[ADMIN]', e.message || e); }
   }, 15000);
 
   function toggleTheme() {
@@ -1717,7 +1717,7 @@
       const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/sessions`);
       adminSessions = await res.json();
       adminRenderSessions();
-    } catch (e) {}
+    } catch (e) { console.warn('[ADMIN] sessions:', e.message || e); }
   }
 
   function adminRenderSessions() {
@@ -1986,7 +1986,7 @@
         document.getElementById('acHours').textContent = '—';
         document.getElementById('acFollowup').textContent = '—';
       }
-    } catch(e) {}
+    } catch(e) { console.warn('[ADMIN] schedule:', e.message || e); }
     document.getElementById('acScheduleLink').href = `businesses.html?uid=${uid}#schedule`;
 
     // 6. Agentes
@@ -2005,7 +2005,7 @@
           </div>`;
         }).join('');
       }
-    } catch(e) {}
+    } catch(e) { console.warn('[ADMIN] agents:', e.message || e); }
 
     // 7. Facturacion
     document.getElementById('acBillPlan').textContent = u.plan || 'trial';
@@ -2239,7 +2239,7 @@
         if (connectedSec) connectedSec.style.display = 'none';
         if (badge) { badge.textContent = 'No conectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#EF4444'; }
       }
-    } catch (_) {}
+    } catch (e) { console.warn('[ADMIN]', e.message || e); }
   }
 
   async function adminSaveCalendarConfig() {
@@ -2247,7 +2247,7 @@
     try {
       const token = await firebase.auth().currentUser.getIdToken();
       await fetch(ADMIN_API + '/api/calendar/config', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }, body: JSON.stringify({ calendarEnabled }) });
-    } catch (_) {}
+    } catch (e) { console.warn('[ADMIN]', e.message || e); }
   }
 
   async function adminDisconnectCalendar() {
@@ -2256,7 +2256,7 @@
       const token = await firebase.auth().currentUser.getIdToken();
       await fetch(ADMIN_API + '/api/calendar/disconnect', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
       adminLoadCalendarStatus();
-    } catch (_) {}
+    } catch (e) { console.warn('[ADMIN]', e.message || e); }
   }
 
   // Call on auth ready
