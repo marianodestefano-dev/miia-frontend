@@ -3445,8 +3445,8 @@
       const phone = document.getElementById('securityPhone').value.replace(/[^0-9]/g, '');
       const name = document.getElementById('securityName').value.trim();
       const level = document.getElementById('securityLevel').value;
-      if (!phone || phone.length < 8) return alert('Ingresa un telefono valido con codigo de pais');
-      if (!name) return alert('Ingresa un nombre para identificar al contacto');
+      if (!phone || phone.length < 8) return showToast('Ingresá un teléfono válido con código de país', 'error');
+      if (!name) return showToast('Ingresá un nombre para identificar al contacto', 'error');
 
       try {
         const res = await fetch(`${API_BASE}/api/tenant/${user.uid}/security-contacts`, {
@@ -3456,13 +3456,13 @@
         });
         const data = await res.json();
         if (!res.ok) throw new Error(data.error || 'Error');
-        alert(`Solicitud enviada! ${data.otp ? 'Codigo OTP: ' + data.otp + ' — el contacto debe enviarlo por WhatsApp a MIIA.' : ''}`);
+        showToast(`Solicitud enviada! ${data.otp ? 'Código OTP: ' + data.otp + ' — el contacto debe enviarlo por WhatsApp a MIIA.' : ''}`, 'success');
         document.getElementById('securityPhone').value = '';
         document.getElementById('securityName').value = '';
         securityContactsLoaded = false;
         await initSecurityContacts();
       } catch (e) {
-        alert('Error: ' + e.message);
+        showToast('Error: ' + e.message, 'error');
       }
     }
 
@@ -3478,7 +3478,7 @@
         if (!res.ok) throw new Error('Error');
         securityContactsLoaded = false;
         await initSecurityContacts();
-      } catch (e) { alert('Error: ' + e.message); }
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
     }
 
     async function changeSecurity(relationId, newLevel) {
@@ -3491,7 +3491,7 @@
           body: JSON.stringify({ level: newLevel })
         });
         if (!res.ok) throw new Error('Error');
-      } catch (e) { alert('Error: ' + e.message); }
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
     }
 
     async function removeSecurity(relationId) {
@@ -3506,7 +3506,7 @@
         if (!res.ok) throw new Error('Error');
         securityContactsLoaded = false;
         await initSecurityContacts();
-      } catch (e) { alert('Error: ' + e.message); }
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
     }
 
     async function initConnections() {
@@ -4917,7 +4917,7 @@
         })
           .then(r => r.json())
           .then(() => { waConnected = false; updateWaBanner(); })
-          .catch(err => { console.error('[WA] Error desvinculando:', err); alert('Error al desvincular. Intenta de nuevo.'); });
+          .catch(err => { console.error('[WA] Error desvinculando:', err); showToast('Error al desvincular. Intentá de nuevo.', 'error'); });
       });
     } else {
       document.getElementById('qrModal').classList.remove('hidden');
@@ -4988,7 +4988,7 @@
     if (_qrConnecting) return; // Bloquear clics múltiples
     _qrConnecting = true;
     if (!currentUser || !currentUser.uid) {
-      alert('Error: No estás autenticado. Recarga la página.');
+      showToast('No estás autenticado. Recargá la página.', 'error');
       _qrConnecting = false;
       return;
     }
@@ -5004,13 +5004,13 @@
 
       if (!initRes.ok) {
         const error = await initRes.json();
-        alert('Error al iniciar WhatsApp: ' + (error.error || 'Error desconocido'));
+        showToast('Error al iniciar WhatsApp: ' + (error.error || 'Error desconocido'), 'error');
         document.getElementById('qrModal').classList.add('hidden');
         _qrConnecting = false;
         return;
       }
     } catch (e) {
-      alert('Error al conectar WhatsApp: ' + e.message);
+      showToast('Error al conectar WhatsApp: ' + e.message, 'error');
       document.getElementById('qrModal').classList.add('hidden');
       _qrConnecting = false;
       return;
@@ -6873,10 +6873,10 @@
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('instagram') === 'connected') {
         showSection('connections');
-        setTimeout(() => { alert('Instagram conectado exitosamente. MIIA ya responde tus DMs.'); }, 500);
+        setTimeout(() => { showToast('Instagram conectado exitosamente. MIIA ya responde tus DMs.', 'success'); }, 500);
       } else if (urlParams.get('instagram') === 'error') {
         showSection('connections');
-        setTimeout(() => { alert('Error conectando Instagram: ' + (urlParams.get('msg') || 'Reintentá desde Conexiones.')); }, 500);
+        setTimeout(() => { showToast('Error conectando Instagram: ' + (urlParams.get('msg') || 'Reintentá desde Conexiones.'), 'error'); }, 500);
       }
     });
 
@@ -6952,9 +6952,9 @@
         if (data.url) {
           window.open(data.url, '_blank', 'width=600,height=700');
         } else {
-          alert(data.error || 'Error obteniendo URL de conexión');
+          showToast(data.error || 'Error obteniendo URL de conexi��n', 'error');
         }
-      } catch (e) { alert('Error conectando Instagram: ' + e.message); }
+      } catch (e) { showToast('Error conectando Instagram: ' + e.message, 'error'); }
     }
 
     async function disconnectInstagram() {
@@ -6963,7 +6963,7 @@
       try {
         await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/instagram`, { method: 'DELETE' });
         checkInstagramStatus();
-      } catch (e) { alert('Error: ' + e.message); }
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
     }
 
     // Verificar al cargar conexiones

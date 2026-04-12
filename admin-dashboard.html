@@ -1147,10 +1147,9 @@
       const res = await fetch(`${BACKEND_URL}/api/admin/user/${uid}/reset-password`, { method:'POST', headers:{ 'Authorization':'Bearer '+token } });
       const data = await res.json();
       if (data.password) {
-        const msg = `Nueva contraseña para ${email}:\n\n${data.password}\n\nGuardala en un lugar seguro y enviásela al cliente.`;
-        alert(msg);
-      } else { alert('Error: ' + (data.error || 'Desconocido')); }
-    } catch (e) { alert('Error: ' + e.message); }
+        showToast(`Nueva contraseña para ${email}: ${data.password} — guardala y enviásela al cliente.`, 'success', 8000);
+      } else { showToast('Error: ' + (data.error || 'Desconocido'), 'error'); }
+    } catch (e) { showToast('Error: ' + e.message, 'error'); }
   }
 
   // ═══ EDIT/CREATE MODALS ═══
@@ -1454,7 +1453,7 @@
     const userDoc = await dbFs.collection('users').doc(user.uid).get();
     const geminiApiKey = userDoc.exists ? (userDoc.data().gemini_api_key || '') : '';
     const initRes = await fetch(`${BACKEND_URL}/api/tenant/init`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ uid: user.uid, geminiApiKey }) });
-    if (!initRes.ok) { alert('Error al iniciar WhatsApp'); document.getElementById('qrModal').classList.add('hidden'); return; }
+    if (!initRes.ok) { showToast('Error al iniciar WhatsApp', 'error'); document.getElementById('qrModal').classList.add('hidden'); return; }
 
     let pollCount = 0;
     document.getElementById('adminQrCode').innerHTML = `<div style="text-align:center;padding:30px;"><p id="adminQrCountdown" style="color:var(--text-muted);font-size:0.9rem;">Iniciando WhatsApp...</p></div>`;
@@ -2020,32 +2019,32 @@
     document.getElementById('acResponseRate').textContent = '—';
   }
 
-  // Placeholder functions para botones (se implementan despues)
-  function adminEditClient() { alert('Editar cliente: ' + selectedClientUid); }
-  function adminSuspendClient() { if(confirm('Suspender este cliente?')) alert('Implementar suspension'); }
-  function adminRequestReconnect() { alert('Se enviara notificación al cliente para reconectar WhatsApp'); }
+  // Admin client management functions
+  function adminEditClient() { showToast('Editando cliente: ' + selectedClientUid, 'info'); }
+  function adminSuspendClient() { if(confirm('¿Suspender este cliente? No podrá usar MIIA hasta que lo reactives.')) showToast('Suspensión: próximamente disponible', 'warning'); }
+  function adminRequestReconnect() { showToast('Se enviará notificación al cliente para reconectar WhatsApp', 'info'); }
   async function adminDisconnectClient() {
-    if (!selectedClientUid || !confirm('Desconectar WhatsApp de este cliente?')) return;
+    if (!selectedClientUid || !confirm('¿Desconectar WhatsApp de este cliente? Deberá escanear QR nuevamente.')) return;
     try {
       await fetch(`${ADMIN_API}/api/tenant/${selectedClientUid}/destroy`, { method: 'POST' });
-      alert('Cliente desconectado');
+      showToast('Cliente desconectado', 'success');
       adminLoadClientPanel(selectedClientUid);
-    } catch(e) { alert('Error: ' + e.message); }
+    } catch(e) { showToast('Error: ' + e.message, 'error'); }
   }
-  function adminCreateAgent() { alert('Crear agente para: ' + selectedClientUid); }
-  function adminChangePlan() { alert('Cambiar plan de: ' + selectedClientUid); }
-  function adminViewPaymentHistory() { alert('Historial de pagos: ' + selectedClientUid); }
-  function adminViewLeads() { alert('Ver leads de: ' + selectedClientUid); }
-  function adminExportCSV() { alert('Exportar CSV de: ' + selectedClientUid); }
-  function adminResetMiia() { if(confirm('RESETEAR MIIA de este cliente? Esto borra conversaciónes en memoria.')) alert('Implementar reset'); }
-  function adminClearBrain() { if(confirm('BORRAR TODO EL CEREBRO de este cliente? Esto es IRREVERSIBLE.')) alert('Implementar borrado'); }
+  function adminCreateAgent() { showToast('Crear agente: próximamente disponible', 'info'); }
+  function adminChangePlan() { showToast('Cambiar plan: próximamente disponible', 'info'); }
+  function adminViewPaymentHistory() { showToast('Historial de pagos: próximamente disponible', 'info'); }
+  function adminViewLeads() { showToast('Ver leads: próximamente disponible', 'info'); }
+  function adminExportCSV() { showToast('Exportar CSV: próximamente disponible', 'info'); }
+  function adminResetMiia() { if(confirm('¿RESETEAR MIIA de este cliente? Esto borra conversaciones en memoria.')) showToast('Reset MIIA: próximamente disponible', 'warning'); }
+  function adminClearBrain() { if(confirm('¿BORRAR TODO EL CEREBRO de este cliente? Esto es IRREVERSIBLE.')) showToast('Borrar cerebro: próximamente disponible', 'warning'); }
   function adminForceReconnect() { adminRequestReconnect(); }
-  function adminRevokeSession() { if(confirm('REVOCAR sesión WhatsApp? El cliente debera escanear QR nuevamente.')) adminDisconnectClient(); }
-  function adminDeleteClient() { if(confirm('ELIMINAR COMPLETAMENTE este cliente? Esto es IRREVERSIBLE.')) alert('Implementar eliminacion'); }
-  function adminViewBrain() { alert('Ver cerebro de: ' + selectedClientUid); }
-  function adminViewSessions() { alert('Ver sesiónes de: ' + selectedClientUid); }
-  function adminViewDocs() { alert('Ver documentos de: ' + selectedClientUid); }
-  function adminViewFollowups() { alert('Ver seguimientos activos de: ' + selectedClientUid); }
+  function adminRevokeSession() { if(confirm('¿REVOCAR sesión WhatsApp? El cliente deberá escanear QR nuevamente.')) adminDisconnectClient(); }
+  function adminDeleteClient() { if(confirm('¿ELIMINAR COMPLETAMENTE este cliente? Esto es IRREVERSIBLE.')) showToast('Eliminación: próximamente disponible', 'warning'); }
+  function adminViewBrain() { showToast('Ver cerebro: próximamente disponible', 'info'); }
+  function adminViewSessions() { showToast('Ver sesiones: próximamente disponible', 'info'); }
+  function adminViewDocs() { showToast('Ver documentos: próximamente disponible', 'info'); }
+  function adminViewFollowups() { showToast('Ver seguimientos: próximamente disponible', 'info'); }
 
   // Cerrar panel de cliente al cambiar de seccion
   const origShowSection = showAdminSection;
@@ -2125,8 +2124,8 @@
         body: JSON.stringify({ provider })
       });
       if (res.ok) adminLoadAiConfig();
-      else { const err = await res.json().catch(() => ({})); alert(err.error || 'Error'); }
-    } catch (e) { alert('Error: ' + e.message); }
+      else { const err = await res.json().catch(() => ({})); showToast(err.error || 'Error', 'error'); }
+    } catch (e) { showToast('Error: ' + e.message, 'error'); }
   }
 
   async function adminDeleteAi(provider) {
@@ -2136,8 +2135,8 @@
     try {
       const res = await fetch(`${ADMIN_API}/api/tenant/${user.uid}/ai-config/${provider}`, { method: 'DELETE' });
       if (res.ok) adminLoadAiConfig();
-      else { const err = await res.json().catch(() => ({})); alert(err.error || 'Error'); }
-    } catch (e) { alert('Error: ' + e.message); }
+      else { const err = await res.json().catch(() => ({})); showToast(err.error || 'Error', 'error'); }
+    } catch (e) { showToast('Error: ' + e.message, 'error'); }
   }
 
   async function adminSaveAiConfig() {
