@@ -469,12 +469,111 @@
           <h3 style="font-weight:700;color:var(--text-dark);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
             <span style="font-size:1.2rem;">&#x1F9E0;</span> Entrenamiento de su MIIA
           </h3>
-          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
-            <div style="cursor:pointer;" onclick="adminViewBrain()" title="Clic para ver detalle del cerebro"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Cerebro</span><strong id="acBrainSize" style="color:var(--primary);text-decoration:underline;">&mdash; chars</strong></div>
-            <div style="cursor:pointer;" onclick="adminViewSessions()" title="Clic para ver sesiónes"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Sesiones</span><strong id="acSessions" style="color:var(--primary);text-decoration:underline;">&mdash;</strong></div>
-            <div style="cursor:pointer;" onclick="adminViewDocs()" title="Clic para ver documentos"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Documentos</span><strong id="acDocs" style="color:var(--primary);text-decoration:underline;">&mdash;</strong></div>
+          <!-- WhatsApp Banner -->
+          <div id="adminWaBanner" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(239,68,68,0.08);margin-bottom:8px;">
+            <span id="adminWaStatusText" style="font-size:0.85rem;font-weight:600;color:#ef4444;">WhatsApp no conectado</span>
+            <button id="adminWaActionBtn" class="btn-sm btn-outline" onclick="adminToggleWhatsApp()" style="margin-left:auto;font-size:0.78rem;">Conectar</button>
           </div>
-          <a id="acTrainingLink" href="#" target="_blank" class="btn-sm btn-primary" style="text-decoration:none;text-align:center;display:inline-block;width:fit-content;">Abrir Entrenamiento Completo &rarr;</a>
+          <!-- Brain Status -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;">
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Cerebro</span><strong id="brainSize">&mdash;</strong> <span id="cerebroStatus" style="font-size:0.75rem;color:var(--text-muted);"></span></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Conversaciones</span><strong id="brainConvos">&mdash;</strong></div>
+            <div style="cursor:pointer;" onclick="adminViewBrain()" title="Ver detalle"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Detalle</span><strong id="acBrainSize" style="color:var(--primary);text-decoration:underline;">&mdash; chars</strong></div>
+            <div style="cursor:pointer;" onclick="adminViewSessions()"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Sesiones</span><strong id="acSessions" style="color:var(--primary);text-decoration:underline;">&mdash;</strong></div>
+            <div style="cursor:pointer;" onclick="adminViewDocs()"><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Documentos</span><strong id="acDocs" style="color:var(--primary);text-decoration:underline;">&mdash;</strong></div>
+          </div>
+          <!-- Training Tabs -->
+          <div id="trainTabsNav" style="display:flex;gap:4px;flex-wrap:wrap;border-bottom:1px solid rgba(0,229,255,0.1);padding-bottom:8px;margin-top:8px;">
+            <button class="tab-btn active" onclick="switchTrainingTab('trainProducts',this)" style="padding:6px 12px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;">Productos</button>
+            <button class="tab-btn" onclick="switchTrainingTab('trainKeywords',this)" style="padding:6px 12px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;">Keywords</button>
+            <button class="tab-btn" onclick="switchTrainingTab('trainSessions',this)" style="padding:6px 12px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;">Sesiones</button>
+            <button class="tab-btn" onclick="switchTrainingTab('trainExpert',this)" style="padding:6px 12px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;">Chat Experto</button>
+            <button class="tab-btn" onclick="switchTrainingTab('trainTest',this)" style="padding:6px 12px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;">Test MIIA</button>
+            <button class="tab-btn" onclick="switchTrainingTab('trainDocs',this)" style="padding:6px 12px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;">Docs</button>
+            <button class="tab-btn" onclick="switchTrainingTab('trainHumanizer',this)" style="padding:6px 12px;border:none;background:transparent;color:var(--text-muted);font-size:0.82rem;font-weight:600;cursor:pointer;border-bottom:2px solid transparent;">Humanizer</button>
+          </div>
+          <div id="trainTabContent">
+            <!-- Products Panel -->
+            <div id="trainProducts" class="train-panel">
+              <table id="adminProductsTable" style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+                <thead><tr style="border-bottom:1px solid rgba(0,229,255,0.1);"><th style="text-align:left;padding:6px 4px;color:var(--text-muted);font-size:0.78rem;">Nombre</th><th style="text-align:left;padding:6px 4px;color:var(--text-muted);font-size:0.78rem;">Descripcion</th><th style="text-align:left;padding:6px 4px;color:var(--text-muted);font-size:0.78rem;">Precio</th><th style="width:80px;padding:6px 4px;color:var(--text-muted);font-size:0.78rem;">Acciones</th></tr></thead>
+                <tbody id="adminProductsBody"></tbody>
+              </table>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+                <button class="btn-sm btn-outline" onclick="adminAddProductRow()">+ Agregar</button>
+                <span id="adminProductStatus" style="font-size:0.78rem;color:var(--accent);font-weight:600;"></span>
+              </div>
+            </div>
+            <!-- Keywords Panel -->
+            <div id="trainKeywords" class="train-panel" style="display:none;">
+              <h4 style="font-size:0.9rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Keywords de Leads</h4>
+              <table style="width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:16px;">
+                <tbody id="adminLeadKeywordsBody"></tbody>
+              </table>
+              <button class="btn-sm btn-outline" onclick="adminAddKeywordRow('lead')" style="margin-bottom:16px;">+ Agregar keyword lead</button>
+              <h4 style="font-size:0.9rem;font-weight:700;color:var(--text-dark);margin-bottom:8px;">Keywords de Clientes</h4>
+              <table style="width:100%;border-collapse:collapse;font-size:0.88rem;">
+                <tbody id="adminClientKeywordsBody"></tbody>
+              </table>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:8px;">
+                <button class="btn-sm btn-outline" onclick="adminAddKeywordRow('client')">+ Agregar keyword cliente</button>
+                <button class="btn-sm btn-primary" onclick="adminSaveContactRules()">Guardar reglas</button>
+                <span id="adminRulesStatus" style="font-size:0.78rem;color:var(--accent);font-weight:600;"></span>
+              </div>
+            </div>
+            <!-- Sessions Panel -->
+            <div id="trainSessions" class="train-panel" style="display:none;">
+              <div id="adminSessionsList" style="display:flex;flex-direction:column;gap:6px;">
+                <p style="font-size:0.85rem;color:var(--text-muted);">Cargando sesiones...</p>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+                <button class="btn-sm btn-primary" onclick="adminSaveCurrentSession()">Guardar sesion</button>
+                <span id="adminSessionSaveStatus" style="font-size:0.78rem;color:var(--accent);font-weight:600;"></span>
+              </div>
+            </div>
+            <!-- Expert Chat Panel -->
+            <div id="trainExpert" class="train-panel" style="display:none;">
+              <div id="adminExpertMessages" style="min-height:200px;max-height:400px;overflow-y:auto;border:1px solid rgba(0,229,255,0.08);border-radius:8px;padding:12px;margin-bottom:12px;background:rgba(0,0,0,0.02);">
+                <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;">Selecciona o crea una sesion para chatear</p>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <input type="text" id="adminExpertInput" placeholder="Escribi para entrenar a MIIA..." style="flex:1;padding:10px 12px;border:1px solid rgba(0,229,255,0.15);border-radius:8px;font-size:0.9rem;color:var(--text-dark);background:var(--surface);">
+                <button class="btn-sm btn-primary" onclick="adminSendExpertMessage()">Enviar</button>
+              </div>
+            </div>
+            <!-- Test MIIA Panel -->
+            <div id="trainTest" class="train-panel" style="display:none;">
+              <div id="adminTestMessages" style="min-height:200px;max-height:400px;overflow-y:auto;border:1px solid rgba(0,229,255,0.08);border-radius:8px;padding:12px;margin-bottom:12px;background:rgba(0,0,0,0.02);">
+                <p style="font-size:0.85rem;color:var(--text-muted);text-align:center;">Escribe como si fueras un lead para probar MIIA</p>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <input type="text" id="adminTestInput" placeholder="Simula un mensaje de lead..." style="flex:1;padding:10px 12px;border:1px solid rgba(0,229,255,0.15);border-radius:8px;font-size:0.9rem;color:var(--text-dark);background:var(--surface);">
+                <button class="btn-sm btn-primary" onclick="adminSendTestMessage()">Enviar</button>
+                <button class="btn-sm btn-outline" onclick="adminResetTest()">Reset</button>
+              </div>
+            </div>
+            <!-- Documents Panel -->
+            <div id="trainDocs" class="train-panel" style="display:none;">
+              <input type="file" id="adminDocUploadInput" accept=".pdf,.txt,.doc,.docx,.csv" multiple style="margin-bottom:12px;">
+              <button class="btn-sm btn-primary" onclick="adminUploadTrainingDocs()">Subir documentos</button>
+              <span id="adminDocUploadStatus" style="font-size:0.78rem;color:var(--accent);font-weight:600;margin-left:8px;"></span>
+            </div>
+            <!-- Humanizer Panel -->
+            <div id="trainHumanizer" class="train-panel" style="display:none;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <label style="font-size:0.9rem;font-weight:600;color:var(--text-dark);">Humanizador de mensajes</label>
+                <div style="position:relative;width:44px;height:24px;cursor:pointer;" onclick="adminSaveHumanizerPref()">
+                  <input type="checkbox" id="adminHumanizerToggle" style="opacity:0;width:0;height:0;">
+                  <span id="adminHumanizerTrack" style="position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,229,255,0.15);border-radius:24px;transition:0.3s;"></span>
+                </div>
+                <span id="adminHumanizerLabel" style="font-size:0.82rem;color:var(--text-muted);">Cargando...</span>
+              </div>
+              <p style="font-size:0.78rem;color:var(--text-muted);margin-top:8px;">Cuando esta activo, MIIA agrega errores sutiles de tipeo para sonar mas natural.</p>
+            </div>
+          </div>
+          <!-- Client Selector -->
+          <select id="adminClientSelector" style="display:none;"></select>
+          <a id="acTrainingLink" href="#" target="_blank" class="btn-sm btn-primary" style="text-decoration:none;text-align:center;display:inline-block;width:fit-content;margin-top:8px;">Abrir Entrenamiento Completo &rarr;</a>
         </div>
 
         <!-- 5. HORARIOS Y SEGUIMIENTO -->
