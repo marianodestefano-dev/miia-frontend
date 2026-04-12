@@ -613,7 +613,7 @@
         return;
       }
 
-      try { const _tok = await user.getIdToken(); const _r = await fetch('https://api.miia-app.com/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin-dashboard.html';return;} } catch(_){}
+      try { const _tok = await user.getIdToken(); const _r = await fetch('https://api.miia-app.com/api/is-admin',{headers:{Authorization:'Bearer '+_tok}}); const _d = await _r.json(); if(_d.isAdmin){window.location.href='admin-dashboard.html';return;} } catch(e){console.warn('[AGENT]',e.message||e)}
 
       // Load user doc
       const doc = await db.collection('users').doc(user.uid).get();
@@ -807,7 +807,7 @@
           return;
         }
 
-        const BACKEND_URL = 'https://api.miia-app.com';
+        // Usa el BACKEND_URL global (no hardcodear)
         const resp = await fetch(`${BACKEND_URL}/api/tenant/${ownerUid}/agent-conversations`, {
           headers: { 'Authorization': 'Bearer ' + token }
         });
@@ -918,23 +918,26 @@
     // ── Google Calendar del agente ──
     async function agentLoadCalendarStatus() {
       try {
+        if (!auth.currentUser) return;
         const token = await auth.currentUser.getIdToken();
         const res = await fetch(BACKEND_URL + '/api/calendar/status', { headers: { Authorization: 'Bearer ' + token } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         const badge = document.getElementById('agentCalBadge');
         const connectSec = document.getElementById('agentCalConnectSection');
         const connectedSec = document.getElementById('agentCalConnectedSection');
         if (data.connected) {
           if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(66,133,244,.12)'; badge.style.color = '#4285F4'; }
-          connectSec.style.display = 'none';
-          connectedSec.style.display = 'flex';
-          document.getElementById('agentCalToggle').checked = !!data.calendarEnabled;
+          if (connectSec) connectSec.style.display = 'none';
+          if (connectedSec) connectedSec.style.display = 'flex';
+          const toggle = document.getElementById('agentCalToggle');
+          if (toggle) toggle.checked = !!data.calendarEnabled;
         } else {
           if (badge) { badge.textContent = 'No conectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#EF4444'; }
-          connectSec.style.display = 'block';
-          connectedSec.style.display = 'none';
+          if (connectSec) connectSec.style.display = 'block';
+          if (connectedSec) connectedSec.style.display = 'none';
         }
-      } catch (_) {}
+      } catch (e) { console.warn('[AGENT] Calendar status error:', e.message); }
     }
 
     // ═══ MOTOR IA ═══
@@ -1005,8 +1008,10 @@
     async function agentDisconnectCalendar() {
       if (!confirm('¿Desconectar Google Calendar?')) return;
       try {
+        if (!auth.currentUser) return;
         const token = await auth.currentUser.getIdToken();
-        await fetch(BACKEND_URL + '/api/calendar/disconnect', { method: 'POST', headers: { Authorization: 'Bearer ' + token } });
+        const res = await fetch(BACKEND_URL + '/api/calendar/disconnect', { method: 'POST', headers: { Authorization: 'Bearer ' + token } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         showToast('Google Calendar desconectado', 'success');
         agentLoadCalendarStatus();
       } catch (e) { showToast('Error: ' + e.message, 'error'); }
@@ -1034,8 +1039,10 @@
 
     async function agentTestEmail() {
       try {
+        if (!auth.currentUser) return;
         const token = await auth.currentUser.getIdToken();
         const res = await fetch(BACKEND_URL + '/api/tenant/' + auth.currentUser.uid + '/email-test', { method: 'POST', headers: { Authorization: 'Bearer ' + token } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const data = await res.json();
         showToast(data.success ? '✅ Email de prueba enviado' : 'Error: ' + data.error, data.success ? 'success' : 'error');
       } catch (e) { showToast('Error: ' + e.message, 'error'); }
