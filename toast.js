@@ -31,9 +31,9 @@
         gap: 10px;
         padding: 13px 18px;
         border-radius: 12px;
-        background: #0D1628;
-        border: 1px solid rgba(91,141,248,0.2);
-        color: #E8EDF8;
+        background: var(--glass-bg, #0D1628);
+        border: 1px solid var(--bd-indigo, rgba(91,141,248,0.2));
+        color: var(--tx-bright, #E8EDF8);
         font-family: Inter, system-ui, sans-serif;
         font-size: 0.875rem;
         line-height: 1.4;
