@@ -2338,7 +2338,7 @@
 
       // Restore section from hash AFTER render is complete
       const hash = window.location.hash.replace('#', '');
-      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'analytics', 'documents'];
+      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'analytics', 'documents', 'security'];
       if (hash && validSections.includes(hash)) {
         const btn = document.querySelector(`.sidebar-btn[onclick*="${hash}"]`);
         showSection(hash, btn);
@@ -3189,7 +3189,7 @@
       btn.disabled = true;
       btn.textContent = 'Exportando...';
       try {
-        const res = await fetch(`https://api.miia-app.com/api/tenant/${user.uid}/export`, { method: 'POST' });
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${user.uid}/export`, { method: 'POST' });
         const data = await res.json();
         if (!res.ok) { showToast(data.error || 'Error al exportar', 'error'); btn.disabled = false; btn.textContent = 'Exportar MIIA'; return; }
         // Download as .miia file
@@ -3534,7 +3534,6 @@
     }
 
     // ═══ AI PROVIDER CONFIG ═══
-    const BACKEND = 'https://api.miia-app.com';
     const aiProviderSelect = document.getElementById('aiProviderSelect');
     const aiKeyContainer = document.getElementById('aiKeyContainer');
     const aiResetBtn = document.getElementById('aiResetBtn');
@@ -3554,7 +3553,7 @@
       const user = auth.currentUser;
       if (!user) return;
       try {
-        const res = await fetch(`${BACKEND}/api/tenant/${user.uid}/ai-config`);
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${user.uid}/ai-config`);
         if (!res.ok) return;
         const data = await res.json();
         aiProviderSelect.value = data.provider;
@@ -3590,7 +3589,7 @@
       aiStatus.textContent = '';
 
       try {
-        const res = await fetch(`${BACKEND}/api/tenant/${user.uid}/ai-test`, {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${user.uid}/ai-test`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ provider, apiKey })
@@ -3618,7 +3617,7 @@
       btn.disabled = true; btn.textContent = 'Guardando...';
 
       try {
-        const res = await fetch(`${BACKEND}/api/tenant/${user.uid}/ai-config`, {
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${user.uid}/ai-config`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ provider, apiKey })
@@ -3644,7 +3643,7 @@
       if (!confirm('¿Restablecer a Gemini (default)?')) return;
 
       try {
-        const res = await fetch(`${BACKEND}/api/tenant/${user.uid}/ai-config`, { method: 'DELETE' });
+        const res = await fetch(`${BACKEND_URL}/api/tenant/${user.uid}/ai-config`, { method: 'DELETE' });
         const data = await res.json();
         if (data.success) {
           aiProviderSelect.value = 'gemini';
@@ -6416,7 +6415,7 @@
     // Restore section from hash on load
     window.addEventListener('DOMContentLoaded', function() {
       const hash = window.location.hash.replace('#', '');
-      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'analytics', 'documents'];
+      const validSections = ['home', 'agents', 'plans', 'connections', 'contacts', 'businesses', 'analytics', 'documents', 'security'];
       if (hash && validSections.includes(hash.split('?')[0])) {
         const sectionName = hash.split('?')[0];
         const btn = document.querySelector(`.sidebar-btn[onclick*="${sectionName}"]`);
@@ -7623,7 +7622,7 @@
 
   <div id="section-documents" class="page-section section-hidden">
     <div style="max-width:1000px;margin:0 auto;padding:40px 24px 80px;">
-    <button class="biz-back-btn" onclick="showSection('dashboard')" title="Volver al dashboard" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">
+    <button class="biz-back-btn" onclick="showSection('home')" title="Volver al dashboard" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Volver
     </button>
   <div class="container">
