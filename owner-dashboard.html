@@ -5005,30 +5005,55 @@
 
   var _qrConnecting = false;
 
-  // openQRModal — muestra el modal QR forzando estilos inline
+  // openQRModal — crea modal QR dinámico (evita conflictos CSS)
   function openQRModal() {
-    alert('CLICK FUNCIONA - abriendo QR modal');
     const uid = currentUser ? currentUser.uid : '';
-    if (!uid) { alert('No estás autenticado. Recargá la página.'); return; }
+    if (!uid) { alert('No autenticado'); return; }
     _qrConnecting = false;
-    const m = document.getElementById('qrModal');
-    if (!m) { alert('Error: modal QR no encontrado'); return; }
-    // Forzar visibilidad: quitar hidden, setear estilos con !important via setProperty
-    m.classList.remove('hidden');
-    m.style.setProperty('display', 'flex', 'important');
-    m.style.setProperty('position', 'fixed', 'important');
-    m.style.setProperty('inset', '0', 'important');
-    m.style.setProperty('z-index', '99999', 'important');
-    m.style.setProperty('background', 'rgba(0,0,0,0.7)', 'important');
-    m.style.setProperty('align-items', 'center', 'important');
-    m.style.setProperty('justify-content', 'center', 'important');
+
+    // Remover modal dinámico anterior si existe
+    var old = document.getElementById('qrModalDynamic');
+    if (old) old.remove();
+
+    // Crear modal completamente desde JS — sin depender de CSS del dashboard
+    var overlay = document.createElement('div');
+    overlay.id = 'qrModalDynamic';
+    overlay.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:999999;';
+    overlay.onclick = function(e) { if (e.target === overlay) closeQRModal(); };
+
+    var card = document.createElement('div');
+    card.style.cssText = 'background:#1e2a45;border:1px solid #2d3748;border-radius:16px;padding:32px;max-width:420px;width:90%;text-align:center;color:#e8eaed;font-family:Inter,sans-serif;';
+    card.innerHTML = '<h3 style="margin:0 0 16px;font-size:1.15rem;color:#e8eaed;">Conectar WhatsApp</h3>' +
+      '<div style="display:flex;gap:0;border:1px solid #2d3748;border-radius:8px;margin-bottom:20px;overflow:hidden;">' +
+        '<button onclick="switchWaTab(\'qr\')" style="flex:1;padding:9px;font-size:0.85rem;border:none;cursor:pointer;background:#3B5BFF;color:white;font-weight:600;">📷 Escanear QR</button>' +
+        '<button onclick="switchWaTab(\'code\')" style="flex:1;padding:9px;font-size:0.85rem;border:none;cursor:pointer;background:transparent;color:#9aa0a6;font-weight:600;">🔢 Código</button>' +
+      '</div>' +
+      '<div id="qrCode" style="min-height:200px;"><p style="color:#9aa0a6;text-align:center;">Generando QR...</p></div>' +
+      '<div id="waPanelCode" style="display:none;">' +
+        '<p style="color:#9aa0a6;font-size:0.85rem;margin-bottom:16px;text-align:center;">Ingresá tu número (formato internacional, sin + ni espacios).</p>' +
+        '<div style="display:flex;gap:8px;margin-bottom:12px;">' +
+          '<input id="pairingPhone" type="tel" placeholder="ej: 5491112345678" style="flex:1;padding:10px 12px;background:#253555;border:1px solid #2d3748;border-radius:8px;color:#e8eaed;font-size:0.9rem;outline:none;">' +
+          '<button onclick="requestPairingCode()" style="padding:10px 16px;background:#3B5BFF;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;">Generar</button>' +
+        '</div>' +
+        '<div id="pairingCodeDisplay" style="display:none;text-align:center;padding:20px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:12px;">' +
+          '<p style="color:#9aa0a6;font-size:0.8rem;margin-bottom:8px;">Tu código de vinculación:</p>' +
+          '<div id="pairingCodeValue" style="font-size:2.2rem;font-weight:800;letter-spacing:8px;color:#7c3aed;font-family:monospace;"></div>' +
+        '</div>' +
+        '<div id="pairingError" style="display:none;color:#ef4444;font-size:0.82rem;text-align:center;margin-top:8px;"></div>' +
+      '</div>' +
+      '<button onclick="closeQRModal()" style="margin-top:20px;width:100%;padding:10px;background:transparent;border:1px solid #2d3748;border-radius:8px;color:#e8eaed;cursor:pointer;font-size:0.88rem;">Cerrar</button>';
+
+    overlay.appendChild(card);
+    document.body.appendChild(overlay);
     connectWhatsApp();
   }
 
   function closeQRModal() {
     _qrConnecting = false;
-    const m = document.getElementById('qrModal');
-    if (m) { m.classList.add('hidden'); m.style.cssText = ''; }
+    var m = document.getElementById('qrModalDynamic');
+    if (m) m.remove();
+    var old = document.getElementById('qrModal');
+    if (old) { old.classList.add('hidden'); old.style.cssText = ''; }
   }
 
   // Bind click listener directo al botón (no depende de onclick del HTML)
