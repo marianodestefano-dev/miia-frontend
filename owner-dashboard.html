@@ -367,7 +367,7 @@
       font-family: inherit;
       font-size: 0.95rem;
       color: var(--text-dark);
-      background: var(--bg-card, var(--surface));
+      background: var(--bg-card, var(--bg-surface));
     }
 
     .form-group input::placeholder,
@@ -965,7 +965,7 @@
       font-family: inherit;
       font-size: 0.95rem;
       color: var(--text-dark);
-      background: var(--bg-card, var(--surface));
+      background: var(--bg-card, var(--bg-surface));
     }
 
     .form-group input::placeholder,
@@ -1915,15 +1915,15 @@
       <div style="display:grid; grid-template-columns: 1fr 1fr 1fr auto; gap:12px; align-items:end;">
         <div>
           <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Telefono (con codigo pais)</label>
-          <input type="text" id="securityPhone" placeholder="+5491155..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); font-size:0.9rem;">
+          <input type="text" id="securityPhone" placeholder="+5491155..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-glass); font-size:0.9rem;">
         </div>
         <div>
           <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Nombre</label>
-          <input type="text" id="securityName" placeholder="Mama, Papa..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); font-size:0.9rem;">
+          <input type="text" id="securityName" placeholder="Mama, Papa..." style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-glass); font-size:0.9rem;">
         </div>
         <div>
           <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:4px;">Nivel de acceso</label>
-          <select id="securityLevel" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-color); font-size:0.9rem;">
+          <select id="securityLevel" style="width:100%; padding:8px 12px; border-radius:8px; border:1px solid var(--border-glass); font-size:0.9rem;">
             <option value="emergencies_only">Solo emergencias</option>
             <option value="agenda_visible">Agenda visible</option>
             <option value="full_supervision">Supervision completa</option>
@@ -2231,7 +2231,7 @@
       // Barra de aviso para modo admin view
       if (adminView && impersonateUid) {
         const bar = document.createElement('div');
-        bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:var(--surface);color:var(--tx-bright);text-align:center;padding:10px;font-size:0.85rem;z-index:9999;';
+        bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:var(--bg-surface);color:var(--tx-bright);text-align:center;padding:10px;font-size:0.85rem;z-index:9999;';
         bar.innerHTML = `👁 <strong>Modo Admin:</strong> Viendo dashboard de ${doc.exists ? doc.data().email : impersonateUid} &nbsp;|&nbsp; <a href="admin-dashboard.html" style="color:var(--indigo);">Volver a Admin</a>`;
         document.body.appendChild(bar);
         document.body.style.paddingBottom = '45px';
@@ -3412,7 +3412,7 @@
         '<span style="color:var(--red-500); font-size:0.8rem;">❌ Rechazado</span>';
 
       container.innerHTML = contacts.map(c => `
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border:1px solid var(--border-color); border-radius:8px; margin-bottom:8px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border:1px solid var(--border-glass); border-radius:8px; margin-bottom:8px;">
           <div>
             <strong style="font-size:0.95rem;">${c.partnerName || 'Sin nombre'}</strong>
             <span style="color:var(--text-muted); font-size:0.8rem; margin-left:8px;">${c.partnerPhone || ''}</span>
@@ -3426,12 +3426,12 @@
               <button onclick="respondSecurity('${c.relationId}', 'rejected')" style="padding:4px 10px; border-radius:6px; background:var(--red-500); color:white; border:none; font-size:0.8rem; cursor:pointer;">Rechazar</button>
             ` : ''}
             ${c.status === 'active' ? `
-              <select onchange="changeSecurity('${c.relationId}', this.value)" style="padding:4px 8px; border-radius:6px; border:1px solid var(--border-color); font-size:0.8rem;">
+              <select onchange="changeSecurity('${c.relationId}', this.value)" style="padding:4px 8px; border-radius:6px; border:1px solid var(--border-glass); font-size:0.8rem;">
                 <option value="emergencies_only" ${c.level === 'emergencies_only' ? 'selected' : ''}>Emergencias</option>
                 <option value="agenda_visible" ${c.level === 'agenda_visible' ? 'selected' : ''}>Agenda</option>
                 <option value="full_supervision" ${c.level === 'full_supervision' ? 'selected' : ''}>Completa</option>
               </select>
-              <button onclick="removeSecurity('${c.relationId}')" style="padding:4px 10px; border-radius:6px; background:var(--bg-hover); border:1px solid var(--border-color); font-size:0.8rem; cursor:pointer;" title="Desvincular">🔓</button>
+              <button onclick="removeSecurity('${c.relationId}')" style="padding:4px 10px; border-radius:6px; background:var(--bg-hover); border:1px solid var(--border-glass); font-size:0.8rem; cursor:pointer;" title="Desvincular">🔓</button>
             ` : ''}
           </div>
         </div>
@@ -4334,13 +4334,13 @@
             </label>
           </td>
           <td>
-            ${otherGroups.length > 0 ? `<select style="font-size:0.8rem;padding:4px 6px;border:1px solid var(--border-color);border-radius:6px;background:var(--bg-surface);color:var(--text-dark);" onchange="moveContact('${esc(c.phone)}', this.value); this.value=''">
+            ${otherGroups.length > 0 ? `<select style="font-size:0.8rem;padding:4px 6px;border:1px solid var(--border-glass);border-radius:6px;background:var(--bg-surface);color:var(--text-dark);" onchange="moveContact('${esc(c.phone)}', this.value); this.value=''">
               <option value="">Mover a...</option>${moveOptions}
             </select>` : '<span style="color:var(--text-muted);font-size:0.8rem;">—</span>'}
           </td>
           <td>
             <div class="actions" style="display:flex;gap:4px;">
-              <button class="btn-icon" title="Editar" onclick="openEditContact('${esc(c.phone)}')" style="background:none;border:1px solid var(--border-color);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.78rem;">✏️</button>
+              <button class="btn-icon" title="Editar" onclick="openEditContact('${esc(c.phone)}')" style="background:none;border:1px solid var(--border-glass);border-radius:6px;padding:4px 8px;cursor:pointer;font-size:0.78rem;">✏️</button>
               ${agentBtn}
               <button class="btn-icon danger" title="Eliminar" onclick="removeContactFromGroup('${esc(c.phone)}')">🗑</button>
             </div>
@@ -5881,7 +5881,7 @@
         return;
       }
       container.innerHTML = data.spreadsheets.map(s =>
-        `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,229,255,0.04);border:1px solid var(--border-color);border-radius:8px;margin-bottom:6px;">
+        `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(0,229,255,0.04);border:1px solid var(--border-glass);border-radius:8px;margin-bottom:6px;">
           <div>
             <strong style="color:var(--text-dark);font-size:0.88rem;">${s.name || s.id}</strong>
             <span style="color:var(--text-muted);font-size:0.78rem;margin-left:8px;">${s.modifiedTime ? new Date(s.modifiedTime).toLocaleDateString() : ''}</span>
@@ -5930,7 +5930,7 @@
       const statusColor = { confirmed: 'var(--emerald)', pending: 'var(--amber-400)', cancelled: 'var(--red-400)', completed: 'var(--tx-dim)' };
       container.innerHTML = data.reservations.map(r => {
         const source = r.source === 'miia_network' ? '<span style="background:rgba(59,91,255,0.15);color:var(--accent-primary);padding:2px 6px;border-radius:4px;font-size:0.7rem;font-weight:700;margin-left:6px;">🤖 MIIA</span>' : '';
-        return `<div style="padding:12px 14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;margin-bottom:8px;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--accent-primary)'" onmouseout="this.style.borderColor='var(--border-color)'">
+        return `<div style="padding:12px 14px;background:var(--card-bg);border:1px solid var(--border-glass);border-radius:10px;margin-bottom:8px;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--accent-primary)'" onmouseout="this.style.borderColor='var(--border-glass)'">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <strong style="color:var(--text-dark);font-size:0.88rem;">${statusEmoji[r.status] || '📋'} ${r.businessName || 'Sin nombre'}${source}</strong>
             <span style="color:${statusColor[r.status] || 'var(--text-muted)'};font-size:0.75rem;font-weight:700;padding:2px 8px;border-radius:12px;background:${statusColor[r.status] ? statusColor[r.status] + '15' : 'transparent'};">${(r.status || '').toUpperCase()}</span>
@@ -5990,7 +5990,7 @@
       empty.style.display = 'none';
       container.innerHTML = data.favorites.map(f => {
         const stars = f.rating ? '⭐'.repeat(Math.min(Math.round(f.rating), 5)) : '';
-        return `<div style="padding:12px 14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;margin-bottom:8px;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--amber-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
+        return `<div style="padding:12px 14px;background:var(--card-bg);border:1px solid var(--border-glass);border-radius:10px;margin-bottom:8px;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--amber-400)'" onmouseout="this.style.borderColor='var(--border-glass)'">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <strong style="color:var(--text-dark);font-size:0.88rem;">⭐ ${f.name || '?'}</strong>
             <span style="font-size:0.78rem;color:var(--text-muted);">${f.visitCount || 0} visitas</span>
@@ -6060,7 +6060,7 @@
       empty.style.display = 'none';
       const statusEmoji = { searching: '🔍', pending: '⏳', confirmed: '✅', cancelled: '❌', completed: '🏁' };
       container.innerHTML = data.reservations.map(r =>
-        `<div style="padding:10px 14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;margin-bottom:6px;opacity:${r.status === 'cancelled' ? '0.5' : '1'};">
+        `<div style="padding:10px 14px;background:var(--card-bg);border:1px solid var(--border-glass);border-radius:8px;margin-bottom:6px;opacity:${r.status === 'cancelled' ? '0.5' : '1'};">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <span style="color:var(--text-dark);font-size:0.85rem;">${statusEmoji[r.status] || '📋'} ${r.businessName || '?'}</span>
             <span style="color:var(--text-muted);font-size:0.75rem;">${r.date || ''}</span>
@@ -6211,7 +6211,7 @@
     const btn = document.getElementById('voiceDictateBtn');
     const icon = document.getElementById('micIcon');
     const status = document.getElementById('voiceStatus');
-    btn.style.borderColor = 'var(--border-color)';
+    btn.style.borderColor = 'var(--border-glass)';
     btn.style.background = 'var(--card-bg)';
     btn.style.animation = 'none';
     icon.style.color = 'var(--text-muted)';
@@ -7004,7 +7004,7 @@
   <div id="section-contacts" class="page-section section-hidden">
     <div style="max-width:1200px;margin:0 auto;padding:40px 24px 80px;">
     <!-- View tabs — estilo limpio, sin globo -->
-    <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border-color);">
+    <div style="display:flex;gap:0;margin-bottom:24px;border-bottom:2px solid var(--border-glass);">
       <button class="contact-view-tab active" onclick="switchContactsView('groups',this)" style="padding:12px 24px;border:none;background:transparent;color:var(--text-muted);font-size:0.95rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;">Grupos de Contacto</button>
       <button class="contact-view-tab" onclick="switchContactsView('conversations',this)" style="padding:12px 24px;border:none;background:transparent;color:var(--text-muted);font-size:0.95rem;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all 0.2s;">Conversaciones</button>
     </div>
@@ -7059,7 +7059,7 @@
           <input type="hidden" id="cfgAutoRespond" value="false">
           <div style="margin-bottom:16px;">
             <span style="font-weight:600;color:var(--text-dark);font-size:0.9rem;">Tono / Instrucciones</span>
-            <textarea id="cfgTone" rows="3" style="width:100%;margin-top:8px;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);font-family:inherit;font-size:0.88rem;resize:vertical;background:var(--bg-surface);color:var(--text-dark);" placeholder="Ej: Habla de forma profesional y cordial..."></textarea>
+            <textarea id="cfgTone" rows="3" style="width:100%;margin-top:8px;padding:8px 10px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);font-family:inherit;font-size:0.88rem;resize:vertical;background:var(--bg-surface);color:var(--text-dark);" placeholder="Ej: Habla de forma profesional y cordial..."></textarea>
           </div>
           <div>
             <button class="btn-primary" onclick="updateGroupConfig(currentGroupId)">Guardar configuración</button>
@@ -7105,7 +7105,7 @@
             </div>
             <div class="form-group" style="margin-bottom:0;">
               <label>Relación</label>
-              <select id="newContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);font-size:0.88rem;-webkit-appearance:menulist;appearance:menulist;">
+              <select id="newContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);font-size:0.88rem;-webkit-appearance:menulist;appearance:menulist;">
                 <option value="" style="color:var(--tx-dim);">— Seleccionar —</option>
                 <option value="hijo">Hijo/a</option>
                 <option value="esposo">Esposo/a</option>
@@ -7151,7 +7151,7 @@
             <div class="form-group"><label>Nombre</label><input type="text" id="editContactName"></div>
             <div class="form-group"><label>Apodo</label><input type="text" id="editContactNickname" placeholder="Ej: Tito, Mamá"></div>
             <div class="form-group"><label>Relación</label>
-              <select id="editContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);-webkit-appearance:menulist;appearance:menulist;">
+              <select id="editContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);-webkit-appearance:menulist;appearance:menulist;">
                 <option value="" style="color:var(--tx-dim);">— Seleccionar —</option>
                 <option value="hijo">Hijo/a</option>
                 <option value="esposo">Esposo/a</option>
@@ -7171,7 +7171,7 @@
             </div>
             <div class="form-group"><label>Gustos / Preferencias</label><input type="text" id="editContactLikes" placeholder="Ej: Le gusta cocinar, fan de Star Wars"></div>
             <div class="form-group"><label>Fanatismo</label><input type="text" id="editContactFandom" placeholder="Ej: Hincha de Boca, fan de F1"></div>
-            <div class="form-group"><label>Notas</label><textarea id="editContactNotes" rows="2" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);font-family:inherit;resize:vertical;"></textarea></div>
+            <div class="form-group"><label>Notas</label><textarea id="editContactNotes" rows="2" style="width:100%;padding:8px 10px;border:1px solid var(--border-glass);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);font-family:inherit;resize:vertical;"></textarea></div>
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
               <label class="toggle-switch" style="flex-shrink:0;">
                 <input type="checkbox" id="editContactEmergency">
@@ -7364,10 +7364,10 @@
       <table class="agents-table" style="width:100%;border-collapse:collapse;font-size:0.88rem;">
         <thead>
           <tr>
-            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-color);color:var(--text-muted);font-weight:600;">Agente</th>
-            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-color);color:var(--text-muted);font-weight:600;">Teléfono</th>
-            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-color);color:var(--text-muted);font-weight:600;">Estado</th>
-            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-color);color:var(--text-muted);font-weight:600;">Acciones</th>
+            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-glass);color:var(--text-muted);font-weight:600;">Agente</th>
+            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-glass);color:var(--text-muted);font-weight:600;">Teléfono</th>
+            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-glass);color:var(--text-muted);font-weight:600;">Estado</th>
+            <th style="text-align:left;padding:10px 12px;border-bottom:2px solid var(--border-glass);color:var(--text-muted);font-weight:600;">Acciones</th>
           </tr>
         </thead>
         <tbody id="bizAgentsBody">
@@ -7557,7 +7557,7 @@
 
       <!-- ═══ COTIZACIONES ═══ -->
       <div style="margin-bottom:32px;">
-        <h3 style="color:var(--text-dark);font-size:1.1rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border-color);">📋 Cotizaciones</h3>
+        <h3 style="color:var(--text-dark);font-size:1.1rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border-glass);">📋 Cotizaciones</h3>
         <div class="form-row">
           <div class="form-group"><label>Nombre del Cliente</label><input type="text" id="bizQuoteClient" placeholder="Ej: Juan Pérez"></div>
           <div class="form-group"><label>Producto/Servicio</label><input type="text" id="bizQuoteProduct" placeholder="Ej: Desarrollo Web"></div>
@@ -7578,7 +7578,7 @@
 
       <!-- ═══ TEMPLATES ═══ -->
       <div style="margin-bottom:32px;">
-        <h3 style="color:var(--text-dark);font-size:1.1rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border-color);">💬 Templates</h3>
+        <h3 style="color:var(--text-dark);font-size:1.1rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border-glass);">💬 Templates</h3>
         <div class="form-group"><label>Nombre del Template</label><input type="text" id="bizTemplateName" placeholder="Ej: Saludo inicial"></div>
         <div class="form-group"><label>Texto del Template</label><textarea id="bizTemplateText" placeholder="Escribe el mensaje que MIIA usará como respuesta..."></textarea></div>
         <button class="btn-primary" onclick="createTemplate()">✅ Guardar Template</button>
@@ -7592,7 +7592,7 @@
 
       <!-- ═══ ARCHIVOS ═══ -->
       <div>
-        <h3 style="color:var(--text-dark);font-size:1.1rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border-color);">📁 Archivos de Conocimiento</h3>
+        <h3 style="color:var(--text-dark);font-size:1.1rem;margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--border-glass);">📁 Archivos de Conocimiento</h3>
         <p style="color:var(--text-muted);margin-bottom:16px;font-size:0.9rem;">Sube catálogos, PDFs, imágenes de brochures, planes o documentos con información sobre tu negocio. MIIA los usará para responder mejor a tus clientes.</p>
         <label class="file-input-label" style="display:inline-flex;align-items:center;gap:8px;padding:10px 20px;background:var(--gradient-main);color:#fff;border-radius:8px;cursor:pointer;font-size:0.88rem;">
           <svg style="width:16px;height:16px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Seleccionar Archivo
@@ -7893,7 +7893,7 @@
             </div>
 
             <!-- Sub-tabs de reservas -->
-            <div style="display:flex;gap:4px;width:100%;background:var(--card-bg);border-radius:10px;padding:3px;border:1px solid var(--border-color);">
+            <div style="display:flex;gap:4px;width:100%;background:var(--card-bg);border-radius:10px;padding:3px;border:1px solid var(--border-glass);">
               <button onclick="switchReservationTab('active')" id="resTabActive" class="btn-sm" style="flex:1;padding:8px 12px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.78rem;transition:all .2s;">Activas</button>
               <button onclick="switchReservationTab('favorites')" id="resTabFavorites" class="btn-sm" style="flex:1;padding:8px 12px;background:transparent;color:var(--text-muted);border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.78rem;transition:all .2s;">Favoritos ⭐</button>
               <button onclick="switchReservationTab('network')" id="resTabNetwork" class="btn-sm" style="flex:1;padding:8px 12px;background:transparent;color:var(--text-muted);border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.78rem;transition:all .2s;">Red MIIA 🤖</button>
@@ -7921,7 +7921,7 @@
               <div style="background:linear-gradient(135deg,rgba(59,91,255,0.08),rgba(255,26,140,0.08));border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid rgba(59,91,255,0.2);">
                 <p style="font-size:0.82rem;color:var(--text-dark);margin-bottom:6px;"><strong>🤖 Red MIIA</strong> — Negocios que usan MIIA. Las reservas se hacen automáticamente vía WhatsApp.</p>
                 <div style="display:flex;gap:8px;margin-top:8px;">
-                  <select id="networkTypeFilter" onchange="loadMiiaNetwork()" style="flex:1;padding:6px 10px;font-size:0.82rem;border-radius:8px;border:1px solid var(--border-color);background:var(--card-bg);color:var(--text-dark);">
+                  <select id="networkTypeFilter" onchange="loadMiiaNetwork()" style="flex:1;padding:6px 10px;font-size:0.82rem;border-radius:8px;border:1px solid var(--border-glass);background:var(--card-bg);color:var(--text-dark);">
                     <option value="">Todos los tipos</option>
                     <option value="restaurant">Restaurantes</option>
                     <option value="doctor">Médicos</option>
@@ -7965,23 +7965,23 @@
             </div>
 
             <!-- Dictado por voz (Speech-to-Text) -->
-            <div style="width:100%;margin-top:12px;padding:14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:12px;">
+            <div style="width:100%;margin-top:12px;padding:14px;background:var(--card-bg);border:1px solid var(--border-glass);border-radius:12px;">
               <p style="font-size:0.82rem;color:var(--text-dark);font-weight:600;margin-bottom:8px;">🎙️ Dictado por voz → MIIA</p>
               <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:12px;line-height:1.4;">Hablá y MIIA ejecuta: "Escribí en la hoja de cálculo ventas de hoy", "Agendame una cita mañana a las 3", "Mandá un email a Juan"...</p>
 
               <div style="display:flex;align-items:center;gap:12px;">
-                <button id="voiceDictateBtn" onclick="toggleVoiceDictation()" style="width:56px;height:56px;border-radius:50%;border:2px solid var(--border-color);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;">
+                <button id="voiceDictateBtn" onclick="toggleVoiceDictation()" style="width:56px;height:56px;border-radius:50%;border:2px solid var(--border-glass);background:var(--card-bg);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;flex-shrink:0;">
                   <svg id="micIcon" style="width:24px;height:24px;color:var(--text-muted);transition:color .3s;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
                 </button>
                 <div style="flex:1;">
                   <div id="voiceStatus" style="font-size:0.82rem;color:var(--text-muted);margin-bottom:4px;">Tocá el micrófono para empezar</div>
-                  <div id="voiceTranscript" style="min-height:36px;padding:8px 12px;background:rgba(0,0,0,0.03);border-radius:8px;font-size:0.85rem;color:var(--text-dark);border:1px solid var(--border-color);max-height:120px;overflow-y:auto;"></div>
+                  <div id="voiceTranscript" style="min-height:36px;padding:8px 12px;background:rgba(0,0,0,0.03);border-radius:8px;font-size:0.85rem;color:var(--text-dark);border:1px solid var(--border-glass);max-height:120px;overflow-y:auto;"></div>
                 </div>
               </div>
 
               <div id="voiceActions" style="display:none;margin-top:10px;display:flex;gap:8px;">
                 <button onclick="sendVoiceCommand()" style="flex:1;padding:8px 14px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.82rem;">Enviar a MIIA</button>
-                <button onclick="clearVoiceTranscript()" style="padding:8px 14px;background:transparent;color:var(--text-muted);border:1px solid var(--border-color);border-radius:8px;cursor:pointer;font-size:0.82rem;">Limpiar</button>
+                <button onclick="clearVoiceTranscript()" style="padding:8px 14px;background:transparent;color:var(--text-muted);border:1px solid var(--border-glass);border-radius:8px;cursor:pointer;font-size:0.82rem;">Limpiar</button>
               </div>
               <div id="voiceResponse" style="display:none;margin-top:10px;padding:10px 14px;background:linear-gradient(135deg,rgba(59,91,255,0.06),rgba(255,26,140,0.06));border-radius:10px;border:1px solid rgba(59,91,255,0.15);">
                 <p style="font-size:0.75rem;color:var(--text-muted);margin-bottom:4px;">Respuesta de MIIA:</p>
@@ -8002,7 +8002,7 @@
     <h3>Conectar WhatsApp</h3>
 
     <!-- Tabs QR / Código -->
-    <div style="display:flex;gap:0;border:1px solid var(--border-color);border-radius:8px;margin-bottom:20px;overflow:hidden;">
+    <div style="display:flex;gap:0;border:1px solid var(--border-glass);border-radius:8px;margin-bottom:20px;overflow:hidden;">
       <button id="waTabQR" onclick="switchWaTab('qr')" style="flex:1;padding:9px;font-size:0.85rem;border:none;cursor:pointer;background:var(--accent-primary);color:white;font-weight:600;transition:background .2s;">
         📷 Escanear QR
       </button>
@@ -8024,7 +8024,7 @@
         Luego en tu celular: WhatsApp → Dispositivos vinculados → Vincular con número de teléfono → ingresá el código de 8 dígitos.
       </p>
       <div style="display:flex;gap:8px;margin-bottom:12px;">
-        <input id="pairingPhone" type="tel" placeholder="ej: 5491112345678" style="flex:1;padding:10px 12px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:8px;color:var(--text-primary);font-size:0.9rem;outline:none;">
+        <input id="pairingPhone" type="tel" placeholder="ej: 5491112345678" style="flex:1;padding:10px 12px;background:var(--card-bg);border:1px solid var(--border-glass);border-radius:8px;color:var(--text-primary);font-size:0.9rem;outline:none;">
         <button onclick="requestPairingCode()" style="padding:10px 16px;background:var(--accent-primary);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;white-space:nowrap;">
           Generar código
         </button>
@@ -8217,7 +8217,7 @@
 
   <div id="section-documents" class="page-section section-hidden">
     <div style="max-width:1000px;margin:0 auto;padding:40px 24px 80px;">
-    <button class="biz-back-btn" onclick="showSection('home')" title="Volver al dashboard" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:8px;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">
+    <button class="biz-back-btn" onclick="showSection('home')" title="Volver al dashboard" style="margin-bottom:16px;display:inline-flex;align-items:center;gap:6px;padding:8px 16px;background:var(--bg-card);border:1px solid var(--border-glass);border-radius:8px;color:var(--text-muted);cursor:pointer;font-size:0.85rem;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg> Volver
     </button>
   <div class="container">
