@@ -1252,7 +1252,7 @@
         </div>
         <p style="font-size:0.82rem;color:var(--text-muted);margin:0;line-height:1.4;">Vincula tu WhatsApp para que MIIA empiece a responder por ti.</p>
       </div>
-      <button onclick="try{openQRModal()}catch(e){alert('ERROR: '+e.message)}" id="homeWaConnectBtn" style="padding:12px 28px;background:var(--brand-whatsapp);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.92rem;font-family:inherit;white-space:nowrap;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+      <button onclick="openQRModal()" id="homeWaConnectBtn" style="padding:12px 28px;background:var(--brand-whatsapp);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.92rem;font-family:inherit;white-space:nowrap;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
         Vincular WhatsApp
       </button>
     </div>
@@ -1566,7 +1566,7 @@
               <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA responderá automáticamente tus conversaciónes de WhatsApp, clasificará leads y cerrará ventas 24/7 sin que intervengas.</p>
             </div>
           </div>
-          <button onclick="try{linkWhatsAppFromConnections()}catch(e){alert('ERROR WA: '+e.message)}" style="width:100%;padding:10px;background:rgba(37,211,102,.1);color:var(--brand-whatsapp);border:1px solid rgba(37,211,102,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.18)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
+          <button onclick="linkWhatsAppFromConnections()" style="width:100%;padding:10px;background:rgba(37,211,102,.1);color:var(--brand-whatsapp);border:1px solid rgba(37,211,102,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.18)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
             Vincular WhatsApp
           </button>
           <!-- Barra de progreso de mining (oculta hasta que empiece) -->
@@ -5009,13 +5009,12 @@
   // openQRModal — muestra modal QR y llama a connectWhatsApp
   function openQRModal() {
     const uid = currentUser ? currentUser.uid : '';
-    console.log('[QR] openQRModal llamado, uid:', uid);
     if (!uid) { console.warn('[QR] No uid, abortando'); return; }
     _qrConnecting = false;
     const qrModal = document.getElementById('qrModal');
     if (qrModal) {
-      console.log('[QR] Mostrando modal QR...');
       qrModal.classList.remove('hidden');
+      qrModal.style.display = 'flex';
       connectWhatsApp();
     } else {
       console.error('[QR] Modal qrModal NO encontrado en DOM');
@@ -8013,7 +8012,7 @@
 </div>
 
 <!-- ═══ QR MODAL ═══ -->
-<div id="qrModal" class="modal-overlay hidden" onclick="if(event.target===this){_qrConnecting=false;this.classList.add('hidden')}">
+<div id="qrModal" class="modal-overlay hidden" onclick="if(event.target===this){_qrConnecting=false;this.classList.add('hidden');this.style.display='none'}">
   <div class="modal-card" style="max-width:420px;width:100%">
     <h3>Conectar WhatsApp</h3>
 
@@ -8053,7 +8052,7 @@
       <div id="pairingError" style="display:none;color:var(--red-400);font-size:0.82rem;text-align:center;margin-top:8px;"></div>
     </div>
 
-    <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="_qrConnecting=false;document.getElementById('qrModal').classList.add('hidden')">Cerrar</button>
+    <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="_qrConnecting=false;var m=document.getElementById('qrModal');m.classList.add('hidden');m.style.display='none'">Cerrar</button>
   </div>
 </div>
 
