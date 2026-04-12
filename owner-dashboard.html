@@ -5061,12 +5061,8 @@
     if (waBtn) {
       waBtn.addEventListener('click', function(e) {
         e.preventDefault();
-        console.log('[QR-BIND] Click detectado en homeWaConnectBtn');
         openQRModal();
       });
-      console.log('[QR-BIND] ✅ Listener agregado a homeWaConnectBtn');
-    } else {
-      console.error('[QR-BIND] ❌ homeWaConnectBtn NO encontrado');
     }
   });
 
@@ -8380,15 +8376,6 @@
     navigator.serviceWorker.register('sw.js').then(r => console.log('[PWA] SW registered')).catch(e => console.warn('[PWA] SW failed:', e));
   }
 
-  // DEBUG: Verificar que openQRModal existe y el botón responde
-  console.log('[DEBUG-FINAL] openQRModal existe?', typeof openQRModal);
-  console.log('[DEBUG-FINAL] connectWhatsApp existe?', typeof connectWhatsApp);
-  console.log('[DEBUG-FINAL] homeWaConnectBtn existe?', !!document.getElementById('homeWaConnectBtn'));
-  var _debugBtn = document.getElementById('homeWaConnectBtn');
-  if (_debugBtn) {
-    console.log('[DEBUG-FINAL] onclick del botón:', _debugBtn.getAttribute('onclick'));
-    console.log('[DEBUG-FINAL] listeners:', _debugBtn.onclick);
-  }
 </script>
 </body>
 </html>
