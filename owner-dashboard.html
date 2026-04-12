@@ -3350,7 +3350,7 @@
         // Sign out and redirect
         showToast('Cuenta eliminada. Redirigiendo...', 'success');
         setTimeout(async () => {
-          try { await auth.signOut(); } catch (_) {}
+          try { await auth.signOut(); } catch (e) { console.warn('[OWNER]', e.message || e); }
           window.location.href = 'index.html';
         }, 2000);
       } catch (e) {
@@ -3529,7 +3529,7 @@
             waStatusEl.style.color = '#EF4444';
           }
         }
-      } catch (_) {}
+      } catch (e) { console.warn('[OWNER]', e.message || e); }
       // Verificar estado de Instagram
       checkInstagramStatus();
     }
@@ -3673,7 +3673,7 @@
           document.getElementById('emailStatus').textContent = '✅ SMTP configurado';
           document.getElementById('emailStatus').style.color = '#4ade80';
         }
-      } catch (_) {}
+      } catch (e) { console.warn('[OWNER]', e.message || e); }
     }
 
     async function saveEmailConfig() {
@@ -3716,7 +3716,7 @@
         if (data.lastEmailCheck) {
           document.getElementById('imapStatus').textContent = 'Ultima revision: ' + new Date(data.lastEmailCheck).toLocaleString('es-ES');
         }
-      } catch (_) {}
+      } catch (e) { console.warn('[OWNER]', e.message || e); }
     }
 
     async function saveImapConfig() {
@@ -3817,7 +3817,7 @@
           if (emailNotConnEl) emailNotConnEl.style.display = 'block';
           if (emailBadge) { emailBadge.textContent = 'No conectado'; emailBadge.style.background = 'rgba(239,68,68,.1)'; emailBadge.style.color = '#EF4444'; }
         }
-      } catch (_) {}
+      } catch (e) { console.warn('[OWNER]', e.message || e); }
     }
 
     async function saveCalendarConfig() {
@@ -4038,7 +4038,7 @@
         const indexDoc = await db.collection('users').doc(currentUser.uid)
           .collection('contact_index').doc(phone).get();
         if (indexDoc.exists) indexData = indexDoc.data();
-      } catch (_) {}
+      } catch (e) { console.warn('[OWNER]', e.message || e); }
       document.getElementById('contactName').value = data.name || indexData.name || name;
       document.getElementById('contactNickname').value = data.nickname || indexData.nickname || '';
       document.getElementById('contactPhone').value = phone;
@@ -4231,7 +4231,7 @@
                 });
                 c.proactiveEnabled = true;
                 synced++;
-              } catch (_) {}
+              } catch (e) { console.warn('[OWNER]', e.message || e); }
             }
           }
           if (synced > 0) {
@@ -6207,7 +6207,7 @@
   function stopListening() {
     isListening = false;
     if (speechRecognition) {
-      try { speechRecognition.stop(); } catch(e) {}
+      try { speechRecognition.stop(); } catch(e) { /* expected if not started */ }
     }
     const btn = document.getElementById('voiceDictateBtn');
     const icon = document.getElementById('micIcon');
