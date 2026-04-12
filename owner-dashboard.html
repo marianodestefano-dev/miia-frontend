@@ -2963,10 +2963,15 @@
     async function initHomeWaStatus() {
       try {
         const uid = currentUser ? currentUser.uid : '';
-        const res = await fetch(`${API}/api/status?uid=${uid}`);
+        // verify=true → prueba REAL contra WhatsApp (detecta desconexiones fantasma)
+        const res = await fetch(`${API}/api/status?uid=${uid}&verify=true`);
         const data = await res.json();
         updateSidebarWaStatus(data.connected);
-        console.log('[WA-STATUS] Estado inicial:', data.connected ? 'conectado' : 'desconectado');
+        if (data.ghostDisconnect) {
+          console.warn('[WA-STATUS] ⚠️ DESCONEXIÓN FANTASMA detectada — Baileys creía estar conectado pero WhatsApp no responde');
+          showToast('WhatsApp desconectado — reconectando automáticamente...', 'warning');
+        }
+        console.log('[WA-STATUS] Estado inicial:', data.connected ? 'conectado' : 'desconectado', data.verified !== undefined ? `(verified: ${data.verified})` : '');
       } catch (e) {
         console.warn('[WA-STATUS] Error verificando estado inicial:', e.message);
         updateSidebarWaStatus(false);

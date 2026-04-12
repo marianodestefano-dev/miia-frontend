@@ -1022,10 +1022,15 @@
     try {
       const user = firebase.auth().currentUser;
       if (!user) return;
-      const res = await fetch(`${BACKEND_URL}/api/status?uid=${user.uid}`);
+      // verify=true → prueba REAL contra WhatsApp (detecta desconexiones fantasma)
+      const res = await fetch(`${BACKEND_URL}/api/status?uid=${user.uid}&verify=true`);
       const data = await res.json();
       const dot = document.getElementById('adminStatusDot');
       const label = document.getElementById('adminStatusLabel');
+      if (data.ghostDisconnect) {
+        console.warn('[WA-STATUS] ⚠️ DESCONEXIÓN FANTASMA — reconectando automáticamente');
+        showToast('WhatsApp: desconexión fantasma detectada. Reconectando...', 'warning');
+      }
       if (data.connected) {
         adminWaConnected = true;
         if (dot) { dot.className = 'status-dot green pulse'; }
