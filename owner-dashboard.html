@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es" data-theme="dark">
 <head>
   <script>
-    // Forzar tema claro siempre (dark mode eliminado por decisión de Mariano)
-    (function(){document.documentElement.setAttribute('data-theme','light');})();
+    (function(){var t=localStorage.getItem('miia-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=1280, initial-scale=0.5, maximum-scale=2.0, user-scalable=yes">
@@ -430,11 +429,11 @@
     .search-bar:focus { outline:none; border-color:var(--primary); }
 
     .contact-type-badge { display:inline-block; padding:2px 8px; border-radius:10px; font-size:0.72rem; font-weight:600; margin-left:6px; }
-    .type-lead { background:rgba(245,158,11,0.12); color:#d97706; }
-    .type-cliente { background:rgba(37,211,102,0.12); color:#16a34a; }
-    .type-familia { background:rgba(168,85,247,0.12); color:#a855f7; }
-    .type-equipo { background:rgba(59,130,246,0.12); color:#3b82f6; }
-    .type-group { background:rgba(236,72,153,0.12); color:#ec4899; }
+    .type-lead { background:rgba(245,158,11,0.12); color:var(--amber-600); }
+    .type-cliente { background:rgba(37,211,102,0.12); color:var(--green-600); }
+    .type-familia { background:rgba(168,85,247,0.12); color:var(--indigo-hi); }
+    .type-equipo { background:rgba(59,130,246,0.12); color:var(--brand-google); }
+    .type-group { background:rgba(236,72,153,0.12); color:var(--pink-400); }
     .type-otro { background:rgba(136,136,164,0.12); color:var(--text-muted); }
 
     @media (max-width: 768px) {
@@ -459,7 +458,7 @@
     .an-metric-label { font-size:0.7rem; color:var(--text-mid); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
     .an-metric-bars { display:flex; align-items:flex-end; justify-content:center; gap:3px; height:28px; }
     .an-metric-bars span {
-      width:6px; border-radius:3px; background:linear-gradient(to top, #E879F9, #A855F7);
+      width:6px; border-radius:3px; background:linear-gradient(to top, var(--pink-400), var(--indigo-hi));
       transition:height 0.4s ease;
     }
     .an-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
@@ -493,7 +492,7 @@
     }
     .an-stage-name { font-size:0.72rem; font-weight:700; color:var(--text-mid); text-transform:uppercase; letter-spacing:0.5px; }
     .an-stage-count {
-      font-size:0.68rem; font-weight:700; color:#E879F9; background:rgba(192,38,211,0.12);
+      font-size:0.68rem; font-weight:700; color:var(--pink-400); background:rgba(192,38,211,0.12);
       padding:2px 8px; border-radius:10px;
     }
     .an-lead-card {
@@ -512,26 +511,26 @@
     }
     .an-conv-row:hover { background:rgba(232,121,249,0.04); }
     .an-conv-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
-    .an-conv-dot.active { background:#34D399; }
-    .an-conv-dot.waiting { background:#FBBF24; }
-    .an-conv-dot.idle { background:#64748B; }
+    .an-conv-dot.active { background:var(--emerald); }
+    .an-conv-dot.waiting { background:var(--amber-400); }
+    .an-conv-dot.idle { background:var(--tx-dim); }
     .an-conv-info { flex:1; min-width:0; }
     .an-conv-name { font-size:0.82rem; font-weight:600; color:var(--text-dark); }
     .an-conv-msg { font-size:0.72rem; color:var(--text-mid); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .an-conv-time { font-size:0.68rem; color:var(--text-mid); flex-shrink:0; }
-    .an-conv-msgs-count { font-size:0.65rem; color:#E879F9; font-weight:600; flex-shrink:0; }
+    .an-conv-msgs-count { font-size:0.65rem; color:var(--pink-400); font-weight:600; flex-shrink:0; }
 
     /* Nightly report */
     .an-nightly { padding:16px 18px; }
     .an-nightly-section { margin-bottom:14px; }
     .an-nightly-title { font-size:0.78rem; font-weight:700; color:var(--text-dark); margin-bottom:6px; }
     .an-nightly-item { font-size:0.78rem; color:var(--text-light); line-height:1.6; padding:2px 0; }
-    .an-nightly-item::before { content:'• '; color:#E879F9; font-weight:700; }
+    .an-nightly-item::before { content:'• '; color:var(--pink-400); font-weight:700; }
 
     /* ADN */
     .an-adn { padding:16px 18px; }
     .an-adn-category { margin-bottom:16px; }
-    .an-adn-cat-title { font-size:0.72rem; font-weight:700; color:#E879F9; text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+    .an-adn-cat-title { font-size:0.72rem; font-weight:700; color:var(--pink-400); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
     .an-adn-item {
       background:rgba(255,255,255,0.03); border:1px solid var(--border-c); border-radius:8px;
       padding:8px 12px; margin-bottom:6px; font-size:0.78rem; color:var(--text-light); line-height:1.5;
@@ -555,7 +554,7 @@
     .group-card h3 { color:var(--text-dark); font-size:1rem; margin-bottom:4px; }
     .group-card-meta { color:var(--text-muted); font-size:0.82rem; }
     .group-badge { display:inline-flex; align-items:center; gap:4px; padding:3px 8px; border-radius:var(--radius-full); font-size:0.72rem; font-weight:600; margin-right:4px; }
-    .group-badge.on { background:rgba(52,211,153,0.12); color:#16a34a; }
+    .group-badge.on { background:rgba(52,211,153,0.12); color:var(--green-600); }
     .group-badge.off { background:rgba(136,136,164,0.08); color:var(--text-muted); }
 
     /* ═══ GROUP DETAIL ═══ */
@@ -572,11 +571,11 @@
     .toggle-switch input:checked + .toggle-slider { background:var(--primary); }
     .toggle-switch input:checked + .toggle-slider:before { transform:translateX(20px); }
     /* Toggle proactivo: verde=activo, rojo=desactivado — ALTO CONTRASTE */
-    .toggle-slider.proactive-toggle { background:#dc2626 !important; box-shadow:0 0 0 2px rgba(220,38,38,.25) !important; }
+    .toggle-slider.proactive-toggle { background:var(--red-600) !important; box-shadow:0 0 0 2px rgba(220,38,38,.25) !important; }
     .toggle-slider.proactive-toggle:before { background:#fff !important; box-shadow:0 1px 3px rgba(0,0,0,.3) !important; }
-    .toggle-switch input:checked + .toggle-slider.proactive-toggle { background:#16a34a !important; box-shadow:0 0 0 2px rgba(22,163,74,.25) !important; }
-    label.toggle-switch .toggle-slider.proactive-toggle { background:#dc2626 !important; }
-    label.toggle-switch input:checked + .toggle-slider.proactive-toggle { background:#16a34a !important; }
+    .toggle-switch input:checked + .toggle-slider.proactive-toggle { background:var(--green-600) !important; box-shadow:0 0 0 2px rgba(22,163,74,.25) !important; }
+    label.toggle-switch .toggle-slider.proactive-toggle { background:var(--red-600) !important; }
+    label.toggle-switch input:checked + .toggle-slider.proactive-toggle { background:var(--green-600) !important; }
     /* Tab activo de contactos */
     .contact-view-tab.active { border-bottom-color:var(--primary) !important; color:var(--text-dark) !important; }
 
@@ -598,7 +597,7 @@
     .btn-secondary:hover { border-color:var(--primary); color:var(--primary); }
     .btn-primary { padding:10px 20px; background:var(--gradient-main); color:white; border:none; border-radius:var(--radius-sm); font-size:0.9rem; font-weight:600; cursor:pointer; transition:transform 0.2s; }
     .btn-primary:hover { transform:translateY(-1px); }
-    .btn-danger { padding:10px 20px; background:var(--danger,#ef4444); color:white; border:none; border-radius:var(--radius-sm); font-size:0.9rem; font-weight:600; cursor:pointer; transition:transform 0.2s; }
+    .btn-danger { padding:10px 20px; background:var(--danger,var(--red-500)); color:white; border:none; border-radius:var(--radius-sm); font-size:0.9rem; font-weight:600; cursor:pointer; transition:transform 0.2s; }
     .btn-danger:hover { transform:translateY(-1px); }
 
     /* ═══ ADD CONTACT FORM ═══ */
@@ -617,7 +616,7 @@
       border-radius: var(--radius-md); display: flex; align-items: center; justify-content: space-between;
       font-size: 0.9rem; font-weight: 600;
     }
-    .wa-banner.connected { background: rgba(52, 211, 153, 0.1); color: #34D399; border: 1px solid rgba(52, 211, 153, 0.2); }
+    .wa-banner.connected { background: rgba(52, 211, 153, 0.1); color: var(--emerald); border: 1px solid rgba(52, 211, 153, 0.2); }
     .wa-banner.disconnected { background: rgba(239, 68, 68, 0.08); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.15); }
     .wa-banner button { padding: 6px 16px; border-radius: var(--radius-full); font-size: 0.85rem; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s; }
     .wa-btn-connect { background: var(--gradient-accent); color: white; }
@@ -718,8 +717,8 @@
       cursor: pointer; font-size: 0.9rem; display: flex; align-items: center; justify-content: center;
       transition: all 0.2s;
     }
-    .row-btn.save { background: rgba(52, 211, 153, 0.1); color: #34D399; }
-    .row-btn.save:hover { background: #34D399; color: white; }
+    .row-btn.save { background: rgba(52, 211, 153, 0.1); color: var(--emerald); }
+    .row-btn.save:hover { background: var(--emerald); color: white; }
     .row-btn.add { background: rgba(0,229,255,0.1); color: var(--primary); }
     .row-btn.add:hover { background: var(--primary); color: white; }
     .row-btn.delete { background: rgba(239, 68, 68, 0.08); color: var(--danger); }
@@ -780,7 +779,7 @@
 
     /* ═══ TEST CHAT (simpler, no sessions) ═══ */
     .test-chat { height: 500px; border: 1px solid rgba(0,229,255,0.08); border-radius: var(--radius-md); overflow: hidden; display: flex; flex-direction: column; }
-    .test-header { padding: 14px 20px; background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; display: flex; align-items: center; gap: 12px; }
+    .test-header { padding: 14px 20px; background: linear-gradient(135deg, var(--amber) 0%, var(--amber-600) 100%); color: white; display: flex; align-items: center; gap: 12px; }
     .test-header .avatar { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; }
     .test-reset { margin-left: auto; padding: 6px 14px; background: rgba(255,255,255,0.2); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.82rem; font-weight: 600; }
 
@@ -1063,7 +1062,7 @@
     }
 
     .btn-delete {
-      color: #e74c3c;
+      color: var(--red-500);
     }
 
     .empty-state {
@@ -1137,7 +1136,7 @@
       <div class="sidebar-header">
         <a href="index.html" class="nav-logo" style="display:flex;align-items:center;gap:8px;">
           <svg viewBox="90 118 220 168" fill="none" style="width:30px;height:30px;flex-shrink:0">
-            <defs><linearGradient id="sb_g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs>
+            <defs><linearGradient id="sb_g" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--cyan)"/><stop offset="50%" stop-color="var(--indigo)"/><stop offset="100%" stop-color="var(--rose)"/></linearGradient></defs>
             <path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#sb_g)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
             <text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text>
           </svg>
@@ -1186,8 +1185,8 @@
         <!-- Theme Toggle (desactivado — solo tema claro por ahora) -->
         <!--
         <button class="theme-toggle" onclick="toggleTheme()" id="themeToggleBtn">
-          <span class="theme-toggle-icon" id="themeIcon">☀️</span>
-          <span class="sidebar-label" id="themeLabel">Tema claro</span>
+          <span class="theme-toggle-icon" id="themeIcon">🌙</span>
+          <span class="sidebar-label" id="themeLabel">Tema oscuro</span>
         </button>
         -->
         <!-- WhatsApp Status -->
@@ -1244,16 +1243,16 @@
     <!-- ═══ WHATSAPP CONNECTION CARD — Visible en #home ═══ -->
     <div id="homeWaCard" style="margin-bottom:24px;background:var(--glass-bg);border:1px solid var(--bd-1);border-radius:16px;padding:24px 28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
       <div style="width:52px;height:52px;border-radius:14px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--brand-whatsapp)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
       </div>
       <div style="flex:1;min-width:200px;">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
           <h3 style="font-size:1.05rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp</h3>
-          <span id="homeWaBadge" style="font-size:0.72rem;padding:3px 10px;border-radius:99px;font-weight:600;background:rgba(239,68,68,.1);color:#EF4444;">Verificando...</span>
+          <span id="homeWaBadge" style="font-size:0.72rem;padding:3px 10px;border-radius:99px;font-weight:600;background:rgba(239,68,68,.1);color:var(--red-500);">Verificando...</span>
         </div>
         <p style="font-size:0.82rem;color:var(--text-muted);margin:0;line-height:1.4;">Vincula tu WhatsApp para que MIIA empiece a responder por ti.</p>
       </div>
-      <button onclick="openQRModal()" id="homeWaConnectBtn" style="padding:12px 28px;background:#25D366;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.92rem;font-family:inherit;white-space:nowrap;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+      <button onclick="openQRModal()" id="homeWaConnectBtn" style="padding:12px 28px;background:var(--brand-whatsapp);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.92rem;font-family:inherit;white-space:nowrap;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
         Vincular WhatsApp
       </button>
     </div>
@@ -1457,7 +1456,7 @@
         <div style="margin-top:12px;">
           <button class="btn-secondary" style="font-size:0.85rem;" onclick="showContactPickerForAgent()">👥 Seleccionar de contactos</button>
         </div>
-        <p id="agentLimitMsg" class="hidden" style="color: #f39c12; font-size: 0.85rem; margin-top: 12px; text-align: center;"></p>
+        <p id="agentLimitMsg" class="hidden" style="color: var(--amber); font-size: 0.85rem; margin-top: 12px; text-align: center;"></p>
       </div>
     </div>
   </div><!-- end section-agents -->
@@ -1486,7 +1485,7 @@
       <div class="card" style="display:flex;flex-direction:column;gap:16px;opacity:1;visibility:visible;">
         <div style="display:flex;align-items:flex-start;gap:14px;">
           <div style="width:44px;height:44px;border-radius:12px;background:rgba(16,185,129,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
           </div>
           <div>
             <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0 0 4px;">Elegí tu plan</h3>
@@ -1498,40 +1497,40 @@
           <!-- PayPal -->
           <div style="background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:36px;height:36px;border-radius:8px;background:#003087;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#fff;">PP</div>
+              <div style="width:36px;height:36px;border-radius:8px;background:var(--brand-paypal-dk);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#fff;">PP</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:var(--text-dark);">PayPal</div>
                 <div style="font-size:0.72rem;color:var(--text-muted);">Recomendado · Tarjetas internacionales + PayPal</div>
               </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;">
-              <button onclick="subscribePayPal('monthly')"   style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $15 USD/mes</button>
-              <button onclick="subscribePayPal('quarterly')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $39 USD / 3 meses</button>
-              <button onclick="subscribePayPal('semestral')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $69 USD / 6 meses</button>
-              <button onclick="subscribePayPal('annual')"    style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $99 USD / año</button>
+              <button onclick="subscribePayPal('monthly')"   style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:var(--brand-mercadopago);border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $15 USD/mes</button>
+              <button onclick="subscribePayPal('quarterly')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:var(--brand-mercadopago);border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $39 USD / 3 meses</button>
+              <button onclick="subscribePayPal('semestral')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:var(--brand-mercadopago);border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $69 USD / 6 meses</button>
+              <button onclick="subscribePayPal('annual')"    style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:var(--brand-mercadopago);border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $99 USD / año</button>
             </div>
           </div>
 
           <!-- MercadoPago -->
           <div style="background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;">
             <div style="display:flex;align-items:center;gap:10px;">
-              <div style="width:36px;height:36px;border-radius:8px;background:#00b1ea;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.75rem;color:#fff;">MP</div>
+              <div style="width:36px;height:36px;border-radius:8px;background:var(--brand-paypal);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.75rem;color:#fff;">MP</div>
               <div>
                 <div style="font-weight:700;font-size:0.9rem;color:var(--text-dark);">MercadoPago</div>
                 <div style="font-size:0.72rem;color:var(--text-muted);">Nequi · PSE · Efecty · Tarjetas LATAM</div>
               </div>
             </div>
             <div style="display:flex;flex-direction:column;gap:6px;">
-              <button onclick="subscribeMP('monthly')"   style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:#00b1ea;border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $15 USD/mes</button>
-              <button onclick="subscribeMP('quarterly')" style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:#00b1ea;border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $39 USD / 3 meses</button>
-              <button onclick="subscribeMP('semestral')" style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:#00b1ea;border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $69 USD / 6 meses</button>
-              <button onclick="subscribeMP('annual')"    style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:#00b1ea;border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $99 USD / año</button>
+              <button onclick="subscribeMP('monthly')"   style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:var(--brand-paypal);border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $15 USD/mes</button>
+              <button onclick="subscribeMP('quarterly')" style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:var(--brand-paypal);border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $39 USD / 3 meses</button>
+              <button onclick="subscribeMP('semestral')" style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:var(--brand-paypal);border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $69 USD / 6 meses</button>
+              <button onclick="subscribeMP('annual')"    style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:var(--brand-paypal);border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $99 USD / año</button>
             </div>
           </div>
         </div>
 
         <div style="padding:14px;background:rgba(0,229,255,0.05);border-radius:var(--radius-md);margin-top:8px;">
-          <p style="color:var(--text-muted);font-size:0.82rem;margin:0;">¿Dudas? Escribinos a <a href="mailto:hola@miia-app.com" style="color:var(--primary);font-weight:600;">hola@miia-app.com</a> o al <a href="https://wa.me/573054169969?text=Hola%20MIIA" style="color:#25D366;font-weight:600;">WhatsApp</a></p>
+          <p style="color:var(--text-muted);font-size:0.82rem;margin:0;">¿Dudas? Escribinos a <a href="mailto:hola@miia-app.com" style="color:var(--primary);font-weight:600;">hola@miia-app.com</a> o al <a href="https://wa.me/573054169969?text=Hola%20MIIA" style="color:var(--brand-whatsapp);font-weight:600;">WhatsApp</a></p>
         </div>
       </div>
     </div>
@@ -1557,36 +1556,36 @@
         <div class="card" style="display:flex;flex-direction:column;gap:16px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-whatsapp)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
             </div>
             <div style="flex:1;">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
                 <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp</h3>
-                <span id="connWaStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">No conectado</span>
+                <span id="connWaStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:var(--red-500);font-weight:600;">No conectado</span>
               </div>
               <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA responderá automáticamente tus conversaciónes de WhatsApp, clasificará leads y cerrará ventas 24/7 sin que intervengas.</p>
             </div>
           </div>
-          <button onclick="linkWhatsAppFromConnections()" style="width:100%;padding:10px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.18)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
+          <button onclick="linkWhatsAppFromConnections()" style="width:100%;padding:10px;background:rgba(37,211,102,.1);color:var(--brand-whatsapp);border:1px solid rgba(37,211,102,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;" onmouseover="this.style.background='rgba(37,211,102,.18)'" onmouseout="this.style.background='rgba(37,211,102,.1)'">
             Vincular WhatsApp
           </button>
           <!-- Barra de progreso de mining (oculta hasta que empiece) -->
           <div id="miningProgressContainer" style="display:none;margin-top:4px;padding:12px;background:rgba(37,211,102,.05);border:1px solid rgba(37,211,102,.15);border-radius:10px;">
             <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
               <span style="font-size:0.8rem;font-weight:600;color:var(--text-dark);display:flex;align-items:center;gap:6px;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--brand-whatsapp)" stroke-width="2"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>
                 Analizando historial
               </span>
               <span id="miningProgressStats" style="font-size:0.72rem;color:var(--text-muted);"></span>
             </div>
             <div style="width:100%;height:6px;background:rgba(37,211,102,.12);border-radius:99px;overflow:hidden;">
-              <div id="miningProgressBar" style="width:0%;height:100%;background:linear-gradient(90deg,#25D366,#128C7E);border-radius:99px;transition:width 0.5s ease;"></div>
+              <div id="miningProgressBar" style="width:0%;height:100%;background:linear-gradient(90deg,var(--brand-whatsapp),var(--accent-green-dark));border-radius:99px;transition:width 0.5s ease;"></div>
             </div>
             <p id="miningProgressDetail" style="font-size:0.72rem;color:var(--text-muted);margin:6px 0 0;"></p>
           </div>
           <!-- Mining completo -->
           <div id="miningCompleteContainer" style="display:none;margin-top:4px;padding:10px 12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:10px;">
-            <span style="font-size:0.8rem;color:#25D366;font-weight:600;" id="miningCompleteText"></span>
+            <span style="font-size:0.8rem;color:var(--brand-whatsapp);font-weight:600;" id="miningCompleteText"></span>
           </div>
         </div>
 
@@ -1594,12 +1593,12 @@
         <div class="card" style="display:flex;flex-direction:column;gap:16px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(124,58,237,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="15" r="2"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="15" r="2"/></svg>
             </div>
             <div style="flex:1;">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
                 <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">Motor de IA</h3>
-                <span id="connAiStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(124,58,237,.1);color:#7C3AED;font-weight:600;">Gemini (default)</span>
+                <span id="connAiStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(124,58,237,.1);color:var(--indigo);font-weight:600;">Gemini (default)</span>
               </div>
               <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">Elegí qué modelo de inteligencia artificial usa MIIA para pensar y responder: Google Gemini, OpenAI GPT o Anthropic Claude.</p>
             </div>
@@ -1629,19 +1628,19 @@
         <div class="card" style="display:flex;flex-direction:column;gap:16px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(66,133,244,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--brand-google)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </div>
             <div style="flex:1;">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
                 <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">Google Calendar</h3>
-                <span id="connCalStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">No conectado</span>
+                <span id="connCalStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:var(--red-500);font-weight:600;">No conectado</span>
               </div>
               <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA verificará tu disponibilidad en tiempo real y agendará citas o demos automáticamente cuando un lead las solicite por WhatsApp.</p>
             </div>
           </div>
           <div id="calendarStatus" style="font-size:0.78rem;"></div>
           <div id="calendarConnectSection">
-            <a href="#" onclick="connectCalendar(event)" id="calConnectBtn" style="display:block;text-align:center;padding:10px;background:rgba(66,133,244,.1);color:#4285F4;border:1px solid rgba(66,133,244,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;text-decoration:none;transition:background .2s;" onmouseover="this.style.background='rgba(66,133,244,.18)'" onmouseout="this.style.background='rgba(66,133,244,.1)'">
+            <a href="#" onclick="connectCalendar(event)" id="calConnectBtn" style="display:block;text-align:center;padding:10px;background:rgba(66,133,244,.1);color:var(--brand-google);border:1px solid rgba(66,133,244,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;text-decoration:none;transition:background .2s;" onmouseover="this.style.background='rgba(66,133,244,.18)'" onmouseout="this.style.background='rgba(66,133,244,.1)'">
               Conectar con Google
             </a>
             <p style="font-size:0.73rem;color:var(--text-muted);margin-top:6px;text-align:center;">Se abrirá una ventana de Google para autorizar</p>
@@ -1654,7 +1653,7 @@
                 <span style="font-size:0.78rem;color:var(--text-muted);">Activo</span>
               </label>
             </div>
-            <button onclick="disconnectCalendar()" style="width:100%;background:none;border:1px solid rgba(239,68,68,.3);color:#EF4444;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Desconectar Calendar</button>
+            <button onclick="disconnectCalendar()" style="width:100%;background:none;border:1px solid rgba(239,68,68,.3);color:var(--red-500);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Desconectar Calendar</button>
           </div>
         </div>
 
@@ -1662,12 +1661,12 @@
         <div class="card" style="display:flex;flex-direction:column;gap:16px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--amber)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
             </div>
             <div style="flex:1;">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
                 <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">Correo Electrónico</h3>
-                <span id="connEmailStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">No conectado</span>
+                <span id="connEmailStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:var(--red-500);font-weight:600;">No conectado</span>
               </div>
               <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA puede leer, enviar y gestionar tus correos desde WhatsApp. Pedile "mis correos", "leé el 2" o "eliminá el 1 y el 3".</p>
             </div>
@@ -1676,9 +1675,9 @@
           <!-- Gmail API conectado (via Google Calendar OAuth) -->
           <div id="emailGmailConnected" style="display:none;">
             <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(66,133,244,.08);border:1px solid rgba(66,133,244,.2);border-radius:10px;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brand-google)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
               <div style="flex:1;">
-                <span style="font-size:0.85rem;font-weight:600;color:#4285F4;">Gmail conectado via Google</span>
+                <span style="font-size:0.85rem;font-weight:600;color:var(--brand-google);">Gmail conectado via Google</span>
                 <p style="font-size:0.73rem;color:var(--text-muted);margin:2px 0 0;">MIIA puede leer, enviar y eliminar correos automaticamente. No necesitas configurar nada mas.</p>
               </div>
             </div>
@@ -1690,7 +1689,7 @@
             <div style="padding:12px 16px;background:rgba(66,133,244,.06);border:1px solid rgba(66,133,244,.15);border-radius:10px;margin-bottom:14px;">
               <p style="font-size:0.82rem;color:var(--text-dark);font-weight:600;margin:0 0 4px;">Forma mas facil: conectar Google</p>
               <p style="font-size:0.75rem;color:var(--text-muted);margin:0 0 8px;">Si conectas Google Calendar arriba, MIIA accede a tu Gmail automaticamente. Un solo click, sin contrasenas.</p>
-              <a href="#" onclick="connectCalendar(event)" style="display:block;text-align:center;padding:8px;background:rgba(66,133,244,.1);color:#4285F4;border:1px solid rgba(66,133,244,.25);border-radius:8px;font-weight:600;font-size:0.82rem;cursor:pointer;text-decoration:none;">Conectar con Google</a>
+              <a href="#" onclick="connectCalendar(event)" style="display:block;text-align:center;padding:8px;background:rgba(66,133,244,.1);color:var(--brand-google);border:1px solid rgba(66,133,244,.25);border-radius:8px;font-weight:600;font-size:0.82rem;cursor:pointer;text-decoration:none;">Conectar con Google</a>
             </div>
 
             <details style="margin-bottom:10px;">
@@ -1736,7 +1735,7 @@
         <div class="card" style="display:flex;flex-direction:column;gap:16px;grid-column:1/-1;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:rgba(16,185,129,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--emerald)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
             </div>
             <div>
               <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0 0 4px;">Medios de Pago</h3>
@@ -1749,34 +1748,34 @@
             <!-- PayPal -->
             <div style="background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;">
               <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;border-radius:8px;background:#003087;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#fff;">PP</div>
+                <div style="width:36px;height:36px;border-radius:8px;background:var(--brand-paypal-dk);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.85rem;color:#fff;">PP</div>
                 <div>
                   <div style="font-weight:700;font-size:0.9rem;color:var(--text-dark);">PayPal</div>
                   <div style="font-size:0.72rem;color:var(--text-muted);">Recomendado · Tarjetas internacionales + PayPal</div>
                 </div>
               </div>
               <div style="display:flex;flex-direction:column;gap:6px;">
-                <button onclick="subscribePayPal('monthly')"   style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $15 USD/mes</button>
-                <button onclick="subscribePayPal('quarterly')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $39 USD / 3 meses</button>
-                <button onclick="subscribePayPal('semestral')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $69 USD / 6 meses</button>
-                <button onclick="subscribePayPal('annual')"    style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:#69b4ff;border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $99 USD / año</button>
+                <button onclick="subscribePayPal('monthly')"   style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:var(--brand-mercadopago);border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $15 USD/mes</button>
+                <button onclick="subscribePayPal('quarterly')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:var(--brand-mercadopago);border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $39 USD / 3 meses</button>
+                <button onclick="subscribePayPal('semestral')" style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:var(--brand-mercadopago);border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $69 USD / 6 meses</button>
+                <button onclick="subscribePayPal('annual')"    style="width:100%;padding:8px;background:rgba(0,48,135,.12);color:var(--brand-mercadopago);border:1px solid rgba(0,48,135,.25);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $99 USD / año</button>
               </div>
             </div>
 
             <!-- MercadoPago -->
             <div style="background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:12px;">
               <div style="display:flex;align-items:center;gap:10px;">
-                <div style="width:36px;height:36px;border-radius:8px;background:#00b1ea;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.75rem;color:#fff;">MP</div>
+                <div style="width:36px;height:36px;border-radius:8px;background:var(--brand-paypal);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.75rem;color:#fff;">MP</div>
                 <div>
                   <div style="font-weight:700;font-size:0.9rem;color:var(--text-dark);">MercadoPago</div>
                   <div style="font-size:0.72rem;color:var(--text-muted);">Nequi · PSE · Efecty · Tarjetas LATAM</div>
                 </div>
               </div>
               <div style="display:flex;flex-direction:column;gap:6px;">
-                <button onclick="subscribeMP('monthly')"   style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:#00b1ea;border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $15 USD/mes</button>
-                <button onclick="subscribeMP('quarterly')" style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:#00b1ea;border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $39 USD / 3 meses</button>
-                <button onclick="subscribeMP('semestral')" style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:#00b1ea;border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $69 USD / 6 meses</button>
-                <button onclick="subscribeMP('annual')"    style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:#00b1ea;border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $99 USD / año</button>
+                <button onclick="subscribeMP('monthly')"   style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:var(--brand-paypal);border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Mensual — $15 USD/mes</button>
+                <button onclick="subscribeMP('quarterly')" style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:var(--brand-paypal);border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Trimestral — $39 USD / 3 meses</button>
+                <button onclick="subscribeMP('semestral')" style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:var(--brand-paypal);border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Semestral — $69 USD / 6 meses</button>
+                <button onclick="subscribeMP('annual')"    style="width:100%;padding:8px;background:rgba(0,177,234,.08);color:var(--brand-paypal);border:1px solid rgba(0,177,234,.2);border-radius:7px;cursor:pointer;font-size:0.82rem;font-family:inherit;font-weight:600;text-align:left;">Anual — $99 USD / año</button>
               </div>
             </div>
 
@@ -1788,19 +1787,19 @@
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg, rgba(131,58,180,.12), rgba(253,29,29,.12), rgba(252,176,69,.12));display:flex;align-items:center;justify-content:center;flex-shrink:0;">
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="url(#igGrad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <defs><linearGradient id="igGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#833AB4"/><stop offset="50%" stop-color="#FD1D1D"/><stop offset="100%" stop-color="#FCB045"/></linearGradient></defs>
+                <defs><linearGradient id="igGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="var(--brand-instagram)"/><stop offset="50%" stop-color="#FD1D1D"/><stop offset="100%" stop-color="#FCB045"/></linearGradient></defs>
                 <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5"/>
               </svg>
             </div>
             <div style="flex:1;">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
                 <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">Instagram DMs</h3>
-                <span id="connIgStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">No conectado</span>
+                <span id="connIgStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:var(--red-500);font-weight:600;">No conectado</span>
               </div>
               <p style="font-size:0.8rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA responde los mensajes directos de Instagram de tu negocio. Atiende leads, responde preguntas y vende 24/7 en Instagram.</p>
             </div>
           </div>
-          <button id="igConnectBtn" onclick="connectInstagram()" style="width:100%;padding:10px;background:linear-gradient(135deg, rgba(131,58,180,.1), rgba(253,29,29,.1));color:#833AB4;border:1px solid rgba(131,58,180,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;">
+          <button id="igConnectBtn" onclick="connectInstagram()" style="width:100%;padding:10px;background:linear-gradient(135deg, rgba(131,58,180,.1), rgba(253,29,29,.1));color:var(--brand-instagram);border:1px solid rgba(131,58,180,.25);border-radius:8px;cursor:pointer;font-weight:600;font-size:0.85rem;font-family:inherit;transition:background .2s;">
             Conectar Instagram
           </button>
         </div>
@@ -1939,15 +1938,15 @@
     <div class="card" style="border-radius:12px; padding:20px;">
       <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:12px;">📋 Niveles de acceso</h3>
       <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:16px;">
-        <div style="padding:12px; background:rgba(239,68,68,0.08); border-radius:8px; border-left:3px solid #ef4444;">
+        <div style="padding:12px; background:rgba(239,68,68,0.08); border-radius:8px; border-left:3px solid var(--red-500);">
           <strong style="font-size:0.9rem;">🔴 Solo emergencias</strong>
           <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">SOS, caidas, inactividad prolongada. Nada mas.</p>
         </div>
-        <div style="padding:12px; background:rgba(245,158,11,0.08); border-radius:8px; border-left:3px solid #f59e0b;">
+        <div style="padding:12px; background:rgba(245,158,11,0.08); border-radius:8px; border-left:3px solid var(--amber);">
           <strong style="font-size:0.9rem;">🟡 Agenda visible</strong>
           <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Ve citas y recordatorios del protegido + emergencias.</p>
         </div>
-        <div style="padding:12px; background:rgba(52,211,153,0.08); border-radius:8px; border-left:3px solid #34d399;">
+        <div style="padding:12px; background:rgba(52,211,153,0.08); border-radius:8px; border-left:3px solid var(--emerald);">
           <strong style="font-size:0.9rem;">🟢 Supervision completa</strong>
           <p style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">Agenda, resumenes de actividad, puede enviar mensajes via MIIA.</p>
         </div>
@@ -1984,24 +1983,24 @@
         <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:12px;text-align:center;">Elegí tu plan y método de pago</p>
         <div style="display:grid;grid-template-columns:1fr auto auto;gap:8px;align-items:center;">
           <span style="font-weight:600;font-size:0.9rem;">Mensual — $15/mes (1 slot)</span>
-          <button onclick="subscribePayPal('monthly')" style="background:#003087;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
-          <button onclick="subscribeMP('monthly')" style="background:#00b1ea;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
+          <button onclick="subscribePayPal('monthly')" style="background:var(--brand-paypal-dk);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
+          <button onclick="subscribeMP('monthly')" style="background:var(--brand-paypal);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
 
           <span style="font-weight:600;font-size:0.9rem;">Trimestral — $39 / 3 meses (2 slots)</span>
-          <button onclick="subscribePayPal('quarterly')" style="background:#003087;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
-          <button onclick="subscribeMP('quarterly')" style="background:#00b1ea;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
+          <button onclick="subscribePayPal('quarterly')" style="background:var(--brand-paypal-dk);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
+          <button onclick="subscribeMP('quarterly')" style="background:var(--brand-paypal);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
 
           <span style="font-weight:600;font-size:0.9rem;">Semestral — $69 / 6 meses (3 slots)</span>
-          <button onclick="subscribePayPal('semestral')" style="background:#003087;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
-          <button onclick="subscribeMP('semestral')" style="background:#00b1ea;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
+          <button onclick="subscribePayPal('semestral')" style="background:var(--brand-paypal-dk);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
+          <button onclick="subscribeMP('semestral')" style="background:var(--brand-paypal);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
 
           <span style="font-weight:600;font-size:0.9rem;">Anual — $99 / año (5 slots)</span>
-          <button onclick="subscribePayPal('annual')" style="background:#003087;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
-          <button onclick="subscribeMP('annual')" style="background:#00b1ea;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
+          <button onclick="subscribePayPal('annual')" style="background:var(--brand-paypal-dk);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
+          <button onclick="subscribeMP('annual')" style="background:var(--brand-paypal);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
 
           <span style="font-weight:600;font-size:0.9rem;">Familiar — $19.99/mes (5 números)</span>
-          <button onclick="subscribePayPal('familiar')" style="background:#003087;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
-          <button onclick="subscribeMP('familiar')" style="background:#00b1ea;color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
+          <button onclick="subscribePayPal('familiar')" style="background:var(--brand-paypal-dk);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">PayPal</button>
+          <button onclick="subscribeMP('familiar')" style="background:var(--brand-paypal);color:#fff;border:none;border-radius:6px;padding:8px 14px;font-size:0.82rem;cursor:pointer;font-weight:600;white-space:nowrap;">MercadoPago</button>
         </div>
       </div>
     </div>
@@ -2232,8 +2231,8 @@
       // Barra de aviso para modo admin view
       if (adminView && impersonateUid) {
         const bar = document.createElement('div');
-        bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#1a1a2e;color:white;text-align:center;padding:10px;font-size:0.85rem;z-index:9999;';
-        bar.innerHTML = `👁 <strong>Modo Admin:</strong> Viendo dashboard de ${doc.exists ? doc.data().email : impersonateUid} &nbsp;|&nbsp; <a href="admin-dashboard.html" style="color:#667eea;">Volver a Admin</a>`;
+        bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:var(--surface);color:var(--tx-bright);text-align:center;padding:10px;font-size:0.85rem;z-index:9999;';
+        bar.innerHTML = `👁 <strong>Modo Admin:</strong> Viendo dashboard de ${doc.exists ? doc.data().email : impersonateUid} &nbsp;|&nbsp; <a href="admin-dashboard.html" style="color:var(--indigo);">Volver a Admin</a>`;
         document.body.appendChild(bar);
         document.body.style.paddingBottom = '45px';
       }
@@ -2522,7 +2521,7 @@
             ? '<span class="badge badge-pending">Código enviado</span>'
             : '<span class="badge badge-active">Activo</span>';
           const resendBtn = isPending
-            ? `<button class="btn-small" style="background:#7C3AED;color:#fff;border:none;margin-right:6px;" onclick="resendOtp('${agent.email}')">Reenviar código</button>`
+            ? `<button class="btn-small" style="background:var(--indigo);color:#fff;border:none;margin-right:6px;" onclick="resendOtp('${agent.email}')">Reenviar código</button>`
             : '';
 
           tbody.innerHTML += `
@@ -2564,14 +2563,14 @@
 
         msgEl.innerHTML = `
           <div style="margin-top: 12px; padding: 12px; background: rgba(102,126,234,0.08); border-radius: 8px;">
-            <p style="margin: 0 0 10px 0; color: #4a4a6a; font-size: 0.9rem;">
+            <p style="margin: 0 0 10px 0; color: var(--tx-dim); font-size: 0.9rem;">
               🔒 Has alcanzado el límite de ${limit} agente${limit > 1 ? 's' : ''}
             </p>
             <div style="display:flex;gap:8px;margin-top:8px;">
-              <button onclick="buyAgentPayPal(${count})" style="flex:1;padding:10px;background:#003087;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.85rem;">
+              <button onclick="buyAgentPayPal(${count})" style="flex:1;padding:10px;background:var(--brand-paypal-dk);color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.85rem;">
                 + Agente extra $3/mes — PayPal
               </button>
-              <button onclick="buyAgentMP(${count})" style="flex:1;padding:10px;background:#00b1ea;color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.85rem;">
+              <button onclick="buyAgentMP(${count})" style="flex:1;padding:10px;background:var(--brand-paypal);color:white;border:none;border-radius:6px;cursor:pointer;font-weight:600;font-size:0.85rem;">
                 + Agente extra $3/mes — MercadoPago
               </button>
             </div>
@@ -2679,7 +2678,7 @@
 
         // Build a simple selection dialog
         const options = contacts.map(c => `${c.name || c.phone} (${c.groupName}) — ${c.phone}`).join('\n');
-        const selection = prompt(`Selecciona un contacto (copia el teléfono):\n\n${options}\n\nEscribí el teléfono:`);
+        const selection = await showPrompt('Seleccionar contacto', options.replace(/\n/g, '<br>'), { placeholder: 'Escribí el teléfono' });
         if (!selection) return;
 
         const match = contacts.find(c => c.phone === selection.trim() || (c.name && c.name.toLowerCase() === selection.trim().toLowerCase()));
@@ -2752,7 +2751,7 @@
           return;
         }
         const options = contacts.map(c => `${c.name || c.phone} (Equipo) — ${c.phone}`).join('\n');
-        const selection = prompt(`Selecciona un contacto del equipo:\n\n${options}\n\nEscribí el teléfono:`);
+        const selection = await showPrompt('Seleccionar contacto del equipo', options.replace(/\n/g, '<br>'), { placeholder: 'Escribí el teléfono' });
         if (!selection) return;
         const match = contacts.find(c => c.phone === selection.trim() || (c.name && c.name.toLowerCase() === selection.trim().toLowerCase()));
         if (match) {
@@ -2786,7 +2785,7 @@
     }
 
     async function removeAgent(agentId) {
-      if (!confirm('¿Eliminar este agente? Esta acción no se puede deshacer.')) return;
+      if (!await miiaConfirm('¿Eliminar este agente? Esta acción no se puede deshacer.')) return;
 
       try {
         await db.collection('users').doc(agentId).delete();
@@ -2928,7 +2927,7 @@
 
     async function updateDealStatus(dealId, newStatus) {
       const label = newStatus === 'won' ? 'ganada' : 'perdida';
-      if (!confirm(`¿Marcar esta deal como ${label}?`)) return;
+      if (!await miiaConfirm(`¿Marcar esta deal como ${label}?`)) return;
 
       try {
         await db.collection('deals').doc(dealId).update({
@@ -2987,13 +2986,13 @@
         const homeWaBtn = document.getElementById('homeWaConnectBtn');
         const homeWaCard = document.getElementById('homeWaCard');
         if (data.connected) {
-          if (waStatusEl) { waStatusEl.textContent = 'Conectado'; waStatusEl.style.background = 'rgba(52,211,153,.1)'; waStatusEl.style.color = '#34D399'; }
-          if (homeWaBadge) { homeWaBadge.textContent = 'Conectado'; homeWaBadge.style.background = 'rgba(52,211,153,.1)'; homeWaBadge.style.color = '#34D399'; }
-          if (homeWaBtn) { homeWaBtn.textContent = 'Reconectar'; homeWaBtn.style.background = 'rgba(52,211,153,.15)'; homeWaBtn.style.color = '#34D399'; }
+          if (waStatusEl) { waStatusEl.textContent = 'Conectado'; waStatusEl.style.background = 'rgba(52,211,153,.1)'; waStatusEl.style.color = 'var(--emerald)'; }
+          if (homeWaBadge) { homeWaBadge.textContent = 'Conectado'; homeWaBadge.style.background = 'rgba(52,211,153,.1)'; homeWaBadge.style.color = 'var(--emerald)'; }
+          if (homeWaBtn) { homeWaBtn.textContent = 'Reconectar'; homeWaBtn.style.background = 'rgba(52,211,153,.15)'; homeWaBtn.style.color = 'var(--emerald)'; }
         } else {
-          if (waStatusEl) { waStatusEl.textContent = 'No conectado'; waStatusEl.style.background = 'rgba(239,68,68,.1)'; waStatusEl.style.color = '#EF4444'; }
-          if (homeWaBadge) { homeWaBadge.textContent = 'No conectado'; homeWaBadge.style.background = 'rgba(239,68,68,.1)'; homeWaBadge.style.color = '#EF4444'; }
-          if (homeWaBtn) { homeWaBtn.textContent = 'Vincular WhatsApp'; homeWaBtn.style.background = '#25D366'; homeWaBtn.style.color = 'white'; }
+          if (waStatusEl) { waStatusEl.textContent = 'No conectado'; waStatusEl.style.background = 'rgba(239,68,68,.1)'; waStatusEl.style.color = 'var(--red-500)'; }
+          if (homeWaBadge) { homeWaBadge.textContent = 'No conectado'; homeWaBadge.style.background = 'rgba(239,68,68,.1)'; homeWaBadge.style.color = 'var(--red-500)'; }
+          if (homeWaBtn) { homeWaBtn.textContent = 'Vincular WhatsApp'; homeWaBtn.style.background = 'var(--brand-whatsapp)'; homeWaBtn.style.color = 'white'; }
         }
 
         if (data.connected) {
@@ -3009,8 +3008,8 @@
             // Después de 90s sin conectar → mostrar estado desconectado en Home (sin redirigir)
             const homeWaBadge = document.getElementById('homeWaBadge');
             const homeWaBtn = document.getElementById('homeWaConnectBtn');
-            if (homeWaBadge) { homeWaBadge.textContent = 'No conectado'; homeWaBadge.style.background = 'rgba(239,68,68,.1)'; homeWaBadge.style.color = '#EF4444'; }
-            if (homeWaBtn) { homeWaBtn.textContent = 'Vincular WhatsApp'; homeWaBtn.style.background = '#25D366'; homeWaBtn.style.color = 'white'; }
+            if (homeWaBadge) { homeWaBadge.textContent = 'No conectado'; homeWaBadge.style.background = 'rgba(239,68,68,.1)'; homeWaBadge.style.color = 'var(--red-500)'; }
+            if (homeWaBtn) { homeWaBtn.textContent = 'Vincular WhatsApp'; homeWaBtn.style.background = 'var(--brand-whatsapp)'; homeWaBtn.style.color = 'white'; }
           }
         }
       } catch (error) {
@@ -3033,7 +3032,7 @@
           border-radius:12px;padding:14px 24px;display:flex;align-items:center;gap:12px;
           z-index:999;color:var(--text-body);font-size:0.85rem;box-shadow:0 8px 30px rgba(0,0,0,0.4);`;
         banner.innerHTML = `
-          <div style="width:10px;height:10px;border-radius:50%;background:#00E5FF;animation:pulse-glow 1.5s infinite;flex-shrink:0"></div>
+          <div style="width:10px;height:10px;border-radius:50%;background:var(--cyan);animation:pulse-glow 1.5s infinite;flex-shrink:0"></div>
           <span id="wa-reconnect-text">MIIA está restaurando la sesión de WhatsApp...</span>
           <span style="color:var(--text-muted);font-size:0.75rem" id="wa-reconnect-timer"></span>`;
         document.body.appendChild(banner);
@@ -3056,7 +3055,7 @@
           <p style="color: var(--text-muted, #9aa0a6); margin-bottom: 24px;">Tu sesión está activa y lista para usar.</p>
           <div style="display: flex; gap: 12px;">
             <button onclick="this.closest('div').parentElement.parentElement.remove()" style="flex: 1; padding: 12px; border: 1px solid var(--border-color, #2d3748); border-radius: 8px; background: var(--bg-primary, #1a1a2e); color: var(--text-dark, #e8eaed); cursor: pointer; font-family: inherit;">Cerrar</button>
-            <button onclick="desvinculateWhatsApp()" style="flex: 1; padding: 12px; border: none; border-radius: 8px; background: #e74c3c; color: white; cursor: pointer; font-weight: 600; font-family: inherit;">Desvincular</button>
+            <button onclick="desvinculateWhatsApp()" style="flex: 1; padding: 12px; border: none; border-radius: 8px; background: var(--red-500); color: white; cursor: pointer; font-weight: 600; font-family: inherit;">Desvincular</button>
           </div>
         </div>
       `;
@@ -3064,7 +3063,7 @@
     }
 
     async function desvinculateWhatsApp() {
-      if (!confirm('¿Desvincular WhatsApp? Tendrás que escanear el código QR nuevamente.')) return;
+      if (!await miiaConfirm('¿Desvincular WhatsApp? Tendrás que escanear el código QR nuevamente.')) return;
 
       try {
         const uid = currentUser ? currentUser.uid : '';
@@ -3320,14 +3319,14 @@
       if (!user) return showToast('Debes iniciar sesión', 'warning');
 
       // Triple confirmación
-      if (!confirm('⚠️ ¿Estás seguro de que quieres ELIMINAR tu cuenta?\n\nSe borrarán permanentemente:\n- Todos tus negocios y productos\n- Todos tus contactos y grupos\n- Tu conexión de WhatsApp\n- Todas tus configuraciones\n\nEsta acción es IRREVERSIBLE.')) return;
+      if (!await miiaConfirm('⚠️ ¿Estás seguro de que quieres ELIMINAR tu cuenta?\n\nSe borrarán permanentemente:\n- Todos tus negocios y productos\n- Todos tus contactos y grupos\n- Tu conexión de WhatsApp\n- Todas tus configuraciones\n\nEsta acción es IRREVERSIBLE.')) return;
 
-      const typed = prompt('Para confirmar, escribe exactamente:\nELIMINAR MI CUENTA');
+      const typed = await showPrompt('Confirmación final', 'Para confirmar, escribí exactamente: <strong>ELIMINAR MI CUENTA</strong>', { placeholder: 'ELIMINAR MI CUENTA' });
       if (typed !== 'ELIMINAR MI CUENTA') {
         return showToast('Confirmación incorrecta. Cuenta NO eliminada.', 'warning');
       }
 
-      if (!confirm('ÚLTIMA OPORTUNIDAD: ¿Realmente quieres eliminar TODO? No hay vuelta atrás.')) return;
+      if (!await miiaConfirm('ÚLTIMA OPORTUNIDAD: ¿Realmente quieres eliminar TODO? No hay vuelta atrás.')) return;
 
       const btn = document.getElementById('btnDeleteAccount');
       btn.disabled = true;
@@ -3408,9 +3407,9 @@
       }
       const levelIcons = { emergencies_only: '🔴', agenda_visible: '🟡', full_supervision: '🟢' };
       const levelNames = { emergencies_only: 'Solo emergencias', agenda_visible: 'Agenda visible', full_supervision: 'Supervision completa' };
-      const statusBadge = (s) => s === 'active' ? '<span style="color:#34d399; font-size:0.8rem;">✅ Activo</span>' :
-        s === 'pending' ? '<span style="color:#f59e0b; font-size:0.8rem;">⏳ Pendiente</span>' :
-        '<span style="color:#ef4444; font-size:0.8rem;">❌ Rechazado</span>';
+      const statusBadge = (s) => s === 'active' ? '<span style="color:var(--emerald); font-size:0.8rem;">✅ Activo</span>' :
+        s === 'pending' ? '<span style="color:var(--amber); font-size:0.8rem;">⏳ Pendiente</span>' :
+        '<span style="color:var(--red-500); font-size:0.8rem;">❌ Rechazado</span>';
 
       container.innerHTML = contacts.map(c => `
         <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 12px; border:1px solid var(--border-color); border-radius:8px; margin-bottom:8px;">
@@ -3423,8 +3422,8 @@
           </div>
           <div style="display:flex; gap:6px;">
             ${c.status === 'pending' && type === 'protector' ? `
-              <button onclick="respondSecurity('${c.relationId}', 'accepted')" style="padding:4px 10px; border-radius:6px; background:#34d399; color:white; border:none; font-size:0.8rem; cursor:pointer;">Aceptar</button>
-              <button onclick="respondSecurity('${c.relationId}', 'rejected')" style="padding:4px 10px; border-radius:6px; background:#ef4444; color:white; border:none; font-size:0.8rem; cursor:pointer;">Rechazar</button>
+              <button onclick="respondSecurity('${c.relationId}', 'accepted')" style="padding:4px 10px; border-radius:6px; background:var(--emerald); color:white; border:none; font-size:0.8rem; cursor:pointer;">Aceptar</button>
+              <button onclick="respondSecurity('${c.relationId}', 'rejected')" style="padding:4px 10px; border-radius:6px; background:var(--red-500); color:white; border:none; font-size:0.8rem; cursor:pointer;">Rechazar</button>
             ` : ''}
             ${c.status === 'active' ? `
               <select onchange="changeSecurity('${c.relationId}', this.value)" style="padding:4px 8px; border-radius:6px; border:1px solid var(--border-color); font-size:0.8rem;">
@@ -3495,7 +3494,7 @@
     }
 
     async function removeSecurity(relationId) {
-      if (!confirm('Desvincular este contacto de seguridad?')) return;
+      if (!await miiaConfirm('Desvincular este contacto de seguridad?')) return;
       const user = firebase.auth().currentUser;
       if (!user) return;
       try {
@@ -3522,11 +3521,11 @@
           if (data.connected) {
             waStatusEl.textContent = 'Conectado';
             waStatusEl.style.background = 'rgba(37,211,102,.12)';
-            waStatusEl.style.color = '#25D366';
+            waStatusEl.style.color = 'var(--brand-whatsapp)';
           } else {
             waStatusEl.textContent = 'No conectado';
             waStatusEl.style.background = 'rgba(239,68,68,.1)';
-            waStatusEl.style.color = '#EF4444';
+            waStatusEl.style.color = 'var(--red-500)';
           }
         }
       } catch (e) { console.warn('[OWNER]', e.message || e); }
@@ -3583,7 +3582,7 @@
       if (!user) return;
       const provider = aiProviderSelect.value;
       const apiKey = document.getElementById('aiApiKeyInput').value.trim();
-      if (!apiKey) { aiStatus.innerHTML = '<span style="color:#EF4444;">Ingresa tu API key</span>'; return; }
+      if (!apiKey) { aiStatus.innerHTML = '<span style="color:var(--red-500);">Ingresa tu API key</span>'; return; }
 
       const btn = document.getElementById('aiTestBtn');
       btn.disabled = true; btn.textContent = 'Probando...';
@@ -3599,10 +3598,10 @@
         if (data.success) {
           aiStatus.innerHTML = `<span style="color:var(--accent);">Conexión exitosa (${data.latencyMs}ms)</span>`;
         } else {
-          aiStatus.innerHTML = `<span style="color:#EF4444;">${data.error}</span>`;
+          aiStatus.innerHTML = `<span style="color:var(--red-500);">${data.error}</span>`;
         }
       } catch (e) {
-        aiStatus.innerHTML = `<span style="color:#EF4444;">Error de conexión</span>`;
+        aiStatus.innerHTML = `<span style="color:var(--red-500);">Error de conexión</span>`;
       }
       btn.disabled = false; btn.textContent = 'Probar conexión';
     }
@@ -3612,7 +3611,7 @@
       if (!user) return;
       const provider = aiProviderSelect.value;
       const apiKey = document.getElementById('aiApiKeyInput').value.trim();
-      if (!apiKey) { aiStatus.innerHTML = '<span style="color:#EF4444;">Ingresa tu API key</span>'; return; }
+      if (!apiKey) { aiStatus.innerHTML = '<span style="color:var(--red-500);">Ingresa tu API key</span>'; return; }
 
       const btn = document.getElementById('aiSaveBtn');
       btn.disabled = true; btn.textContent = 'Guardando...';
@@ -3630,10 +3629,10 @@
           document.getElementById('aiApiKeyInput').value = '';
           document.getElementById('aiApiKeyInput').placeholder = 'Key configurada (ingresa nueva para cambiar)';
         } else {
-          aiStatus.innerHTML = `<span style="color:#EF4444;">${data.error}</span>`;
+          aiStatus.innerHTML = `<span style="color:var(--red-500);">${data.error}</span>`;
         }
       } catch (e) {
-        aiStatus.innerHTML = `<span style="color:#EF4444;">Error de conexión</span>`;
+        aiStatus.innerHTML = `<span style="color:var(--red-500);">Error de conexión</span>`;
       }
       btn.disabled = false; btn.textContent = 'Guardar';
     }
@@ -3641,7 +3640,7 @@
     async function resetAIConfig() {
       const user = auth.currentUser;
       if (!user) return;
-      if (!confirm('¿Restablecer a Gemini (default)?')) return;
+      if (!await miiaConfirm('¿Restablecer a Gemini (default)?')) return;
 
       try {
         const res = await fetch(`${BACKEND_URL}/api/tenant/${user.uid}/ai-config`, { method: 'DELETE' });
@@ -3655,7 +3654,7 @@
           aiStatus.innerHTML = `<span style="color:var(--accent);">Restablecido a Gemini</span>`;
         }
       } catch (e) {
-        aiStatus.innerHTML = `<span style="color:#EF4444;">Error de conexión</span>`;
+        aiStatus.innerHTML = `<span style="color:var(--red-500);">Error de conexión</span>`;
       }
     }
 
@@ -3671,7 +3670,7 @@
         if (data.smtpUser) document.getElementById('smtpUser').value = data.smtpUser;
         if (data.configured) {
           document.getElementById('emailStatus').textContent = '✅ SMTP configurado';
-          document.getElementById('emailStatus').style.color = '#4ade80';
+          document.getElementById('emailStatus').style.color = 'var(--green-400)';
         }
       } catch (e) { console.warn('[OWNER]', e.message || e); }
     }
@@ -3688,7 +3687,7 @@
         if (res.ok) {
           showToast('✅ Configuración de email guardada', 'success');
           document.getElementById('emailStatus').textContent = '✅ SMTP configurado';
-          document.getElementById('emailStatus').style.color = '#4ade80';
+          document.getElementById('emailStatus').style.color = 'var(--green-400)';
         }
       } catch (e) { showToast('Error: ' + e.message, 'error'); }
     }
@@ -3747,14 +3746,14 @@
         const res = await fetch(API + '/api/email/test-imap', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ imapHost, imapUser, imapPass }) });
         const data = await res.json();
         if (data.ok) {
-          document.getElementById('imapStatus').innerHTML = '<span style="color:#10b981;">Conexion exitosa (' + (data.messageCount || 0) + ' emails)</span>';
+          document.getElementById('imapStatus').innerHTML = '<span style="color:var(--emerald);">Conexion exitosa (' + (data.messageCount || 0) + ' emails)</span>';
           showToast('Conexion IMAP exitosa', 'success');
         } else {
-          document.getElementById('imapStatus').innerHTML = '<span style="color:#ef4444;">' + (data.error || 'No se pudo conectar') + '</span>';
+          document.getElementById('imapStatus').innerHTML = '<span style="color:var(--red-500);">' + (data.error || 'No se pudo conectar') + '</span>';
           showToast('Error IMAP: ' + (data.error || 'fallo'), 'error');
         }
       } catch (e) {
-        document.getElementById('imapStatus').innerHTML = '<span style="color:#ef4444;">Error de red</span>';
+        document.getElementById('imapStatus').innerHTML = '<span style="color:var(--red-500);">Error de red</span>';
       }
     }
 
@@ -3798,24 +3797,24 @@
         const emailBadge = document.getElementById('connEmailStatus');
 
         if (data.connected) {
-          statusEl.innerHTML = '<span style="color:#4ade80;font-size:0.82rem;">✅ Google Calendar conectado</span>';
+          statusEl.innerHTML = '<span style="color:var(--green-400);font-size:0.82rem;">✅ Google Calendar conectado</span>';
           connectSection.style.display = 'none';
           connectedSection.style.display = 'flex';
           document.getElementById('calendarAutoToggle').checked = !!data.calendarEnabled;
-          if (calBadge) { calBadge.textContent = 'Conectado'; calBadge.style.background = 'rgba(66,133,244,.12)'; calBadge.style.color = '#4285F4'; }
+          if (calBadge) { calBadge.textContent = 'Conectado'; calBadge.style.background = 'rgba(66,133,244,.12)'; calBadge.style.color = 'var(--brand-google)'; }
           // Gmail via OAuth activo
           if (emailGmailEl) emailGmailEl.style.display = 'block';
           if (emailNotConnEl) emailNotConnEl.style.display = 'none';
-          if (emailBadge) { emailBadge.textContent = 'Gmail via Google'; emailBadge.style.background = 'rgba(66,133,244,.12)'; emailBadge.style.color = '#4285F4'; }
+          if (emailBadge) { emailBadge.textContent = 'Gmail via Google'; emailBadge.style.background = 'rgba(66,133,244,.12)'; emailBadge.style.color = 'var(--brand-google)'; }
         } else {
           statusEl.innerHTML = '';
           connectSection.style.display = 'block';
           connectedSection.style.display = 'none';
-          if (calBadge) { calBadge.textContent = 'No conectado'; calBadge.style.background = 'rgba(239,68,68,.1)'; calBadge.style.color = '#EF4444'; }
+          if (calBadge) { calBadge.textContent = 'No conectado'; calBadge.style.background = 'rgba(239,68,68,.1)'; calBadge.style.color = 'var(--red-500)'; }
           // Mostrar config manual
           if (emailGmailEl) emailGmailEl.style.display = 'none';
           if (emailNotConnEl) emailNotConnEl.style.display = 'block';
-          if (emailBadge) { emailBadge.textContent = 'No conectado'; emailBadge.style.background = 'rgba(239,68,68,.1)'; emailBadge.style.color = '#EF4444'; }
+          if (emailBadge) { emailBadge.textContent = 'No conectado'; emailBadge.style.background = 'rgba(239,68,68,.1)'; emailBadge.style.color = 'var(--red-500)'; }
         }
       } catch (e) { console.warn('[OWNER]', e.message || e); }
     }
@@ -3830,7 +3829,7 @@
     }
 
     async function disconnectCalendar() {
-      if (!confirm('¿Desconectar Google Calendar?')) return;
+      if (!await miiaConfirm('¿Desconectar Google Calendar?')) return;
       try {
         const token = await auth.currentUser.getIdToken();
         await fetch(API + '/api/calendar/disconnect', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
@@ -3864,8 +3863,8 @@
     updateThemeUI(document.documentElement.getAttribute('data-theme') || 'dark');
 
     // ═══ LOGOUT ═══
-    function handleLogout() {
-      if (confirm('¿Cerrar sesión?')) {
+    async function handleLogout() {
+      if (await miiaConfirm('¿Cerrar sesión?')) {
         localStorage.removeItem('miia_user');
         auth.signOut();
         window.location.href = 'login.html';
@@ -4125,7 +4124,7 @@
         return;
       }
       container.innerHTML = groups.map(g => {
-        const proactiveColor = g.proactiveEnabled ? '#22c55e' : '#ef4444';
+        const proactiveColor = g.proactiveEnabled ? 'var(--green-500)' : 'var(--red-500)';
         const proactiveLabel = g.proactiveEnabled ? '✓ Proactivo' : '— Proactivo';
         const tonePreview = g.tone ? g.tone.slice(0, 60) + (g.tone.length > 60 ? '…' : '') : '<em style="color:var(--text-muted)">Sin tono configurado</em>';
         return `<div class="group-card" onclick="openGroup('${g.id}')">
@@ -4247,7 +4246,7 @@
     }
 
     async function deleteGroup(groupId) {
-      if (!confirm('¿Eliminar este grupo y todos sus contactos? Esta acción no se puede deshacer.')) return;
+      if (!await miiaConfirm('¿Eliminar este grupo y todos sus contactos? Esta acción no se puede deshacer.')) return;
       try {
         const token = await auth.currentUser.getIdToken();
         const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${groupId}`, {
@@ -4300,7 +4299,7 @@
         groupContacts = await res.json();
         renderGroupContacts();
       } catch (err) {
-        document.getElementById('groupContactsBody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger,#ef4444);">Error: ${esc(err.message)}</td></tr>`;
+        document.getElementById('groupContactsBody').innerHTML = `<tr><td colspan="6" style="text-align:center;color:var(--danger,var(--red-500));">Error: ${esc(err.message)}</td></tr>`;
       }
     }
 
@@ -4353,7 +4352,7 @@
     async function promoteToAgent(phone, name) {
       // Promote a contact from Equipo group to Agent
       const agentName = name || phone;
-      if (!confirm(`¿Hacer a ${agentName} agente de tu negocio?`)) return;
+      if (!await miiaConfirm(`¿Hacer a ${agentName} agente de tu negocio?`)) return;
 
       // Check agent limit
       try {
@@ -4370,7 +4369,7 @@
       }
 
       // Prompt for email (agents need email for login)
-      const email = prompt(`Email de ${agentName} (necesario para que acceda como agente):`);
+      const email = await showPrompt('Email del agente', `Ingresá el email de ${agentName} para que pueda acceder como agente:`, { placeholder: 'email@ejemplo.com', inputType: 'email' });
       if (!email || !email.includes('@')) {
         showToast('Se necesita un email válido para crear el agente.', 'warning');
         return;
@@ -4467,7 +4466,7 @@
     }
 
     async function removeContactFromGroup(phone) {
-      if (!confirm(`¿Eliminar ${phone} de este grupo?`)) return;
+      if (!await miiaConfirm(`¿Eliminar ${phone} de este grupo?`)) return;
       try {
         const token = await auth.currentUser.getIdToken();
         const res = await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/contact-groups/${currentGroupId}/contacts/${encodeURIComponent(phone)}`, {
@@ -4826,11 +4825,11 @@
     }
   }
 
-  function confirmDeleteBusiness() {
+  async function confirmDeleteBusiness() {
     if (!currentBizId) return;
     const biz = businesses.find(b => b.id === currentBizId);
     const name = biz ? biz.name : 'este negocio';
-    if (!confirm(`¿Eliminar "${name}"? Esta acción es irreversible y eliminará todos los productos, sesiónes y datos asociados.`)) return;
+    if (!await miiaConfirm(`¿Eliminar "${name}"? Esta acción es irreversible y eliminará todos los productos, sesiónes y datos asociados.`)) return;
     deleteBusiness(currentBizId);
   }
 
@@ -4907,9 +4906,9 @@
     updateSidebarWaStatus(waConnected);
   }
 
-  function toggleWhatsApp() {
+  async function toggleWhatsApp() {
     if (waConnected) {
-      if (!confirm('Desvincular WhatsApp?')) return;
+      if (!await miiaConfirm('Desvincular WhatsApp?')) return;
       currentUser.getIdToken().then(token => {
         fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/logout`, {
           method: 'POST',
@@ -5041,7 +5040,7 @@
         const data = await res.json();
         if (data.phase === 'authenticated_loading') {
           clearInterval(countdownTimer);
-          document.getElementById('qrCode').innerHTML = `<div style="text-align:center;padding:40px 20px;"><div style="font-size:2rem;margin-bottom:12px;">🔄</div><p style="color:#34D399;font-size:0.9rem;">Sesión autenticada — cargando WhatsApp...</p></div>`;
+          document.getElementById('qrCode').innerHTML = `<div style="text-align:center;padding:40px 20px;"><div style="font-size:2rem;margin-bottom:12px;">🔄</div><p style="color:var(--emerald);font-size:0.9rem;">Sesión autenticada — cargando WhatsApp...</p></div>`;
         }
         if (data.qrCode) {
           clearInterval(countdownTimer);
@@ -5065,7 +5064,7 @@
           <div style="text-align:center;padding:30px 20px;">
             <div style="font-size:2rem;margin-bottom:12px;">⚠️</div>
             <p style="color:var(--text-muted);font-size:0.9rem;margin-bottom:16px;">Hubo un problema conectando con WhatsApp. Esto puede pasar si el servidor está reiniciando.</p>
-            <button onclick="_qrConnecting=false;connectWhatsApp()" style="padding:10px 24px;background:#25D366;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.88rem;">
+            <button onclick="_qrConnecting=false;connectWhatsApp()" style="padding:10px 24px;background:var(--brand-whatsapp);color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;font-size:0.88rem;">
               Reintentar conexión
             </button>
           </div>`;
@@ -5159,7 +5158,7 @@
     if (!currentBizId) return;
     const p = products[index];
     if (p.id) {
-      if (!confirm('Eliminar este producto? MIIA olvidara esta información permanentemente.')) return;
+      if (!await miiaConfirm('Eliminar este producto? MIIA olvidara esta información permanentemente.')) return;
       await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/products/${p.id}`, { method: 'DELETE' });
     }
     products.splice(index, 1);
@@ -5268,7 +5267,7 @@
       const forbidden = allKws.filter(kw => FORBIDDEN.has(normalize(kw)));
       if (forbidden.length > 0) {
         statusEl.textContent = `Palabras muy genericas (no permitidas): ${forbidden.join(', ')}. Usa palabras especificas de tu negocio.`;
-        statusEl.style.color = 'var(--danger, #ef4444)';
+        statusEl.style.color = 'var(--danger, var(--red-500))';
         setTimeout(() => { statusEl.style.color = ''; }, 6000);
         return;
       }
@@ -5480,7 +5479,7 @@
 
   async function updateSession(date) {
     if (!currentBizId) return;
-    const text = prompt('Agrega información adicional para esta sesión:');
+    const text = await showPrompt('Información adicional', 'Agregá información extra para esta sesión de entrenamiento:', { placeholder: 'Escribí aquí...' });
     if (!text || !text.trim()) return;
     try {
       await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/sessions/${date}`, {
@@ -5497,7 +5496,7 @@
 
   async function deleteSession(date) {
     if (!currentBizId) return;
-    if (!confirm(`Eliminar sesión del ${date}? MIIA olvidara permanentemente todo lo aprendido en esa sesión.`)) return;
+    if (!await miiaConfirm(`Eliminar sesión del ${date}? MIIA olvidara permanentemente todo lo aprendido en esa sesión.`)) return;
     try {
       await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/businesses/${currentBizId}/sessions/${date}`, { method: 'DELETE' });
       sessions = sessions.filter(s => s.date !== date);
@@ -5609,7 +5608,7 @@
           <div class="branch-item" style="background:rgba(0,229,255,0.04);border:1px solid rgba(0,229,255,0.1);border-radius:8px;padding:10px;margin-bottom:8px;">
             <div style="display:flex;gap:6px;margin-bottom:6px;">
               <input type="text" placeholder="Nombre sucursal" value="${esc(b.name||'')}" style="flex:1;padding:6px 8px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.82rem;" data-branch="${i}" data-field="name">
-              <button onclick="removeBranch('${m.id}',${i})" style="padding:4px 8px;background:rgba(239,68,68,0.15);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:6px;cursor:pointer;font-size:0.75rem;">X</button>
+              <button onclick="removeBranch('${m.id}',${i})" style="padding:4px 8px;background:rgba(239,68,68,0.15);color:var(--red-500);border:1px solid rgba(239,68,68,0.3);border-radius:6px;cursor:pointer;font-size:0.75rem;">X</button>
             </div>
             <input type="text" placeholder="Dirección completa (calle, número, piso, oficina)" value="${esc(b.address||'')}" style="width:100%;padding:6px 8px;border:1px solid rgba(0,229,255,0.2);border-radius:6px;background:rgba(5,5,8,0.8);color:var(--text-dark);font-size:0.82rem;margin-bottom:6px;box-sizing:border-box;" data-branch="${i}" data-field="address">
             <div style="display:flex;gap:6px;">
@@ -5834,11 +5833,11 @@
       const btnDisc = document.getElementById('btnDisconnectGoogle');
       if (tokens && tokens.access_token) {
         label.textContent = '✅ Conectado';
-        label.style.color = '#34D399';
+        label.style.color = 'var(--emerald)';
         if (btnDisc) btnDisc.style.display = 'inline-block';
       } else {
         label.textContent = '❌ No conectado';
-        label.style.color = '#f87171';
+        label.style.color = 'var(--red-400)';
         if (btnDisc) btnDisc.style.display = 'none';
       }
     } catch(e) {
@@ -5855,7 +5854,7 @@
   }
 
   async function disconnectGoogle() {
-    if (!confirm('¿Desconectar Google? MIIA dejará de acceder a Calendar, Gmail, Sheets, etc.')) return;
+    if (!await miiaConfirm('¿Desconectar Google? MIIA dejará de acceder a Calendar, Gmail, Sheets, etc.')) return;
     try {
       const resp = await fetch(`${API_BASE}/api/calendar/disconnect`, {
         method: 'POST',
@@ -5891,7 +5890,7 @@
         </div>`
       ).join('');
     } catch(e) {
-      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+      container.innerHTML = `<p style="color:var(--red-400);font-size:0.82rem;">Error: ${e.message}</p>`;
     }
   }
 
@@ -5928,7 +5927,7 @@
       }
       empty.style.display = 'none';
       const statusEmoji = { searching: '🔍', pending: '⏳', confirmed: '✅', cancelled: '❌', completed: '🏁' };
-      const statusColor = { confirmed: '#34D399', pending: '#fbbf24', cancelled: '#f87171', completed: '#9aa0a6' };
+      const statusColor = { confirmed: 'var(--emerald)', pending: 'var(--amber-400)', cancelled: 'var(--red-400)', completed: 'var(--tx-dim)' };
       container.innerHTML = data.reservations.map(r => {
         const source = r.source === 'miia_network' ? '<span style="background:rgba(59,91,255,0.15);color:var(--accent-primary);padding:2px 6px;border-radius:4px;font-size:0.7rem;font-weight:700;margin-left:6px;">🤖 MIIA</span>' : '';
         return `<div style="padding:12px 14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;margin-bottom:8px;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--accent-primary)'" onmouseout="this.style.borderColor='var(--border-color)'">
@@ -5942,7 +5941,7 @@
             <span>👥 ${r.partySize || 1}</span>
           </div>
           ${r.status === 'confirmed' ? `<div style="margin-top:8px;display:flex;gap:6px;">
-            <button onclick="cancelReservation('${r.id}')" style="padding:4px 10px;font-size:0.75rem;border:1px solid #f87171;color:#f87171;background:transparent;border-radius:6px;cursor:pointer;">Cancelar</button>
+            <button onclick="cancelReservation('${r.id}')" style="padding:4px 10px;font-size:0.75rem;border:1px solid var(--red-400);color:var(--red-400);background:transparent;border-radius:6px;cursor:pointer;">Cancelar</button>
           </div>` : ''}
           ${r.status === 'completed' && !r.personalRating ? `<div style="margin-top:8px;">
             <span style="font-size:0.78rem;color:var(--text-muted);">Calificar: </span>
@@ -5951,7 +5950,7 @@
         </div>`;
       }).join('');
     } catch(e) {
-      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+      container.innerHTML = `<p style="color:var(--red-400);font-size:0.82rem;">Error: ${e.message}</p>`;
     }
   }
 
@@ -5991,7 +5990,7 @@
       empty.style.display = 'none';
       container.innerHTML = data.favorites.map(f => {
         const stars = f.rating ? '⭐'.repeat(Math.min(Math.round(f.rating), 5)) : '';
-        return `<div style="padding:12px 14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;margin-bottom:8px;transition:border-color .2s;" onmouseover="this.style.borderColor='#fbbf24'" onmouseout="this.style.borderColor='var(--border-color)'">
+        return `<div style="padding:12px 14px;background:var(--card-bg);border:1px solid var(--border-color);border-radius:10px;margin-bottom:8px;transition:border-color .2s;" onmouseover="this.style.borderColor='var(--amber-400)'" onmouseout="this.style.borderColor='var(--border-color)'">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <strong style="color:var(--text-dark);font-size:0.88rem;">⭐ ${f.name || '?'}</strong>
             <span style="font-size:0.78rem;color:var(--text-muted);">${f.visitCount || 0} visitas</span>
@@ -6003,7 +6002,7 @@
         </div>`;
       }).join('');
     } catch(e) {
-      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+      container.innerHTML = `<p style="color:var(--red-400);font-size:0.82rem;">Error: ${e.message}</p>`;
     }
   }
 
@@ -6035,12 +6034,12 @@
           ${b.description ? `<p style="color:var(--text-muted);font-size:0.75rem;margin-top:4px;line-height:1.4;">${b.description.substring(0, 100)}${b.description.length > 100 ? '...' : ''}</p>` : ''}
           <div style="margin-top:8px;">
             <span style="font-size:0.75rem;color:var(--accent-primary);font-weight:600;">✨ Reserva automática disponible</span>
-            ${b.autoConfirm ? '<span style="font-size:0.75rem;color:#34D399;margin-left:8px;">✓ Confirmación inmediata</span>' : ''}
+            ${b.autoConfirm ? '<span style="font-size:0.75rem;color:var(--emerald);margin-left:8px;">✓ Confirmación inmediata</span>' : ''}
           </div>
         </div>`
       ).join('');
     } catch(e) {
-      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+      container.innerHTML = `<p style="color:var(--red-400);font-size:0.82rem;">Error: ${e.message}</p>`;
     }
   }
 
@@ -6070,12 +6069,12 @@
         </div>`
       ).join('');
     } catch(e) {
-      container.innerHTML = `<p style="color:#f87171;font-size:0.82rem;">Error: ${e.message}</p>`;
+      container.innerHTML = `<p style="color:var(--red-400);font-size:0.82rem;">Error: ${e.message}</p>`;
     }
   }
 
   async function cancelReservation(id) {
-    if (!confirm('¿Estás seguro de cancelar esta reserva?')) return;
+    if (!await miiaConfirm('¿Estás seguro de cancelar esta reserva?')) return;
     try {
       await fetch(`${API_BASE}/api/reservations/${id}`, {
         method: 'DELETE',
@@ -6196,12 +6195,12 @@
     const btn = document.getElementById('voiceDictateBtn');
     const icon = document.getElementById('micIcon');
     const status = document.getElementById('voiceStatus');
-    btn.style.borderColor = '#ef4444';
+    btn.style.borderColor = 'var(--red-500)';
     btn.style.background = 'rgba(239,68,68,0.1)';
     btn.style.animation = 'pulse 1.5s infinite';
-    icon.style.color = '#ef4444';
+    icon.style.color = 'var(--red-500)';
     status.textContent = '🔴 Escuchando... Hablá ahora';
-    status.style.color = '#ef4444';
+    status.style.color = 'var(--red-500)';
   }
 
   function stopListening() {
@@ -6406,7 +6405,7 @@
                 ${phoneHint}
                 <div class="an-lead-meta">${l.lastActivity ? timeAgo(l.lastActivity) : 'Sin actividad'}</div>
               </div>
-            `;}).join('') + (stage.leads.length > 8 ? `<div style="font-size:0.68rem;color:#E879F9;padding:4px;">+${stage.leads.length - 8} más</div>` : '')
+            `;}).join('') + (stage.leads.length > 8 ? `<div style="font-size:0.68rem;color:var(--pink-400);padding:4px;">+${stage.leads.length - 8} más</div>` : '')
           }
         </div>
       `).join('');
@@ -6645,18 +6644,18 @@
         <html>
         <head><title>Cotización</title></head>
         <body style="font-family: Arial; padding: 40px; max-width: 800px;">
-          <h1 style="color: #667eea;">COTIZACIÓN</h1>
+          <h1 style="color: var(--indigo);">COTIZACIÓN</h1>
           <p><strong>Cliente:</strong> ${client}</p>
           <p><strong>Fecha:</strong> ${new Date().toLocaleDateString('es-ES')}</p>
-          <hr style="border: 1px solid #ddd; margin: 20px 0;">
+          <hr style="border: 1px solid var(--bd-1); margin: 20px 0;">
           <h3>Detalles</h3>
           <p><strong>Producto/Servicio:</strong> ${product}</p>
           <p><strong>Descripción:</strong></p>
           <p>${desc}</p>
-          <hr style="border: 1px solid #ddd; margin: 20px 0;">
+          <hr style="border: 1px solid var(--bd-1); margin: 20px 0;">
           <p style="font-size: 18px;"><strong>Total: USD $${parseFloat(price).toFixed(2)}</strong></p>
           ${expiry ? `<p><strong>Válida hasta:</strong> ${expiry}</p>` : ''}
-          <p style="margin-top: 40px; color: #888; font-size: 12px;">Esta cotización fue generada por MIIA el ${new Date().toLocaleDateString('es-ES')}</p>
+          <p style="margin-top: 40px; color: var(--tx-dim); font-size: 12px;">Esta cotización fue generada por MIIA el ${new Date().toLocaleDateString('es-ES')}</p>
         </body>
         </html>
       `;
@@ -6712,7 +6711,7 @@
     }
 
     async function deleteTemplate(id) {
-      if (!confirm('¿Eliminar este template?')) return;
+      if (!await miiaConfirm('¿Eliminar este template?')) return;
       try {
         await db.collection('templates').doc(currentUser.uid).collection('items').doc(id).delete();
         loadTemplates();
@@ -6785,7 +6784,7 @@
     }
 
     async function deleteFile(id) {
-      if (!confirm('¿Eliminar este archivo?')) return;
+      if (!await miiaConfirm('¿Eliminar este archivo?')) return;
       try {
         await db.collection('knowledge_files').doc(currentUser.uid).collection('items').doc(id).delete();
         loadKnowledgeFiles();
@@ -6904,16 +6903,16 @@
       if (homeWaBadge) {
         homeWaBadge.textContent = connected ? 'Conectado' : 'No conectado';
         homeWaBadge.style.background = connected ? 'rgba(52,211,153,.1)' : 'rgba(239,68,68,.1)';
-        homeWaBadge.style.color = connected ? '#34D399' : '#EF4444';
+        homeWaBadge.style.color = connected ? 'var(--emerald)' : 'var(--red-500)';
       }
       if (homeWaBtn) {
         if (connected) {
           homeWaBtn.textContent = 'Reconectar';
           homeWaBtn.style.background = 'rgba(52,211,153,.15)';
-          homeWaBtn.style.color = '#34D399';
+          homeWaBtn.style.color = 'var(--emerald)';
         } else {
           homeWaBtn.textContent = 'Vincular WhatsApp';
-          homeWaBtn.style.background = '#25D366';
+          homeWaBtn.style.background = 'var(--brand-whatsapp)';
           homeWaBtn.style.color = 'white';
         }
       }
@@ -6922,7 +6921,7 @@
       if (connWaBadge) {
         connWaBadge.textContent = connected ? 'Conectado' : 'No conectado';
         connWaBadge.style.background = connected ? 'rgba(37,211,102,.12)' : 'rgba(239,68,68,.1)';
-        connWaBadge.style.color = connected ? '#25D366' : '#EF4444';
+        connWaBadge.style.color = connected ? 'var(--brand-whatsapp)' : 'var(--red-500)';
       }
     }
 
@@ -6935,11 +6934,11 @@
         const badge = document.getElementById('connIgStatus');
         const btn = document.getElementById('igConnectBtn');
         if (data.connected) {
-          if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(52,211,153,.1)'; badge.style.color = '#34D399'; }
-          if (btn) { btn.textContent = 'Desconectar Instagram'; btn.onclick = disconnectInstagram; btn.style.background = 'rgba(239,68,68,.08)'; btn.style.color = '#EF4444'; btn.style.borderColor = 'rgba(239,68,68,.2)'; }
+          if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(52,211,153,.1)'; badge.style.color = 'var(--emerald)'; }
+          if (btn) { btn.textContent = 'Desconectar Instagram'; btn.onclick = disconnectInstagram; btn.style.background = 'rgba(239,68,68,.08)'; btn.style.color = 'var(--red-500)'; btn.style.borderColor = 'rgba(239,68,68,.2)'; }
         } else {
-          if (badge) { badge.textContent = 'No conectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#EF4444'; }
-          if (btn) { btn.textContent = 'Conectar Instagram'; btn.onclick = connectInstagram; btn.style.background = 'linear-gradient(135deg, rgba(131,58,180,.1), rgba(253,29,29,.1))'; btn.style.color = '#833AB4'; btn.style.borderColor = 'rgba(131,58,180,.25)'; }
+          if (badge) { badge.textContent = 'No conectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = 'var(--red-500)'; }
+          if (btn) { btn.textContent = 'Conectar Instagram'; btn.onclick = connectInstagram; btn.style.background = 'linear-gradient(135deg, rgba(131,58,180,.1), rgba(253,29,29,.1))'; btn.style.color = 'var(--brand-instagram)'; btn.style.borderColor = 'rgba(131,58,180,.25)'; }
         }
       } catch (e) { console.warn('[IG] Error checking status:', e.message); }
     }
@@ -6959,7 +6958,7 @@
 
     async function disconnectInstagram() {
       if (!currentUser) return;
-      if (!confirm('¿Desconectar Instagram? MIIA dejará de responder DMs.')) return;
+      if (!await miiaConfirm('¿Desconectar Instagram? MIIA dejará de responder DMs.')) return;
       try {
         await fetch(`${BACKEND_URL}/api/tenant/${currentUser.uid}/instagram`, { method: 'DELETE' });
         checkInstagramStatus();
@@ -7042,7 +7041,7 @@
         <div class="group-config">
           <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
             <h3 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-dark);">Mensajes proactivos</h3>
-            <label class="toggle-switch" style="--toggle-on:#22c55e;--toggle-off:#ef4444;">
+            <label class="toggle-switch" style="--toggle-on:var(--green-500);--toggle-off:var(--red-500);">
               <input type="checkbox" id="cfgProactive">
               <span class="toggle-slider proactive-toggle"></span>
             </label>
@@ -7052,7 +7051,7 @@
               <h3 style="margin:0;font-size:1rem;font-weight:700;color:var(--text-dark);">Simular delay humano</h3>
               <span style="font-size:0.78rem;color:var(--text-muted);">MIIA simula leer y escribir como humano (delays naturales)</span>
             </div>
-            <label class="toggle-switch" style="--toggle-on:#22c55e;--toggle-off:#ef4444;">
+            <label class="toggle-switch" style="--toggle-on:var(--green-500);--toggle-off:var(--red-500);">
               <input type="checkbox" id="cfgHumanDelay" checked>
               <span class="toggle-slider proactive-toggle"></span>
             </label>
@@ -7107,7 +7106,7 @@
             <div class="form-group" style="margin-bottom:0;">
               <label>Relación</label>
               <select id="newContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);font-size:0.88rem;-webkit-appearance:menulist;appearance:menulist;">
-                <option value="" style="color:#6b7280;">— Seleccionar —</option>
+                <option value="" style="color:var(--tx-dim);">— Seleccionar —</option>
                 <option value="hijo">Hijo/a</option>
                 <option value="esposo">Esposo/a</option>
                 <option value="padre">Padre/Madre</option>
@@ -7153,7 +7152,7 @@
             <div class="form-group"><label>Apodo</label><input type="text" id="editContactNickname" placeholder="Ej: Tito, Mamá"></div>
             <div class="form-group"><label>Relación</label>
               <select id="editContactRelation" style="width:100%;padding:8px 10px;border:1px solid var(--border-color);border-radius:var(--radius-sm);background:var(--bg-surface);color:var(--text-dark);-webkit-appearance:menulist;appearance:menulist;">
-                <option value="" style="color:#6b7280;">— Seleccionar —</option>
+                <option value="" style="color:var(--tx-dim);">— Seleccionar —</option>
                 <option value="hijo">Hijo/a</option>
                 <option value="esposo">Esposo/a</option>
                 <option value="padre">Padre/Madre</option>
@@ -8032,10 +8031,10 @@
       </div>
       <div id="pairingCodeDisplay" style="display:none;text-align:center;padding:20px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:12px;">
         <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:8px;">Tu código de vinculación (válido ~60s):</p>
-        <div id="pairingCodeValue" style="font-size:2.2rem;font-weight:800;letter-spacing:8px;color:#7C3AED;font-family:monospace;"></div>
+        <div id="pairingCodeValue" style="font-size:2.2rem;font-weight:800;letter-spacing:8px;color:var(--indigo);font-family:monospace;"></div>
         <p style="color:var(--text-muted);font-size:0.78rem;margin-top:10px;">Ingresalo en WhatsApp → Dispositivos vinculados → Vincular con número de teléfono</p>
       </div>
-      <div id="pairingError" style="display:none;color:#f87171;font-size:0.82rem;text-align:center;margin-top:8px;"></div>
+      <div id="pairingError" style="display:none;color:var(--red-400);font-size:0.82rem;text-align:center;margin-top:8px;"></div>
     </div>
 
     <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="document.getElementById('qrModal').classList.add('hidden')">Cerrar</button>
@@ -8170,7 +8169,7 @@
         <!-- Pipeline de ventas -->
         <div class="an-panel an-panel-wide">
           <div class="an-panel-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#E879F9" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink-400)" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
             <h3>Pipeline de ventas</h3>
           </div>
           <div class="an-pipeline" id="anPipeline">
@@ -8181,7 +8180,7 @@
         <!-- Conversaciones en vivo -->
         <div class="an-panel">
           <div class="an-panel-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#E879F9" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink-400)" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
             <h3>Conversaciones en vivo</h3>
           </div>
           <div class="an-conversations" id="anConversations">
@@ -8192,7 +8191,7 @@
         <!-- Informe nocturno IA -->
         <div class="an-panel">
           <div class="an-panel-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#E879F9" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink-400)" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
             <h3>Informe nocturno IA</h3>
             <select id="anNightlyDate" class="an-date-select" onchange="renderNightlyReport()"></select>
           </div>
@@ -8204,7 +8203,7 @@
         <!-- ADN Vendedor -->
         <div class="an-panel">
           <div class="an-panel-header">
-            <svg viewBox="0 0 24 24" fill="none" stroke="#E879F9" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="var(--pink-400)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             <h3>ADN Vendedor</h3>
           </div>
           <div class="an-adn" id="anADN">

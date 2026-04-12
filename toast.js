@@ -87,4 +87,86 @@
       setTimeout(() => toast.remove(), 320);
     }, duration);
   };
+  /**
+   * miiaConfirm — drop-in replacement for native confirm()
+   * Auto-detects destructive intent from message keywords.
+   * Usage: if (!await miiaConfirm('¿Eliminar producto?')) return;
+   */
+  window.miiaConfirm = async function (msg) {
+    const isDanger = /elimin|borr|desconect|desvincul|irrever|no se puede deshacer|ÚLTIMA/i.test(msg);
+    return showConfirm('¿Estás seguro?', msg.replace(/^¿/, '').replace(/\?$/, ''), {
+      confirmText: isDanger ? 'Sí, eliminar' : 'Confirmar',
+      cancelText: 'Cancelar',
+      danger: isDanger
+    });
+  };
+
+  /**
+   * showConfirm — modal de confirmación estilo dashboard (reemplaza confirm() nativo)
+   * @param {string} title - Título del diálogo
+   * @param {string} message - Mensaje descriptivo
+   * @param {Object} [opts] - { confirmText, cancelText, danger }
+   * @returns {Promise<boolean>} true si confirma, false si cancela
+   */
+  window.showConfirm = function (title, message, opts = {}) {
+    const { confirmText = 'Confirmar', cancelText = 'Cancelar', danger = false } = opts;
+    return new Promise((resolve) => {
+      const overlay = document.createElement('div');
+      overlay.className = 'confirm-overlay';
+      overlay.innerHTML = `
+        <div class="confirm-box">
+          <h3>${title}</h3>
+          <p>${message}</p>
+          <div class="confirm-actions">
+            <button class="confirm-cancel" data-action="cancel">${cancelText}</button>
+            <button class="confirm-ok ${danger ? 'danger' : ''}" data-action="ok">${confirmText}</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+      overlay.addEventListener('click', (e) => {
+        const action = e.target.getAttribute('data-action');
+        if (action === 'ok') { overlay.remove(); resolve(true); }
+        else if (action === 'cancel') { overlay.remove(); resolve(false); }
+      });
+      // ESC to cancel
+      const esc = (e) => { if (e.key === 'Escape') { overlay.remove(); resolve(false); document.removeEventListener('keydown', esc); } };
+      document.addEventListener('keydown', esc);
+    });
+  };
+  /**
+   * showPrompt — custom input modal (replaces native prompt())
+   * @param {string} title
+   * @param {string} message
+   * @param {Object} [opts] - { placeholder, defaultValue, inputType }
+   * @returns {Promise<string|null>} input value or null if cancelled
+   */
+  window.showPrompt = function (title, message, opts = {}) {
+    const { placeholder = '', defaultValue = '', inputType = 'text' } = opts;
+    return new Promise((resolve) => {
+      const overlay = document.createElement('div');
+      overlay.className = 'confirm-overlay';
+      overlay.innerHTML = `
+        <div class="confirm-box">
+          <h3>${title}</h3>
+          <p>${message}</p>
+          <input type="${inputType}" value="${defaultValue}" placeholder="${placeholder}"
+            style="width:100%;padding:10px 14px;border:1px solid var(--bd-2);border-radius:var(--r-md);background:var(--surface);color:var(--tx-bright);font-size:.9rem;font-family:inherit;margin-bottom:16px;outline:none;" />
+          <div class="confirm-actions">
+            <button class="confirm-cancel" data-action="cancel">Cancelar</button>
+            <button class="confirm-ok" data-action="ok">Aceptar</button>
+          </div>
+        </div>`;
+      document.body.appendChild(overlay);
+      const input = overlay.querySelector('input');
+      input.focus();
+      input.addEventListener('keydown', (e) => { if (e.key === 'Enter') { overlay.remove(); resolve(input.value || null); } });
+      overlay.addEventListener('click', (e) => {
+        const action = e.target.getAttribute('data-action');
+        if (action === 'ok') { overlay.remove(); resolve(input.value || null); }
+        else if (action === 'cancel') { overlay.remove(); resolve(null); }
+      });
+      const esc = (e) => { if (e.key === 'Escape') { overlay.remove(); resolve(null); document.removeEventListener('keydown', esc); } };
+      document.addEventListener('keydown', esc);
+    });
+  };
 })();

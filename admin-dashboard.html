@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <!-- v2 -->
-<html lang="es" data-theme="light">
+<html lang="es" data-theme="dark">
 <head>
-  <script>(function(){document.documentElement.setAttribute('data-theme','light');})()</script>
+  <script>(function(){var t=localStorage.getItem('miia-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})()</script>
   <meta charset="UTF-8">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
@@ -24,7 +24,7 @@
     .nav-right { display:flex; align-items:center; gap:16px; }
     .nav-email { font-size:0.82rem; color:var(--text-muted); padding:6px 14px; background:var(--bg-surface); border:1px solid var(--border-glass); border-radius:var(--radius-full); }
     .nav-btn { padding:8px 18px; border-radius:var(--radius-sm); font-size:0.85rem; font-weight:600; cursor:pointer; border:none; transition:all 0.3s; }
-    .nav-btn.logout { background:transparent; border:1px solid rgba(239,68,68,0.4); color:#f87171; }
+    .nav-btn.logout { background:transparent; border:1px solid rgba(239,68,68,0.4); color:var(--red-400); }
     .nav-btn.logout:hover { background:rgba(239,68,68,0.12); }
 
     /* Tabs */
@@ -53,13 +53,13 @@
 
     /* Badges */
     .badge { display:inline-block; padding:4px 12px; border-radius:var(--radius-full); font-size:0.78rem; font-weight:600; }
-    .badge-green { background:rgba(37,211,102,0.1); color:#16a34a; }
+    .badge-green { background:rgba(37,211,102,0.1); color:var(--green-600); }
     .badge-blue { background:rgba(102,126,234,0.1); color:var(--primary); }
     .badge-red { background:rgba(239,68,68,0.08); color:var(--danger); }
-    .badge-yellow { background:rgba(245,158,11,0.1); color:#d97706; }
-    .badge-trial { background:rgba(245,158,11,0.1); color:#d97706; }
+    .badge-yellow { background:rgba(245,158,11,0.1); color:var(--amber-600); }
+    .badge-trial { background:rgba(245,158,11,0.1); color:var(--amber-600); }
     .badge-pro { background:rgba(0,229,255,0.12); color:var(--primary); }
-    .badge-active { background:rgba(37,211,102,0.1); color:#16a34a; }
+    .badge-active { background:rgba(37,211,102,0.1); color:var(--green-600); }
     .badge-pending { background:rgba(239,68,68,0.08); color:var(--danger); }
     .section-hidden { display:none !important; }
 
@@ -83,8 +83,8 @@
 
     /* Alert cards */
     .alert-card { padding:14px 20px; border-radius:var(--radius-md); margin-bottom:8px; font-size:0.88rem; display:flex; align-items:center; gap:10px; }
-    .alert-card.warn { background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.18); color:#fbbf24; }
-    .alert-card.danger { background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); color:#f87171; }
+    .alert-card.warn { background:rgba(245,158,11,0.06); border:1px solid rgba(245,158,11,0.18); color:var(--amber-400); }
+    .alert-card.danger { background:rgba(239,68,68,0.06); border:1px solid rgba(239,68,68,0.2); color:var(--red-400); }
 
     /* Section title */
     .section-title { font-size:1.15rem; font-weight:700; color:var(--text-dark); margin-bottom:16px; }
@@ -116,10 +116,10 @@
     .tenant-card:hover { border-color:rgba(0,229,255,0.25); }
     .tenant-status { display:flex; align-items:center; gap:6px; font-size:0.85rem; }
     .dot { width:10px; height:10px; border-radius:50%; }
-    .dot.green { background:#22c55e; } .dot.red { background:#ef4444; } .dot.yellow { background:#f59e0b; }
+    .dot.green { background:var(--green-500); } .dot.red { background:var(--red-500); } .dot.yellow { background:var(--amber); }
 
     select option { background:var(--bg-panel); color:var(--text-dark); }
-    .dot-danger { display:inline-block; width:8px; height:8px; border-radius:50%; background:#ef4444; box-shadow:0 0 6px #ef4444; flex-shrink:0; }
+    .dot-danger { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--red-500); box-shadow:0 0 6px var(--red-500); flex-shrink:0; }
     .alert-icon-warn { display:inline-block; width:16px; height:16px; flex-shrink:0; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23fbbf24' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-size:contain; }
     .hidden { display:none !important; }
     /* ═══ TRAINING TAB STYLES ═══ */
@@ -133,7 +133,7 @@
     .grid-table input:focus { outline:none;border-color:var(--primary); }
     .grid-table input::placeholder { color:var(--text-muted);font-style:italic; }
     .row-btn { width:30px;height:30px;border:none;border-radius:8px;cursor:pointer;font-size:0.9rem;display:inline-flex;align-items:center;justify-content:center;transition:all .2s; }
-    .row-btn.save { background:rgba(52,211,153,.1);color:#34D399; } .row-btn.save:hover { background:#34D399;color:white; }
+    .row-btn.save { background:rgba(52,211,153,.1);color:var(--emerald); } .row-btn.save:hover { background:var(--emerald);color:white; }
     .row-btn.add { background:rgba(0,229,255,.1);color:var(--primary); } .row-btn.add:hover { background:var(--primary);color:white; }
     .row-btn.delete { background:rgba(239,68,68,.08);color:var(--danger); } .row-btn.delete:hover { background:var(--danger);color:white; }
     .message { margin-bottom:10px;display:flex; }
@@ -170,7 +170,7 @@
     <div class="sidebar-header">
       <span class="nav-logo" style="display:flex;align-items:center;gap:8px;">
         <svg viewBox="90 118 220 168" fill="none" style="width:30px;height:30px;flex-shrink:0">
-          <defs><linearGradient id="sb_ga" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs>
+          <defs><linearGradient id="sb_ga" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="var(--cyan)"/><stop offset="50%" stop-color="var(--indigo)"/><stop offset="100%" stop-color="var(--rose)"/></linearGradient></defs>
           <path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#sb_ga)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
           <text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text>
         </svg>
@@ -248,16 +248,16 @@
       <!-- ═══ WHATSAPP CONNECTION CARD — Prominente en #summary ═══ -->
       <div id="adminHomeWaCard" style="margin-bottom:24px;background:var(--glass-bg);border:1px solid var(--bd-1);border-radius:16px;padding:20px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
         <div style="width:48px;height:48px;border-radius:12px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--brand-whatsapp)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
         </div>
         <div style="flex:1;min-width:180px;">
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:3px;">
             <h3 style="font-size:1rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp</h3>
-            <span id="adminHomeWaBadge" style="font-size:0.72rem;padding:3px 10px;border-radius:99px;font-weight:600;background:rgba(239,68,68,.1);color:#EF4444;">Verificando...</span>
+            <span id="adminHomeWaBadge" style="font-size:0.72rem;padding:3px 10px;border-radius:99px;font-weight:600;background:rgba(239,68,68,.1);color:var(--red-500);">Verificando...</span>
           </div>
           <p style="font-size:0.8rem;color:var(--text-muted);margin:0;">Vincula tu WhatsApp con QR o codigo de 8 digitos.</p>
         </div>
-        <button onclick="adminOpenQrModal()" id="adminHomeWaBtn" style="padding:11px 24px;background:#25D366;color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.88rem;font-family:inherit;white-space:nowrap;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+        <button onclick="adminOpenQrModal()" id="adminHomeWaBtn" style="padding:11px 24px;background:var(--brand-whatsapp);color:white;border:none;border-radius:10px;cursor:pointer;font-weight:700;font-size:0.88rem;font-family:inherit;white-space:nowrap;transition:opacity .2s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
           Vincular WhatsApp
         </button>
       </div>
@@ -451,7 +451,7 @@
           </h3>
           <p style="font-size:0.75rem;color:var(--text-muted);margin:0;">Este es el estado del WhatsApp vinculado por el cliente, no el tuyo.</p>
           <div style="display:flex;align-items:center;gap:12px;">
-            <span class="status-dot" id="acWaDot" style="width:10px;height:10px;border-radius:50%;background:#ef4444;display:inline-block;"></span>
+            <span class="status-dot" id="acWaDot" style="width:10px;height:10px;border-radius:50%;background:var(--red-500);display:inline-block;"></span>
             <span id="acWaStatus" style="font-size:0.9rem;font-weight:600;">Desconectado</span>
           </div>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
@@ -471,7 +471,7 @@
           </h3>
           <!-- WhatsApp Banner -->
           <div id="adminWaBanner" style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:8px;background:rgba(239,68,68,0.08);margin-bottom:8px;">
-            <span id="adminWaStatusText" style="font-size:0.85rem;font-weight:600;color:#ef4444;">WhatsApp no conectado</span>
+            <span id="adminWaStatusText" style="font-size:0.85rem;font-weight:600;color:var(--red-500);">WhatsApp no conectado</span>
             <button id="adminWaActionBtn" class="btn-sm btn-outline" onclick="adminToggleWhatsApp()" style="margin-left:auto;font-size:0.78rem;">Conectar</button>
           </div>
           <!-- Brain Status -->
@@ -621,8 +621,8 @@
           </h3>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
             <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Leads totales</span><strong id="acLeadsTotal">&mdash;</strong></div>
-            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Hot</span><strong id="acLeadsHot" style="color:#34D399;">&mdash;</strong></div>
-            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Cold</span><strong id="acLeadsCold" style="color:#f87171;">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Hot</span><strong id="acLeadsHot" style="color:var(--emerald);">&mdash;</strong></div>
+            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Cold</span><strong id="acLeadsCold" style="color:var(--red-400);">&mdash;</strong></div>
             <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Tasa respuesta MIIA</span><strong id="acResponseRate">&mdash;</strong></div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -633,7 +633,7 @@
 
         <!-- 9. EMERGENCIA -->
         <div class="card" style="display:flex;flex-direction:column;gap:12px;border:1px solid rgba(239,68,68,0.15);">
-          <h3 style="font-weight:700;color:#f87171;font-size:1.05rem;display:flex;align-items:center;gap:8px;">
+          <h3 style="font-weight:700;color:var(--red-400);font-size:1.05rem;display:flex;align-items:center;gap:8px;">
             <span style="font-size:1.2rem;">&#x26A0;&#xFE0F;</span> Acciones de Emergencia
           </h3>
           <p style="font-size:0.82rem;color:var(--text-muted);margin:0;">Estas acciónes son irreversibles o de alto impacto. Usa con precaucion.</p>
@@ -666,37 +666,37 @@
         <div class="card" style="display:flex;flex-direction:column;gap:14px;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="width:42px;height:42px;border-radius:10px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.989.574 3.842 1.567 5.406L2.046 22l4.733-1.497A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 11.999 2zm.001 18.18a8.178 8.178 0 01-4.164-1.132l-.299-.177-3.098.98.912-3.02-.195-.31A8.173 8.173 0 013.82 12c0-4.51 3.67-8.18 8.18-8.18 4.51 0 8.18 3.67 8.18 8.18 0 4.51-3.67 8.18-8.18 8.18z"/></svg>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="var(--brand-whatsapp)"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M11.999 2C6.477 2 2 6.477 2 12c0 1.989.574 3.842 1.567 5.406L2.046 22l4.733-1.497A9.956 9.956 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 11.999 2zm.001 18.18a8.178 8.178 0 01-4.164-1.132l-.299-.177-3.098.98.912-3.02-.195-.31A8.173 8.173 0 013.82 12c0-4.51 3.67-8.18 8.18-8.18 4.51 0 8.18 3.67 8.18 8.18 0 4.51-3.67 8.18-8.18 8.18z"/></svg>
             </div>
             <div style="flex:1;">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
                 <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">WhatsApp Admin</h3>
-                <span id="adminWaBadgeConexiones" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">Desconectado</span>
+                <span id="adminWaBadgeConexiones" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:var(--red-500);font-weight:600;">Desconectado</span>
               </div>
               <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">Número de WhatsApp principal de MIIA para responder a los mensajes de tus clientes.</p>
             </div>
           </div>
           <div id="adminWaStatusConexiones" style="font-size:0.8rem;color:var(--text-muted);padding:8px 12px;background:var(--bg-surface);border-radius:8px;">Verificando estado...</div>
-          <button onclick="document.getElementById('qrModal').classList.remove('hidden');adminOpenQrModal()" style="width:100%;padding:9px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">Conectar WhatsApp</button>
+          <button onclick="document.getElementById('qrModal').classList.remove('hidden');adminOpenQrModal()" style="width:100%;padding:9px;background:rgba(37,211,102,.1);color:var(--brand-whatsapp);border:1px solid rgba(37,211,102,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">Conectar WhatsApp</button>
         </div>
 
         <!-- Google Calendar -->
         <div class="card" style="display:flex;flex-direction:column;gap:14px;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="width:42px;height:42px;border-radius:10px;background:rgba(66,133,244,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--brand-google)" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
             </div>
             <div>
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
                 <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0;">Google Calendar</h3>
-                <span id="adminCalBadge" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#EF4444;font-weight:600;">No conectado</span>
+                <span id="adminCalBadge" style="font-size:0.7rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:var(--red-500);font-weight:600;">No conectado</span>
               </div>
               <p style="font-size:0.78rem;color:var(--text-muted);margin:0;line-height:1.5;">MIIA verificará tu disponibilidad y agendará citas automáticamente cuando un lead lo solicite.</p>
             </div>
           </div>
           <div id="adminCalendarStatus" style="font-size:0.78rem;"></div>
           <div id="adminCalendarConnectSection">
-            <a href="#" onclick="adminConnectCalendar(event)" style="display:block;text-align:center;padding:9px;background:rgba(66,133,244,.1);color:#4285F4;border:1px solid rgba(66,133,244,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;text-decoration:none;">Conectar con Google</a>
+            <a href="#" onclick="adminConnectCalendar(event)" style="display:block;text-align:center;padding:9px;background:rgba(66,133,244,.1);color:var(--brand-google);border:1px solid rgba(66,133,244,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;text-decoration:none;">Conectar con Google</a>
           </div>
           <div id="adminCalendarConnectedSection" style="display:none;flex-direction:column;gap:8px;">
             <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -706,7 +706,7 @@
                 <span style="font-size:0.75rem;color:var(--text-muted);">Activo</span>
               </label>
             </div>
-            <button onclick="adminDisconnectCalendar()" style="width:100%;background:none;border:1px solid rgba(239,68,68,.3);color:#EF4444;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Desconectar Calendar</button>
+            <button onclick="adminDisconnectCalendar()" style="width:100%;background:none;border:1px solid rgba(239,68,68,.3);color:var(--red-500);border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Desconectar Calendar</button>
           </div>
         </div>
 
@@ -714,7 +714,7 @@
         <div class="card" style="display:flex;flex-direction:column;gap:14px;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="width:42px;height:42px;border-radius:10px;background:rgba(139,92,246,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-hi)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
             </div>
             <div style="flex:1;">
               <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0 0 4px;">Inteligencia Artificial</h3>
@@ -737,7 +737,7 @@
               <button onclick="toggleAiKeyVisibility()" style="padding:6px 10px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-sm);cursor:pointer;color:var(--text-muted);font-size:0.8rem;" title="Mostrar/ocultar">👁</button>
             </div>
             <div style="display:flex;gap:8px;">
-              <button onclick="adminSaveAiConfig()" style="flex:1;padding:9px;background:linear-gradient(135deg,#8B5CF6,#6D28D9);color:#fff;border:none;border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">Agregar</button>
+              <button onclick="adminSaveAiConfig()" style="flex:1;padding:9px;background:linear-gradient(135deg,var(--indigo-hi),var(--primary-dark));color:white;border:none;border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">Agregar</button>
               <button onclick="adminTestAiConnection()" style="padding:9px 16px;background:var(--bg-surface);color:var(--text-body);border:1px solid var(--border-glass);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;">🧪 Test</button>
             </div>
             <div id="adminAiResult" style="display:none;font-size:0.82rem;padding:8px 12px;border-radius:8px;line-height:1.5;"></div>
@@ -753,7 +753,7 @@
         <div class="card" style="display:flex;flex-direction:column;gap:14px;grid-column: span 1;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="width:42px;height:42px;border-radius:10px;background:rgba(124,58,237,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
             </div>
             <div>
               <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0 0 4px;">Variables del Sistema</h3>
@@ -792,7 +792,7 @@
         <div class="card" style="display:flex;flex-direction:column;gap:14px;">
           <div style="display:flex;align-items:flex-start;gap:12px;">
             <div style="width:42px;height:42px;border-radius:10px;background:rgba(167,139,250,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--indigo-hi)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
             </div>
             <div>
               <h3 style="font-size:0.95rem;font-weight:700;color:var(--text-dark);margin:0 0 4px;">Super Admin</h3>
@@ -813,7 +813,7 @@
               <strong style="color:var(--text-dark);">¿Que NO cambia?</strong><br>
               Las plataformas externas (GitHub, Railway, Vercel, Paddle) usan sus propias cuentas separadas. No dependen de este email.<br><br>
               <strong style="color:var(--text-dark);">Unico paso manual post-migracion:</strong><br>
-              Ir a <a href="https://railway.com/project/9ee59327-edf5-4e33-b6ac-96670bc9a2fe" target="_blank" style="color:#A78BFA;">Railway → Variables</a> → actualizar <code style="color:#A78BFA;">ADMIN_EMAILS</code> con el nuevo email.
+              Ir a <a href="https://railway.com/project/9ee59327-edf5-4e33-b6ac-96670bc9a2fe" target="_blank" style="color:var(--indigo-hi);">Railway → Variables</a> → actualizar <code style="color:var(--indigo-hi);">ADMIN_EMAILS</code> con el nuevo email.
             </div>
             <button onclick="migrateAdminEmail()" class="btn-sm btn-danger" style="width:100%;">Migrar cuenta</button>
             <div id="migrateResult" style="display:none;font-size:0.82rem;padding:8px 12px;border-radius:8px;"></div>
@@ -859,8 +859,8 @@
       <div id="logStats" style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap;"></div>
 
       <!-- Log viewer -->
-      <div id="logViewer" style="background:#0d1117;border:1px solid var(--border-color);border-radius:12px;padding:16px;font-family:'Fira Code','Cascadia Code','Consolas',monospace;font-size:0.78rem;line-height:1.6;color:#c9d1d9;max-height:70vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;">
-        <div style="color:#8b949e;text-align:center;padding:40px;">Cargando logs...</div>
+      <div id="logViewer" style="background:var(--surface);border:1px solid var(--border-color);border-radius:12px;padding:16px;font-family:'Fira Code','Cascadia Code','Consolas',monospace;font-size:0.78rem;line-height:1.6;color:var(--tx-body);max-height:70vh;overflow-y:auto;white-space:pre-wrap;word-break:break-all;">
+        <div style="color:var(--tx-body);text-align:center;padding:40px;">Cargando logs...</div>
       </div>
 
       <!-- Info de deployment -->
@@ -887,9 +887,9 @@
       </div>
       <div id="adminPairingCodeDisplay" style="display:none;text-align:center;padding:18px;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.2);border-radius:12px;">
         <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:6px;">Tu código (válido ~60s):</p>
-        <div id="adminPairingCodeValue" style="font-size:2.2rem;font-weight:800;letter-spacing:8px;color:#7C3AED;font-family:monospace;"></div>
+        <div id="adminPairingCodeValue" style="font-size:2.2rem;font-weight:800;letter-spacing:8px;color:var(--indigo);font-family:monospace;"></div>
       </div>
-      <div id="adminPairingError" style="display:none;color:#f87171;font-size:0.82rem;text-align:center;margin-top:8px;"></div>
+      <div id="adminPairingError" style="display:none;color:var(--red-400);font-size:0.82rem;text-align:center;margin-top:8px;"></div>
     </div>
     <button class="btn-sm btn-outline" style="margin-top:18px;width:100%;" onclick="document.getElementById('qrModal').classList.add('hidden')">Cerrar</button>
   </div>
@@ -939,7 +939,7 @@
       </div>
     </form>
     <div id="createResult" class="hidden" style="margin-top:16px;padding:16px;background:rgba(37,211,102,0.08);border-radius:var(--radius-sm);">
-      <p style="font-weight:600;color:#16a34a;">Usuario creado</p>
+      <p style="font-weight:600;color:var(--green-600);">Usuario creado</p>
       <p style="font-size:0.9rem;margin-top:8px;">Contrasena temporal: <strong id="tempPasswordDisplay">—</strong></p>
       <p style="font-size:0.82rem;color:var(--text-muted);margin-top:4px;">Comparte esta contrasena con el usuario. Podra cambiarla en su perfil.</p>
     </div>
@@ -1141,7 +1141,7 @@
   }
 
   async function resetUserPassword(uid, email) {
-    if (!confirm(`¿Resetear contraseña de ${email}? Se generará una contraseña aleatoria.`)) return;
+    if (!await miiaConfirm(`¿Resetear contraseña de ${email}? Se generará una contraseña aleatoria.`)) return;
     try {
       const token = await auth.currentUser.getIdToken();
       const res = await fetch(`${BACKEND_URL}/api/admin/user/${uid}/reset-password`, { method:'POST', headers:{ 'Authorization':'Bearer '+token } });
@@ -1188,7 +1188,7 @@
   async function deleteCurrentUser() {
     if (!currentEditUid) return;
     const u = users.find(x => x.uid === currentEditUid);
-    if (!confirm(`Eliminar ${u.email}? Esta acción es irreversible.`)) return;
+    if (!await miiaConfirm(`Eliminar ${u.email}? Esta acción es irreversible.`)) return;
     try {
       const res = await fetch(`${BACKEND_URL}/api/admin/user/${currentEditUid}`, {
         method: 'DELETE',
@@ -1273,7 +1273,7 @@
   }
 
   async function disconnectTenant(uid) {
-    if (!confirm('Desconectar este tenant?')) return;
+    if (!await miiaConfirm('Desconectar este tenant?')) return;
     await fetch(`${BACKEND_URL}/api/tenant/${uid}/logout`, { method: 'POST' });
     loadTenants();
   }
@@ -1298,7 +1298,7 @@
   }
 
   async function forceADNMining() {
-    if (!confirm('Ejecutar ADN Mining ahora?')) return;
+    if (!await miiaConfirm('Ejecutar ADN Mining ahora?')) return;
     try {
       const res = await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, { method: 'POST' });
       const data = await res.json();
@@ -1314,7 +1314,7 @@
     }
   }
   async function forceScraperRun() {
-    if (!confirm('Ejecutar scraper regulatorio ahora?')) return;
+    if (!await miiaConfirm('Ejecutar scraper regulatorio ahora?')) return;
     try {
       const res = await fetch(`${BACKEND_URL}/api/scraper/run`, { method: 'POST' });
       if (res.ok) {
@@ -1336,7 +1336,7 @@
       document.getElementById('serverInfo').innerHTML = `
         <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;">
           <span style="color:var(--text-body);">WhatsApp</span>
-          <span id="sysWaStatus" style="font-weight:700;color:${waOk ? '#16a34a' : '#ef4444'}">${waOk ? '✅ Conectado' : '❌ Desconectado'}</span>
+          <span id="sysWaStatus" style="font-weight:700;color:${waOk ? 'var(--green-600)' : 'var(--red-500)'}">${waOk ? '✅ Conectado' : '❌ Desconectado'}</span>
         </div>
         <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:8px;">
           <span style="color:var(--text-body);">Conversaciones en memoria</span>
@@ -1349,12 +1349,12 @@
         const el = document.getElementById(id);
         if (!el) return;
         if (special) { el.innerHTML = special; return; }
-        el.innerHTML = `<span style="color:${val ? '#16a34a' : '#ef4444'}">${ok(val)}</span>`;
+        el.innerHTML = `<span style="color:${val ? 'var(--green-600)' : 'var(--red-500)'}">${ok(val)}</span>`;
       };
       setEnv('envGemini', env.GEMINI_API_KEY);
       setEnv('envGoogleId', env.GOOGLE_CLIENT_ID);
       setEnv('envGoogleSecret', env.GOOGLE_CLIENT_SECRET);
-      setEnv('envSkipWA', null, env.SKIP_WA_INIT ? `<span style="color:#f59e0b;">⚠️ ${env.SKIP_WA_INIT}</span>` : '<span style="color:var(--text-muted);">—</span>');
+      setEnv('envSkipWA', null, env.SKIP_WA_INIT ? `<span style="color:var(--amber);">⚠️ ${env.SKIP_WA_INIT}</span>` : '<span style="color:var(--text-muted);">—</span>');
     } catch (e) {
       document.getElementById('serverInfo').innerHTML = '<p style="color:var(--danger);">No se pudo conectar al backend</p>';
     }
@@ -1367,7 +1367,7 @@
       const data = await res.json();
       const waOk = data.whatsapp === 'connected' || data.whatsapp === true || data.whatsapp === 'true';
       const el = document.getElementById('sysWaStatus');
-      if (el) { el.style.color = waOk ? '#16a34a' : '#ef4444'; el.textContent = waOk ? '✅ Conectado' : '❌ Desconectado'; }
+      if (el) { el.style.color = waOk ? 'var(--green-600)' : 'var(--red-500)'; el.textContent = waOk ? '✅ Conectado' : '❌ Desconectado'; }
       const conv = document.getElementById('sysConvCount');
       if (conv) conv.textContent = data.conversationCount || 0;
     } catch (e) { console.warn('[ADMIN]', e.message || e); }
@@ -1398,8 +1398,8 @@
   // Init theme UI on load
   updateThemeUI(document.documentElement.getAttribute('data-theme') || 'dark');
 
-  function handleLogout() {
-    if (confirm('Cerrar sesión?')) { auth.signOut(); window.location.href = 'login.html'; }
+  async function handleLogout() {
+    if (await miiaConfirm('Cerrar sesión?')) { auth.signOut(); window.location.href = 'login.html'; }
   }
 
   // ════════════════════════════════════════════
@@ -1436,7 +1436,7 @@
   // ─── WhatsApp ─────────────────────────────
   async function adminToggleWhatsApp() {
     if (adminWaConnected) {
-      if (!confirm('Desvincular WhatsApp?')) return;
+      if (!await miiaConfirm('Desvincular WhatsApp?')) return;
       const token = await firebase.auth().currentUser.getIdToken();
       await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/logout`, { method:'POST', headers:{ Authorization:'Bearer '+token } });
       adminWaConnected = false;
@@ -1463,7 +1463,7 @@
         const res = await fetch(`${BACKEND_URL}/api/tenant/${user.uid}/qr`);
         const data = await res.json();
         if (data.phase === 'authenticated_loading') {
-          document.getElementById('adminQrCode').innerHTML = `<div style="text-align:center;padding:30px;"><p style="color:#34D399;">Sesión autenticada — cargando...</p></div>`;
+          document.getElementById('adminQrCode').innerHTML = `<div style="text-align:center;padding:30px;"><p style="color:var(--emerald);">Sesión autenticada — cargando...</p></div>`;
         }
         if (data.qrCode) {
           document.getElementById('adminQrCode').innerHTML = `<img src="${data.qrCode}" alt="QR" style="width:300px;height:300px;margin:0 auto;display:block;image-rendering:pixelated;">`;
@@ -1493,26 +1493,26 @@
     const homeBadge = document.getElementById('adminHomeWaBadge');
     const homeBtn = document.getElementById('adminHomeWaBtn');
     if (adminWaConnected) {
-      if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(37,211,102,.1)'; badge.style.color = '#16a34a'; }
-      if (statusEl) { statusEl.textContent = '✅ WhatsApp conectado y listo para recibir mensajes.'; statusEl.style.color = '#16a34a'; }
-      if (homeBadge) { homeBadge.textContent = 'Conectado'; homeBadge.style.background = 'rgba(52,211,153,.1)'; homeBadge.style.color = '#34D399'; }
-      if (homeBtn) { homeBtn.textContent = 'Reconectar'; homeBtn.style.background = 'rgba(52,211,153,.15)'; homeBtn.style.color = '#34D399'; }
+      if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(37,211,102,.1)'; badge.style.color = 'var(--green-600)'; }
+      if (statusEl) { statusEl.textContent = '✅ WhatsApp conectado y listo para recibir mensajes.'; statusEl.style.color = 'var(--green-600)'; }
+      if (homeBadge) { homeBadge.textContent = 'Conectado'; homeBadge.style.background = 'rgba(52,211,153,.1)'; homeBadge.style.color = 'var(--emerald)'; }
+      if (homeBtn) { homeBtn.textContent = 'Reconectar'; homeBtn.style.background = 'rgba(52,211,153,.15)'; homeBtn.style.color = 'var(--emerald)'; }
     } else {
-      if (badge) { badge.textContent = 'Desconectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#EF4444'; }
-      if (statusEl) { statusEl.textContent = '❌ WhatsApp desconectado. Hacé clic en "Conectar WhatsApp" para vincular.'; statusEl.style.color = '#f87171'; }
-      if (homeBadge) { homeBadge.textContent = 'No conectado'; homeBadge.style.background = 'rgba(239,68,68,.1)'; homeBadge.style.color = '#EF4444'; }
-      if (homeBtn) { homeBtn.textContent = 'Vincular WhatsApp'; homeBtn.style.background = '#25D366'; homeBtn.style.color = 'white'; }
+      if (badge) { badge.textContent = 'Desconectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = 'var(--red-500)'; }
+      if (statusEl) { statusEl.textContent = '❌ WhatsApp desconectado. Hacé clic en "Conectar WhatsApp" para vincular.'; statusEl.style.color = 'var(--red-400)'; }
+      if (homeBadge) { homeBadge.textContent = 'No conectado'; homeBadge.style.background = 'rgba(239,68,68,.1)'; homeBadge.style.color = 'var(--red-500)'; }
+      if (homeBtn) { homeBtn.textContent = 'Vincular WhatsApp'; homeBtn.style.background = 'var(--brand-whatsapp)'; homeBtn.style.color = 'white'; }
     }
     if (!banner) return;
     if (adminWaConnected) {
       banner.style.background = 'rgba(52,211,153,0.1)';
-      banner.style.color = '#34D399';
+      banner.style.color = 'var(--emerald)';
       banner.style.borderColor = 'rgba(52,211,153,0.2)';
       if (text) text.textContent = 'WhatsApp conectado';
       if (btn) btn.textContent = 'Desvincular';
     } else {
       banner.style.background = 'rgba(239,68,68,0.08)';
-      banner.style.color = '#f87171';
+      banner.style.color = 'var(--red-400)';
       banner.style.borderColor = 'rgba(239,68,68,0.15)';
       if (text) text.textContent = 'WhatsApp no conectado';
       if (btn) btn.textContent = 'Conectar';
@@ -1535,7 +1535,7 @@
   async function adminRequestPairingCode() {
     const phone = document.getElementById('adminPairingPhone').value.replace(/\D/g, '');
     const errEl = document.getElementById('adminPairingError');
-    if (!phone || phone.length < 10) { errEl.style.display=''; errEl.style.color='#f87171'; errEl.textContent='Ingresá número con código de país (ej: 5491112345678)'; return; }
+    if (!phone || phone.length < 10) { errEl.style.display=''; errEl.style.color='var(--red-400)'; errEl.textContent='Ingresá número con código de país (ej: 5491112345678)'; return; }
     errEl.style.display = '';
     errEl.style.color = 'var(--text-body)';
     errEl.textContent = '⏳ Inicializando cliente WhatsApp...';
@@ -1554,7 +1554,7 @@
         if (statusData.qrCode) { qrReady = true; break; }
         errEl.textContent = `⏳ Esperando cliente... (${i+1}/15)`;
       }
-      if (!qrReady) { errEl.style.color='#f87171'; errEl.textContent='No se pudo inicializar WhatsApp. Cerrá el modal y volvé a abrir.'; return; }
+      if (!qrReady) { errEl.style.color='var(--red-400)'; errEl.textContent='No se pudo inicializar WhatsApp. Cerrá el modal y volvé a abrir.'; return; }
       errEl.textContent = '📲 Solicitando código a WhatsApp...';
       const res = await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/request-pairing-code`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ phone }) });
       const data = await res.json();
@@ -1563,11 +1563,11 @@
         document.getElementById('adminPairingCodeDisplay').style.display = '';
         document.getElementById('adminPairingCodeValue').textContent = data.code;
       } else {
-        errEl.style.color = '#f87171';
+        errEl.style.color = 'var(--red-400)';
         errEl.textContent = (data.error || 'Error generando código') + ' — Intentá con QR.';
       }
     } catch (e) {
-      errEl.style.color = '#f87171';
+      errEl.style.color = 'var(--red-400)';
       errEl.textContent = 'Error: ' + e.message;
     }
   }
@@ -1638,7 +1638,7 @@
 
   async function adminDeleteProduct(index) {
     const p = adminProducts[index];
-    if (p.id && !confirm('Eliminar este producto? MIIA olvidará esta información.')) return;
+    if (p.id && !await miiaConfirm('Eliminar este producto? MIIA olvidará esta información.')) return;
     if (p.id) await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/product/${p.id}`, { method:'DELETE' });
     adminProducts.splice(index, 1);
     if (!adminProducts.length) adminProducts.push({ name:'', description:'', price:'', pricePromo:'', stock:'', id:null });
@@ -1703,7 +1703,7 @@
       const parse = arr => arr.filter(k=>k.keyword.trim()).flatMap(k=>k.keyword.split(',').map(kw=>kw.trim()).filter(x=>x));
       const allKws = [...parse(adminLeadKeywords), ...parse(adminClientKeywords)];
       const bad = allKws.filter(kw => FORBIDDEN.has(norm(kw)));
-      if (bad.length > 0) { statusEl.textContent = `Palabras muy genericas: ${bad.join(', ')}`; statusEl.style.color='var(--danger,#ef4444)'; setTimeout(()=>{statusEl.style.color='';},6000); return; }
+      if (bad.length > 0) { statusEl.textContent = `Palabras muy genericas: ${bad.join(', ')}`; statusEl.style.color='var(--danger,var(--red-500))'; setTimeout(()=>{statusEl.style.color='';},6000); return; }
       await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/contact-rules`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ lead_keywords:parse(adminLeadKeywords), client_keywords:parse(adminClientKeywords) }) });
       statusEl.textContent = 'Reglas guardadas';
       setTimeout(() => statusEl.textContent='', 3000);
@@ -1793,7 +1793,7 @@
   }
 
   async function adminDeleteSession(date) {
-    if (!confirm(`Eliminar sesión del ${date}?`)) return;
+    if (!await miiaConfirm(`Eliminar sesión del ${date}?`)) return;
     await fetch(`${BACKEND_URL}/api/tenant/${adminTrainingUid}/train/session/${date}`, { method:'DELETE' });
     adminSessions = adminSessions.filter(s => s.date !== date);
     adminRenderSessions();
@@ -1953,15 +1953,15 @@
 
     // 2. API Key
     document.getElementById('acApiKeyStatus').innerHTML = u.gemini_api_key
-      ? '<span style="color:#34D399;">&#x2705; Configurada</span>'
-      : '<span style="color:#f87171;">&#x274C; Sin configurar</span>';
+      ? '<span style="color:var(--emerald);">&#x2705; Configurada</span>'
+      : '<span style="color:var(--red-400);">&#x274C; Sin configurar</span>';
     document.getElementById('acHumanizer').textContent = u.humanizer_enabled ? 'Activo' : 'Inactivo';
 
     // 3. WhatsApp
     try {
       const res = await fetch(`${ADMIN_API}/api/tenant/${uid}/status`);
       const data = await res.json();
-      document.getElementById('acWaDot').style.background = data.isReady ? '#34D399' : '#ef4444';
+      document.getElementById('acWaDot').style.background = data.isReady ? 'var(--emerald)' : 'var(--red-500)';
       document.getElementById('acWaStatus').textContent = data.isReady ? 'Conectado' : 'Desconectado';
       document.getElementById('acWaNumber').textContent = u.whatsapp_number ? u.whatsapp_number.replace(/(\d{2})(\d{3})(\d{3})(\d+)/, '$1 *** ***$4') : '—';
       document.getElementById('acWaMsgs').textContent = data.conversationCount || '0';
@@ -2021,10 +2021,10 @@
 
   // Admin client management functions
   function adminEditClient() { showToast('Editando cliente: ' + selectedClientUid, 'info'); }
-  function adminSuspendClient() { if(confirm('¿Suspender este cliente? No podrá usar MIIA hasta que lo reactives.')) showToast('Suspensión: próximamente disponible', 'warning'); }
+  async function adminSuspendClient() { if(await miiaConfirm('¿Suspender este cliente? No podrá usar MIIA hasta que lo reactives.')) showToast('Suspensión: próximamente disponible', 'warning'); }
   function adminRequestReconnect() { showToast('Se enviará notificación al cliente para reconectar WhatsApp', 'info'); }
   async function adminDisconnectClient() {
-    if (!selectedClientUid || !confirm('¿Desconectar WhatsApp de este cliente? Deberá escanear QR nuevamente.')) return;
+    if (!selectedClientUid || !await miiaConfirm('¿Desconectar WhatsApp de este cliente? Deberá escanear QR nuevamente.')) return;
     try {
       await fetch(`${ADMIN_API}/api/tenant/${selectedClientUid}/destroy`, { method: 'POST' });
       showToast('Cliente desconectado', 'success');
@@ -2036,11 +2036,11 @@
   function adminViewPaymentHistory() { showToast('Historial de pagos: próximamente disponible', 'info'); }
   function adminViewLeads() { showToast('Ver leads: próximamente disponible', 'info'); }
   function adminExportCSV() { showToast('Exportar CSV: próximamente disponible', 'info'); }
-  function adminResetMiia() { if(confirm('¿RESETEAR MIIA de este cliente? Esto borra conversaciones en memoria.')) showToast('Reset MIIA: próximamente disponible', 'warning'); }
-  function adminClearBrain() { if(confirm('¿BORRAR TODO EL CEREBRO de este cliente? Esto es IRREVERSIBLE.')) showToast('Borrar cerebro: próximamente disponible', 'warning'); }
+  async function adminResetMiia() { if(await miiaConfirm('¿RESETEAR MIIA de este cliente? Esto borra conversaciones en memoria.')) showToast('Reset MIIA: próximamente disponible', 'warning'); }
+  async function adminClearBrain() { if(await miiaConfirm('¿BORRAR TODO EL CEREBRO de este cliente? Esto es IRREVERSIBLE.')) showToast('Borrar cerebro: próximamente disponible', 'warning'); }
   function adminForceReconnect() { adminRequestReconnect(); }
-  function adminRevokeSession() { if(confirm('¿REVOCAR sesión WhatsApp? El cliente deberá escanear QR nuevamente.')) adminDisconnectClient(); }
-  function adminDeleteClient() { if(confirm('¿ELIMINAR COMPLETAMENTE este cliente? Esto es IRREVERSIBLE.')) showToast('Eliminación: próximamente disponible', 'warning'); }
+  async function adminRevokeSession() { if(await miiaConfirm('¿REVOCAR sesión WhatsApp? El cliente deberá escanear QR nuevamente.')) adminDisconnectClient(); }
+  async function adminDeleteClient() { if(await miiaConfirm('¿ELIMINAR COMPLETAMENTE este cliente? Esto es IRREVERSIBLE.')) showToast('Eliminación: próximamente disponible', 'warning'); }
   function adminViewBrain() { showToast('Ver cerebro: próximamente disponible', 'info'); }
   function adminViewSessions() { showToast('Ver sesiones: próximamente disponible', 'info'); }
   function adminViewDocs() { showToast('Ver documentos: próximamente disponible', 'info'); }
@@ -2057,12 +2057,12 @@
 
   // ── Configuración IA — Multi-provider ──
   const AI_PROVIDER_META = {
-    gemini: { label: 'Google Gemini', placeholder: 'AIza...', color: '#00E5FF', bg: 'rgba(0,229,255,.12)',
-      svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00E5FF" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>' },
-    openai: { label: 'OpenAI (GPT)', placeholder: 'sk-...', color: '#10a37f', bg: 'rgba(16,163,127,.12)',
-      svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10a37f" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>' },
-    claude: { label: 'Anthropic (Claude)', placeholder: 'sk-ant-api03-...', color: '#D97706', bg: 'rgba(217,119,6,.12)',
-      svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#D97706" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>' }
+    gemini: { label: 'Google Gemini', placeholder: 'AIza...', color: 'var(--cyan)', bg: 'rgba(0,229,255,.12)',
+      svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--cyan)" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>' },
+    openai: { label: 'OpenAI (GPT)', placeholder: 'sk-...', color: 'var(--brand-openai)', bg: 'rgba(16,163,127,.12)',
+      svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--brand-openai)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>' },
+    claude: { label: 'Anthropic (Claude)', placeholder: 'sk-ant-api03-...', color: 'var(--amber-600)', bg: 'rgba(217,119,6,.12)',
+      svg: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--amber-600)" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>' }
   };
 
   async function adminLoadAiConfig() {
@@ -2094,10 +2094,10 @@
         </div>
         <div style="display:flex;align-items:center;gap:6px;">
           ${isActive
-            ? '<span style="font-size:0.72rem;padding:3px 10px;border-radius:99px;background:rgba(37,211,102,.12);color:#16a34a;font-weight:600;">Activa</span>'
+            ? '<span style="font-size:0.72rem;padding:3px 10px;border-radius:99px;background:rgba(37,211,102,.12);color:var(--green-600);font-weight:600;">Activa</span>'
             : `<button onclick="adminActivateAi('${c.provider}')" style="font-size:0.72rem;padding:3px 10px;border-radius:99px;background:var(--bg-surface);border:1px solid var(--border-glass);color:var(--text-muted);cursor:pointer;font-weight:600;transition:all .2s;" onmouseover="this.style.borderColor='${meta.color}';this.style.color='${meta.color}'" onmouseout="this.style.borderColor='var(--border-glass)';this.style.color='var(--text-muted)'">Activar</button>`
           }
-          <button onclick="adminDeleteAi('${c.provider}')" style="width:30px;height:30px;border-radius:6px;border:1px solid var(--border-glass);background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.75rem;transition:all .2s;" onmouseover="this.style.borderColor='#ef4444';this.style.color='#ef4444'" onmouseout="this.style.borderColor='var(--border-glass)';this.style.color='var(--text-muted)'" title="Eliminar">✕</button>
+          <button onclick="adminDeleteAi('${c.provider}')" style="width:30px;height:30px;border-radius:6px;border:1px solid var(--border-glass);background:transparent;color:var(--text-muted);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:0.75rem;transition:all .2s;" onmouseover="this.style.borderColor='var(--red-500)';this.style.color='var(--red-500)'" onmouseout="this.style.borderColor='var(--border-glass)';this.style.color='var(--text-muted)'" title="Eliminar">✕</button>
         </div>
       </div>`;
     }).join('');
@@ -2129,7 +2129,7 @@
   }
 
   async function adminDeleteAi(provider) {
-    if (!confirm(`¿Eliminar ${(AI_PROVIDER_META[provider] || {}).label || provider}?`)) return;
+    if (!await miiaConfirm(`¿Eliminar ${(AI_PROVIDER_META[provider] || {}).label || provider}?`)) return;
     const user = firebase.auth().currentUser;
     if (!user) return;
     try {
@@ -2145,7 +2145,7 @@
     const provider = document.getElementById('adminAiProvider').value;
     const apiKey = document.getElementById('adminAiApiKey').value.trim();
     const result = document.getElementById('adminAiResult');
-    if (!apiKey) { result.style.display = 'block'; result.style.background = 'rgba(239,68,68,.1)'; result.style.color = '#EF4444'; result.textContent = 'Ingresá una API key'; setTimeout(() => { result.style.display = 'none'; }, 3000); return; }
+    if (!apiKey) { result.style.display = 'block'; result.style.background = 'rgba(239,68,68,.1)'; result.style.color = 'var(--red-500)'; result.textContent = 'Ingresá una API key'; setTimeout(() => { result.style.display = 'none'; }, 3000); return; }
     result.style.display = 'block';
     result.style.background = 'rgba(0,229,255,.08)';
     result.style.color = 'var(--text-body)';
@@ -2158,7 +2158,7 @@
       });
       if (res.ok) {
         result.style.background = 'rgba(37,211,102,.1)';
-        result.style.color = '#16a34a';
+        result.style.color = 'var(--green-600)';
         result.textContent = '✅ Proveedor agregado';
         document.getElementById('adminAiApiKey').value = '';
         adminLoadAiConfig();
@@ -2168,7 +2168,7 @@
       }
     } catch (e) {
       result.style.background = 'rgba(239,68,68,.1)';
-      result.style.color = '#EF4444';
+      result.style.color = 'var(--red-500)';
       result.textContent = '❌ Error: ' + e.message;
     }
     setTimeout(() => { result.style.display = 'none'; }, 5000);
@@ -2180,7 +2180,7 @@
     const provider = document.getElementById('adminAiProvider').value;
     const apiKey = document.getElementById('adminAiApiKey').value.trim();
     const result = document.getElementById('adminAiResult');
-    if (!apiKey) { result.style.display = 'block'; result.style.background = 'rgba(239,68,68,.1)'; result.style.color = '#EF4444'; result.textContent = 'Ingresá una API key para testear'; setTimeout(() => { result.style.display = 'none'; }, 3000); return; }
+    if (!apiKey) { result.style.display = 'block'; result.style.background = 'rgba(239,68,68,.1)'; result.style.color = 'var(--red-500)'; result.textContent = 'Ingresá una API key para testear'; setTimeout(() => { result.style.display = 'none'; }, 3000); return; }
     result.style.display = 'block';
     result.style.background = 'rgba(0,229,255,.08)';
     result.style.color = 'var(--text-body)';
@@ -2194,14 +2194,14 @@
       const data = await res.json();
       if (res.ok && data.success) {
         result.style.background = 'rgba(37,211,102,.1)';
-        result.style.color = '#16a34a';
+        result.style.color = 'var(--green-600)';
         result.innerHTML = '✅ Conexión exitosa<br><span style="font-size:0.75rem;color:var(--text-muted);">Respuesta: "' + (data.response || '').substring(0, 100) + '"</span>';
       } else {
         throw new Error(data.error || 'Test falló');
       }
     } catch (e) {
       result.style.background = 'rgba(239,68,68,.1)';
-      result.style.color = '#EF4444';
+      result.style.color = 'var(--red-500)';
       result.textContent = '❌ Error: ' + e.message;
     }
     setTimeout(() => { result.style.display = 'none'; }, 8000);
@@ -2232,12 +2232,12 @@
         if (connectedSec) connectedSec.style.display = 'flex';
         const tog = document.getElementById('adminCalendarAutoToggle');
         if (tog) tog.checked = !!data.calendarEnabled;
-        if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(66,133,244,.12)'; badge.style.color = '#4285F4'; }
+        if (badge) { badge.textContent = 'Conectado'; badge.style.background = 'rgba(66,133,244,.12)'; badge.style.color = 'var(--brand-google)'; }
       } else {
         if (statusEl) statusEl.innerHTML = '';
         if (connectSec) connectSec.style.display = 'block';
         if (connectedSec) connectedSec.style.display = 'none';
-        if (badge) { badge.textContent = 'No conectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = '#EF4444'; }
+        if (badge) { badge.textContent = 'No conectado'; badge.style.background = 'rgba(239,68,68,.1)'; badge.style.color = 'var(--red-500)'; }
       }
     } catch (e) { console.warn('[ADMIN]', e.message || e); }
   }
@@ -2251,7 +2251,7 @@
   }
 
   async function adminDisconnectCalendar() {
-    if (!confirm('¿Desconectar Google Calendar?')) return;
+    if (!await miiaConfirm('¿Desconectar Google Calendar?')) return;
     try {
       const token = await firebase.auth().currentUser.getIdToken();
       await fetch(ADMIN_API + '/api/calendar/disconnect', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
@@ -2327,7 +2327,7 @@
 
     const resultDiv = document.getElementById('migrateResult');
 
-    const confirmed = confirm(
+    const confirmed = await miiaConfirm(
       '⚠️ ATENCION: Estas por migrar la cuenta de Super Admin.\n\n' +
       'Esto cambiara:\n' +
       '- Firebase Auth (email de login)\n' +
@@ -2338,7 +2338,7 @@
     );
     if (!confirmed) return;
 
-    const doubleConfirm = confirm('¿Realmente seguro? Escribi OK mentalmente y confirma.');
+    const doubleConfirm = await miiaConfirm('¿Realmente seguro? Escribi OK mentalmente y confirma.');
     if (!doubleConfirm) return;
 
     resultDiv.style.display = 'block';
@@ -2358,17 +2358,17 @@
       const data = await res.json();
       if (res.ok && data.success) {
         resultDiv.style.background = 'rgba(37,211,102,0.08)';
-        resultDiv.style.color = '#16a34a';
+        resultDiv.style.color = 'var(--green-600)';
         resultDiv.textContent = 'Migracion exitosa. Cerra sesión e ingresa con el nuevo email.';
         showToast('Migracion completada', 'success');
       } else {
         resultDiv.style.background = 'rgba(239,68,68,0.08)';
-        resultDiv.style.color = '#f87171';
+        resultDiv.style.color = 'var(--red-400)';
         resultDiv.textContent = 'Error: ' + (data.error || 'Error desconocido');
       }
     } catch (e) {
       resultDiv.style.background = 'rgba(239,68,68,0.08)';
-      resultDiv.style.color = '#f87171';
+      resultDiv.style.color = 'var(--red-400)';
       resultDiv.textContent = 'Error de conexión: ' + e.message;
     }
   }
@@ -2403,7 +2403,7 @@
 
   async function loadRailwayLogs() {
     const viewer = document.getElementById('logViewer');
-    viewer.innerHTML = '<div style="color:#8b949e;text-align:center;padding:40px;">⏳ Cargando logs...</div>';
+    viewer.innerHTML = '<div style="color:var(--tx-body);text-align:center;padding:40px;">⏳ Cargando logs...</div>';
 
     const type = document.getElementById('logType').value;
     const deploymentId = document.getElementById('logDeployment').value;
@@ -2420,7 +2420,7 @@
 
       if (!resp.ok) {
         const err = await resp.json().catch(() => ({}));
-        viewer.innerHTML = `<div style="color:#f87171;text-align:center;padding:40px;">❌ ${err.error || 'Error cargando logs'}\n\n${resp.status === 503 ? 'Configurá RAILWAY_API_TOKEN en Railway → Variables.' : ''}</div>`;
+        viewer.innerHTML = `<div style="color:var(--red-400);text-align:center;padding:40px;">❌ ${err.error || 'Error cargando logs'}\n\n${resp.status === 503 ? 'Configurá RAILWAY_API_TOKEN en Railway → Variables.' : ''}</div>`;
         return;
       }
 
@@ -2432,14 +2432,14 @@
       renderLogs(_allLogs);
       updateLogStats(_allLogs);
     } catch (e) {
-      viewer.innerHTML = `<div style="color:#f87171;text-align:center;padding:40px;">❌ Error de conexión: ${e.message}</div>`;
+      viewer.innerHTML = `<div style="color:var(--red-400);text-align:center;padding:40px;">❌ Error de conexión: ${e.message}</div>`;
     }
   }
 
   function renderLogs(logs) {
     const viewer = document.getElementById('logViewer');
     if (!logs.length) {
-      viewer.innerHTML = '<div style="color:#8b949e;text-align:center;padding:40px;">Sin logs disponibles</div>';
+      viewer.innerHTML = '<div style="color:var(--tx-body);text-align:center;padding:40px;">Sin logs disponibles</div>';
       return;
     }
 
@@ -2455,25 +2455,25 @@
     if (type === 'http') {
       html = filtered.map(l => {
         const time = new Date(l.timestamp).toLocaleTimeString('es-CO');
-        const statusColor = l.httpStatus >= 500 ? '#f87171' : l.httpStatus >= 400 ? '#fbbf24' : '#34d399';
-        return `<span style="color:#8b949e">${time}</span> <span style="color:${statusColor};font-weight:bold">${l.httpStatus}</span> <span style="color:#79c0ff">${l.method}</span> ${l.path || ''} <span style="color:#8b949e">${l.totalDuration || ''}ms</span>`;
+        const statusColor = l.httpStatus >= 500 ? 'var(--red-400)' : l.httpStatus >= 400 ? 'var(--amber-400)' : 'var(--emerald)';
+        return `<span style="color:var(--tx-body)">${time}</span> <span style="color:${statusColor};font-weight:bold">${l.httpStatus}</span> <span style="color:var(--brand-mercadopago)">${l.method}</span> ${l.path || ''} <span style="color:var(--tx-body)">${l.totalDuration || ''}ms</span>`;
       }).join('\n');
     } else {
       html = filtered.map(l => {
         const time = l.timestamp ? new Date(l.timestamp).toLocaleTimeString('es-CO') : '';
         const msg = escapeHtml(l.message || '');
         // Colorear por severidad/contenido
-        let color = '#c9d1d9';
-        if (l.severity === 'error' || /❌|ERROR|CRITICAL/i.test(msg)) color = '#f87171';
-        else if (l.severity === 'warn' || /⚠️|WARN|WARNING/i.test(msg)) color = '#fbbf24';
-        else if (/✅|SUCCESS|Iniciado|Conectado/i.test(msg)) color = '#34d399';
-        else if (/\[AGENDA\]|\[FOLLOWUP\]|\[NIGHTLY\]/i.test(msg)) color = '#a78bfa';
-        else if (/\[TM\]|\[TENANT\]/i.test(msg)) color = '#79c0ff';
-        return `<span style="color:#8b949e">${time}</span> <span style="color:${color}">${msg}</span>`;
+        let color = 'var(--tx-body)';
+        if (l.severity === 'error' || /❌|ERROR|CRITICAL/i.test(msg)) color = 'var(--red-400)';
+        else if (l.severity === 'warn' || /⚠️|WARN|WARNING/i.test(msg)) color = 'var(--amber-400)';
+        else if (/✅|SUCCESS|Iniciado|Conectado/i.test(msg)) color = 'var(--emerald)';
+        else if (/\[AGENDA\]|\[FOLLOWUP\]|\[NIGHTLY\]/i.test(msg)) color = 'var(--indigo-hi)';
+        else if (/\[TM\]|\[TENANT\]/i.test(msg)) color = 'var(--brand-mercadopago)';
+        return `<span style="color:var(--tx-body)">${time}</span> <span style="color:${color}">${msg}</span>`;
       }).join('\n');
     }
 
-    viewer.innerHTML = html || '<div style="color:#8b949e;text-align:center;padding:20px;">Sin resultados para el filtro</div>';
+    viewer.innerHTML = html || '<div style="color:var(--tx-body);text-align:center;padding:20px;">Sin resultados para el filtro</div>';
     document.getElementById('logDeployInfo').textContent += ` | Mostrando: ${filtered.length}`;
   }
 
@@ -2494,11 +2494,11 @@
       : '';
 
     statsDiv.innerHTML = [
-      badge('❌ Errores', errors, '#ef4444'),
-      badge('⚠️ Warnings', warns, '#f59e0b'),
-      badge('📅 Agenda', agenda, '#8b5cf6'),
-      badge('📤 Followup', followup, '#3b82f6'),
-      badge('🔐 Crypto', crypto, '#ec4899'),
+      badge('❌ Errores', errors, 'var(--red-500)'),
+      badge('⚠️ Warnings', warns, 'var(--amber)'),
+      badge('📅 Agenda', agenda, 'var(--indigo-hi)'),
+      badge('📤 Followup', followup, 'var(--brand-google)'),
+      badge('🔐 Crypto', crypto, 'var(--pink-400)'),
       `<div style="padding:4px 12px;border-radius:20px;background:rgba(107,114,128,0.1);color:var(--text-muted);font-size:0.78rem;">Total: ${logs.length}</div>`
     ].filter(Boolean).join('');
   }

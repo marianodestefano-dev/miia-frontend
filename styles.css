@@ -16,6 +16,26 @@
   --amber:     #f59e0b;
   --rose:      #FF1744;   /* Rojo marca */
 
+  /* ── Status Colors (same in both themes) ── */
+  --red-500:   #ef4444;
+  --red-400:   #f87171;
+  --red-600:   #dc2626;
+  --green-500: #22c55e;
+  --green-400: #4ade80;
+  --green-600: #16a34a;
+  --amber-400: #fbbf24;
+  --amber-600: #d97706;
+  --pink-400:  #E879F9;
+
+  /* ── Third-party brand colors ── */
+  --brand-google:    #4285F4;
+  --brand-whatsapp:  #25D366;
+  --brand-paypal:    #00b1ea;
+  --brand-paypal-dk: #003087;
+  --brand-instagram: #833AB4;
+  --brand-openai:    #10a37f;
+  --brand-mercadopago: #69b4ff;
+
   /* ── Radius ── */
   --r-sm:   8px;
   --r-md:   10px;
@@ -1081,6 +1101,72 @@ html.theme-transitioning *::before,
 html.theme-transitioning *::after {
   transition: background-color .3s ease, color .2s ease, border-color .3s ease, box-shadow .3s ease !important;
 }
+
+/* ═══ CUSTOM CONFIRM MODAL ═══ */
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeUp .15s ease;
+}
+.confirm-box {
+  background: var(--glass-bg);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 28px 32px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+.confirm-box h3 {
+  color: var(--tx-bright);
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.confirm-box p {
+  color: var(--tx-body);
+  font-size: .88rem;
+  line-height: 1.5;
+  margin-bottom: 20px;
+}
+.confirm-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.confirm-actions button {
+  padding: 9px 22px;
+  border-radius: var(--r-full);
+  font-weight: 600;
+  font-size: .85rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all .2s;
+  border: none;
+}
+.confirm-cancel {
+  background: var(--raise);
+  color: var(--tx-body);
+  border: 1px solid var(--bd-2) !important;
+}
+.confirm-cancel:hover { background: var(--lift); color: var(--tx-bright); }
+.confirm-ok {
+  background: var(--indigo);
+  color: white;
+}
+.confirm-ok:hover { background: var(--indigo-hi); }
+.confirm-ok.danger {
+  background: var(--red-500);
+}
+.confirm-ok.danger:hover { background: var(--red-400); }
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 768px) {
