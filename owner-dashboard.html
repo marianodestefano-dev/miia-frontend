@@ -4941,8 +4941,7 @@
           .catch(err => { console.error('[WA] Error desvinculando:', err); showToast('Error al desvincular. Intentá de nuevo.', 'error'); });
       });
     } else {
-      document.getElementById('qrModal').classList.remove('hidden');
-      connectWhatsApp();
+      openQRModal();
     }
   }
 
@@ -5006,19 +5005,29 @@
 
   var _qrConnecting = false;
 
-  // openQRModal — muestra modal QR y llama a connectWhatsApp
+  // openQRModal — muestra el modal QR forzando estilos inline
   function openQRModal() {
     const uid = currentUser ? currentUser.uid : '';
-    if (!uid) { console.warn('[QR] No uid, abortando'); return; }
+    if (!uid) { alert('No estás autenticado. Recargá la página.'); return; }
     _qrConnecting = false;
-    const qrModal = document.getElementById('qrModal');
-    if (qrModal) {
-      qrModal.className = 'modal-overlay';
-      qrModal.style.cssText = 'display:flex !important;position:fixed;inset:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:9999;';
-      connectWhatsApp();
-    } else {
-      console.error('[QR] Modal qrModal NO encontrado en DOM');
-    }
+    const m = document.getElementById('qrModal');
+    if (!m) { alert('Error: modal QR no encontrado'); return; }
+    // Forzar visibilidad: quitar hidden, setear estilos con !important via setProperty
+    m.classList.remove('hidden');
+    m.style.setProperty('display', 'flex', 'important');
+    m.style.setProperty('position', 'fixed', 'important');
+    m.style.setProperty('inset', '0', 'important');
+    m.style.setProperty('z-index', '99999', 'important');
+    m.style.setProperty('background', 'rgba(0,0,0,0.7)', 'important');
+    m.style.setProperty('align-items', 'center', 'important');
+    m.style.setProperty('justify-content', 'center', 'important');
+    connectWhatsApp();
+  }
+
+  function closeQRModal() {
+    _qrConnecting = false;
+    const m = document.getElementById('qrModal');
+    if (m) { m.classList.add('hidden'); m.style.cssText = ''; }
   }
 
   async function connectWhatsApp() {
@@ -5042,13 +5051,13 @@
       if (!initRes.ok) {
         const error = await initRes.json();
         showToast('Error al iniciar WhatsApp: ' + (error.error || 'Error desconocido'), 'error');
-        document.getElementById('qrModal').classList.add('hidden');
+        closeQRModal();
         _qrConnecting = false;
         return;
       }
     } catch (e) {
       showToast('Error al conectar WhatsApp: ' + e.message, 'error');
-      document.getElementById('qrModal').classList.add('hidden');
+      closeQRModal();
       _qrConnecting = false;
       return;
     }
@@ -5090,7 +5099,7 @@
           waConnected = true;
           _qrConnecting = false;
           updateWaBanner();
-          document.getElementById('qrModal').classList.add('hidden');
+          closeQRModal();
         }
       } catch (e) {
         console.error('[QR POLL] Error:', e.message);
@@ -8012,7 +8021,7 @@
 </div>
 
 <!-- ═══ QR MODAL ═══ -->
-<div id="qrModal" class="modal-overlay hidden" onclick="if(event.target===this){_qrConnecting=false;this.className='modal-overlay hidden';this.style.cssText=''}">
+<div id="qrModal" class="modal-overlay hidden" onclick="if(event.target===this)closeQRModal()">
   <div class="modal-card" style="max-width:420px;width:100%">
     <h3>Conectar WhatsApp</h3>
 
@@ -8052,7 +8061,7 @@
       <div id="pairingError" style="display:none;color:var(--red-400);font-size:0.82rem;text-align:center;margin-top:8px;"></div>
     </div>
 
-    <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="_qrConnecting=false;var m=document.getElementById('qrModal');m.className='modal-overlay hidden';m.style.cssText=''">Cerrar</button>
+    <button class="btn-sm btn-outline" style="margin-top:20px;width:100%;" onclick="closeQRModal()">Cerrar</button>
   </div>
 </div>
 
