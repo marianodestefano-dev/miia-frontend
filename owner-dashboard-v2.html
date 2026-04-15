@@ -234,6 +234,15 @@
           </div>
 
           <div id="gest-contactos" class="gest-panel">
+            <!-- Busqueda + filtros -->
+            <input type="text" id="contactSearchInput" class="form-input" placeholder="Buscar por nombre o numero..." oninput="filterContacts()" style="margin-bottom:12px;">
+            <div class="filter-pills" id="filterPills">
+              <button class="fpill active" onclick="setContactFilter('all', this)">Todos</button>
+              <button class="fpill" onclick="setContactFilter('lead', this)">Leads</button>
+              <button class="fpill" onclick="setContactFilter('cliente', this)">Clientes</button>
+              <button class="fpill" onclick="setContactFilter('familia', this)">Familia</button>
+              <button class="fpill" onclick="setContactFilter('equipo', this)">Equipo</button>
+            </div>
             <div id="contactList">
               <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando contactos...</div>
             </div>
@@ -373,7 +382,7 @@
           <div id="wizCodePanel" class="hidden">
             <div class="wizard-code-input-group">
               <input type="tel" id="wizPhoneInput" class="form-input" placeholder="+54 9 11 1234-5678" style="text-align:center;font-size:16px;letter-spacing:1px;">
-              <button class="btn btn-primary" onclick="wizardRequestPairingCode()" id="wizCodeBtn">Enviar codigo</button>
+              <button class="btn btn-primary" onclick="wizardRequestPairingCode()" id="wizCodeBtn">Generar codigo</button>
             </div>
             <div class="wizard-pairing-code hidden" id="wizPairingResult">
               <p style="color:var(--text-2);font-size:13px;margin-bottom:8px;">Ingresa este codigo en tu WhatsApp:</p>
@@ -872,28 +881,123 @@
       }
     }
 
+    var _activeContactFilter = 'all';
+
     function renderContactList(container) {
-      if (allConversations.length === 0) {
-        container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Sin conversaciones aun</div>';
+      // Aplicar filtros
+      var q = (document.getElementById('contactSearchInput')?.value || '').toLowerCase();
+      var filtered = allConversations.filter(function(conv) {
+        var phone = conv.phoneNumber || conv.phone || '';
+        var name = (conv.name || '').toLowerCase();
+        var type = contactTypes[phone] || 'otro';
+        // Filtro por tipo
+        if (_activeContactFilter !== 'all') {
+          if (_activeContactFilter === 'cliente' && type !== 'client' && type !== 'cliente') return false;
+          else if (_activeContactFilter === 'equipo' && type !== 'equipo' && type !== 'group') return false;
+          else if (_activeContactFilter !== 'cliente' && _activeContactFilter !== 'equipo' && type !== _activeContactFilter) return false;
+        }
+        // Filtro por búsqueda
+        if (q && !name.includes(q) && !phone.includes(q)) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);">' + (allConversations.length === 0 ? 'Sin conversaciones aun' : 'Sin resultados para este filtro') + '</div>';
         return;
       }
+
       var pillClass = { lead: 'pill-lead', client: 'pill-client', cliente: 'pill-client', familia: 'pill-familia', equipo: 'pill-equipo', group: 'pill-equipo' };
       var typeLabel = { lead: 'Lead', client: 'Cliente', cliente: 'Cliente', familia: 'Familia', equipo: 'Equipo', group: 'Amigo' };
       var html = '<div class="card" style="padding:0;overflow:hidden;">';
-      allConversations.slice(0, 50).forEach(function(conv) {
+      filtered.slice(0, 80).forEach(function(conv) {
         var phone = conv.phoneNumber || conv.phone || '';
         var name = conv.name || 'Sin nombre';
         var type = contactTypes[phone] || 'otro';
         var initial = name.charAt(0).toUpperCase();
         var pill = pillClass[type] || 'pill-otro';
         var label = typeLabel[type] || 'Otro';
-        html += '<div class="contact-item"><div class="contact-avatar">' + esc(initial) + '</div><div class="contact-info"><div class="contact-name">' + esc(name) + '</div><div class="contact-phone">' + esc(phone) + '</div></div><span class="contact-type-pill ' + pill + '">' + label + '</span></div>';
+        html += '<div class="contact-item"><div class="contact-avatar">' + esc(initial) + '</div><div class="contact-info"><div class="contact-name">' + esc(name) + '</div><div class="contact-phone">' + esc(phone) + '</div></div><span class="contact-type-pill ' + pill + '">' + label + '</span><button class="contact-action" onclick="showAddToGroupMenu(event, \'' + esc(phone) + '\', \'' + esc(name).replace(/'/g, "\\'") + '\')">+ Grupo</button></div>';
       });
       html += '</div>';
-      if (allConversations.length > 50) {
-        html += '<p style="text-align:center;color:var(--text-3);font-size:12px;margin-top:8px;">Mostrando 50 de ' + allConversations.length + ' contactos</p>';
+      if (filtered.length > 80) {
+        html += '<p style="text-align:center;color:var(--text-3);font-size:12px;margin-top:8px;">Mostrando 80 de ' + filtered.length + ' contactos</p>';
       }
       container.innerHTML = html;
+    }
+
+    function setContactFilter(tipo, btn) {
+      _activeContactFilter = tipo;
+      document.querySelectorAll('.fpill').forEach(function(b) { b.classList.remove('active'); });
+      if (btn) btn.classList.add('active');
+      filterContacts();
+    }
+
+    function filterContacts() {
+      var container = document.getElementById('contactList');
+      if (container && allConversations.length > 0) {
+        renderContactList(container);
+      }
+    }
+
+    // Agregar contacto a grupo — mini dropdown
+    function showAddToGroupMenu(evt, phone, name) {
+      evt.stopPropagation();
+      // Cerrar menus previos
+      var old = document.getElementById('addToGroupMenu');
+      if (old) old.remove();
+
+      // Si no hay grupos cargados, cargarlos
+      if (!groups || groups.length === 0) {
+        showToast('No hay grupos disponibles. Crea uno primero.');
+        return;
+      }
+
+      var menu = document.createElement('div');
+      menu.id = 'addToGroupMenu';
+      menu.style.cssText = 'position:fixed;z-index:9999;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:8px 0;box-shadow:var(--shadow-lg);min-width:180px;';
+      // Posicionar cerca del click
+      var rect = evt.target.getBoundingClientRect();
+      menu.style.top = (rect.bottom + 4) + 'px';
+      menu.style.left = Math.min(rect.left, window.innerWidth - 200) + 'px';
+
+      groups.forEach(function(g) {
+        var item = document.createElement('button');
+        item.style.cssText = 'display:block;width:100%;padding:8px 16px;text-align:left;font-size:13px;color:var(--text-1);background:transparent;border:none;cursor:pointer;font-family:inherit;';
+        item.textContent = (g.icon || '👥') + ' ' + g.name;
+        item.onmouseover = function() { this.style.background = 'var(--bg-hover)'; };
+        item.onmouseout = function() { this.style.background = 'transparent'; };
+        item.onclick = function() { addContactToGroup(g.id, g.name, phone, name); menu.remove(); };
+        menu.appendChild(item);
+      });
+
+      document.body.appendChild(menu);
+      // Cerrar al hacer click fuera
+      setTimeout(function() {
+        document.addEventListener('click', function closeMenu() {
+          var m = document.getElementById('addToGroupMenu');
+          if (m) m.remove();
+          document.removeEventListener('click', closeMenu);
+        });
+      }, 100);
+    }
+
+    async function addContactToGroup(groupId, groupName, phone, contactName) {
+      try {
+        var token = await auth.currentUser.getIdToken();
+        var res = await fetch(API + '/api/tenant/' + currentUser.uid + '/contact-groups/' + groupId + '/contacts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ phone: phone, name: contactName })
+        });
+        if (res.ok) {
+          showToast((contactName || phone) + ' agregado a ' + groupName);
+        } else {
+          var err = await res.json();
+          showToast('Error: ' + (err.error || 'desconocido'));
+        }
+      } catch (e) {
+        showToast('Error: ' + e.message);
+      }
     }
 
     // ── Grupos ──
@@ -1217,26 +1321,28 @@
     }
 
     async function wizardRequestPairingCode() {
-      const phone = document.getElementById('wizPhoneInput').value.trim();
+      var rawPhone = document.getElementById('wizPhoneInput').value.trim();
+      // Limpiar: quitar +, espacios, guiones — solo dígitos
+      var phone = rawPhone.replace(/\D/g, '');
       if (!phone || phone.length < 8) {
-        showToast('Ingresa un numero de telefono valido');
+        showToast('Ingresa un numero de telefono valido (ej: 5491112345678)');
         return;
       }
-      const btn = document.getElementById('wizCodeBtn');
-      if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+      var btn = document.getElementById('wizCodeBtn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Generando...'; }
 
       try {
-        const token = await auth.currentUser.getIdToken();
-        const res = await fetch(API + '/api/tenant/' + currentUser.uid + '/request-pairing-code', {
+        var token = await auth.currentUser.getIdToken();
+        console.log('[WIZARD] Pairing code para:', phone);
+        var res = await fetch(API + '/api/tenant/' + currentUser.uid + '/request-pairing-code', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
-          body: JSON.stringify({ phoneNumber: phone })
+          body: JSON.stringify({ phone: phone })
         });
-        const data = await res.json();
+        var data = await res.json();
         if (data.code) {
           document.getElementById('wizPairingResult').classList.remove('hidden');
           document.getElementById('wizCodeDisplay').textContent = data.code;
-          // Poll conexion
           wizardPollConnection();
         } else {
           showToast(data.error || 'Error al solicitar codigo');
@@ -1244,7 +1350,7 @@
       } catch (e) {
         showToast('Error: ' + e.message);
       } finally {
-        if (btn) { btn.disabled = false; btn.textContent = 'Enviar codigo'; }
+        if (btn) { btn.disabled = false; btn.textContent = 'Generar codigo'; }
       }
     }
 
