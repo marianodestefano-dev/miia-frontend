@@ -938,6 +938,161 @@ input, select, textarea { font-family: inherit; font-size: inherit; }
 .mb-24 { margin-bottom: 24px; }
 
 
+/* ═══ GESTIONAR TABS ═══ */
+.gestionar-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.gtab {
+  padding: 8px 18px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.gtab:hover {
+  border-color: var(--border-hover);
+  color: var(--text-1);
+}
+
+.gtab.active {
+  background: var(--accent-bg);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.gest-panel { display: none; }
+.gest-panel.active { display: block; }
+
+.gest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.gest-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.gest-card:hover {
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+
+.gest-card-icon {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.gest-card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-1);
+  margin-bottom: 4px;
+}
+
+.gest-card-meta {
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+.gest-card-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: var(--r-full);
+  font-size: 11px;
+  font-weight: 600;
+  margin-top: 8px;
+}
+
+.gest-empty {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-3);
+  grid-column: 1 / -1;
+}
+
+.gest-empty-icon {
+  font-size: 36px;
+  margin-bottom: 12px;
+}
+
+/* Contact list items */
+.contact-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+
+.contact-item:hover {
+  background: var(--bg-hover);
+}
+
+.contact-item:last-child {
+  border-bottom: none;
+}
+
+.contact-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-elevated);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+.contact-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.contact-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-1);
+}
+
+.contact-phone {
+  font-size: 11px;
+  color: var(--text-3);
+}
+
+.contact-type-pill {
+  padding: 2px 8px;
+  border-radius: var(--r-full);
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.pill-lead { background: rgba(59,130,246,0.12); color: #3b82f6; }
+.pill-client { background: rgba(34,197,94,0.12); color: var(--green-500); }
+.pill-familia { background: rgba(168,85,247,0.12); color: #a855f7; }
+.pill-equipo { background: rgba(245,158,11,0.12); color: var(--amber-500); }
+.pill-otro { background: var(--bg-elevated); color: var(--text-2); }
+
+
 /* ═══ WIZARD ONBOARDING ═══ */
 .wizard-overlay {
   position: fixed;

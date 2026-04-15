@@ -217,26 +217,37 @@
               </button>
             </div>
           </div>
-          <div class="stats-row" style="grid-template-columns: repeat(4, 1fr);">
-            <div class="card" style="cursor:pointer;" data-tooltip="Administra tus negocios, productos y servicios">
-              <div class="card-title">Negocios</div>
-              <div class="stat-number">—</div>
-              <div class="stat-label">Configurados</div>
+
+          <!-- Tabs de Gestionar -->
+          <div class="gestionar-tabs">
+            <button class="gtab active" onclick="switchGestionar('negocios')">Negocios</button>
+            <button class="gtab" onclick="switchGestionar('contactos')">Contactos</button>
+            <button class="gtab" onclick="switchGestionar('grupos')">Grupos</button>
+            <button class="gtab" onclick="switchGestionar('agentes')">Agentes</button>
+          </div>
+
+          <!-- Sub-secciones -->
+          <div id="gest-negocios" class="gest-panel active">
+            <div id="businessList" class="gest-grid">
+              <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando negocios...</div>
             </div>
-            <div class="card" style="cursor:pointer;" data-tooltip="Gestiona tus contactos, grupos y clasificaciones">
-              <div class="card-title">Contactos</div>
-              <div class="stat-number">—</div>
-              <div class="stat-label">Registrados</div>
+          </div>
+
+          <div id="gest-contactos" class="gest-panel">
+            <div id="contactList">
+              <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando contactos...</div>
             </div>
-            <div class="card" style="cursor:pointer;" data-tooltip="Eventos agendados y configuracion de calendario">
-              <div class="card-title">Agenda</div>
-              <div class="stat-number">—</div>
-              <div class="stat-label">Eventos proximos</div>
+          </div>
+
+          <div id="gest-grupos" class="gest-panel">
+            <div id="groupList" class="gest-grid">
+              <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando grupos...</div>
             </div>
-            <div class="card" style="cursor:pointer;" data-tooltip="Gestiona tus agentes y equipo de trabajo">
-              <div class="card-title">Agentes</div>
-              <div class="stat-number">—</div>
-              <div class="stat-label">Activos</div>
+          </div>
+
+          <div id="gest-agentes" class="gest-panel">
+            <div id="agentList">
+              <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando agentes...</div>
             </div>
           </div>
         </section>
@@ -784,6 +795,170 @@
         });
     }
 
+    // ═══ GESTIONAR — Tabs + data loading ═══
+    let businesses = [];
+    let groups = [];
+    let allConversations = [];
+    let contactTypes = {};
+
+    function switchGestionar(tab) {
+      document.querySelectorAll('.gtab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.gest-panel').forEach(p => p.classList.remove('active'));
+      const btn = document.querySelector('.gtab[onclick*="' + tab + '"]');
+      if (btn) btn.classList.add('active');
+      const panel = document.getElementById('gest-' + tab);
+      if (panel) panel.classList.add('active');
+
+      if (tab === 'negocios') loadBusinesses();
+      if (tab === 'contactos') loadContacts();
+      if (tab === 'grupos') loadGroups();
+      if (tab === 'agentes') loadGestAgents();
+    }
+
+    // ── Negocios ──
+    async function loadBusinesses() {
+      if (!currentUser) return;
+      const container = document.getElementById('businessList');
+      try {
+        const res = await fetch(API + '/api/tenant/' + currentUser.uid + '/businesses');
+        if (res.ok) {
+          businesses = await res.json();
+        } else {
+          businesses = [];
+        }
+      } catch (e) {
+        console.warn('[BIZ] Error:', e.message);
+        businesses = [];
+      }
+      renderBusinessCards(container);
+    }
+
+    function renderBusinessCards(container) {
+      if (!businesses || businesses.length === 0) {
+        container.innerHTML = '<div class="gest-empty"><div class="gest-empty-icon">🏢</div><h3 style="color:var(--text-1);margin-bottom:4px;">Sin negocios aun</h3><p>Crea tu primer negocio para entrenar a MIIA</p><button class="btn btn-primary" style="margin-top:16px;" onclick="openOnboardingWizard()">Crear negocio</button></div>';
+        return;
+      }
+      container.innerHTML = businesses.map(function(biz) {
+        var desc = (biz.description || 'Sin descripcion').substring(0, 80);
+        if ((biz.description || '').length > 80) desc += '...';
+        var badges = '';
+        if (biz.productCount !== undefined) badges += '<span class="gest-card-badge" style="background:var(--accent-bg);color:var(--accent);">📦 ' + biz.productCount + ' productos</span> ';
+        if (biz.sessionCount !== undefined) badges += '<span class="gest-card-badge" style="background:rgba(168,85,247,0.1);color:#a855f7;">💬 ' + biz.sessionCount + ' sesiones</span>';
+        return '<div class="gest-card"><div class="gest-card-icon">🏢</div><div class="gest-card-title">' + esc(biz.name || 'Sin nombre') + '</div><div class="gest-card-meta">' + esc(desc) + '</div>' + (badges ? '<div style="margin-top:8px;">' + badges + '</div>' : '') + '</div>';
+      }).join('');
+    }
+
+    // ── Contactos ──
+    async function loadContacts() {
+      if (!currentUser) return;
+      const container = document.getElementById('contactList');
+      try {
+        const res = await fetch(API + '/api/conversations?uid=' + currentUser.uid);
+        const data = await res.json();
+        if (!data || !Array.isArray(data)) {
+          container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Sin conversaciones aun</div>';
+          return;
+        }
+        allConversations = data;
+        // Cargar tipos de contacto
+        try {
+          const snapshot = await db.collection('users').doc(currentUser.uid).collection('contact_index').get();
+          snapshot.forEach(function(doc) { var d = doc.data(); if (d.type) contactTypes[doc.id] = d.type; });
+        } catch (e) { /* silencio */ }
+        renderContactList(container);
+      } catch (e) {
+        console.warn('[CONTACTS] Error:', e.message);
+        container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Error al cargar contactos</div>';
+      }
+    }
+
+    function renderContactList(container) {
+      if (allConversations.length === 0) {
+        container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Sin conversaciones aun</div>';
+        return;
+      }
+      var pillClass = { lead: 'pill-lead', client: 'pill-client', cliente: 'pill-client', familia: 'pill-familia', equipo: 'pill-equipo', group: 'pill-equipo' };
+      var typeLabel = { lead: 'Lead', client: 'Cliente', cliente: 'Cliente', familia: 'Familia', equipo: 'Equipo', group: 'Amigo' };
+      var html = '<div class="card" style="padding:0;overflow:hidden;">';
+      allConversations.slice(0, 50).forEach(function(conv) {
+        var phone = conv.phoneNumber || conv.phone || '';
+        var name = conv.name || 'Sin nombre';
+        var type = contactTypes[phone] || 'otro';
+        var initial = name.charAt(0).toUpperCase();
+        var pill = pillClass[type] || 'pill-otro';
+        var label = typeLabel[type] || 'Otro';
+        html += '<div class="contact-item"><div class="contact-avatar">' + esc(initial) + '</div><div class="contact-info"><div class="contact-name">' + esc(name) + '</div><div class="contact-phone">' + esc(phone) + '</div></div><span class="contact-type-pill ' + pill + '">' + label + '</span></div>';
+      });
+      html += '</div>';
+      if (allConversations.length > 50) {
+        html += '<p style="text-align:center;color:var(--text-3);font-size:12px;margin-top:8px;">Mostrando 50 de ' + allConversations.length + ' contactos</p>';
+      }
+      container.innerHTML = html;
+    }
+
+    // ── Grupos ──
+    async function loadGroups() {
+      if (!currentUser) return;
+      const container = document.getElementById('groupList');
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(API + '/api/tenant/' + currentUser.uid + '/contact-groups', {
+          headers: { Authorization: 'Bearer ' + token }
+        });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        groups = await res.json();
+      } catch (e) {
+        console.warn('[GROUPS] Error:', e.message);
+        groups = [];
+      }
+      renderGroupList(container);
+    }
+
+    function renderGroupList(container) {
+      if (!groups || groups.length === 0) {
+        container.innerHTML = '<div class="gest-empty"><div class="gest-empty-icon">👥</div><h3 style="color:var(--text-1);margin-bottom:4px;">Sin grupos aun</h3><p>Los grupos se crean automaticamente o desde el self-chat</p></div>';
+        return;
+      }
+      container.innerHTML = groups.map(function(g) {
+        var proColor = g.proactiveEnabled ? 'var(--green-500)' : 'var(--text-3)';
+        var proLabel = g.proactiveEnabled ? 'Proactivo' : 'Silencioso';
+        var tone = g.tone ? g.tone.slice(0, 50) + (g.tone.length > 50 ? '...' : '') : 'Sin tono configurado';
+        return '<div class="gest-card"><div class="gest-card-icon">' + (g.icon || '👥') + '</div><div class="gest-card-title">' + esc(g.name) + '</div><div class="gest-card-meta">' + (g.contactCount || 0) + ' contacto(s) — ' + esc(tone) + '</div><div style="margin-top:8px;"><span class="gest-card-badge" style="background:' + proColor + '15;color:' + proColor + ';border:1px solid ' + proColor + '30;">' + proLabel + '</span></div></div>';
+      }).join('');
+    }
+
+    // ── Agentes ──
+    async function loadGestAgents() {
+      if (!currentUser) return;
+      const container = document.getElementById('agentList');
+      try {
+        const snapshot = await db.collection('users')
+          .where('parent_client_uid', '==', currentUser.uid)
+          .get();
+        var agents = [];
+        snapshot.forEach(function(doc) { agents.push({ id: doc.id, ...doc.data() }); });
+
+        if (agents.length === 0) {
+          container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);"><p>Sin agentes configurados</p><p style="font-size:12px;margin-top:8px;">Los agentes pueden responder por tu negocio cuando no estas</p></div>';
+          return;
+        }
+        var html = '<div class="card" style="padding:0;overflow:hidden;">';
+        agents.forEach(function(agent) {
+          var status = (agent.otp_pending || agent.invite_pending) ? '<span class="gest-card-badge" style="background:rgba(245,158,11,0.1);color:var(--amber-500);">Pendiente</span>' : '<span class="gest-card-badge" style="background:rgba(34,197,94,0.1);color:var(--green-500);">Activo</span>';
+          var initial = (agent.name || '?').charAt(0).toUpperCase();
+          html += '<div class="contact-item"><div class="contact-avatar">' + initial + '</div><div class="contact-info"><div class="contact-name">' + esc(agent.name || 'Sin nombre') + '</div><div class="contact-phone">' + esc(agent.email || '') + '</div></div>' + status + '</div>';
+        });
+        html += '</div>';
+        container.innerHTML = html;
+      } catch (e) {
+        console.warn('[AGENTS] Error:', e.message);
+        container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Error al cargar agentes</div>';
+      }
+    }
+
+    // Helper: escape HTML
+    function esc(s) { if (!s) return ''; var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
     // Deals (real-time listener)
     function loadDeals() {
       if (!currentUser) return;
@@ -819,6 +994,11 @@
         btn.classList.remove('active');
         if (btn.dataset.section === sectionId) btn.classList.add('active');
       });
+
+      // Cargar datos de Gestionar al entrar
+      if (sectionId === 'gestionar') {
+        switchGestionar('negocios');
+      }
     }
 
     function switchMode(mode) {
