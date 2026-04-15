@@ -201,12 +201,21 @@
               <h2 class="section-title">Gestionar</h2>
               <p class="section-subtitle">Negocios, contactos, agenda y entrenar a MIIA</p>
             </div>
-            <button class="btn btn-primary btn-sm" data-tooltip="Abre el chat experto para ensenarle a MIIA sobre tu negocio">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
-              </svg>
-              Entrenar MIIA
-            </button>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button class="btn btn-secondary btn-sm" onclick="openOnboardingWizard()"
+                      data-tooltip="Revisa la configuracion inicial de MIIA paso a paso">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+                </svg>
+                Guia de setup
+              </button>
+              <button class="btn btn-primary btn-sm" data-tooltip="Abre el chat experto para ensenarle a MIIA sobre tu negocio">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                </svg>
+                Entrenar MIIA
+              </button>
+            </div>
           </div>
           <div class="stats-row" style="grid-template-columns: repeat(4, 1fr);">
             <div class="card" style="cursor:pointer;" data-tooltip="Administra tus negocios, productos y servicios">
@@ -302,6 +311,109 @@
         Mas
       </button>
     </nav>
+
+    <!-- WIZARD ONBOARDING -->
+    <div class="wizard-overlay" id="wizardOverlay">
+      <div class="wizard-card">
+        <!-- Progress bar -->
+        <div class="wizard-progress">
+          <div class="wizard-progress-fill" id="wizardProgressFill" style="width:33%"></div>
+        </div>
+        <div class="wizard-step-label" id="wizardStepLabel">Paso 1 de 3</div>
+
+        <!-- PASO 1: Modo de uso -->
+        <div class="wizard-step" id="wizStep1">
+          <h2 class="wizard-title">Bienvenido a MIIA</h2>
+          <p class="wizard-subtitle">Como queres usar MIIA?</p>
+          <div class="wizard-options">
+            <button class="wizard-option" onclick="wizardSelectMode('negocio')">
+              <span class="wizard-option-icon">🏢</span>
+              <span class="wizard-option-label">Para mi negocio</span>
+              <span class="wizard-option-desc">Responde leads, agenda citas, vende</span>
+            </button>
+            <button class="wizard-option" onclick="wizardSelectMode('personal')">
+              <span class="wizard-option-icon">👤</span>
+              <span class="wizard-option-label">Para uso personal</span>
+              <span class="wizard-option-desc">Agenda, recordatorios, asistente diario</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- PASO 2: Conectar WhatsApp -->
+        <div class="wizard-step hidden" id="wizStep2">
+          <h2 class="wizard-title">Conecta tu WhatsApp</h2>
+          <p class="wizard-subtitle">Escanea el QR con tu celular</p>
+
+          <!-- Tabs QR / Codigo -->
+          <div class="wizard-tabs">
+            <button class="wizard-tab active" id="wizTabQr" onclick="wizardSwitchTab('qr')">Codigo QR</button>
+            <button class="wizard-tab" id="wizTabCode" onclick="wizardSwitchTab('code')">Codigo de 8 digitos</button>
+          </div>
+
+          <!-- QR container -->
+          <div id="wizQrPanel">
+            <div class="wizard-qr-box" id="wizQrBox">
+              <div class="wizard-spinner"></div>
+            </div>
+            <div class="wizard-qr-timer" id="wizQrTimer"></div>
+          </div>
+
+          <!-- Pairing code container -->
+          <div id="wizCodePanel" class="hidden">
+            <div class="wizard-code-input-group">
+              <input type="tel" id="wizPhoneInput" class="form-input" placeholder="+54 9 11 1234-5678" style="text-align:center;font-size:16px;letter-spacing:1px;">
+              <button class="btn btn-primary" onclick="wizardRequestPairingCode()" id="wizCodeBtn">Enviar codigo</button>
+            </div>
+            <div class="wizard-pairing-code hidden" id="wizPairingResult">
+              <p style="color:var(--text-2);font-size:13px;margin-bottom:8px;">Ingresa este codigo en tu WhatsApp:</p>
+              <div class="wizard-code-display" id="wizCodeDisplay">--------</div>
+              <p style="color:var(--text-3);font-size:11px;margin-top:8px;">WhatsApp > Dispositivos vinculados > Vincular dispositivo > Vincular con numero de telefono</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:20px;justify-content:center;">
+            <button class="btn btn-ghost" onclick="wizardGoTo(1)">Atras</button>
+            <button class="btn btn-secondary" onclick="wizardGoTo(3)" id="wizSkipWaBtn">Omitir por ahora</button>
+          </div>
+        </div>
+
+        <!-- PASO 3: Primera configuracion -->
+        <div class="wizard-step hidden" id="wizStep3">
+          <h2 class="wizard-title" id="wizStep3Title">Contale a MIIA sobre tu negocio</h2>
+          <p class="wizard-subtitle" id="wizStep3Subtitle">Esta info ayuda a MIIA a responder mejor</p>
+
+          <!-- Modo negocio -->
+          <div id="wizBizFields">
+            <div class="form-group">
+              <label class="form-label">Nombre del negocio</label>
+              <input type="text" class="form-input" id="wizBizName" placeholder="Ej: Medilink, Panaderia Don Juan...">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Rubro o industria</label>
+              <input type="text" class="form-input" id="wizBizIndustry" placeholder="Ej: Salud, Gastronomia, Tecnologia...">
+            </div>
+          </div>
+
+          <!-- Modo personal -->
+          <div id="wizPersonalFields" class="hidden">
+            <div class="form-group">
+              <label class="form-label">Contale algo a MIIA</label>
+              <textarea class="form-input" id="wizPersonalBio" rows="4" placeholder="Ej: me llamo Mariano, vivo en Medellin, trabajo en ventas..." style="resize:vertical;"></textarea>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:20px;">
+            <button class="btn btn-ghost" onclick="wizardGoTo(2)">Atras</button>
+            <button class="btn btn-primary" onclick="wizardComplete()" style="flex:1;">MIIA esta lista →</button>
+          </div>
+        </div>
+
+        <!-- Close button (siempre visible para re-open manual) -->
+        <button class="wizard-close" onclick="closeWizard()" data-tooltip="Cerrar wizard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
 
     <!-- TOAST -->
     <div class="toast" id="toast"></div>
@@ -541,6 +653,11 @@
           avatarEl.textContent = initials;
         }
       }
+
+      // Auto-trigger wizard si no completó onboarding
+      if (!userData.onboarded) {
+        setTimeout(() => openOnboardingWizard(), 500);
+      }
     }
 
     // WhatsApp status — verificar al cargar
@@ -743,51 +860,273 @@
       t._timer = setTimeout(() => t.classList.remove('show'), duration || 3000);
     }
 
-    // QR Modal — placeholder hasta FASE C/D
+    // ═══ WIZARD DE ONBOARDING ═══
+    let _wizardMode = 'negocio';
+    let _wizQrInterval = null;
+    let _wizQrCountdown = null;
+    let _wizWaPolling = null;
+
     function openQRModal() {
-      if (!currentUser) {
-        showToast('Inicia sesion primero');
-        return;
-      }
-      // Iniciar flujo de vinculacion WA
-      const modal = document.createElement('div');
-      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:700;display:flex;align-items:center;justify-content:center;';
-      modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
-      modal.innerHTML = '<div style="background:var(--bg-card);border:1px solid var(--border-1);border-radius:16px;padding:40px;text-align:center;max-width:400px;width:90%;">' +
-        '<h2 style="color:var(--text-1);font-size:1.3rem;margin-bottom:12px;">Vincular WhatsApp</h2>' +
-        '<p style="color:var(--text-2);margin-bottom:24px;">Escaneando codigo QR...</p>' +
-        '<div id="qrContainer" style="min-height:200px;display:flex;align-items:center;justify-content:center;"><div class="spinner"></div></div>' +
-        '<button onclick="this.closest(\'div\').parentElement.remove()" style="margin-top:20px;padding:10px 24px;border:1px solid var(--border-1);border-radius:8px;background:transparent;color:var(--text-1);cursor:pointer;font-family:inherit;">Cancelar</button>' +
-        '</div>';
-      document.body.appendChild(modal);
-      // Iniciar conexion WA
-      fetchQR(modal);
+      // Badge WA → abre wizard en paso 2
+      openOnboardingWizard(2);
     }
 
-    async function fetchQR(modal) {
+    function openOnboardingWizard(startStep) {
+      const overlay = document.getElementById('wizardOverlay');
+      if (!overlay) return;
+      overlay.classList.add('active');
+      wizardGoTo(startStep || 1);
+    }
+
+    function closeWizard() {
+      const overlay = document.getElementById('wizardOverlay');
+      if (overlay) overlay.classList.remove('active');
+      // Limpiar timers
+      if (_wizQrInterval) { clearInterval(_wizQrInterval); _wizQrInterval = null; }
+      if (_wizQrCountdown) { clearInterval(_wizQrCountdown); _wizQrCountdown = null; }
+      if (_wizWaPolling) { clearTimeout(_wizWaPolling); _wizWaPolling = null; }
+    }
+
+    function wizardGoTo(step) {
+      // Ocultar todos los pasos
+      document.getElementById('wizStep1').classList.add('hidden');
+      document.getElementById('wizStep2').classList.add('hidden');
+      document.getElementById('wizStep3').classList.add('hidden');
+
+      // Mostrar paso solicitado
+      document.getElementById('wizStep' + step).classList.remove('hidden');
+
+      // Progress bar
+      const fill = document.getElementById('wizardProgressFill');
+      const label = document.getElementById('wizardStepLabel');
+      if (fill) fill.style.width = (step * 33.33) + '%';
+      if (label) label.textContent = 'Paso ' + step + ' de 3';
+
+      // Acciones especificas por paso
+      if (step === 2) {
+        wizardInitQR();
+      }
+      if (step === 3) {
+        wizardInitStep3();
+      }
+    }
+
+    function wizardSelectMode(mode) {
+      _wizardMode = mode;
+      // Guardar en Firestore
+      if (currentUser) {
+        db.collection('users').doc(currentUser.uid).update({ mode: mode }).catch(() => {});
+      }
+      // Actualizar toggle del nav
+      document.getElementById('modeNegocio').classList.toggle('active', mode === 'negocio');
+      document.getElementById('modePersonal').classList.toggle('active', mode === 'personal');
+      // Avanzar a paso 2
+      wizardGoTo(2);
+    }
+
+    // ── Paso 2: QR real ──
+    async function wizardInitQR() {
+      // Limpiar timers previos
+      if (_wizQrInterval) { clearInterval(_wizQrInterval); _wizQrInterval = null; }
+      if (_wizQrCountdown) { clearInterval(_wizQrCountdown); _wizQrCountdown = null; }
+      if (_wizWaPolling) { clearTimeout(_wizWaPolling); _wizWaPolling = null; }
+
+      const qrBox = document.getElementById('wizQrBox');
+      const timerEl = document.getElementById('wizQrTimer');
+      if (qrBox) qrBox.innerHTML = '<div class="wizard-spinner"></div>';
+      if (timerEl) timerEl.textContent = '';
+
       try {
+        // Paso 1: init tenant
         const token = await auth.currentUser.getIdToken();
-        const res = await fetch(API + '/api/tenant/' + currentUser.uid + '/connect', {
+        const geminiKey = currentUserData?.gemini_api_key || currentUserData?.ai_api_key || '';
+        await fetch(API + '/api/tenant/init', {
           method: 'POST',
-          headers: { 'Authorization': 'Bearer ' + token }
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ uid: currentUser.uid, geminiApiKey: geminiKey })
         });
+
+        // Paso 2: obtener QR
+        await wizardFetchQR();
+
+        // Auto-refresh QR cada 30s
+        let countdown = 30;
+        _wizQrCountdown = setInterval(() => {
+          countdown--;
+          if (timerEl) timerEl.textContent = countdown > 0 ? 'Nuevo QR en ' + countdown + 's' : 'Actualizando...';
+          if (countdown <= 0) {
+            countdown = 30;
+            wizardFetchQR();
+          }
+        }, 1000);
+
+        // Poll conexion cada 3s
+        wizardPollConnection();
+      } catch (e) {
+        if (qrBox) qrBox.innerHTML = '<p style="color:var(--red-500);font-size:13px;padding:16px;">Error: ' + e.message + '</p>';
+      }
+    }
+
+    async function wizardFetchQR() {
+      const qrBox = document.getElementById('wizQrBox');
+      try {
+        const res = await fetch(API + '/api/tenant/' + currentUser.uid + '/qr');
         const data = await res.json();
         if (data.qr) {
-          const container = modal.querySelector('#qrContainer');
-          if (container) {
-            container.innerHTML = '<img src="' + data.qr + '" style="max-width:256px;border-radius:8px;">';
-          }
-          // Poll para verificar conexion
-          _waReconnectAttempts = 0;
-          setTimeout(checkWhatsAppStatus, 5000);
-        } else if (data.connected) {
-          modal.remove();
-          updateWaNavBadge(true);
-          showToast('WhatsApp ya esta conectado', 'success');
+          if (qrBox) qrBox.innerHTML = '<img src="' + data.qr + '" alt="QR Code">';
+        } else if (data.isReady) {
+          wizardWaConnected();
+        } else {
+          if (qrBox) qrBox.innerHTML = '<p style="color:var(--text-2);font-size:13px;padding:16px;">Esperando QR del servidor...</p>';
         }
       } catch (e) {
-        const container = modal.querySelector('#qrContainer');
-        if (container) container.innerHTML = '<p style="color:var(--danger);">Error al obtener QR: ' + e.message + '</p>';
+        console.warn('[WIZARD-QR] Error:', e.message);
+      }
+    }
+
+    function wizardPollConnection() {
+      if (_wizWaPolling) clearTimeout(_wizWaPolling);
+      _wizWaPolling = setTimeout(async () => {
+        try {
+          const res = await fetch(API + '/api/tenant/' + currentUser.uid + '/qr');
+          const data = await res.json();
+          if (data.isReady) {
+            wizardWaConnected();
+            return;
+          }
+        } catch (e) { /* silencio */ }
+        // Seguir polling si wizard sigue abierto
+        const overlay = document.getElementById('wizardOverlay');
+        if (overlay && overlay.classList.contains('active')) {
+          wizardPollConnection();
+        }
+      }, 3000);
+    }
+
+    function wizardWaConnected() {
+      // Limpiar timers
+      if (_wizQrInterval) { clearInterval(_wizQrInterval); _wizQrInterval = null; }
+      if (_wizQrCountdown) { clearInterval(_wizQrCountdown); _wizQrCountdown = null; }
+      if (_wizWaPolling) { clearTimeout(_wizWaPolling); _wizWaPolling = null; }
+
+      // Actualizar badge nav
+      updateWaNavBadge(true);
+
+      // Mostrar exito en QR box
+      const qrBox = document.getElementById('wizQrBox');
+      if (qrBox) {
+        qrBox.innerHTML = '<div style="text-align:center;padding:20px;"><div style="font-size:48px;margin-bottom:12px;">✅</div><p style="color:var(--text-1);font-weight:700;font-size:16px;">WhatsApp conectado</p></div>';
+      }
+
+      // Avanzar a paso 3 automaticamente
+      setTimeout(() => wizardGoTo(3), 1500);
+    }
+
+    // ── Paso 2: Tab switch ──
+    function wizardSwitchTab(tab) {
+      document.getElementById('wizTabQr').classList.toggle('active', tab === 'qr');
+      document.getElementById('wizTabCode').classList.toggle('active', tab === 'code');
+      document.getElementById('wizQrPanel').classList.toggle('hidden', tab !== 'qr');
+      document.getElementById('wizCodePanel').classList.toggle('hidden', tab !== 'code');
+    }
+
+    async function wizardRequestPairingCode() {
+      const phone = document.getElementById('wizPhoneInput').value.trim();
+      if (!phone || phone.length < 8) {
+        showToast('Ingresa un numero de telefono valido');
+        return;
+      }
+      const btn = document.getElementById('wizCodeBtn');
+      if (btn) { btn.disabled = true; btn.textContent = 'Enviando...'; }
+
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(API + '/api/tenant/' + currentUser.uid + '/request-pairing-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ phoneNumber: phone })
+        });
+        const data = await res.json();
+        if (data.code) {
+          document.getElementById('wizPairingResult').classList.remove('hidden');
+          document.getElementById('wizCodeDisplay').textContent = data.code;
+          // Poll conexion
+          wizardPollConnection();
+        } else {
+          showToast(data.error || 'Error al solicitar codigo');
+        }
+      } catch (e) {
+        showToast('Error: ' + e.message);
+      } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Enviar codigo'; }
+      }
+    }
+
+    // ── Paso 3: Config inicial ──
+    function wizardInitStep3() {
+      const titleEl = document.getElementById('wizStep3Title');
+      const subtitleEl = document.getElementById('wizStep3Subtitle');
+      const bizFields = document.getElementById('wizBizFields');
+      const personalFields = document.getElementById('wizPersonalFields');
+
+      if (_wizardMode === 'personal') {
+        if (titleEl) titleEl.textContent = 'Contale algo a MIIA';
+        if (subtitleEl) subtitleEl.textContent = 'Asi puede conocerte mejor y ayudarte';
+        if (bizFields) bizFields.classList.add('hidden');
+        if (personalFields) personalFields.classList.remove('hidden');
+      } else {
+        if (titleEl) titleEl.textContent = 'Contale a MIIA sobre tu negocio';
+        if (subtitleEl) subtitleEl.textContent = 'Esta info ayuda a MIIA a responder mejor';
+        if (bizFields) bizFields.classList.remove('hidden');
+        if (personalFields) personalFields.classList.add('hidden');
+      }
+    }
+
+    async function wizardComplete() {
+      if (!currentUser) return;
+
+      try {
+        if (_wizardMode === 'negocio') {
+          const bizName = document.getElementById('wizBizName').value.trim();
+          const bizIndustry = document.getElementById('wizBizIndustry').value.trim();
+          if (!bizName) {
+            showToast('Ingresa el nombre de tu negocio');
+            return;
+          }
+          // Guardar negocio en Firestore
+          await db.collection('users').doc(currentUser.uid).collection('businesses').add({
+            name: bizName,
+            industry: bizIndustry,
+            createdAt: new Date(),
+            isDefault: true
+          });
+        } else {
+          const bio = document.getElementById('wizPersonalBio').value.trim();
+          if (bio) {
+            // Guardar en personal brain
+            await db.collection('users').doc(currentUser.uid).collection('personal').doc('personal_brain').set({
+              content: bio,
+              updatedAt: new Date()
+            }, { merge: true });
+          }
+        }
+
+        // Marcar onboarding completo
+        await db.collection('users').doc(currentUser.uid).update({
+          onboarded: true,
+          onboarded_at: new Date(),
+          mode: _wizardMode
+        });
+
+        // Cerrar wizard
+        closeWizard();
+        showToast('MIIA esta lista para trabajar!');
+
+        // Actualizar datos locales
+        if (currentUserData) currentUserData.onboarded = true;
+      } catch (e) {
+        showToast('Error: ' + e.message);
+        console.error('[WIZARD] Error completando:', e);
       }
     }
 
