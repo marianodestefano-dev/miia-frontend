@@ -310,41 +310,406 @@
 
   <script>
     // ═══════════════════════════════════════════════════
-    // FASE A — Solo navegacion visual + tema
-    // Firebase, backend y funciones se conectan en FASE B
+    // FASE B — Firebase + datos reales conectados
     // ═══════════════════════════════════════════════════
 
-    // ── Navegacion entre secciones ──
-    function showSection(sectionId, clickedEl) {
-      // Ocultar todas las secciones
-      document.querySelectorAll('.miia-section').forEach(s => s.classList.remove('active'));
+    // ── PASO 1: Firebase init ──
+    const firebaseConfig = {
+      apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
+      authDomain: "miia-app-8cbd0.firebaseapp.com",
+      projectId: "miia-app-8cbd0",
+      storageBucket: "miia-app-8cbd0.firebasestorage.app",
+      messagingSenderId: "481282126913",
+      appId: "1:481282126913:web:c5c8e74ce51d3d9a6aa509"
+    };
 
-      // Mostrar la sección target
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    // API URL — única fuente de verdad
+    const API = 'https://api.miia-app.com';
+
+    // ── Socket.IO ──
+    let socket = null;
+    let currentUser = null;
+    let currentUserData = null;
+    let currentUserUid = null;
+    let allDeals = [];
+
+    function initSocket() {
+      if (socket) return;
+      socket = io(API, { reconnection: true, reconnectionDelay: 1000 });
+
+      socket.on(`tenant_recovery_needed_${currentUserUid}`, (data) => {
+        showToast('⚠️ ' + data.message, 'warning');
+        setTimeout(() => checkWhatsAppStatus(), 500);
+      });
+
+      socket.on('whatsapp_ready', () => updateWaNavBadge(true));
+      socket.on('whatsapp_disconnected', () => updateWaNavBadge(false));
+
+      if (currentUserUid) {
+        socket.emit('join_tenant_room', currentUserUid);
+      }
+
+      console.log('[Socket.IO] Conectado al servidor en tiempo real');
+    }
+
+    // ── PASO 2: onAuthStateChanged ──
+    auth.onAuthStateChanged(async user => {
+      // Leer URL params (pagos, sub_success, etc.)
+      readUrlParams();
+
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      currentUser = user;
+      currentUserUid = user.uid;
+
+      // Inicializar Socket.IO
+      initSocket();
+
+      // Leer perfil de Firestore
+      const params = new URLSearchParams(window.location.search);
+      const adminView = params.get('adminView') === '1';
+      const impersonateUid = params.get('impersonateUid');
+      const targetUid = (adminView && impersonateUid) ? impersonateUid : user.uid;
+      let doc = await db.collection('users').doc(targetUid).get();
+
+      // Admin view banner
+      if (adminView && impersonateUid) {
+        const bar = document.createElement('div');
+        bar.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:var(--bg-card);color:var(--text-1);text-align:center;padding:10px;font-size:0.85rem;z-index:9999;border-top:1px solid var(--border-1);';
+        bar.innerHTML = '👁 <strong>Modo Admin:</strong> Viendo dashboard de ' + (doc.exists ? doc.data().email : impersonateUid) + ' &nbsp;|&nbsp; <a href="admin-dashboard.html" style="color:var(--cyan);">Volver a Admin</a>';
+        document.body.appendChild(bar);
+      }
+
+      // Crear doc si es nuevo usuario (solo si no es adminView)
+      if (!doc.exists && !adminView) {
+        const now = new Date();
+        const trialEnd = new Date(now.getTime() + 15 * 24 * 60 * 60 * 1000);
+        await db.collection('users').doc(user.uid).set({
+          uid: user.uid,
+          name: user.displayName || '',
+          email: user.email,
+          photo: user.photoURL || '',
+          role: 'owner',
+          plan: 'trial',
+          plan_start_date: now,
+          plan_end_date: trialEnd,
+          payment_status: 'trial',
+          approved: false,
+          ai_provider: 'gemini',
+          gemini_api_key: '',
+          ai_api_key: '',
+          use_owner_key: false,
+          agents_limit: 1,
+          discount_percent: 0,
+          parent_client_uid: '',
+          owner_uid: '',
+          whatsapp: '',
+          whatsapp_number: '',
+          humanizer_enabled: false,
+          subscription_provider: '',
+          registered_at: now,
+          last_login: now
+        });
+        // Auto-detectar timezone
+        try {
+          const deviceTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+          if (deviceTz) {
+            await db.collection('users').doc(user.uid).collection('settings').doc('schedule').set({
+              timezone: deviceTz,
+              activeDays: [1, 2, 3, 4, 5],
+              startTime: '09:00',
+              endTime: '21:00',
+              autoReplyOffHours: false,
+              _autoDetected: true
+            });
+            console.log('[MIIA] Timezone auto-detectado:', deviceTz);
+          }
+        } catch (tzErr) { console.warn('Timezone auto-detect failed:', tzErr); }
+        doc = await db.collection('users').doc(user.uid).get();
+      } else if (!adminView) {
+        // Actualizar last_login + timezone en cada visita
+        const currentTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const updateData = { last_login: new Date() };
+        if (currentTz) updateData.timezone = currentTz;
+        await db.collection('users').doc(user.uid).update(updateData);
+        if (currentTz) {
+          await db.collection('users').doc(user.uid).collection('settings').doc('schedule').set(
+            { timezone: currentTz, _lastUpdated: new Date() },
+            { merge: true }
+          );
+        }
+      }
+
+      currentUserData = doc.data();
+
+      // Agent → redirect
+      if (currentUserData.role === 'agent' && !adminView) {
+        window.location.href = 'agent-dashboard.html';
+        return;
+      }
+
+      // Renderizar datos del home
+      renderHome(currentUserData);
+
+      // Verificar trial
+      checkTrialStatus(currentUserData);
+
+      // Cargar datos en paralelo
+      initHomeWaStatus();
+      updateStatCards();
+      loadDeals();
+
+      console.log('[MIIA] Dashboard v2 cargado para:', currentUserData.name || currentUserData.email);
+    });
+
+    // ── URL Params (pagos, redirects) ──
+    function readUrlParams() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('sub_success') === '1') {
+        showToast('Plan activado. Bienvenido a MIIA.', 'success');
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      if (params.get('agent_success') === '1') {
+        showToast('Agente adicional activado.', 'success');
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      if (params.get('mp_success') === '1') {
+        const mpPlan = params.get('plan');
+        const mpUid = params.get('uid');
+        const mpPaymentId = params.get('payment_id') || params.get('collection_id');
+        window.history.replaceState({}, '', window.location.pathname);
+        if (mpPaymentId && mpPlan && mpUid) {
+          (async () => {
+            try {
+              showToast('Confirmando pago MercadoPago...', 'info');
+              const res = await fetch(API + '/api/mercadopago/confirm', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ payment_id: mpPaymentId, plan: mpPlan, uid: mpUid })
+              });
+              const data = await res.json();
+              if (data.success) showToast('Plan activado via MercadoPago.', 'success');
+              else showToast('Error al confirmar: ' + (data.error || 'Desconocido'), 'error');
+            } catch (e) { showToast('Error: ' + e.message, 'error'); }
+          })();
+        } else {
+          showToast('Pago recibido. Tu plan se activara en minutos.', 'success');
+        }
+      }
+      if (params.get('mp_failure') === '1') {
+        showToast('El pago con MercadoPago fallo. Intenta de nuevo.', 'error');
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      if (params.get('mp_pending') === '1') {
+        showToast('Tu pago esta pendiente de acreditacion.', 'info');
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+      if (params.get('paypal_capture') === '1') {
+        const ppToken = params.get('token');
+        const ppPlan = params.get('plan');
+        const ppUid = params.get('uid');
+        window.history.replaceState({}, '', window.location.pathname);
+        if (ppToken && ppPlan && ppUid) capturePayPal(ppToken, ppPlan, ppUid);
+      }
+    }
+
+    // ── PASO 3: Funciones del home ──
+
+    // Renderizar nombre + avatar desde Firestore
+    function renderHome(userData) {
+      const name = userData.name || userData.email || 'Usuario';
+      const firstName = name.split(' ')[0];
+
+      // Hero name
+      const heroEl = document.getElementById('heroName');
+      if (heroEl) heroEl.textContent = firstName;
+
+      // Avatar (iniciales o foto)
+      const avatarEl = document.getElementById('navAvatar');
+      if (avatarEl) {
+        if (userData.photo) {
+          avatarEl.innerHTML = '<img src="' + userData.photo + '" alt="avatar" style="width:100%;height:100%;border-radius:50%;object-fit:cover;">';
+        } else {
+          const initials = name.split(' ').map(w => w[0]).slice(0, 2).join('').toUpperCase();
+          avatarEl.textContent = initials;
+        }
+      }
+    }
+
+    // WhatsApp status — verificar al cargar
+    async function initHomeWaStatus() {
+      try {
+        const uid = currentUser ? currentUser.uid : '';
+        const res = await fetch(API + '/api/status?uid=' + uid + '&verify=true');
+        const data = await res.json();
+        updateWaNavBadge(data.connected);
+        if (data.ghostDisconnect) {
+          console.warn('[WA-STATUS] ⚠️ DESCONEXION FANTASMA detectada');
+          showToast('WhatsApp desconectado — reconectando...', 'warning');
+        }
+        console.log('[WA-STATUS] Estado inicial:', data.connected ? 'conectado' : 'desconectado');
+      } catch (e) {
+        console.warn('[WA-STATUS] Error verificando estado:', e.message);
+        updateWaNavBadge(false);
+      }
+    }
+
+    // Actualizar badge WA en nav
+    function updateWaNavBadge(connected) {
+      const dot = document.getElementById('waDot');
+      const label = document.getElementById('waLabel');
+      if (dot) {
+        dot.style.background = connected ? 'var(--accent)' : 'var(--danger)';
+      }
+      if (label) {
+        label.textContent = connected ? 'Conectado' : 'Sin conectar';
+      }
+      // Mostrar/ocultar empty state en home
+      const emptyState = document.getElementById('emptyStateHome');
+      const timeline = document.getElementById('timeline');
+      if (emptyState && !connected) {
+        emptyState.classList.remove('hidden');
+        if (timeline) timeline.style.display = 'none';
+      } else if (emptyState && connected) {
+        emptyState.classList.add('hidden');
+        if (timeline) timeline.style.display = '';
+      }
+    }
+
+    // Polling WA status (post QR scan)
+    let _waReconnectAttempts = 0;
+    async function checkWhatsAppStatus() {
+      try {
+        const uid = currentUser ? currentUser.uid : '';
+        const res = await fetch(API + '/api/status?uid=' + uid);
+        const data = await res.json();
+        updateWaNavBadge(data.connected);
+
+        if (data.connected) {
+          _waReconnectAttempts = 0;
+          showToast('WhatsApp conectado', 'success');
+        } else {
+          _waReconnectAttempts++;
+          if (_waReconnectAttempts <= 18) {
+            showReconnectingBanner(_waReconnectAttempts);
+            setTimeout(checkWhatsAppStatus, 5000);
+          }
+        }
+      } catch (error) {
+        _waReconnectAttempts++;
+        if (_waReconnectAttempts <= 18) {
+          setTimeout(checkWhatsAppStatus, 5000);
+        }
+      }
+    }
+
+    function showReconnectingBanner(attempt) {
+      let banner = document.getElementById('wa-reconnecting-banner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'wa-reconnecting-banner';
+        banner.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--bg-card);border:1px solid var(--border-1);border-radius:12px;padding:14px 24px;display:flex;align-items:center;gap:12px;z-index:999;color:var(--text-1);font-size:0.85rem;box-shadow:var(--shadow-lg);';
+        banner.innerHTML = '<div style="width:10px;height:10px;border-radius:50%;background:var(--cyan);animation:pulse-glow 1.5s infinite;flex-shrink:0"></div><span id="wa-reconnect-text">MIIA esta restaurando la sesion de WhatsApp...</span><span style="color:var(--text-3);font-size:0.75rem" id="wa-reconnect-timer"></span>';
+        document.body.appendChild(banner);
+      }
+      const remaining = Math.max(0, 90 - attempt * 5);
+      const timerEl = document.getElementById('wa-reconnect-timer');
+      if (timerEl) timerEl.textContent = '~' + remaining + 's';
+    }
+
+    // Trial check
+    function checkTrialStatus(userData) {
+      if (userData.role === 'admin') {
+        console.log('[TRIAL] Admin founder — acceso completo gratis');
+        return;
+      }
+      if (userData.payment_status === 'active' || userData.payment_status === 'paid') return;
+      if (userData.payment_status === 'trial') {
+        const trialEnd = userData.plan_end_date?.toDate
+          ? userData.plan_end_date.toDate()
+          : new Date((userData.registered_at?.toDate?.() || new Date()).getTime() + 7 * 24 * 60 * 60 * 1000);
+        const now = new Date();
+        const daysLeft = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
+        if (daysLeft <= 0) {
+          showToast('Tu periodo de prueba ha terminado. Elige un plan para continuar.', 'warning');
+          // TODO FASE D: showPaywall()
+        } else if (daysLeft <= 5) {
+          showToast('Te quedan ' + daysLeft + ' dia' + (daysLeft !== 1 ? 's' : '') + ' de prueba', 'info');
+        }
+      } else if (userData.payment_status === 'expired' || userData.payment_status === 'pending_payment') {
+        showToast('Tu plan ha expirado. Renueva para seguir usando MIIA.', 'warning');
+      }
+    }
+
+    // Stats del home — datos reales desde backend
+    function updateStatCards() {
+      if (!currentUser) return;
+      fetch(API + '/api/tenant/' + currentUser.uid + '/home-stats')
+        .then(r => r.json())
+        .then(data => {
+          const convEl = document.getElementById('statConversaciones');
+          const leadsEl = document.getElementById('statLeads');
+          const preEl = document.getElementById('statPreventas');
+          if (convEl) convEl.textContent = data.conversationsToday || 0;
+          if (leadsEl) leadsEl.textContent = data.activeLeads || 0;
+          if (preEl) preEl.textContent = data.presales || 0;
+          console.log('[HOME-STATS] ✅ Stats actualizadas:', data);
+        })
+        .catch(e => {
+          console.warn('[HOME-STATS] Error cargando stats:', e.message);
+        });
+    }
+
+    // Deals (real-time listener)
+    function loadDeals() {
+      if (!currentUser) return;
+      db.collection('deals')
+        .where('client_uid', '==', currentUser.uid)
+        .onSnapshot(snapshot => {
+          allDeals = [];
+          snapshot.forEach(doc => allDeals.push({ id: doc.id, ...doc.data() }));
+          // Actualizar stats cuando cambien los deals
+          updateStatCards();
+        }, error => {
+          console.warn('[DEALS] Error en listener:', error.message);
+        });
+    }
+
+    // ── PASO 4 (ya incluido en updateStatCards) ──
+
+    // ═══════════════════════════════════════════════════
+    // Navegacion + UI (mantenido de FASE A)
+    // ═══════════════════════════════════════════════════
+
+    function showSection(sectionId, clickedEl) {
+      document.querySelectorAll('.miia-section').forEach(s => s.classList.remove('active'));
       const target = document.getElementById('sec-' + sectionId);
       if (target) target.classList.add('active');
 
-      // Actualizar nav superior
       document.querySelectorAll('.miia-nav-link').forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.section === sectionId) btn.classList.add('active');
       });
 
-      // Actualizar nav bottom (mobile)
       document.querySelectorAll('.miia-nav-bottom-link').forEach(btn => {
         btn.classList.remove('active');
         if (btn.dataset.section === sectionId) btn.classList.add('active');
       });
     }
 
-    // ── Toggle Negocio / Personal ──
     function switchMode(mode) {
       document.getElementById('modeNegocio').classList.toggle('active', mode === 'negocio');
       document.getElementById('modePersonal').classList.toggle('active', mode === 'personal');
-      // En FASE B: cambiar contenido del dashboard segun modo
       showToast(mode === 'negocio' ? 'Modo Negocio activado' : 'Modo Personal activado');
     }
 
-    // ── Toggle tema oscuro/claro ──
     function toggleTheme() {
       const html = document.documentElement;
       const current = html.getAttribute('data-theme') || 'dark';
@@ -352,6 +717,10 @@
       html.setAttribute('data-theme', next);
       localStorage.setItem('miia-theme', next);
       updateThemeIcon(next);
+      // Guardar preferencia en Firestore si hay usuario
+      if (currentUser) {
+        db.collection('users').doc(currentUser.uid).update({ themePreference: next }).catch(() => {});
+      }
       showToast(next === 'dark' ? 'Tema oscuro' : 'Tema claro');
     }
 
@@ -365,23 +734,72 @@
       }
     }
 
-    // ── Toast ──
-    function showToast(msg, duration) {
+    function showToast(msg, type, duration) {
       const t = document.getElementById('toast');
       if (!t) return;
       t.textContent = msg;
       t.classList.add('show');
       clearTimeout(t._timer);
-      t._timer = setTimeout(() => t.classList.remove('show'), duration || 2500);
+      t._timer = setTimeout(() => t.classList.remove('show'), duration || 3000);
     }
 
-    // ── Placeholder funciones (FASE B las implementa) ──
+    // QR Modal — placeholder hasta FASE C/D
     function openQRModal() {
-      showToast('Vincular WhatsApp — se conecta en FASE B');
+      if (!currentUser) {
+        showToast('Inicia sesion primero');
+        return;
+      }
+      // Iniciar flujo de vinculacion WA
+      const modal = document.createElement('div');
+      modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:700;display:flex;align-items:center;justify-content:center;';
+      modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+      modal.innerHTML = '<div style="background:var(--bg-card);border:1px solid var(--border-1);border-radius:16px;padding:40px;text-align:center;max-width:400px;width:90%;">' +
+        '<h2 style="color:var(--text-1);font-size:1.3rem;margin-bottom:12px;">Vincular WhatsApp</h2>' +
+        '<p style="color:var(--text-2);margin-bottom:24px;">Escaneando codigo QR...</p>' +
+        '<div id="qrContainer" style="min-height:200px;display:flex;align-items:center;justify-content:center;"><div class="spinner"></div></div>' +
+        '<button onclick="this.closest(\'div\').parentElement.remove()" style="margin-top:20px;padding:10px 24px;border:1px solid var(--border-1);border-radius:8px;background:transparent;color:var(--text-1);cursor:pointer;font-family:inherit;">Cancelar</button>' +
+        '</div>';
+      document.body.appendChild(modal);
+      // Iniciar conexion WA
+      fetchQR(modal);
+    }
+
+    async function fetchQR(modal) {
+      try {
+        const token = await auth.currentUser.getIdToken();
+        const res = await fetch(API + '/api/tenant/' + currentUser.uid + '/connect', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (data.qr) {
+          const container = modal.querySelector('#qrContainer');
+          if (container) {
+            container.innerHTML = '<img src="' + data.qr + '" style="max-width:256px;border-radius:8px;">';
+          }
+          // Poll para verificar conexion
+          _waReconnectAttempts = 0;
+          setTimeout(checkWhatsAppStatus, 5000);
+        } else if (data.connected) {
+          modal.remove();
+          updateWaNavBadge(true);
+          showToast('WhatsApp ya esta conectado', 'success');
+        }
+      } catch (e) {
+        const container = modal.querySelector('#qrContainer');
+        if (container) container.innerHTML = '<p style="color:var(--danger);">Error al obtener QR: ' + e.message + '</p>';
+      }
     }
 
     function toggleProfileMenu() {
-      showToast('Menu de perfil — se conecta en FASE B');
+      showToast('Perfil — proximamente');
+    }
+
+    // Logout
+    function logout() {
+      auth.signOut().then(() => {
+        window.location.href = 'login.html';
+      });
     }
 
     // ── Init ──
