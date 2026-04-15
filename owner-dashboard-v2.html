@@ -209,7 +209,7 @@
                 </svg>
                 Guia de setup
               </button>
-              <button class="btn btn-primary btn-sm" data-tooltip="Abre el chat experto para ensenarle a MIIA sobre tu negocio">
+              <button class="btn btn-primary btn-sm" onclick="openOnboardingWizard()" data-tooltip="Configura MIIA paso a paso para tu negocio o vida personal">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
                 </svg>
@@ -940,11 +940,14 @@
         // Paso 1: init tenant
         const token = await auth.currentUser.getIdToken();
         const geminiKey = currentUserData?.gemini_api_key || currentUserData?.ai_api_key || '';
-        await fetch(API + '/api/tenant/init', {
+        const initUrl = API + '/api/tenant/init';
+        console.log('[WIZARD] Init URL:', initUrl, 'UID:', currentUser.uid);
+        const initRes = await fetch(initUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
           body: JSON.stringify({ uid: currentUser.uid, geminiApiKey: geminiKey })
         });
+        console.log('[WIZARD] Init response:', initRes.status);
 
         // Paso 2: obtener QR
         await wizardFetchQR();
@@ -970,7 +973,9 @@
     async function wizardFetchQR() {
       const qrBox = document.getElementById('wizQrBox');
       try {
-        const res = await fetch(API + '/api/tenant/' + currentUser.uid + '/qr');
+        const qrUrl = API + '/api/tenant/' + currentUser.uid + '/qr';
+        console.log('[WIZARD] QR URL:', qrUrl);
+        const res = await fetch(qrUrl);
         const data = await res.json();
         if (data.qr) {
           if (qrBox) qrBox.innerHTML = '<img src="' + data.qr + '" alt="QR Code">';
