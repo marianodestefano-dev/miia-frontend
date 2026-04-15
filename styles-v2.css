@@ -946,3 +946,149 @@ input, select, textarea { font-family: inherit; font-size: inherit; }
 .mt-24 { margin-top: 24px; }
 .mb-16 { margin-bottom: 16px; }
 .mb-24 { margin-bottom: 24px; }
+
+
+/* ═══ RESPONSIVE — TABLET (768px–1024px) ═══ */
+@media (max-width: 1024px) {
+  /* Feed lateral: ocultar */
+  .miia-feed {
+    display: none;
+  }
+
+  /* Nav links: reducir padding */
+  .miia-nav-link {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  /* Nav bottom: mostrar */
+  .miia-nav-bottom {
+    display: flex;
+  }
+
+  /* Body: espacio para nav bottom */
+  .miia-body {
+    padding-bottom: 56px;
+  }
+
+  /* Stats: 2 columnas */
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Main: reducir padding */
+  .miia-main {
+    padding: 24px 24px;
+  }
+
+  /* Toast: arriba del nav bottom */
+  .toast {
+    bottom: 72px;
+  }
+}
+
+
+/* ═══ RESPONSIVE — MOBILE (<768px) ═══ */
+@media (max-width: 767px) {
+  /* Nav top links: ocultar (se usa nav bottom) */
+  .miia-nav-links {
+    display: none;
+  }
+
+  /* Mode toggle: ocultar en mobile */
+  .miia-nav .mode-toggle {
+    display: none;
+  }
+
+  /* Feed lateral: ocultar */
+  .miia-feed {
+    display: none;
+  }
+
+  /* Nav bottom: mostrar */
+  .miia-nav-bottom {
+    display: flex;
+  }
+
+  /* Body: espacio para nav bottom */
+  .miia-body {
+    padding-bottom: 56px;
+  }
+
+  /* Stats: 1 columna */
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+
+  /* Gestionar cards: 2 columnas en mobile */
+  .stats-row[style*="repeat(4"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* Hero: reducir tamaño */
+  .hero-name {
+    font-size: 24px;
+  }
+
+  .hero-greeting {
+    font-size: 11px;
+  }
+
+  /* Main: padding reducido */
+  .miia-main {
+    padding: 16px 12px;
+  }
+
+  /* Cards: padding reducido */
+  .card {
+    padding: 16px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-number {
+    font-size: 28px;
+  }
+
+  /* Section headers: stack en mobile */
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* Nav top: reducir padding */
+  .miia-nav {
+    padding: 0 12px;
+    gap: 4px;
+  }
+
+  /* Logo: más compacto */
+  .miia-nav-logo {
+    margin-right: 8px;
+  }
+
+  /* Empty state: menos padding */
+  .empty-state {
+    padding: 40px 16px;
+  }
+
+  /* Toast: arriba del nav bottom */
+  .toast {
+    bottom: 72px;
+    max-width: calc(100vw - 32px);
+  }
+
+  /* Modal: full width */
+  .modal {
+    width: 95%;
+    padding: 24px;
+  }
+
+  /* Gradient line: menos margin */
+  .gline {
+    margin: 16px 0;
+  }
+}

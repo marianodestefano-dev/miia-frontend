@@ -1,12 +1,12 @@
 {
-  "name": "MIIA - Tu Asistente IA",
+  "name": "MIIA",
   "short_name": "MIIA",
-  "description": "Asistente inteligente para WhatsApp con IA avanzada",
-  "start_url": "/owner-dashboard.html",
+  "description": "Tu asistente de vida por WhatsApp",
+  "start_url": "/owner-dashboard-v2.html",
   "display": "standalone",
-  "background_color": "#1a1a2e",
-  "theme_color": "#3B5BFF",
-  "orientation": "any",
+  "background_color": "#05050A",
+  "theme_color": "#05050A",
+  "orientation": "portrait-primary",
   "icons": [
     {
       "src": "miia-logo.png",
