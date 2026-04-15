@@ -1157,8 +1157,9 @@
         console.log('[WIZARD] QR URL:', qrUrl);
         const res = await fetch(qrUrl);
         const data = await res.json();
-        if (data.qr) {
-          if (qrBox) qrBox.innerHTML = '<img src="' + data.qr + '" alt="QR Code">';
+        console.log('[WIZARD] QR response:', data.phase, 'hasQR:', !!data.qrCode);
+        if (data.qrCode) {
+          if (qrBox) qrBox.innerHTML = '<img src="' + data.qrCode + '" alt="QR Code">';
         } else if (data.isReady) {
           wizardWaConnected();
         } else {
