@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <script>
+    (function(){var t=localStorage.getItem('miia-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
+  <meta name="author" content="Mariano De Stefano">
+  <meta name="copyright" content="(c) 2024-2026 MIIA App. All rights reserved.">
+  <title>MIIA - Dashboard</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#05050A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="miia-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles-v2.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- Socket.IO -->
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+</head>
+<body>
+  <div class="miia-app">
+
+    <!-- ═══ TOP NAV ═══ -->
+    <nav class="miia-nav">
+      <!-- Logo -->
+      <a href="index.html" class="miia-nav-logo" data-tooltip="Ir a inicio de MIIA">
+        <svg viewBox="90 118 220 168" fill="none" style="width:52px;height:40px;display:block">
+          <defs>
+            <linearGradient id="lg_nav" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#00E5FF"/>
+              <stop offset="50%" stop-color="#7C3AED"/>
+              <stop offset="100%" stop-color="#FF1744"/>
+            </linearGradient>
+          </defs>
+          <path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#lg_nav)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+          <text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text>
+        </svg>
+      </a>
+
+      <!-- Toggle Negocio / Personal -->
+      <div class="mode-toggle" data-tooltip="Cambia entre modo negocio y vida personal">
+        <button class="active" id="modeNegocio" onclick="switchMode('negocio')">Negocio</button>
+        <button id="modePersonal" onclick="switchMode('personal')">Personal</button>
+      </div>
+
+      <!-- Nav links (4 secciones) -->
+      <div class="miia-nav-links">
+        <button class="miia-nav-link active" data-section="home"
+                data-tooltip="Resumen, estadisticas y actividad reciente"
+                onclick="showSection('home', this)">Inicio</button>
+        <button class="miia-nav-link" data-section="actividad"
+                data-tooltip="Conversaciones en vivo e historial de chats"
+                onclick="showSection('actividad', this)">Actividad</button>
+        <button class="miia-nav-link" data-section="gestionar"
+                data-tooltip="Negocios, contactos, agenda y entrenar a MIIA"
+                onclick="showSection('gestionar', this)">Gestionar</button>
+        <button class="miia-nav-link" data-section="analitica"
+                data-tooltip="Metricas, reportes, deals y pipeline"
+                onclick="showSection('analitica', this)">Analitica</button>
+      </div>
+
+      <!-- Nav right -->
+      <div class="miia-nav-right">
+        <!-- Theme toggle -->
+        <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()"
+                data-tooltip="Cambiar entre tema oscuro y claro">
+          <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+          </svg>
+        </button>
+
+        <!-- WhatsApp status -->
+        <button class="wa-badge" id="waStatusBadge" onclick="openQRModal()"
+                data-tooltip="Estado de conexion WhatsApp. Click para vincular.">
+          <span class="wa-dot" id="waDot"></span>
+          <span id="waLabel">Sin conectar</span>
+        </button>
+
+        <!-- Avatar -->
+        <div class="nav-avatar" id="navAvatar" onclick="toggleProfileMenu()"
+             data-tooltip="Tu perfil y configuracion">
+          ?
+        </div>
+      </div>
+    </nav>
+
+    <!-- ═══ BODY: MAIN + FEED ═══ -->
+    <div class="miia-body">
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <main class="miia-main">
+
+        <!-- SECCION: HOME -->
+        <section id="sec-home" class="miia-section active">
+
+          <!-- Hero -->
+          <div class="hero">
+            <p class="hero-greeting">Bienvenido de vuelta</p>
+            <h1 class="hero-name" id="heroName">...</h1>
+          </div>
+
+          <!-- Gradient line -->
+          <div class="gline"></div>
+
+          <!-- Stats row -->
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-number gradient" id="statConversaciones">—</div>
+              <div class="stat-label">Conversaciones hoy</div>
+              <div class="stat-delta up" id="statConvDelta"></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="statLeads">—</div>
+              <div class="stat-label">Leads activos</div>
+              <div class="stat-delta" id="statLeadsDelta"></div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number" id="statPreventas">—</div>
+              <div class="stat-label">Pre-ventas</div>
+              <div class="stat-delta" id="statPreventasDelta"></div>
+            </div>
+          </div>
+
+          <!-- Timeline de actividad -->
+          <div class="card">
+            <div class="card-title">Actividad reciente</div>
+            <div class="timeline" id="timeline">
+              <!-- Datos de ejemplo (se reemplazan en FASE B con datos reales) -->
+              <div class="timeline-item">
+                <div class="timeline-dot cyan"></div>
+                <div class="timeline-text"><strong>MIIA</strong> respondio a un lead nuevo</div>
+                <div class="timeline-time">Hace 5 minutos</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot violet"></div>
+                <div class="timeline-text"><strong>Carlos Garcia</strong> pregunto por precios</div>
+                <div class="timeline-time">Hace 12 minutos</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot rose"></div>
+                <div class="timeline-text"><strong>MIIA</strong> agendo una cita con <strong>Maria Lopez</strong></div>
+                <div class="timeline-time">Hace 28 minutos</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot cyan"></div>
+                <div class="timeline-text"><strong>Ana Ruiz</strong> confirmo su turno de manana</div>
+                <div class="timeline-time">Hace 1 hora</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Estado sin WhatsApp (se muestra si no hay conexion) -->
+          <div class="empty-state hidden" id="emptyStateHome">
+            <svg class="empty-state-logo" width="80" height="80" viewBox="90 118 220 168" fill="none" opacity="0.4">
+              <path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z"
+                    fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>
+              <text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60"
+                    fill="currentColor" text-anchor="middle" letter-spacing="-2">MIIA</text>
+            </svg>
+            <h2 class="empty-state-title">MIIA esta lista</h2>
+            <p class="empty-state-text">Solo necesita tu WhatsApp para empezar a responder por ti.</p>
+            <button class="btn btn-primary" onclick="openQRModal()" data-tooltip="Escanea un QR o usa un codigo para vincular tu WhatsApp">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+              </svg>
+              Vincular WhatsApp
+            </button>
+          </div>
+        </section>
+
+        <!-- SECCION: ACTIVIDAD -->
+        <section id="sec-actividad" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Actividad</h2>
+              <p class="section-subtitle">Conversaciones en vivo e historial</p>
+            </div>
+          </div>
+          <div class="card">
+            <p style="color: var(--text-3); text-align: center; padding: 40px;">
+              Conversaciones se conectan en FASE B
+            </p>
+          </div>
+        </section>
+
+        <!-- SECCION: GESTIONAR -->
+        <section id="sec-gestionar" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Gestionar</h2>
+              <p class="section-subtitle">Negocios, contactos, agenda y entrenar a MIIA</p>
+            </div>
+            <button class="btn btn-primary btn-sm" data-tooltip="Abre el chat experto para ensenarle a MIIA sobre tu negocio">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+              </svg>
+              Entrenar MIIA
+            </button>
+          </div>
+          <div class="stats-row" style="grid-template-columns: repeat(4, 1fr);">
+            <div class="card" style="cursor:pointer;" data-tooltip="Administra tus negocios, productos y servicios">
+              <div class="card-title">Negocios</div>
+              <div class="stat-number">—</div>
+              <div class="stat-label">Configurados</div>
+            </div>
+            <div class="card" style="cursor:pointer;" data-tooltip="Gestiona tus contactos, grupos y clasificaciones">
+              <div class="card-title">Contactos</div>
+              <div class="stat-number">—</div>
+              <div class="stat-label">Registrados</div>
+            </div>
+            <div class="card" style="cursor:pointer;" data-tooltip="Eventos agendados y configuracion de calendario">
+              <div class="card-title">Agenda</div>
+              <div class="stat-number">—</div>
+              <div class="stat-label">Eventos proximos</div>
+            </div>
+            <div class="card" style="cursor:pointer;" data-tooltip="Gestiona tus agentes y equipo de trabajo">
+              <div class="card-title">Agentes</div>
+              <div class="stat-number">—</div>
+              <div class="stat-label">Activos</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECCION: ANALITICA -->
+        <section id="sec-analitica" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Analitica</h2>
+              <p class="section-subtitle">Metricas, reportes y pipeline</p>
+            </div>
+          </div>
+          <div class="card">
+            <p style="color: var(--text-3); text-align: center; padding: 40px;">
+              Metricas y reportes se conectan en FASE B
+            </p>
+          </div>
+        </section>
+
+      </main>
+
+      <!-- FEED LATERAL (desktop) -->
+      <aside class="miia-feed">
+        <div class="feed-header">
+          <span class="feed-pulse"></span>
+          MIIA EN VIVO
+        </div>
+
+        <!-- Burbujas de ejemplo (se reemplazan en FASE B) -->
+        <div class="feed-bubble contact">
+          <div class="feed-bubble-name">Carlos Garcia</div>
+          Hola, queria saber el precio del plan mensual
+          <div class="feed-bubble-time">14:32</div>
+        </div>
+        <div class="feed-bubble miia">
+          Hola Carlos! El plan mensual esta a $15 USD/mes. Incluye respuestas ilimitadas y agenda inteligente.
+          <div class="feed-bubble-time">14:32</div>
+        </div>
+        <div class="feed-bubble contact">
+          <div class="feed-bubble-name">Ana Ruiz</div>
+          Confirmo el turno de manana a las 10
+          <div class="feed-bubble-time">14:28</div>
+        </div>
+        <div class="feed-bubble miia">
+          Perfecto Ana, queda confirmado tu turno para manana a las 10:00 am.
+          <div class="feed-bubble-time">14:28</div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- NAV BOTTOM (mobile — se activa en FASE C) -->
+    <nav class="miia-nav-bottom">
+      <button class="miia-nav-bottom-link active" data-section="home" onclick="showSection('home', this)"
+              data-tooltip="Inicio" data-tooltip-pos="top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Inicio
+      </button>
+      <button class="miia-nav-bottom-link" data-section="actividad" onclick="showSection('actividad', this)"
+              data-tooltip="Actividad" data-tooltip-pos="top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Actividad
+      </button>
+      <button class="miia-nav-bottom-link" data-section="gestionar" onclick="showSection('gestionar', this)"
+              data-tooltip="Gestionar" data-tooltip-pos="top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        Gestionar
+      </button>
+      <button class="miia-nav-bottom-link" data-section="mas" onclick="showSection('mas', this)"
+              data-tooltip="Mas opciones" data-tooltip-pos="top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
+        Mas
+      </button>
+    </nav>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast"></div>
+
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════════
+    // FASE A — Solo navegacion visual + tema
+    // Firebase, backend y funciones se conectan en FASE B
+    // ═══════════════════════════════════════════════════
+
+    // ── Navegacion entre secciones ──
+    function showSection(sectionId, clickedEl) {
+      // Ocultar todas las secciones
+      document.querySelectorAll('.miia-section').forEach(s => s.classList.remove('active'));
+
+      // Mostrar la sección target
+      const target = document.getElementById('sec-' + sectionId);
+      if (target) target.classList.add('active');
+
+      // Actualizar nav superior
+      document.querySelectorAll('.miia-nav-link').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.section === sectionId) btn.classList.add('active');
+      });
+
+      // Actualizar nav bottom (mobile)
+      document.querySelectorAll('.miia-nav-bottom-link').forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.dataset.section === sectionId) btn.classList.add('active');
+      });
+    }
+
+    // ── Toggle Negocio / Personal ──
+    function switchMode(mode) {
+      document.getElementById('modeNegocio').classList.toggle('active', mode === 'negocio');
+      document.getElementById('modePersonal').classList.toggle('active', mode === 'personal');
+      // En FASE B: cambiar contenido del dashboard segun modo
+      showToast(mode === 'negocio' ? 'Modo Negocio activado' : 'Modo Personal activado');
+    }
+
+    // ── Toggle tema oscuro/claro ──
+    function toggleTheme() {
+      const html = document.documentElement;
+      const current = html.getAttribute('data-theme') || 'dark';
+      const next = current === 'dark' ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      localStorage.setItem('miia-theme', next);
+      updateThemeIcon(next);
+      showToast(next === 'dark' ? 'Tema oscuro' : 'Tema claro');
+    }
+
+    function updateThemeIcon(theme) {
+      const icon = document.getElementById('themeIcon');
+      if (!icon) return;
+      if (theme === 'dark') {
+        icon.innerHTML = '<path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>';
+      } else {
+        icon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+      }
+    }
+
+    // ── Toast ──
+    function showToast(msg, duration) {
+      const t = document.getElementById('toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.add('show');
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove('show'), duration || 2500);
+    }
+
+    // ── Placeholder funciones (FASE B las implementa) ──
+    function openQRModal() {
+      showToast('Vincular WhatsApp — se conecta en FASE B');
+    }
+
+    function toggleProfileMenu() {
+      showToast('Menu de perfil — se conecta en FASE B');
+    }
+
+    // ── Init ──
+    document.addEventListener('DOMContentLoaded', () => {
+      const theme = localStorage.getItem('miia-theme') || 'dark';
+      updateThemeIcon(theme);
+    });
+  </script>
+</body>
+</html>
