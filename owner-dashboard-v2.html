@@ -209,7 +209,7 @@
                 </svg>
                 Guia de setup
               </button>
-              <button class="btn btn-primary btn-sm" onclick="openOnboardingWizard()" data-tooltip="Configura MIIA paso a paso para tu negocio o vida personal">
+              <button class="btn btn-primary btn-sm" onclick="openTrainingSession()" data-tooltip="Ensena a MIIA sobre tu negocio, productos y estilo">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
                 </svg>
@@ -277,6 +277,35 @@
         </section>
 
       </main>
+
+      <!-- MODAL: Entrenar MIIA -->
+      <div class="wizard-overlay" id="trainingOverlay" onclick="if(event.target===this)closeTraining()">
+        <div class="wizard-card" style="max-width:520px;">
+          <button class="wizard-close" onclick="closeTraining()">&times;</button>
+          <h2 style="color:var(--text-1);margin:0 0 4px;">Entrenar a MIIA</h2>
+          <p style="color:var(--text-3);font-size:13px;margin:0 0 16px;">Contale sobre tu negocio, productos, tono de voz, reglas... MIIA aprende y lo aplica en cada conversacion.</p>
+          <textarea id="trainingInput" rows="8" placeholder="Ej: Mi negocio es una clinica dental en Bogota. Atendemos ortodoncia, blanqueamiento y limpieza. Los turnos se dan de lunes a viernes de 8 a 18hs. Quiero que MIIA sea amable y profesional..." style="width:100%;background:var(--bg-2);color:var(--text-1);border:1px solid var(--border-1);border-radius:8px;padding:12px;font-size:14px;resize:vertical;font-family:inherit;"></textarea>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
+            <button class="btn btn-secondary btn-sm" onclick="closeTraining()">Cancelar</button>
+            <button class="btn btn-primary btn-sm" id="trainingSaveBtn" onclick="saveTraining()">Guardar</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL: Agregar Agente -->
+      <div class="wizard-overlay" id="addAgentOverlay" onclick="if(event.target===this)closeAddAgent()">
+        <div class="wizard-card" style="max-width:420px;">
+          <button class="wizard-close" onclick="closeAddAgent()">&times;</button>
+          <h2 style="color:var(--text-1);margin:0 0 4px;">Agregar agente</h2>
+          <p style="color:var(--text-3);font-size:13px;margin:0 0 16px;">Invita a alguien de tu equipo para que responda por tu negocio en MIIA.</p>
+          <label style="color:var(--text-2);font-size:13px;display:block;margin-bottom:6px;">Email del agente</label>
+          <input id="agentEmailInput" type="email" placeholder="agente@empresa.com" style="width:100%;background:var(--bg-2);color:var(--text-1);border:1px solid var(--border-1);border-radius:8px;padding:10px 12px;font-size:14px;box-sizing:border-box;">
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+            <button class="btn btn-secondary btn-sm" onclick="closeAddAgent()">Cancelar</button>
+            <button class="btn btn-primary btn-sm" id="addAgentBtn" onclick="submitAddAgent()">Enviar invitacion</button>
+          </div>
+        </div>
+      </div>
 
       <!-- FEED LATERAL (desktop) -->
       <aside class="miia-feed">
@@ -1035,6 +1064,7 @@
     async function loadGestAgents() {
       if (!currentUser) return;
       const container = document.getElementById('agentList');
+      var limit = (currentUserData && currentUserData.agents_limit) ? currentUserData.agents_limit : 1;
       try {
         const snapshot = await db.collection('users')
           .where('parent_client_uid', '==', currentUser.uid)
@@ -1042,8 +1072,15 @@
         var agents = [];
         snapshot.forEach(function(doc) { agents.push({ id: doc.id, ...doc.data() }); });
 
+        var actionHtml = '';
+        if (agents.length < limit) {
+          actionHtml = '<div style="text-align:center;padding:16px;"><button class="btn btn-primary btn-sm" onclick="showAddAgentModal()">+ Agregar agente</button></div>';
+        } else {
+          actionHtml = '<div style="text-align:center;padding:16px;color:var(--text-3);font-size:13px;"><p>Alcanzaste el limite de tu plan (' + limit + ' agente' + (limit > 1 ? 's' : '') + ').</p><button class="btn btn-secondary btn-sm" style="margin-top:8px;" onclick="showUpgradePlans()">Ver planes</button></div>';
+        }
+
         if (agents.length === 0) {
-          container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);"><p>Sin agentes configurados</p><p style="font-size:12px;margin-top:8px;">Los agentes pueden responder por tu negocio cuando no estas</p></div>';
+          container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);"><p>Sin agentes configurados</p><p style="font-size:12px;margin-top:8px;">Los agentes pueden responder por tu negocio cuando no estas</p></div>' + actionHtml;
           return;
         }
         var html = '<div class="card" style="padding:0;overflow:hidden;">';
@@ -1053,11 +1090,86 @@
           html += '<div class="contact-item"><div class="contact-avatar">' + initial + '</div><div class="contact-info"><div class="contact-name">' + esc(agent.name || 'Sin nombre') + '</div><div class="contact-phone">' + esc(agent.email || '') + '</div></div>' + status + '</div>';
         });
         html += '</div>';
-        container.innerHTML = html;
+        container.innerHTML = html + actionHtml;
       } catch (e) {
         console.warn('[AGENTS] Error:', e.message);
         container.innerHTML = '<div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Error al cargar agentes</div>';
       }
+    }
+
+    // ── Fix D: Entrenar MIIA ──
+    function openTrainingSession() {
+      var overlay = document.getElementById('trainingOverlay');
+      if (overlay) overlay.classList.add('active');
+      var input = document.getElementById('trainingInput');
+      if (input) input.value = '';
+    }
+    function closeTraining() {
+      var overlay = document.getElementById('trainingOverlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+    async function saveTraining() {
+      var input = document.getElementById('trainingInput');
+      var btn = document.getElementById('trainingSaveBtn');
+      if (!input || !input.value.trim()) { showToast('Escribe algo para entrenar a MIIA', 'error'); return; }
+      btn.disabled = true; btn.textContent = 'Guardando...';
+      try {
+        var res = await fetch(API + '/api/tenant/' + currentUser.uid + '/train', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: input.value.trim() })
+        });
+        var data = await res.json();
+        if (data.success) {
+          showToast('MIIA aprendio algo nuevo', 'success');
+          closeTraining();
+        } else {
+          showToast('Error: ' + (data.error || 'No se pudo guardar'), 'error');
+        }
+      } catch (e) {
+        showToast('Error de conexion: ' + e.message, 'error');
+      }
+      btn.disabled = false; btn.textContent = 'Guardar';
+    }
+
+    // ── Fix C: Agregar agente ──
+    function showAddAgentModal() {
+      var overlay = document.getElementById('addAgentOverlay');
+      if (overlay) overlay.classList.add('active');
+      var input = document.getElementById('agentEmailInput');
+      if (input) input.value = '';
+    }
+    function closeAddAgent() {
+      var overlay = document.getElementById('addAgentOverlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+    async function submitAddAgent() {
+      var input = document.getElementById('agentEmailInput');
+      var btn = document.getElementById('addAgentBtn');
+      if (!input || !input.value.trim() || !input.value.includes('@')) { showToast('Ingresa un email valido', 'error'); return; }
+      btn.disabled = true; btn.textContent = 'Enviando...';
+      try {
+        var token = await currentUser.getIdToken();
+        var res = await fetch(API + '/api/auth/send-otp', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+          body: JSON.stringify({ agentEmail: input.value.trim().toLowerCase() })
+        });
+        var data = await res.json();
+        if (data.success || data.otpSent) {
+          showToast('Invitacion enviada al agente', 'success');
+          closeAddAgent();
+          loadGestAgents();
+        } else {
+          showToast('Error: ' + (data.error || 'No se pudo invitar'), 'error');
+        }
+      } catch (e) {
+        showToast('Error de conexion: ' + e.message, 'error');
+      }
+      btn.disabled = false; btn.textContent = 'Enviar invitacion';
+    }
+    function showUpgradePlans() {
+      showToast('Contacta a soporte para actualizar tu plan', 'info');
     }
 
     // Helper: escape HTML
