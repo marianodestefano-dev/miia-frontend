@@ -251,17 +251,7 @@ input, select, textarea { font-family: inherit; font-size: inherit; }
   font-weight: 600;
 }
 
-.miia-nav-link.active::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 2px;
-  background: var(--miia-gradient);
-  border-radius: 1px;
-}
+/* Nav link activo: solo texto, sin barra */
 
 /* Nav right */
 .miia-nav-right {
