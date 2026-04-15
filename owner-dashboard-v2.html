@@ -1414,14 +1414,20 @@
       // Actualizar badge nav
       updateWaNavBadge(true);
 
-      // Mostrar exito en QR box
+      // Mostrar exito en QR box — fondo oscuro + texto cian MIIA
       const qrBox = document.getElementById('wizQrBox');
       if (qrBox) {
-        qrBox.innerHTML = '<div style="text-align:center;padding:20px;"><div style="font-size:48px;margin-bottom:12px;">✅</div><p style="color:var(--text-1);font-weight:700;font-size:16px;">WhatsApp conectado</p></div>';
+        qrBox.innerHTML = '<div style="text-align:center;padding:32px;background:#05050A;border-radius:12px;"><p style="color:#00E5FF;font-weight:700;font-size:18px;margin:0 0 16px;">✅ Vinculacion con MIIA realizada</p><button class="btn btn-primary btn-sm" onclick="wizardGoTo(3)">Continuar →</button></div>';
       }
 
-      // Avanzar a paso 3 automaticamente
-      setTimeout(() => wizardGoTo(3), 1500);
+      // Tambien avanzar automatico a los 3s si no clickea
+      setTimeout(() => {
+        var overlay = document.getElementById('wizardOverlay');
+        var step2 = document.getElementById('wizStep2');
+        if (overlay && overlay.classList.contains('active') && step2 && !step2.classList.contains('hidden')) {
+          wizardGoTo(3);
+        }
+      }, 3000);
     }
 
     // ── Paso 2: Tab switch ──
@@ -1497,12 +1503,11 @@
             showToast('Ingresa el nombre de tu negocio');
             return;
           }
-          // Guardar negocio en Firestore
-          await db.collection('users').doc(currentUser.uid).collection('businesses').add({
-            name: bizName,
-            industry: bizIndustry,
-            createdAt: new Date(),
-            isDefault: true
+          // Guardar como preferencias del usuario — NO crear negocio aqui
+          // La creacion real del negocio es en Gestionar → Crear negocio
+          await db.collection('users').doc(currentUser.uid).update({
+            businessName: bizName,
+            businessType: bizIndustry
           });
         } else {
           const bio = document.getElementById('wizPersonalBio').value.trim();
