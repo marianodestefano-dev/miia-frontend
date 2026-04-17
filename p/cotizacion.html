@@ -314,7 +314,25 @@ body {
 .plan-card.sel-t { border-color:#A78BFA; background:rgba(108,63,200,.14); box-shadow:0 0 0 1px rgba(108,63,200,.4); }
 .plan-emoji { font-size:26px; margin-bottom:7px; display:block; }
 .plan-name { font-size:15px; font-weight:700; color:white; margin-bottom:3px; }
-.plan-desc { font-size:11px; color:rgba(255,255,255,.5); line-height:1.4; }
+.plan-desc { font-size:11px; color:rgba(255,255,255,.5); line-height:1.4; margin-bottom:12px; }
+/* ── VIDEO BUTTON EN PLAN CARD ── */
+.plan-video-btn {
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.22);
+  border-radius:20px;
+  padding:6px 12px;
+  font-family:'Poppins',sans-serif;
+  font-size:11px; font-weight:600;
+  color:rgba(255,255,255,.85);
+  cursor:pointer; text-decoration:none;
+  transition:all .2s; width:100%;
+}
+.plan-video-btn:hover { background:rgba(255,255,255,.25); color:white; }
+.plan-card.sel-e .plan-video-btn { background:rgba(0,174,239,.3); border-color:rgba(0,174,239,.5); color:white; }
+.plan-card.sel-p .plan-video-btn { background:rgba(245,166,35,.3); border-color:rgba(245,166,35,.5); color:#FDE68A; }
+.plan-card.sel-t .plan-video-btn { background:rgba(167,139,250,.3); border-color:rgba(167,139,250,.5); color:#EDE9FE; }
+.play-ico { font-size:9px; flex-shrink:0; }
 .plan-tick {
   position:absolute; top:10px; right:10px;
   width:20px; height:20px;
@@ -830,7 +848,7 @@ body {
   <div class="hero-title" id="hero-title">
     Está <em>transformando</em><br>las clínicas y centros de salud
   </div>
-  <div class="hero-sub" id="hero-sub">"Especialistas en salud, igual que tú" · www.softwaremedilink.com</div>
+  <div class="hero-sub" id="hero-sub">"Especialistas en salud, igual que tú"</div>
   <!-- stats moved to trust-section at bottom -->
 </div>
 
@@ -868,22 +886,31 @@ body {
     <div class="plan-wrap-sub">Elegí el que mejor se adapta a tu centro de salud</div>
     <div class="plan-cards">
       <div class="plan-card sel-e" id="card-esencial" onclick="setPlan('esencial')">
+        <div class="plan-tick">✓</div>
         <span class="plan-emoji">🩺</span>
         <div class="plan-name">Plan Esencial</div>
         <div class="plan-desc">Lo indispensable para una consulta.</div>
-        <div class="plan-tick">✓</div>
+        <a class="plan-video-btn" href="https://youtu.be/c624nlfNH2w?feature=shared" target="_blank" onclick="event.stopPropagation()">
+          <span class="play-ico">▶</span> Ver demo del plan
+        </a>
       </div>
       <div class="plan-card" id="card-pro" onclick="setPlan('pro')">
+        <div class="plan-tick">✓</div>
         <span class="plan-emoji">⭐</span>
         <div class="plan-name">Plan Pro</div>
         <div class="plan-desc">Control y visibilidad 360 de tu centro.</div>
-        <div class="plan-tick">✓</div>
+        <a class="plan-video-btn" href="https://youtu.be/PZF9bfK-qb8?feature=shared" target="_blank" onclick="event.stopPropagation()">
+          <span class="play-ico">▶</span> Ver demo del plan
+        </a>
       </div>
       <div class="plan-card" id="card-titanium" onclick="setPlan('titanium')">
+        <div class="plan-tick">✓</div>
         <span class="plan-emoji">👑</span>
         <div class="plan-name">Plan Titanium</div>
         <div class="plan-desc">Gestión avanzada + fidelización activa.</div>
-        <div class="plan-tick">✓</div>
+        <a class="plan-video-btn" href="https://youtu.be/n0funFLeWt8?feature=shared" target="_blank" onclick="event.stopPropagation()">
+          <span class="play-ico">▶</span> Ver demo del plan
+        </a>
       </div>
     </div>
     <div class="modalidad-row">
@@ -1316,8 +1343,8 @@ function applyContent(c, leadName) {
   if (c.company_name) {
     document.title = c.company_name + ' — Propuesta Comercial';
   }
-  if (c.tagline && c.website_url) {
-    document.getElementById('hero-sub').textContent = '"' + c.tagline + '" · ' + (c.website_url || '');
+  if (c.tagline) {
+    document.getElementById('hero-sub').textContent = '"' + c.tagline + '"';
   }
   if (c.website_url) {
     document.getElementById('footer-info').innerHTML = c.website_url + '<br>"' + (c.tagline || '') + '"';
