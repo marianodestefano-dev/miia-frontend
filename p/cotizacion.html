@@ -829,7 +829,7 @@ body {
 
 <!-- DOWNLOAD BAR -->
 <div class="download-bar no-print" style="display:none" id="main-content-bar">
-  <span class="dl-text">📄 Esta propuesta es tuya — ajustá el plan, usuarios y módulos a tu medida</span>
+  <span class="dl-text">📄 Esta propuesta es tuya — ajusta el plan, usuarios y módulos a tu medida</span>
   <button class="dl-btn" onclick="trackDownload()">⬇ Guardar / Imprimir PDF</button>
 </div>
 
@@ -877,13 +877,13 @@ body {
   <div class="step-header">
     <div class="step-num">1</div>
     <div class="step-info">
-      <div class="step-title">Elegí tu plan</div>
+      <div class="step-title">Elige tu plan</div>
       <div class="step-sub">Mensual, semestral o anual</div>
     </div>
   </div>
   <div class="plan-wrap">
-    <div class="plan-wrap-title">Seleccioná tu plan</div>
-    <div class="plan-wrap-sub">Elegí el que mejor se adapta a tu centro de salud</div>
+    <div class="plan-wrap-title">Selecciona tu plan</div>
+    <div class="plan-wrap-sub">Elige el que mejor se adapta a tu centro de salud</div>
     <div class="plan-cards">
       <div class="plan-card sel-e" id="card-esencial" onclick="setPlan('esencial')">
         <div class="plan-tick">✓</div>
@@ -975,7 +975,7 @@ body {
   </div>
   <div class="adic-section">
     <div class="adic-title" style="display:none">Módulos adicionales</div>
-    <div class="adic-sub">Seleccioná los módulos que necesita tu centro y el volumen mensual de cada uno.</div>
+    <div class="adic-sub">Selecciona los módulos que necesita tu centro y el volumen mensual de cada uno.</div>
     <div style="display:flex;flex-direction:column;gap:14px" id="adic-mods"></div>
   </div>
 
@@ -1008,7 +1008,7 @@ body {
         <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Solo plan base (sin adicionales)</div>
         <div class="price-big"><span class="price-curr" id="r-curr">COP $</span><span id="r-price">87.500</span></div>
         <div class="price-period" id="r-period">meses 1 al 3 · con promoción 30%</div>
-        <div class="price-normal">Sin promo: <strong id="r-normal">COP $125.000</strong>/mes desde mes 4</div>
+        <div class="price-normal">Sin promo: <strong id="r-normal">COP $125.000</strong> · precio regular desde el mes 4</div>
         <div class="green-badge">✦ Descuento activo</div>
       </div>
     </div>
@@ -1023,7 +1023,7 @@ body {
     <!-- DEMO CTA -->
     <div class="demo-cta">
       <div class="demo-col demo-col-left">
-        <div class="demo-col-title">📅 Agendá tu demo ahora</div>
+        <div class="demo-col-title">📅 Agenda tu demo ahora</div>
         <a class="demo-cta-btn" href="https://meetings.hubspot.com/marianodestefano/demomedilink" target="_blank">Reservar mi lugar →</a>
       </div>
       <div class="demo-divider"></div>
@@ -1254,6 +1254,8 @@ async function loadPropuesta() {
         pm = parseMod(data.params.modulos.factura);
         if (pm) AS.factura = pm;
       }
+      // Siempre activos — independiente del API
+      AS.wa.on = true; AS.firma.on = true; AS.factura.on = true;
     }
 
     // España: solo modalidad anual (precios EUR son anuales)
@@ -1354,7 +1356,7 @@ function applyContent(c, leadName) {
     wEl.textContent = c.welcome_message.replace('[lead]', safeLeadName);
     wEl.style.removeProperty('display');
   } else if (safeLeadName) {
-    wEl.textContent = 'Hola ' + safeLeadName + ', esta propuesta fue preparada especialmente para vos.';
+    wEl.textContent = 'Hola ' + safeLeadName + ', esta propuesta fue preparada especialmente para ti.';
     wEl.style.removeProperty('display');
   } else {
     wEl.textContent = 'Esta propuesta fue preparada especialmente para tu cl\u00ednica.';
@@ -1476,7 +1478,7 @@ function renderAdic() {
     wrap.appendChild(head);
     var tierWrap = document.createElement('div');
     tierWrap.className = 'amod-tiers';
-    tierWrap.innerHTML = '<div class="tier-lbl">Elegí el volumen mensual</div>';
+    tierWrap.innerHTML = '<div class="tier-lbl">Selecciona el volumen mensual</div>';
     var grid = document.createElement('div');
     grid.className = 'tier-grid';
     for (var ti = 0; ti < TIERS.length; ti++) {
@@ -1550,7 +1552,7 @@ function renderDetalle() {
   document.getElementById('r-price').textContent = PR[S.country].decs > 0 ? neto.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep) : Math.round(neto).toString().replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep);
   var ml = { mensual: 'meses 1 al 3 · descuento 30%', semestral: 'pago semestral · descuento 15%', anual: 'pago anual · descuento 20%' };
   document.getElementById('r-period').textContent = ml[S.mod];
-  document.getElementById('r-normal').textContent = fmt(base) + (S.mod === 'mensual' ? '/mes' : '');
+  document.getElementById('r-normal').textContent = fmt(base);
   var bd = '<div class="bd-row"><span class="bd-label">Plan base (' + S.mod + ')</span><span class="bd-value">' + fmt(p.base * mult) + '</span></div>';
   if (nA > 0) bd += '<div class="bd-row"><span class="bd-label">+' + nA + ' usuario' + (nA > 1 ? 's' : '') + '</span><span class="bd-value">' + fmt(p.adic * nA * mult) + '</span></div>';
   bd += '<div class="bd-row bonus"><span class="bd-label">Administrativos ilimitados</span><span class="bd-value">♾️ Gratis</span></div>';
