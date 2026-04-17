@@ -767,7 +767,12 @@ body {
   </div>
 </div>
 
-<!-- country determined by backend, no user toggle -->
+<!-- COUNTRY BADGE (informativo, no toggle) -->
+<div id="country-badge" style="display:none;background:white;border-bottom:2px solid var(--border);padding:10px 40px;align-items:center;gap:10px;box-shadow:0 2px 10px rgba(0,0,0,0.06)">
+  <span id="cb-flag" style="font-size:18px"></span>
+  <span id="cb-name" style="font-size:12px;font-weight:700;color:var(--navy)"></span>
+  <span id="cb-curr" style="margin-left:auto;background:var(--pale);border-radius:12px;padding:4px 12px;font-size:11px;font-weight:700;color:var(--cyan-dark)"></span>
+</div>
 
 <div class="wrap" id="main-wrap" style="display:none">
 
@@ -982,11 +987,23 @@ var PRICING_FACTOR = 1;
 var trackTimeout = null;
 
 // ── DATOS BASE ──
-var PR={CO:{currency:"COP $",sep:".",decs:0,esencial:{base:125000,adic:35000},pro:{base:150000,adic:40000},titanium:{base:225000,adic:55000}},OP:{currency:"USD $",sep:",",decs:2,esencial:{base:45,adic:12},pro:{base:65,adic:13},titanium:{base:85,adic:14}}};
+var PR={
+  CO:{currency:"COP $",sym:"COP",sep:".",decs:0,flag:"\ud83c\udde8\ud83c\uddf4",name:"Colombia",esencial:{base:125000,adic:35000},pro:{base:150000,adic:40000},titanium:{base:225000,adic:55000}},
+  CL:{currency:"CLP $",sym:"CLP",sep:".",decs:0,flag:"\ud83c\udde8\ud83c\uddf1",name:"Chile",esencial:{base:35000,adic:15000},pro:{base:55000,adic:16000},titanium:{base:85000,adic:18000}},
+  MX:{currency:"MXN $",sym:"MXN",sep:",",decs:2,flag:"\ud83c\uddf2\ud83c\uddfd",name:"M\u00e9xico",esencial:{base:842.80,adic:250},pro:{base:1180,adic:300},titanium:{base:1297,adic:450}},
+  ES:{currency:"EUR \u20ac",sym:"EUR",sep:",",decs:2,flag:"\ud83c\uddea\ud83c\uddf8",name:"Espa\u00f1a",anualOnly:true,esencial:{base:840,adic:120},pro:{base:1200,adic:192},titanium:{base:1440,adic:240}},
+  OP:{currency:"USD $",sym:"USD",sep:",",decs:2,flag:"\ud83c\udf0e",name:"Internacional",esencial:{base:45,adic:12},pro:{base:65,adic:13},titanium:{base:85,adic:14}}
+};
 var DESC={mensual:0.30,semestral:0.15,anual:0.20};
 var MULT={mensual:1,semestral:6,anual:12};
 var PINFO={esencial:{name:"Plan Esencial",tag:"Lo indispensable para una consulta",pill:"pill-e",txt:"ESENCIAL"},pro:{name:"Plan Pro",tag:"Control y visibilidad 360",pill:"pill-p",txt:"PRO"},titanium:{name:"Plan Titanium",tag:"Gestión avanzada con fidelización",pill:"pill-t",txt:"TITANIUM"}};
-var BOLSAS={CO:{wa:{r:[150,350,800,2000],p:[11000,23000,75000,120000]},firma:{r:[50,200,500,1000],p:[15000,30000,70000,140000]},factura:{r:[50,200,500,1000],p:[32000,50000,88000,165000]}},OP:{wa:{r:[150,350,800,2000],p:[15,35,70,170]},firma:{r:[50,200,500,1000],p:[25,40,70,170]},factura:{r:[50,200,500,1000],p:[10,17,35,60]}}};
+var BOLSAS={
+  CO:{wa:{r:[150,350,800,2000],p:[11000,23000,75000,120000]},firma:{r:[50,200,500,1000],p:[15000,30000,70000,140000]},factura:{r:[50,200,500,1000],p:[32000,50000,88000,165000]}},
+  CL:{wa:{r:[150,350,800,2000],p:[17780,38894,83671,197556]},firma:{r:[50,200,500,1000],p:[20833,39063,69444,164474]},factura:{r:[50,200,500,1000],p:[10000,13000,20000,30000]}},
+  MX:{wa:{r:[150,350,800,2000],p:[210,360,680,1300]},firma:{r:[50,100,200,500],p:[450,790,1400,3300]},factura:{r:[50,100,200,500],p:[160,270,440,500]}},
+  ES:{wa:{r:[150,350,800,2000],p:[180,396,864,2040]},firma:{r:[50,100,200,500],p:[300,540,960,2400]},factura:{r:[50,100,200,500],p:[120,204,420,720]}},
+  OP:{wa:{r:[150,350,800,2000],p:[15,35,70,170]},firma:{r:[50,100,200,500],p:[25,40,70,170]},factura:{r:[50,100,200,500],p:[10,17,35,60]}}
+};
 var MODS=[{id:"wa",icon:"💬",name:"WhatsApp — Recordatorios automáticos",desc:"Envíos automáticos de recordatorios y confirmaciones de citas."},{id:"firma",icon:"✍️",name:"Firma electrónica digital",desc:"Para consentimientos informados y documentos clínicos."},{id:"factura",icon:"🧾",name:"Facturador electrónico",desc:"Facturación electrónica integrada. Incluye FEV-RIPS en Colombia."}];
 var TIERS=["S","M","L","XL"];
 var NORMS={CO:[{t:"Res. 256/2016 — Calidad servicios",co:true},{t:"Res. 2275/2023 — HC electrónica + RIPS",co:true},{t:"Res. 3100/2019 — Habilitación centros",co:true},{t:"Res. 1888/2024 — Interoperabilidad",co:true},{t:"Ley 1581/2012 — Habeas data",co:true}],OP:[{t:"RGPD / GDPR — Protección datos",co:false},{t:"ISO 27001 — Seguridad certificada",co:false},{t:"Normativa local privacidad clínica",co:false},{t:"Estándares internacionales telemedicina",co:false}]};
@@ -1040,6 +1057,11 @@ var S={country:"CO",plan:"esencial",mod:"mensual",users:2,fc:"all"};
 var AS={wa:{on:true,tier:0},firma:{on:false,tier:0},factura:{on:false,tier:0}};
 
 // ── LOAD FROM API ──
+function normalizeCountry(c) {
+  var map = {CO:'CO',CL:'CL',MX:'MX',ES:'ES',AR:'OP',DO:'OP',PE:'OP',EC:'OP',INTL:'OP'};
+  return map[(c||'').toUpperCase()] || 'OP';
+}
+
 async function loadPropuesta() {
   if (!HASH) { showError(); return; }
   try {
@@ -1067,7 +1089,7 @@ async function loadPropuesta() {
       S.plan = data.params.plan || 'esencial';
       S.users = data.params.users || 2;
       S.mod = data.params.modalidad || 'mensual';
-      S.country = data.params.country || 'CO';
+      S.country = normalizeCountry(data.params.country);
       function parseMod(m) {
         if (!m || typeof m !== 'object') return null;
         var t = parseInt(m.tier);
@@ -1081,6 +1103,14 @@ async function loadPropuesta() {
         pm = parseMod(data.params.modulos.factura);
         if (pm) AS.factura = pm;
       }
+    }
+
+    // España: solo modalidad anual (precios EUR son anuales)
+    if (PR[S.country] && PR[S.country].anualOnly) {
+      S.mod = 'anual';
+      document.querySelectorAll('.mod-btn').forEach(function(b,i){
+        if (i < 2) b.style.display = 'none';
+      });
     }
 
     PRICING_FACTOR = data.pricing_factor || 1;
@@ -1098,6 +1128,15 @@ async function loadPropuesta() {
     document.getElementById('hero-section').style.removeProperty('display');
     document.getElementById('main-wrap').style.removeProperty('display');
     document.getElementById('footer-section').style.removeProperty('display');
+
+    // Country badge
+    var cp = PR[S.country];
+    if (cp) {
+      document.getElementById('cb-flag').textContent = cp.flag;
+      document.getElementById('cb-name').textContent = cp.name;
+      document.getElementById('cb-curr').textContent = cp.currency;
+      document.getElementById('country-badge').style.display = 'flex';
+    }
 
     render();
 
@@ -1199,10 +1238,7 @@ function syncModUI() {
 }
 
 function syncCountryUI() {
-  document.querySelectorAll('.c-tab').forEach(function(b, i) {
-    b.classList.toggle('active', (i === 0 && S.country === 'CO') || (i === 1 && S.country === 'OP'));
-  });
-  document.getElementById('cur-badge').textContent = PR[S.country].currency;
+  // Country is now set by backend, no toggle — badge updated in loadPropuesta
 }
 
 // ── TRACKING ──
@@ -1383,7 +1419,7 @@ function renderDetalle() {
     div.innerHTML = '<span class="inc-icon">' + item.i + '</span><div class="inc-text"><strong>' + item.t + (item.co ? '<span class="co-badge">CO</span>' : '') + '</strong><small>' + item.s + '</small></div>';
     igEl.appendChild(div);
   }
-  var norms = NORMS[S.country];
+  var norms = NORMS[S.country] || NORMS['OP'];
   document.getElementById('norm-title').textContent = S.country === 'CO' ? 'Cumplimiento normativo Colombia' : 'Cumplimiento normativo internacional';
   var npEl = document.getElementById('norm-pills');
   npEl.innerHTML = '';
@@ -1431,7 +1467,7 @@ function renderFeat() {
   for (var fi = 0; fi < FEATS.length; fi++) {
     var f = FEATS[fi];
     if (S.fc !== 'all' && f.cat !== S.fc) continue;
-    if (S.country === 'OP' && f.co) continue;
+    if (S.country !== 'CO' && f.co) continue;
     var card = document.createElement('div');
     card.className = 'feat-card';
     var dots = (f.pl.indexOf('e') >= 0 ? '<span class="fpd e">Esencial</span>' : '') + (f.pl.indexOf('p') >= 0 ? '<span class="fpd p">Pro</span>' : '') + (f.pl.indexOf('t') >= 0 ? '<span class="fpd t">Titanium</span>' : '');
