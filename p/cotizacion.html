@@ -346,9 +346,10 @@ let STATE = {
 // ═══ INIT ═══
 document.addEventListener('DOMContentLoaded', () => {
   const path = window.location.pathname;
-  const match = path.match(/\/p\/([a-f0-9]{8})/);
+  // Acepta /p/{hash} y /{negocio}/{hash}
+  const match = path.match(/\/([^/]+)\/([a-f0-9]{8})$/);
   if (!match) return showError('Enlace invalido', 'Este enlace no tiene el formato correcto.');
-  STATE.hash = match[1];
+  STATE.hash = match[2];
   loadPropuesta();
 });
 

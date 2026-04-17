@@ -1,6 +1,7 @@
 {
   "rewrites": [
-    { "source": "/p/:hash([a-f0-9]{8})", "destination": "/p/cotizacion.html" }
+    { "source": "/p/:hash([a-f0-9]{8})", "destination": "/p/cotizacion.html" },
+    { "source": "/:slug([a-z0-9-]+)/:hash([a-f0-9]{8})", "destination": "/p/cotizacion.html" }
   ],
   "headers": [
     {
