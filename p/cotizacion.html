@@ -56,10 +56,74 @@ body {
 
 /* ── PRINT ── */
 @media print {
-  .no-print { display:none !important; }
-  /* country-bar removed — country comes from backend */
-  body { background:white; }
-  .hero { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  /* Ocultar controles interactivos */
+  .no-print,
+  .download-bar,
+  .country-bar,
+  #loading-state,
+  .counter-btn,
+  .mod-btn,
+  .feat-tabs,
+  .adic-module-head .adic-toggle,
+  .toggle
+  { display:none !important; }
+
+  /* Forzar colores e imágenes en impresión */
+  * { -webkit-print-color-adjust:exact !important; print-color-adjust:exact !important; }
+
+  body { background:white; font-size:12px; margin:0; }
+  .wrap { padding:0 12px; max-width:100%; }
+
+  /* Hero */
+  .hero { padding:20px 28px 24px; break-inside:avoid; page-break-inside:avoid; }
+  .hero-title { font-size:24px; }
+  .hero-stats { gap:20px; }
+
+  /* NUNCA cortar estos bloques entre páginas */
+  .p-card,
+  .plan-card,
+  .plan-wrap,
+  .modalidad-row,
+  .user-counter-wrap,
+  .uc-block,
+  .amod,
+  .total-final,
+  .cotiz-result,
+  .cotiz-head,
+  .vig-card,
+  .inc-item,
+  .norm-card,
+  .feat-card,
+  .stat-card,
+  .award-pill,
+  .trust-section,
+  .footer
+  { break-inside:avoid; page-break-inside:avoid; }
+
+  /* Grillas: no cortar a la mitad */
+  .promise-grid,
+  .plan-cards,
+  .uc-grid,
+  .breakdown,
+  .inc-grid,
+  .feat-grid,
+  .stats-grid,
+  .awards-row
+  { break-inside:avoid; page-break-inside:avoid; }
+
+  /* Salto de página limpio antes de secciones grandes */
+  .trust-section  { break-before:page; page-break-before:always; padding:20px; }
+  .cotiz-result   { break-before:auto; }
+
+  /* Reducir padding para que entre más */
+  .plan-wrap      { padding:20px; }
+  .section        { padding:24px 0; }
+  .cotiz-result   { padding:20px 24px; }
+  .adic-section   { padding:18px 22px; }
+  .total-final    { padding:18px 24px; }
+
+  /* Footer siempre al final sin corte */
+  .footer { break-before:auto; margin-top:6px; padding:16px 28px; }
 }
 
 /* ── DOWNLOAD BAR ── */
@@ -410,6 +474,74 @@ body {
 .bd-row.total .bd-label { color:rgba(255,255,255,.7); font-size:13px; }
 .bd-row.total .bd-value { color:white; font-size:19px; }
 
+/* ── STEP HEADERS ── */
+.step-header {
+  display:flex; align-items:center; gap:14px;
+  margin-bottom:18px;
+}
+.step-num {
+  width:36px; height:36px;
+  border-radius:50%;
+  background:var(--cyan);
+  color:white;
+  font-size:16px; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.step-title { font-size:18px; font-weight:800; color:var(--navy); }
+.step-sub   { font-size:12px; color:var(--muted); margin-top:2px; }
+
+/* ── PLAN COMPARISON TABLE ── */
+.plan-table-wrap { margin-top:16px; }
+.plan-table-toggle {
+  display:flex; align-items:center; gap:8px;
+  background:none; border:1.5px solid var(--border);
+  border-radius:10px; padding:10px 18px;
+  font-family:'Poppins',sans-serif;
+  font-size:13px; font-weight:600;
+  color:var(--navy); cursor:pointer;
+  width:100%; justify-content:center;
+  transition:all .2s;
+}
+.plan-table-toggle:hover { border-color:var(--cyan); background:var(--pale); }
+.plan-table-toggle .arrow { transition:transform .3s; }
+.plan-table-wrap.open .plan-table-toggle .arrow { transform:rotate(180deg); }
+.plan-table { display:none; margin-top:14px; width:100%; border-collapse:collapse; }
+.plan-table-wrap.open .plan-table { display:table; }
+.plan-table th, .plan-table td {
+  padding:8px 10px;
+  font-size:12px;
+  text-align:center;
+  border-bottom:1px solid var(--border);
+}
+.plan-table th {
+  font-weight:700;
+  color:var(--navy);
+  background:var(--pale);
+  position:sticky; top:0;
+}
+.plan-table th.col-active { background:var(--pale2); }
+.plan-table td:first-child {
+  text-align:left;
+  font-weight:500;
+  color:var(--ink);
+  padding-left:14px;
+}
+.plan-table td.col-active { background:rgba(200,236,250,.25); }
+.plan-table .cat-row td {
+  font-size:11px;
+  font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:.8px;
+  background:var(--pale);
+  padding:10px 14px;
+  border-bottom:2px solid var(--border);
+}
+.pt-yes { color:var(--green); font-weight:700; }
+.pt-add { color:var(--gold); font-weight:700; }
+.pt-no  { color:#ccc; }
+
 /* ── INCLUDES ── */
 .inc-title {
   font-size:11px; font-weight:700;
@@ -651,8 +783,14 @@ body {
     </div>
   </div>
 
-  <!-- PLAN SELECTOR -->
-  <div class="section-label" style="margin-bottom:12px">Configurá tu cotización</div>
+  <!-- PASO 1: Elegí tu plan -->
+  <div class="step-header">
+    <div class="step-num">1</div>
+    <div class="step-info">
+      <div class="step-title">Elegí tu plan</div>
+      <div class="step-sub">Mensual, semestral o anual</div>
+    </div>
+  </div>
   <div class="plan-wrap">
     <div class="plan-wrap-title">Seleccioná tu plan</div>
     <div class="plan-wrap-sub">Elegí el que mejor se adapta a tu centro de salud</div>
@@ -686,9 +824,24 @@ body {
     </div>
   </div>
 
-  <!-- USER COUNTER -->
+  <!-- TABLA COMPARATIVA DE PLANES -->
+  <div class="plan-table-wrap" id="plan-table-wrap">
+    <button class="plan-table-toggle" onclick="document.getElementById('plan-table-wrap').classList.toggle('open')">
+      Ver todas las funcionalidades por plan <span class="arrow">▾</span>
+    </button>
+    <table class="plan-table" id="plan-table"></table>
+  </div>
+
+  <!-- PASO 2: Cantidad de usuarios -->
+  <div class="step-header" style="margin-top:32px">
+    <div class="step-num">2</div>
+    <div class="step-info">
+      <div class="step-title">Cantidad de usuarios</div>
+      <div class="step-sub">Profesionales con agenda + administrativos gratis</div>
+    </div>
+  </div>
   <div class="user-counter-wrap">
-    <div class="uc-title">¿Cuántos usuarios necesitan acceso?</div>
+    <div class="uc-title" style="display:none">¿Cuántos usuarios necesitan acceso?</div>
     <div class="uc-sub">Solo los profesionales de salud con agenda propia tienen costo. El personal administrativo accede de forma gratuita.</div>
     <div class="uc-grid">
       <div class="uc-block">
@@ -713,9 +866,16 @@ body {
     </div>
   </div>
 
-  <!-- ADICIONALES -->
+  <!-- PASO 3: Módulos adicionales -->
+  <div class="step-header" style="margin-top:32px">
+    <div class="step-num">3</div>
+    <div class="step-info">
+      <div class="step-title">Módulos adicionales</div>
+      <div class="step-sub">WhatsApp, Firma electrónica, Facturación</div>
+    </div>
+  </div>
   <div class="adic-section">
-    <div class="adic-title">Módulos adicionales</div>
+    <div class="adic-title" style="display:none">Módulos adicionales</div>
     <div class="adic-sub">Seleccioná los módulos que necesita tu centro y el volumen mensual de cada uno.</div>
     <div style="display:flex;flex-direction:column;gap:14px" id="adic-mods"></div>
   </div>
@@ -829,11 +989,52 @@ var PINFO={esencial:{name:"Plan Esencial",tag:"Lo indispensable para una consult
 var BOLSAS={CO:{wa:{r:[150,350,800,2000],p:[11000,23000,75000,120000]},firma:{r:[50,200,500,1000],p:[15000,30000,70000,140000]},factura:{r:[50,200,500,1000],p:[32000,50000,88000,165000]}},OP:{wa:{r:[150,350,800,2000],p:[15,35,70,170]},firma:{r:[50,200,500,1000],p:[25,40,70,170]},factura:{r:[50,200,500,1000],p:[10,17,35,60]}}};
 var MODS=[{id:"wa",icon:"💬",name:"WhatsApp — Recordatorios automáticos",desc:"Envíos automáticos de recordatorios y confirmaciones de citas."},{id:"firma",icon:"✍️",name:"Firma electrónica digital",desc:"Para consentimientos informados y documentos clínicos."},{id:"factura",icon:"🧾",name:"Facturador electrónico",desc:"Facturación electrónica integrada. Incluye FEV-RIPS en Colombia."}];
 var TIERS=["S","M","L","XL"];
-var NORMS={CO:[{t:"Res. 256/2016 — Calidad servicios",co:true},{t:"Res. 2275/2023 — HC electrónica + RIPS",co:true},{t:"Res. 3100/2019 — Habilitación centros",co:true},{t:"Res. 1888/2024 — Interoperabilidad",co:true},{t:"Ley 1581/2012 — Habeas data",co:false}],OP:[{t:"RGPD / GDPR — Protección datos",co:false},{t:"ISO 27001 — Seguridad certificada",co:false},{t:"Normativa local privacidad clínica",co:false},{t:"Estándares internacionales telemedicina",co:false}]};
+var NORMS={CO:[{t:"Res. 256/2016 — Calidad servicios",co:true},{t:"Res. 2275/2023 — HC electrónica + RIPS",co:true},{t:"Res. 3100/2019 — Habilitación centros",co:true},{t:"Res. 1888/2024 — Interoperabilidad",co:true},{t:"Ley 1581/2012 — Habeas data",co:true}],OP:[{t:"RGPD / GDPR — Protección datos",co:false},{t:"ISO 27001 — Seguridad certificada",co:false},{t:"Normativa local privacidad clínica",co:false},{t:"Estándares internacionales telemedicina",co:false}]};
 var PINC={esencial:[{i:"📋",t:"Historia clínica personalizable",s:"Por especialidad. CIE-10/CIE-11.",co:false},{i:"📅",t:"Agenda + Link online",s:"Auto-agendamiento para pacientes.",co:false},{i:"🎥",t:"Telemedicina ilimitada",s:"Videoconsultas sin costo extra.",co:false},{i:"✍️",t:"Consentimientos + Firma electrónica",s:"Firma digital de documentos.",co:false}],pro:[{i:"📦",t:"Inventario virtual",s:"Control de stock de insumos.",co:false},{i:"💰",t:"Control gastos y remuneraciones",s:"Comisiones automáticas.",co:false},{i:"📊",t:"+80 reportes Excel",s:"Gestión clínica y administrativa.",co:false},{i:"🏢",t:"Gestión multisucursal",s:"Desde una sola plataforma.",co:false}],titanium:[{i:"😊",t:"Ficha estética facial",s:"Esquema facial intuitivo.",co:false},{i:"💌",t:"Email marketing",s:"Campañas de fidelización activa.",co:false},{i:"⚡",t:"Tareas automáticas",s:"Seguimiento y re-agendamiento.",co:false},{i:"🧪",t:"Laboratorios y exámenes",s:"Solicitudes internas y externas.",co:false}]};
 var BINC=[{i:"💬",t:"WhatsApp — 2.000 recordatorios",s:"Envíos automáticos mensuales.",co:false},{i:"🤖",t:"IA incluida (dictado, resumen, auditoría)",s:"Tokens según plan.",co:false},{i:"🔒",t:"ISO 27001 + AWS",s:"Máxima seguridad de datos.",co:false},{i:"🎓",t:"Capacitación + Soporte",s:"Clases virtuales + soporte L-V.",co:false}];
 var COINC=[{i:"🧾",t:"Facturación electrónica",s:"Sin salir de la plataforma.",co:true},{i:"📊",t:"RIPS + CUPS + FEV",s:"Envío directo al Ministerio.",co:true}];
 var FEATS=[{ico:"📅",n:"Agendamiento Online",d:"Auto-agendamiento, 3 vistas, confirmaciones.",pl:["e","p","t"],cat:"atencion"},{ico:"📋",n:"Ficha Clínica",d:"Personalizable por especialidad. CIE-10/CIE-11.",pl:["e","p","t"],cat:"atencion"},{ico:"🎥",n:"Telemedicina",d:"Videoconsultas ilimitadas integradas.",pl:["e","p","t"],cat:"atencion"},{ico:"✍️",n:"Firma Electrónica",d:"Consentimientos con firma digital.",pl:["e","p","t"],cat:"atencion"},{ico:"💊",n:"Recetas + Vademcéum",d:"Prescripción médica integrada.",pl:["e","p","t"],cat:"atencion"},{ico:"😊",n:"Ficha Estética Facial",d:"Esquema facial para estética.",pl:["t"],cat:"atencion"},{ico:"💰",n:"Control de Gastos",d:"Gastos, costos y flujos de caja.",pl:["p","t"],cat:"gestion"},{ico:"📦",n:"Inventario",d:"Control de stock de insumos.",pl:["p","t"],cat:"gestion"},{ico:"💼",n:"Remuneraciones",d:"Cálculo automático de comisiones.",pl:["p","t"],cat:"gestion"},{ico:"📊",n:"+80 Reportes Excel",d:"Gestión clínica y administrativa.",pl:["p","t"],cat:"gestion"},{ico:"🏢",n:"Gestión Sucursales",d:"Manejo multisucursal.",pl:["p","t"],cat:"gestion"},{ico:"🧪",n:"Laboratorios",d:"Solicitudes internas y externas.",pl:["t"],cat:"gestion"},{ico:"💌",n:"Email Marketing",d:"Campañas de fidelización.",pl:["t"],cat:"fideliz"},{ico:"⚡",n:"Tareas Automáticas",d:"Automatización de seguimiento.",pl:["t"],cat:"fideliz"},{ico:"📝",n:"Encuestas NPS",d:"Mide satisfacción del paciente.",pl:["t"],cat:"fideliz"},{ico:"🔗",n:"API Integraciones",d:"Conecta con tus otros sistemas.",pl:["p","t"],cat:"tech"},{ico:"🤖",n:"IA — Dictado + Resumen",d:"Transcripción y resumen clínico.",pl:["e","p","t"],cat:"tech"},{ico:"🔒",n:"ISO 27001 + AWS",d:"Almacenamiento seguro certificado.",pl:["e","p","t"],cat:"tech"},{ico:"🧾",n:"RIPS + FEV (Colombia)",d:"Envío FEV-RIPS al Ministerio.",pl:["e","p","t"],cat:"tech",co:true}];
+
+// ── PLAN COMPARISON TABLE DATA ──
+// v=yes(included), a=adicional(bolt-on), n=no
+var PLAN_TABLE=[
+  {cat:"ATENCION DE PACIENTES",rows:[
+    {t:"Gestion de recursos",e:"v",p:"v",ti:"v"},
+    {t:"Agenda medica",e:"v",p:"v",ti:"v"},
+    {t:"Telemedicina",e:"v",p:"v",ti:"v"},
+    {t:"Documentos personalizables",e:"v",p:"v",ti:"v"},
+    {t:"Recetas con Vademecum",e:"v",p:"v",ti:"v"},
+    {t:"Consentimientos informados",e:"v",p:"v",ti:"v"},
+    {t:"Ficha clinica electronica",e:"v",p:"v",ti:"v"},
+    {t:"Agendamiento online",e:"v",p:"v",ti:"v"},
+    {t:"Ficha estetica facial",e:"a",p:"a",ti:"v"},
+    {t:"Firma electronica digital",e:"a",p:"a",ti:"a"},
+    {t:"Facturador electronico",e:"a",p:"a",ti:"a"},
+    {t:"WhatsApp — Recordatorios",e:"a",p:"a",ti:"a"}
+  ]},
+  {cat:"GESTION CLINICA",rows:[
+    {t:"Inventario",e:"n",p:"v",ti:"v"},
+    {t:"Pagos y Gastos",e:"n",p:"v",ti:"v"},
+    {t:"Remuneraciones",e:"n",p:"v",ti:"v"},
+    {t:"Laboratorios y examenes",e:"n",p:"n",ti:"v"},
+    {t:"Convenios",e:"v",p:"v",ti:"v"}
+  ]},
+  {cat:"CONTROL DE OPERACIONES",rows:[
+    {t:"Tareas automaticas de citas",e:"n",p:"n",ti:"v"},
+    {t:"Reportes Excel",e:"n",p:"v",ti:"v"},
+    {t:"Flujo de caja automatico",e:"n",p:"v",ti:"v"},
+    {t:"Gestion de sucursales",e:"n",p:"v",ti:"v"},
+    {t:"Integracion con Siigo",e:"n",p:"n",ti:"v"},
+    {t:"Recaudacion y Cajas",e:"v",p:"v",ti:"v"}
+  ]},
+  {cat:"FIDELIZACION Y RETENCION",rows:[
+    {t:"Campanas de Agendamiento",e:"n",p:"v",ti:"v"},
+    {t:"Panel de desempeno",e:"n",p:"v",ti:"v"},
+    {t:"Email marketing",e:"n",p:"n",ti:"v"},
+    {t:"Encuestas de satisfaccion",e:"n",p:"n",ti:"v"},
+    {t:"Datafono",e:"n",p:"n",ti:"v"}
+  ]}
+];
 
 var S={country:"CO",plan:"esencial",mod:"mensual",users:2,fc:"all"};
 var AS={wa:{on:true,tier:0},firma:{on:false,tier:0},factura:{on:false,tier:0}};
@@ -1186,6 +1387,35 @@ function renderDetalle() {
   }
 }
 
+// ── RENDER PLAN TABLE ──
+function renderPlanTable() {
+  var tbl = document.getElementById('plan-table');
+  var pMap = {esencial:'e',pro:'p',titanium:'t'};
+  var active = pMap[S.plan] || 'e';
+  var html = '<thead><tr><th style="text-align:left">Funcionalidad</th>';
+  html += '<th class="' + (active==='e'?'col-active':'') + '">Esencial</th>';
+  html += '<th class="' + (active==='p'?'col-active':'') + '">Pro</th>';
+  html += '<th class="' + (active==='t'?'col-active':'') + '">Titanium</th>';
+  html += '</tr></thead><tbody>';
+  var sym = {v:'<span class="pt-yes">&#10003;</span>',a:'<span class="pt-add">+</span>',n:'<span class="pt-no">&mdash;</span>'};
+  for (var ci = 0; ci < PLAN_TABLE.length; ci++) {
+    var cat = PLAN_TABLE[ci];
+    html += '<tr class="cat-row"><td colspan="4">' + cat.cat + '</td></tr>';
+    for (var ri = 0; ri < cat.rows.length; ri++) {
+      var r = cat.rows[ri];
+      html += '<tr><td>' + r.t + '</td>';
+      html += '<td class="' + (active==='e'?'col-active':'') + '">' + sym[r.e] + '</td>';
+      html += '<td class="' + (active==='p'?'col-active':'') + '">' + sym[r.p] + '</td>';
+      html += '<td class="' + (active==='t'?'col-active':'') + '">' + sym[r.ti] + '</td>';
+      html += '</tr>';
+    }
+  }
+  html += '</tbody>';
+  html += '<tfoot><tr><td colspan="4" style="text-align:center;padding:10px;font-size:11px;color:var(--muted)">';
+  html += '<span class="pt-yes">&#10003;</span> Incluido &nbsp;&nbsp; <span class="pt-add">+</span> Adicional (bolsa) &nbsp;&nbsp; <span class="pt-no">&mdash;</span> No incluido</td></tr></tfoot>';
+  tbl.innerHTML = html;
+}
+
 // ── RENDER FEATURES ──
 function renderFeat() {
   var fgEl = document.getElementById('feat-grid');
@@ -1209,7 +1439,7 @@ function filterFeat(cat, btn) {
   renderFeat();
 }
 
-function render() { renderAdic(); calcTotal(); renderDetalle(); renderFeat(); }
+function render() { renderAdic(); calcTotal(); renderDetalle(); renderPlanTable(); renderFeat(); }
 
 // ── INIT ──
 loadPropuesta();
