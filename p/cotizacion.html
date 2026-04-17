@@ -1,743 +1,1264 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tu propuesta personalizada</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <style>
-    /* ═══ RESET + BASE ═══ */
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      font-family: var(--font-body, 'Poppins'), sans-serif;
-      background: var(--bg, #f4f7fa);
-      color: var(--text, #1a2332);
-      line-height: 1.6;
-      min-height: 100vh;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medilink — Propuesta Comercial</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
 
-    /* ═══ CSS VARIABLES (overridden by tenant branding) ═══ */
-    :root {
-      --primary: #00AEEF;
-      --secondary: #0B3C5A;
-      --accent: #00B388;
-      --font-body: 'Poppins', sans-serif;
-      --font-heading: 'Poppins', sans-serif;
-      --bg: #f4f7fa;
-      --text: #1a2332;
-      --text-light: #5a6978;
-      --card-bg: #ffffff;
-      --card-border: #e2e8f0;
-      --card-shadow: 0 2px 12px rgba(0,0,0,.08);
-      --hero-gradient: linear-gradient(135deg, #0B3C5A 0%, #0D6B99 55%, #00AEEF 100%);
-      --radius: 16px;
-    }
+:root {
+  --cyan:       #00AEEF;
+  --cyan-dark:  #0090C4;
+  --navy:       #0B3C5A;
+  --navy2:      #1B5276;
+  --white:      #FFFFFF;
+  --pale:       #EBF8FE;
+  --pale2:      #C8ECFA;
+  --ink:        #1A2B3C;
+  --muted:      #6B8A9E;
+  --border:     #D4ECF7;
+  --green:      #00B388;
+  --gold:       #F5A623;
+  --purple:     #6C3FC8;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+body {
+  font-family:'Poppins',sans-serif;
+  background:#F4FBFF;
+  color:var(--ink);
+  font-size:14px;
+  line-height:1.5;
+}
 
-    /* ═══ LOADING STATE ═══ */
-    .loading-screen {
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 100vh; gap: 20px;
-    }
-    .loading-spinner {
-      width: 48px; height: 48px; border: 4px solid #e2e8f0;
-      border-top-color: var(--primary); border-radius: 50%;
-      animation: spin .8s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    .loading-text { color: var(--text-light); font-size: 14px; }
+/* ── LOADING STATE ── */
+#loading-state {
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+  flex-direction:column;
+  gap:16px;
+}
+.loader-spinner {
+  width:40px;height:40px;
+  border:3px solid var(--pale2);
+  border-top-color:var(--cyan);
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-text { font-size:13px; color:var(--muted); font-weight:500; }
 
-    /* ═══ ERROR STATE ═══ */
-    .error-screen {
-      display: none; flex-direction: column; align-items: center; justify-content: center;
-      min-height: 100vh; gap: 16px; text-align: center; padding: 32px;
-    }
-    .error-screen .icon { font-size: 48px; }
-    .error-screen h2 { font-size: 24px; color: var(--secondary); }
-    .error-screen p { color: var(--text-light); max-width: 400px; }
+/* ── PRINT ── */
+@media print {
+  .no-print { display:none !important; }
+  .country-bar { position:static; }
+  body { background:white; }
+  .hero { -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+}
 
-    /* ═══ MAIN CONTENT (hidden until loaded) ═══ */
-    .propuesta { display: none; }
+/* ── DOWNLOAD BAR ── */
+.download-bar {
+  background:var(--navy);
+  padding:10px 32px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.dl-text { font-size:12px; color:rgba(255,255,255,0.7); font-weight:500; }
+.dl-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:var(--cyan);
+  color:white;
+  border:none;
+  padding:8px 18px;
+  border-radius:20px;
+  font-family:'Poppins',sans-serif;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .2s;
+}
+.dl-btn:hover { background:var(--cyan-dark); }
 
-    /* ═══ HERO ═══ */
-    .hero {
-      background: var(--hero-gradient);
-      color: #fff; padding: 48px 24px 56px; text-align: center;
-      position: relative; overflow: hidden;
-    }
-    .hero::after {
-      content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 40px;
-      background: var(--bg); border-radius: 40px 40px 0 0;
-    }
-    .hero-logo { max-height: 48px; margin-bottom: 16px; filter: brightness(0) invert(1); }
-    .hero h1 { font-family: var(--font-heading); font-size: clamp(22px, 5vw, 32px); font-weight: 700; margin-bottom: 8px; }
-    .hero .tagline { font-size: 16px; opacity: .85; }
-    .hero .lead-name { font-size: 14px; opacity: .7; margin-top: 12px; }
+/* ── HERO ── */
+.hero {
+  background:linear-gradient(135deg, #0B3C5A 0%, #0D6B99 60%, #00AEEF 100%);
+  padding:32px 40px 40px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::after {
+  content:'';
+  position:absolute;
+  bottom:-60px; right:-40px;
+  width:280px; height:280px;
+  border-radius:50%;
+  background:rgba(255,255,255,0.05);
+}
+.hero-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:28px;
+}
+.logo-wrap img { height:44px; width:auto; }
+.hero-iso { display:flex; align-items:center; gap:10px; }
+.iso-badge {
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.25);
+  border-radius:8px;
+  padding:6px 12px;
+  font-size:11px;
+  font-weight:700;
+  color:white;
+  text-align:center;
+  line-height:1.3;
+}
+.iso-badge span { display:block; font-size:9px; color:rgba(255,255,255,0.65); font-weight:500; }
+.hero-title {
+  font-size:34px;
+  font-weight:800;
+  color:white;
+  line-height:1.15;
+  max-width:580px;
+  position:relative; z-index:1;
+}
+.hero-title em { color:var(--cyan); font-style:italic; }
+.hero-welcome {
+  font-size:15px;
+  color:rgba(255,255,255,0.85);
+  margin-bottom:8px;
+  font-weight:500;
+  position:relative; z-index:1;
+}
+.hero-sub {
+  font-size:14px;
+  color:rgba(255,255,255,0.75);
+  margin-top:10px;
+  font-weight:400;
+  position:relative; z-index:1;
+}
+.hero-stats {
+  display:flex;
+  gap:32px;
+  margin-top:24px;
+  position:relative; z-index:1;
+}
+.hero-stat .num { font-size:22px; font-weight:800; color:var(--cyan); }
+.hero-stat .lbl { font-size:11px; color:rgba(255,255,255,0.6); font-weight:500; }
 
-    /* ═══ CONTAINER ═══ */
-    .container { max-width: 900px; margin: 0 auto; padding: 0 16px 48px; }
+/* ── COUNTRY BAR ── */
+.country-bar {
+  background:white;
+  border-bottom:2px solid var(--border);
+  padding:12px 40px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  position:sticky;
+  top:0;
+  z-index:100;
+  box-shadow:0 2px 10px rgba(0,0,0,0.06);
+}
+.c-label { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:1px; white-space:nowrap; }
+.c-tabs { display:flex; gap:4px; background:var(--pale); border-radius:24px; padding:3px; }
+.c-tab {
+  padding:6px 18px;
+  border-radius:20px;
+  border:none;
+  background:transparent;
+  font-family:'Poppins',sans-serif;
+  font-size:12px;
+  font-weight:600;
+  color:var(--muted);
+  cursor:pointer;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.c-tab.active { background:var(--cyan-dark); color:white; box-shadow:0 2px 6px rgba(0,144,196,.3); }
+.currency-badge {
+  margin-left:auto;
+  background:var(--pale);
+  border-radius:12px;
+  padding:4px 12px;
+  font-size:11px;
+  font-weight:700;
+  color:var(--cyan-dark);
+}
 
-    /* ═══ SECTION ═══ */
-    .section { margin-bottom: 32px; }
-    .section-title {
-      font-family: var(--font-heading); font-size: 20px; font-weight: 600;
-      color: var(--secondary); margin-bottom: 16px; padding-left: 4px;
-    }
+/* ── CONTAINER ── */
+.wrap { max-width:1080px; margin:0 auto; padding:0 28px; }
+.section { padding:44px 0; }
+.section-label {
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color:var(--cyan-dark);
+  margin-bottom:6px;
+}
+.section-h {
+  font-size:26px;
+  font-weight:800;
+  color:var(--navy);
+  line-height:1.2;
+}
+.section-h em { color:var(--cyan-dark); font-style:italic; }
 
-    /* ═══ CARDS ═══ */
-    .card {
-      background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: var(--radius); padding: 24px; box-shadow: var(--card-shadow);
-    }
+/* ── PROMISE ── */
+.promise-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:14px;
+  margin-top:24px;
+}
+.p-card {
+  background:white;
+  border-radius:12px;
+  padding:20px;
+  border:1px solid var(--border);
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+}
+.p-icon {
+  width:40px; height:40px;
+  border-radius:10px;
+  background:var(--pale);
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+.p-text strong { display:block; font-size:13px; font-weight:700; color:var(--navy); margin-bottom:3px; }
+.p-text small { font-size:12px; color:var(--muted); line-height:1.5; }
 
-    /* ═══ PLAN CARDS ═══ */
-    .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
-    .plan-card {
-      background: var(--card-bg); border: 2px solid var(--card-border);
-      border-radius: var(--radius); padding: 24px; text-align: center;
-      cursor: pointer; transition: all .2s; position: relative;
-    }
-    .plan-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
-    .plan-card.selected { border-color: var(--primary); background: linear-gradient(180deg, rgba(0,174,239,.04) 0%, transparent 100%); }
-    .plan-card.selected::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-      background: var(--primary); border-radius: var(--radius) var(--radius) 0 0;
-    }
-    .plan-card .plan-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--secondary); text-transform: uppercase; }
-    .plan-card .plan-price { font-size: 28px; font-weight: 700; color: var(--primary); margin: 12px 0 4px; }
-    .plan-card .plan-price-original { font-size: 14px; color: var(--text-light); text-decoration: line-through; }
-    .plan-card .plan-price-label { font-size: 12px; color: var(--text-light); }
-    .plan-card .plan-desc { font-size: 13px; color: var(--text-light); margin-top: 8px; }
-    .plan-badge {
-      display: inline-block; background: var(--accent); color: #fff;
-      font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 99px;
-      margin-bottom: 8px;
-    }
+/* ── PLAN SELECTOR ── */
+.plan-wrap {
+  background:var(--navy);
+  border-radius:20px;
+  padding:36px;
+  margin:8px 0 0;
+  position:relative;
+  overflow:hidden;
+}
+.plan-wrap::before {
+  content:''; position:absolute;
+  top:-50px; right:-50px;
+  width:200px; height:200px;
+  border-radius:50%;
+  background:rgba(0,174,239,.08);
+}
+.plan-wrap-title { font-size:20px; font-weight:800; color:white; margin-bottom:4px; }
+.plan-wrap-sub { font-size:13px; color:rgba(255,255,255,.55); margin-bottom:24px; }
+.plan-cards {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  margin-bottom:24px;
+}
+.plan-card {
+  background:rgba(255,255,255,.07);
+  border:2px solid rgba(255,255,255,.12);
+  border-radius:14px;
+  padding:20px 16px;
+  cursor:pointer;
+  transition:all .2s;
+  position:relative;
+}
+.plan-card:hover { background:rgba(255,255,255,.11); }
+.plan-card.sel-e { border-color:var(--cyan); background:rgba(0,174,239,.14); box-shadow:0 0 0 1px rgba(0,174,239,.3); }
+.plan-card.sel-p { border-color:var(--gold); background:rgba(245,166,35,.12); box-shadow:0 0 0 1px rgba(245,166,35,.3); }
+.plan-card.sel-t { border-color:#A78BFA; background:rgba(108,63,200,.14); box-shadow:0 0 0 1px rgba(108,63,200,.4); }
+.plan-emoji { font-size:26px; margin-bottom:7px; display:block; }
+.plan-name { font-size:15px; font-weight:700; color:white; margin-bottom:3px; }
+.plan-desc { font-size:11px; color:rgba(255,255,255,.5); line-height:1.4; }
+.plan-tick {
+  position:absolute; top:10px; right:10px;
+  width:20px; height:20px;
+  border-radius:50%;
+  background:var(--cyan);
+  display:none;
+  align-items:center; justify-content:center;
+  font-size:10px; color:white; font-weight:900;
+}
+.plan-card.sel-e .plan-tick,
+.plan-card.sel-p .plan-tick,
+.plan-card.sel-t .plan-tick { display:flex; }
 
-    /* ═══ USERS CONTROL ═══ */
-    .users-control {
-      display: flex; align-items: center; gap: 16px;
-      justify-content: center; padding: 20px 0;
-    }
-    .users-control label { font-weight: 500; color: var(--text); }
-    .users-btn {
-      width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary);
-      background: transparent; color: var(--primary); font-size: 20px; font-weight: 700;
-      cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center;
-    }
-    .users-btn:hover { background: var(--primary); color: #fff; }
-    .users-btn:disabled { opacity: .3; cursor: not-allowed; }
-    .users-count { font-size: 28px; font-weight: 700; color: var(--primary); min-width: 40px; text-align: center; }
+/* ── MODALIDAD ── */
+.modalidad-row {
+  display:flex;
+  align-items:center;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:0;
+}
+.mod-label { font-size:12px; font-weight:600; color:rgba(255,255,255,.55); }
+.mod-opts { display:flex; gap:6px; }
+.mod-btn {
+  padding:7px 16px;
+  border-radius:18px;
+  border:1.5px solid rgba(255,255,255,.2);
+  background:transparent;
+  font-family:'Poppins',sans-serif;
+  font-size:12px; font-weight:600;
+  color:rgba(255,255,255,.6);
+  cursor:pointer;
+  transition:all .2s;
+}
+.mod-btn.active { background:var(--cyan); border-color:var(--cyan); color:white; }
+.save-tag { background:rgba(255,255,255,.2); padding:1px 5px; border-radius:6px; font-size:10px; margin-left:3px; }
 
-    /* ═══ MODULES ═══ */
-    .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-    .module-card {
-      background: var(--card-bg); border: 1px solid var(--card-border);
-      border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px;
-    }
-    .module-icon { font-size: 24px; }
-    .module-info { flex: 1; }
-    .module-name { font-weight: 600; font-size: 14px; }
-    .module-detail { font-size: 12px; color: var(--text-light); }
-    .module-price { font-weight: 700; color: var(--primary); font-size: 15px; white-space: nowrap; }
+/* ── USER COUNTER ── */
+.user-counter-wrap {
+  background:white;
+  border-radius:18px;
+  padding:28px 32px;
+  margin-top:20px;
+  border:1.5px solid var(--border);
+}
+.uc-title { font-size:16px; font-weight:700; color:var(--navy); margin-bottom:6px; }
+.uc-sub { font-size:12px; color:var(--muted); margin-bottom:22px; }
+.uc-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.uc-block {
+  background:var(--pale);
+  border-radius:14px;
+  padding:18px 20px;
+  border:1.5px solid var(--pale2);
+}
+.uc-block.free-block {
+  background:linear-gradient(135deg,#E8FDF5,#D4F7EC);
+  border-color:rgba(0,179,136,.25);
+}
+.uc-block-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:12px;
+}
+.uc-block-label { font-size:12px; font-weight:700; color:var(--navy); }
+.uc-block-label small { display:block; font-size:11px; font-weight:500; color:var(--muted); margin-top:2px; }
+.promo-tag {
+  background:var(--green);
+  color:white;
+  font-size:10px;
+  font-weight:700;
+  padding:3px 8px;
+  border-radius:8px;
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+.counter-row { display:flex; align-items:center; gap:12px; }
+.counter-btn {
+  width:32px; height:32px;
+  border-radius:50%;
+  border:1.5px solid var(--pale2);
+  background:white;
+  font-size:18px;
+  font-weight:700;
+  color:var(--cyan-dark);
+  cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .2s;
+  line-height:1;
+  padding-bottom:1px;
+}
+.counter-btn:hover { background:var(--cyan); color:white; border-color:var(--cyan); }
+.counter-num { font-size:28px; font-weight:800; color:var(--navy); min-width:40px; text-align:center; }
+.counter-label { font-size:11px; color:var(--muted); font-weight:500; }
 
-    /* ═══ TOTAL ═══ */
-    .total-card {
-      background: var(--secondary); color: #fff; border-radius: var(--radius);
-      padding: 28px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,.15);
-    }
-    .total-label { font-size: 14px; opacity: .8; margin-bottom: 4px; }
-    .total-amount { font-size: 36px; font-weight: 700; }
-    .total-period { font-size: 14px; opacity: .7; margin-top: 4px; }
-    .total-savings {
-      display: inline-block; background: var(--accent); color: #fff;
-      font-size: 13px; font-weight: 600; padding: 4px 16px; border-radius: 99px;
-      margin-top: 12px;
-    }
+/* ── COTIZ RESULT ── */
+.cotiz-result {
+  background:white;
+  border-radius:18px;
+  padding:28px 32px;
+  margin-top:20px;
+  border:1.5px solid var(--border);
+}
+.cotiz-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-start;
+  margin-bottom:22px;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;
+  gap:16px;
+}
+.plan-pill {
+  display:inline-block;
+  padding:4px 12px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.8px;
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.pill-e { background:#E3F7FF; color:var(--cyan-dark); }
+.pill-p { background:#FFF8E6; color:#B8860B; }
+.pill-t { background:#F3EEFF; color:var(--purple); }
+.cotiz-plan-name { font-size:20px; font-weight:800; color:var(--navy); }
+.cotiz-plan-tag { font-size:12px; color:var(--muted); margin-top:3px; }
+.price-box { text-align:right; }
+.price-big { font-size:38px; font-weight:800; color:var(--navy); line-height:1; }
+.price-curr { font-size:14px; font-weight:600; color:var(--muted); }
+.price-period { font-size:11px; color:var(--muted); margin-top:3px; }
+.price-normal { font-size:12px; color:var(--muted); margin-top:5px; }
+.price-normal strong { color:var(--ink); }
+.green-badge {
+  display:inline-flex; align-items:center; gap:4px;
+  background:#E8FDF5; color:var(--green);
+  font-size:11px; font-weight:700;
+  padding:3px 10px; border-radius:10px;
+  margin-top:6px;
+}
+.breakdown { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:20px; }
+.bd-row {
+  background:var(--pale);
+  border-radius:10px;
+  padding:10px 14px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.bd-label { font-size:12px; color:var(--muted); font-weight:500; }
+.bd-value { font-size:13px; font-weight:700; color:var(--navy); }
+.bd-row.disc .bd-value { color:#C62828; }
+.bd-row.bonus { background:#E8FDF5; }
+.bd-row.bonus .bd-value { color:var(--green); }
+.bd-row.total { grid-column:span 2; background:var(--navy); padding:14px 16px; }
+.bd-row.total .bd-label { color:rgba(255,255,255,.7); font-size:13px; }
+.bd-row.total .bd-value { color:white; font-size:19px; }
 
-    /* ═══ PROMISE / NORMATIVA ═══ */
-    .promise-card { background: linear-gradient(135deg, rgba(0,179,136,.08), rgba(0,174,239,.05)); border: 1px solid rgba(0,179,136,.2); }
-    .promise-card h3 { color: var(--accent); font-size: 16px; margin-bottom: 8px; }
-    .promise-card p { font-size: 14px; color: var(--text-light); }
-    .promise-card ul { list-style: none; padding: 0; }
-    .promise-card li { padding: 6px 0; font-size: 14px; color: var(--text); }
-    .promise-card li::before { content: ''; margin-right: 8px; }
+/* ── INCLUDES ── */
+.inc-title {
+  font-size:11px; font-weight:700;
+  color:var(--muted);
+  text-transform:uppercase;
+  letter-spacing:1px;
+  margin-bottom:12px;
+  display:flex; align-items:center; gap:8px;
+}
+.inc-title::after { content:''; flex:1; height:1px; background:var(--border); }
+.inc-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; }
+.inc-item {
+  display:flex;
+  gap:10px;
+  padding:10px 12px;
+  background:var(--pale);
+  border-radius:10px;
+  border-left:3px solid var(--cyan);
+  align-items:flex-start;
+}
+.inc-item.co-item { border-left-color:var(--gold); }
+.inc-icon { font-size:15px; flex-shrink:0; margin-top:2px; }
+.inc-text strong { display:block; font-size:12px; font-weight:700; color:var(--navy); }
+.inc-text small { font-size:11px; color:var(--muted); }
+.co-badge {
+  display:inline-block;
+  background:#FFF3CD;
+  color:#B8860B;
+  font-size:9px; font-weight:800;
+  padding:1px 5px;
+  border-radius:4px;
+  margin-left:4px;
+  text-transform:uppercase;
+}
 
-    /* ═══ FEATURES ═══ */
-    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
-    .feature-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; }
-    .feature-check { color: var(--accent); font-size: 18px; flex-shrink: 0; margin-top: 2px; }
-    .feature-text { font-size: 14px; color: var(--text); }
+/* ── VIGENCIA ── */
+.vig-card {
+  background:#FFFBEB;
+  border:1px solid rgba(245,158,11,.25);
+  border-radius:10px;
+  padding:13px 16px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin:18px 0;
+}
+.vig-text { font-size:13px; color:#92400E; }
+.vig-text strong { color:#B45309; font-weight:700; }
 
-    /* ═══ STATS ═══ */
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; text-align: center; }
-    .stat-item .stat-number { font-size: 28px; font-weight: 700; color: var(--primary); }
-    .stat-item .stat-label { font-size: 12px; color: var(--text-light); }
+.tf-chip{display:inline-flex;align-items:center;background:rgba(255,255,255,.09);border-radius:8px;padding:4px 10px;font-size:11px;color:rgba(255,255,255,.6);font-weight:600}
 
-    /* ═══ CTA ═══ */
-    .cta-section { text-align: center; padding: 32px 0; }
-    .cta-btn {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: var(--primary); color: #fff; border: none;
-      font-family: var(--font-heading); font-size: 16px; font-weight: 600;
-      padding: 14px 32px; border-radius: 99px; cursor: pointer;
-      text-decoration: none; transition: all .2s;
-      box-shadow: 0 4px 16px rgba(0,174,239,.3);
-    }
-    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,174,239,.4); }
+/* ── NORMATIVA ── */
+.norm-card {
+  background:linear-gradient(135deg,#F0FDF9,#E6FAF2);
+  border:1.5px solid rgba(0,179,136,.2);
+  border-radius:16px;
+  padding:22px 26px;
+  display:flex; gap:16px;
+  align-items:flex-start;
+  margin:28px 0;
+}
+.norm-icon {
+  width:44px; height:44px;
+  background:var(--green);
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+.norm-title { font-size:11px; font-weight:800; color:var(--green); text-transform:uppercase; letter-spacing:.8px; margin-bottom:8px; }
+.norm-pills { display:flex; flex-wrap:wrap; gap:7px; }
+.norm-pill {
+  background:white;
+  border:1px solid rgba(0,179,136,.2);
+  border-radius:16px;
+  padding:4px 10px;
+  font-size:11px; font-weight:600;
+  color:var(--ink);
+}
+.norm-pill.co-sp { background:#FFF8E6; border-color:rgba(245,166,35,.3); color:#B8860B; }
 
-    /* ═══ FOOTER ═══ */
-    .footer {
-      text-align: center; padding: 24px 16px; font-size: 12px; color: var(--text-light);
-      border-top: 1px solid var(--card-border); margin-top: 16px;
-    }
-    .footer a { color: var(--primary); text-decoration: none; }
+/* ── FEATURES ── */
+.feat-tabs { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:18px; }
+.feat-tab {
+  padding:7px 14px;
+  border-radius:18px;
+  border:1.5px solid var(--border);
+  background:white;
+  font-family:'Poppins',sans-serif;
+  font-size:11px; font-weight:600;
+  color:var(--muted);
+  cursor:pointer;
+  transition:all .2s;
+}
+.feat-tab.active { background:var(--cyan-dark); border-color:var(--cyan-dark); color:white; }
+.feat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+.feat-card {
+  background:white;
+  border-radius:12px;
+  padding:16px;
+  border:1px solid var(--border);
+}
+.feat-ico { font-size:22px; margin-bottom:8px; display:block; }
+.feat-name { font-size:13px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+.feat-desc { font-size:11px; color:var(--muted); line-height:1.5; }
+.feat-plan-dots { display:flex; gap:4px; margin-top:8px; flex-wrap:wrap; }
+.fpd { font-size:9px; font-weight:700; padding:2px 6px; border-radius:5px; background:var(--pale); color:var(--muted); }
+.fpd.e { background:#E3F7FF; color:var(--cyan-dark); }
+.fpd.p { background:#FFF8E6; color:#B8860B; }
+.fpd.t { background:#F3EEFF; color:var(--purple); }
 
-    /* ═══ VIGENCIA BADGE ═══ */
-    .vigencia-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: rgba(245,158,11,.1); color: #d97706;
-      font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 99px;
-      margin-top: 16px;
-    }
+/* ── TRUST ── */
+.trust-section {
+  background:var(--navy);
+  border-radius:20px;
+  padding:36px;
+  margin:20px 0;
+}
+.trust-title { font-size:20px; font-weight:800; color:white; text-align:center; margin-bottom:24px; }
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.stat-card { background:rgba(255,255,255,.08); border-radius:12px; padding:18px; text-align:center; }
+.stat-num { font-size:24px; font-weight:800; color:var(--cyan); line-height:1; }
+.stat-lbl { font-size:11px; color:rgba(255,255,255,.55); margin-top:4px; font-weight:500; }
+.awards-row { display:flex; justify-content:center; gap:16px; flex-wrap:wrap; }
+.award-pill {
+  background:rgba(255,255,255,.1);
+  border-radius:18px;
+  padding:7px 14px;
+  font-size:11px;
+  font-weight:600;
+  color:rgba(255,255,255,.8);
+  display:flex; align-items:center; gap:5px;
+}
 
-    /* ═══ DISCOUNT BADGE ═══ */
-    .discount-badge {
-      position: absolute; top: -1px; right: 12px;
-      background: #ef4444; color: #fff; font-size: 11px; font-weight: 700;
-      padding: 4px 10px; border-radius: 0 0 8px 8px;
-    }
+/* ── FOOTER ── */
+.footer {
+  background:var(--navy);
+  padding:24px 40px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-top:12px;
+}
+.footer img { height:28px; filter:brightness(0) invert(1); opacity:.8; }
+.footer-info { font-size:11px; color:rgba(255,255,255,.45); text-align:right; line-height:1.6; }
 
-    /* ═══ RESPONSIVE ═══ */
-    @media (max-width: 640px) {
-      .hero { padding: 36px 16px 44px; }
-      .hero h1 { font-size: 22px; }
-      .plans-grid { grid-template-columns: 1fr; }
-      .total-amount { font-size: 28px; }
-      .container { padding: 0 12px 32px; }
-    }
-  </style>
+/* ── ADICIONALES ── */
+.adic-section { background:white; border-radius:18px; padding:26px 30px; margin-top:18px; border:1.5px solid var(--border); }
+.adic-title { font-size:15px; font-weight:700; color:var(--navy); margin-bottom:4px; }
+.adic-sub { font-size:12px; color:var(--muted); margin-bottom:18px; }
+.amod { border:1.5px solid var(--border); border-radius:14px; overflow:hidden; transition:border-color .2s,box-shadow .2s; }
+.amod.on { border-color:var(--cyan); box-shadow:0 0 0 1px rgba(0,174,239,.18); }
+.amod-head { display:flex; align-items:center; gap:12px; padding:14px 18px; cursor:pointer; background:var(--pale); user-select:none; transition:background .2s; }
+.amod-head:hover { background:var(--pale2); }
+.toggle { width:38px; height:22px; border-radius:11px; background:#CBD5E1; position:relative; flex-shrink:0; transition:background .25s; }
+.toggle::after { content:""; position:absolute; top:4px; left:4px; width:14px; height:14px; border-radius:50%; background:white; transition:left .25s; box-shadow:0 1px 3px rgba(0,0,0,.25); }
+.amod.on .toggle { background:var(--cyan); }
+.amod.on .toggle::after { left:20px; }
+.amod-icon { font-size:20px; flex-shrink:0; }
+.amod-info { flex:1; min-width:0; }
+.amod-name { font-size:13px; font-weight:700; color:var(--navy); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.amod-desc { font-size:11px; color:var(--muted); margin-top:1px; }
+.amod-price { font-size:14px; font-weight:800; color:var(--cyan-dark); white-space:nowrap; flex-shrink:0; }
+.amod-tiers { padding:16px 18px; display:none; border-top:1px solid var(--border); background:white; }
+.amod.on .amod-tiers { display:block; }
+.tier-lbl { font-size:11px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.8px; margin-bottom:10px; }
+.tier-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+.tier-btn { border-radius:10px; border:1.5px solid var(--border); background:var(--pale); padding:11px 8px; cursor:pointer; text-align:center; transition:all .2s; font-family:"Poppins",sans-serif; }
+.tier-btn:hover { border-color:var(--cyan); background:#F0FBFF; }
+.tier-btn.active { border-color:var(--cyan); background:#E3F7FF; box-shadow:0 0 0 1px rgba(0,174,239,.2); }
+.t-name { font-size:14px; font-weight:800; color:var(--navy); display:block; margin-bottom:3px; }
+.t-range { font-size:10px; color:var(--muted); display:block; margin-bottom:4px; line-height:1.3; }
+.t-price { font-size:13px; font-weight:700; color:var(--cyan-dark); display:block; }
+.tier-btn.active .t-name,.tier-btn.active .t-price { color:var(--cyan-dark); }
+
+/* ── TOTAL FINAL ── */
+.total-final {
+  background:var(--navy);
+  border-radius:18px;
+  padding:24px 32px;
+  margin-top:20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+</style>
 </head>
 <body>
 
-  <!-- LOADING -->
-  <div id="loading" class="loading-screen">
-    <div class="loading-spinner"></div>
-    <div class="loading-text">Cargando tu propuesta...</div>
-  </div>
+<!-- LOADING STATE -->
+<div id="loading-state">
+  <div class="loader-spinner"></div>
+  <div class="loader-text">Cargando tu propuesta personalizada...</div>
+</div>
 
-  <!-- ERROR -->
-  <div id="error" class="error-screen">
-    <div class="icon"></div>
-    <h2 id="error-title">Enlace no disponible</h2>
-    <p id="error-text">Este enlace ha expirado o no es valido. Contacta a tu asesor para una nueva propuesta.</p>
-  </div>
+<!-- DOWNLOAD BAR -->
+<div class="download-bar no-print" style="display:none" id="main-content-bar">
+  <span class="dl-text">📄 Esta propuesta es tuya — ajustá el plan, usuarios y módulos a tu medida</span>
+  <button class="dl-btn" onclick="trackDownload()">⬇ Guardar / Imprimir PDF</button>
+</div>
 
-  <!-- MAIN CONTENT -->
-  <div id="propuesta" class="propuesta">
-
-    <!-- HERO -->
-    <div class="hero" id="hero">
-      <img class="hero-logo" id="hero-logo" src="" alt="" style="display:none">
-      <h1 id="hero-title">Tu propuesta personalizada</h1>
-      <div class="tagline" id="hero-tagline"></div>
-      <div class="lead-name" id="hero-lead"></div>
+<!-- HERO -->
+<div class="hero" id="hero-section" style="display:none">
+  <div class="hero-top">
+    <div class="logo-wrap">
+      <img id="tenant-logo" src="" alt="Logo">
     </div>
+    <div class="hero-iso">
+      <div class="iso-badge">ISO 27001 <span>Certificado</span></div>
+      <div class="iso-badge">🏆 #1 <span>Healtech LatAm</span></div>
+    </div>
+  </div>
+  <div id="hero-welcome" class="hero-welcome" style="display:none"></div>
+  <div class="hero-title" id="hero-title">
+    Está <em>transformando</em><br>las clínicas y centros de salud
+  </div>
+  <div class="hero-sub" id="hero-sub">"Especialistas en salud, igual que tú" · www.softwaremedilink.com</div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="num">+15.000</div><div class="lbl">Centros de salud</div></div>
+    <div class="hero-stat"><div class="num">+22</div><div class="lbl">Países</div></div>
+    <div class="hero-stat"><div class="num">+4.5M</div><div class="lbl">Citas anuales</div></div>
+    <div class="hero-stat"><div class="num">100%</div><div class="lbl">AWS + ISO 27001</div></div>
+  </div>
+</div>
 
-    <div class="container">
+<!-- COUNTRY BAR -->
+<div class="country-bar no-print" id="country-bar" style="display:none">
+  <span class="c-label">País:</span>
+  <div class="c-tabs">
+    <button class="c-tab active" onclick="setCountry('CO',this)">🇨🇴 Colombia</button>
+    <button class="c-tab" onclick="setCountry('OP',this)">🌎 Internacional</button>
+  </div>
+  <span class="currency-badge" id="cur-badge">COP $</span>
+</div>
 
-      <!-- PROMISE -->
-      <div class="section" id="sec-promise" style="display:none">
-        <div class="card promise-card">
-          <h3>Nuestra promesa</h3>
-          <ul id="promise-list"></ul>
-        </div>
+<div class="wrap" id="main-wrap" style="display:none">
+
+  <!-- PROMISE -->
+  <div class="section">
+    <div class="section-label">Nuestra propuesta de valor</div>
+    <div class="section-h">¿Cuál es la promesa <em>de valor?</em></div>
+    <div class="promise-grid">
+      <div class="p-card"><div class="p-icon">🎯</div><div class="p-text"><strong>Atrae más pacientes</strong><small>Aumenta la ocupación de tu clínica y acerca la salud a más personas.</small></div></div>
+      <div class="p-card"><div class="p-icon">✨</div><div class="p-text"><strong>Experiencia clínica extraordinaria</strong><small>Deleita a tus pacientes y colaboradores de principio a fin.</small></div></div>
+      <div class="p-card"><div class="p-icon">💙</div><div class="p-text"><strong>Fideliza a largo plazo</strong><small>Conecta con tus pacientes de por vida con CRM y marketing automatizado.</small></div></div>
+      <div class="p-card"><div class="p-icon">📈</div><div class="p-text"><strong>Aumenta ingresos</strong><small>Convierte tus presupuestos en planes de tratamiento efectivos.</small></div></div>
+    </div>
+  </div>
+
+  <!-- PLAN SELECTOR -->
+  <div class="section-label" style="margin-bottom:12px">Configurá tu cotización</div>
+  <div class="plan-wrap">
+    <div class="plan-wrap-title">Seleccioná tu plan</div>
+    <div class="plan-wrap-sub">Elegí el que mejor se adapta a tu centro de salud</div>
+    <div class="plan-cards">
+      <div class="plan-card sel-e" id="card-esencial" onclick="setPlan('esencial')">
+        <span class="plan-emoji">🩺</span>
+        <div class="plan-name">Plan Esencial</div>
+        <div class="plan-desc">Lo indispensable para una consulta.</div>
+        <div class="plan-tick">✓</div>
       </div>
-
-      <!-- PLANS -->
-      <div class="section" id="sec-plans" style="display:none">
-        <div class="section-title">Elige tu plan</div>
-        <div class="plans-grid" id="plans-grid"></div>
+      <div class="plan-card" id="card-pro" onclick="setPlan('pro')">
+        <span class="plan-emoji">⭐</span>
+        <div class="plan-name">Plan Pro</div>
+        <div class="plan-desc">Control y visibilidad 360 de tu centro.</div>
+        <div class="plan-tick">✓</div>
       </div>
-
-      <!-- USERS -->
-      <div class="section" id="sec-users" style="display:none">
-        <div class="section-title">Profesionales que atienden</div>
-        <div class="card">
-          <div class="users-control">
-            <button class="users-btn" id="btn-minus" onclick="adjustUsers(-1)">-</button>
-            <span class="users-count" id="users-count">1</span>
-            <button class="users-btn" id="btn-plus" onclick="adjustUsers(1)">+</button>
-          </div>
-          <p style="text-align:center;font-size:13px;color:var(--text-light)">
-            Solo profesionales que atienden pacientes por su cuenta. Secretaria, admin, contador = gratis.
-          </p>
-        </div>
+      <div class="plan-card" id="card-titanium" onclick="setPlan('titanium')">
+        <span class="plan-emoji">👑</span>
+        <div class="plan-name">Plan Titanium</div>
+        <div class="plan-desc">Gestión avanzada + fidelización activa.</div>
+        <div class="plan-tick">✓</div>
       </div>
-
-      <!-- MODULES -->
-      <div class="section" id="sec-modules" style="display:none">
-        <div class="section-title">Modulos incluidos</div>
-        <div class="modules-grid" id="modules-grid"></div>
-      </div>
-
-      <!-- NORMATIVA -->
-      <div class="section" id="sec-normativa" style="display:none">
-        <div class="card promise-card" id="normativa-card">
-          <h3>Normativa y cumplimiento</h3>
-          <p id="normativa-text"></p>
-        </div>
-      </div>
-
-      <!-- TOTAL -->
-      <div class="section" id="sec-total">
-        <div class="total-card" id="total-card">
-          <div class="total-label" id="total-label">Inversion total</div>
-          <div class="total-amount" id="total-amount">—</div>
-          <div class="total-period" id="total-period"></div>
-          <div class="total-savings" id="total-savings" style="display:none"></div>
-          <div class="vigencia-badge" id="vigencia-badge" style="display:none"></div>
-        </div>
-      </div>
-
-      <!-- FEATURES -->
-      <div class="section" id="sec-features" style="display:none">
-        <div class="section-title">Todo lo que incluye</div>
-        <div class="features-grid" id="features-grid"></div>
-      </div>
-
-      <!-- STATS -->
-      <div class="section" id="sec-stats" style="display:none">
-        <div class="stats-grid" id="stats-grid"></div>
-      </div>
-
-      <!-- CTA -->
-      <div class="cta-section">
-        <a class="cta-btn" id="cta-btn" href="#" target="_blank">
-          <span id="cta-text">Quiero comenzar</span>
-        </a>
-      </div>
-
-      <!-- FOOTER -->
-      <div class="footer" id="footer">
-        <span id="footer-text"></span>
+    </div>
+    <div class="modalidad-row">
+      <span class="mod-label">Modalidad:</span>
+      <div class="mod-opts">
+        <button class="mod-btn active" onclick="setMod('mensual',this)">Mensual</button>
+        <button class="mod-btn" onclick="setMod('semestral',this)">Semestral <span class="save-tag">−15%</span></button>
+        <button class="mod-btn" onclick="setMod('anual',this)">Anual <span class="save-tag">−20%</span></button>
       </div>
     </div>
   </div>
+
+  <!-- USER COUNTER -->
+  <div class="user-counter-wrap">
+    <div class="uc-title">¿Cuántos usuarios necesitan acceso?</div>
+    <div class="uc-sub">Solo los profesionales de salud con agenda propia tienen costo. El personal administrativo accede de forma gratuita.</div>
+    <div class="uc-grid">
+      <div class="uc-block">
+        <div class="uc-block-top">
+          <div class="uc-block-label">Profesionales de salud<small>Médicos, dentistas, psicólogos, etc.</small></div>
+        </div>
+        <div class="counter-row">
+          <button class="counter-btn" onclick="changeUsers(-1)">−</button>
+          <span class="counter-num" id="user-count">2</span>
+          <button class="counter-btn" onclick="changeUsers(1)">+</button>
+        </div>
+        <div class="counter-label" style="margin-top:6px" id="user-label">2 usuarios · precio base</div>
+      </div>
+      <div class="uc-block free-block">
+        <div class="uc-block-top">
+          <div class="uc-block-label">Administrativos, asistentes y secretarias<small>Acceso ilimitado sin costo adicional</small></div>
+          <span class="promo-tag">¡Gratis!</span>
+        </div>
+        <div class="counter-row"><span style="font-size:32px">♾️</span></div>
+        <div class="counter-label" style="margin-top:6px; color:var(--green);">Usuarios ilimitados incluidos de por vida</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADICIONALES -->
+  <div class="adic-section">
+    <div class="adic-title">Módulos adicionales</div>
+    <div class="adic-sub">Seleccioná los módulos que necesita tu centro y el volumen mensual de cada uno.</div>
+    <div style="display:flex;flex-direction:column;gap:14px" id="adic-mods"></div>
+  </div>
+
+  <!-- TOTAL FINAL -->
+  <div class="total-final" id="total-final-block">
+    <div style="flex:1">
+      <div style="font-size:15px;font-weight:700;color:rgba(255,255,255,.8)">TOTAL CON PROMOCIÓN</div>
+      <div id="tf-sub" style="font-size:11px;color:rgba(255,255,255,.4);margin-top:3px">Plan base + módulos seleccionados</div>
+      <div id="tf-chips" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px"></div>
+    </div>
+    <div style="text-align:right;flex-shrink:0">
+      <div style="font-size:11px;color:rgba(255,255,255,.5);margin-bottom:3px" id="tf-period">Meses 1 al 3 · descuento 30%</div>
+      <div style="display:flex;align-items:baseline;gap:3px;justify-content:flex-end">
+        <span style="font-size:14px;font-weight:700;color:rgba(255,255,255,.55)" id="tf-curr">COP $</span>
+        <span style="font-size:42px;font-weight:800;color:#00AEEF;line-height:1" id="tf-amount">87.500</span>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,.35);margin-top:5px">Sin promo: <strong style="color:rgba(255,255,255,.55)" id="tf-normal">COP $125.000</strong></div>
+    </div>
+  </div>
+
+  <!-- DETALLE DEL PLAN -->
+  <div class="cotiz-result">
+    <div class="cotiz-head">
+      <div>
+        <span class="plan-pill pill-e" id="r-pill">ESENCIAL</span>
+        <div class="cotiz-plan-name" id="r-name">Plan Esencial</div>
+        <div class="cotiz-plan-tag" id="r-tag">Lo indispensable para una consulta</div>
+      </div>
+      <div class="price-box">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Solo plan base (sin adicionales)</div>
+        <div class="price-big"><span class="price-curr" id="r-curr">COP $</span><span id="r-price">87.500</span></div>
+        <div class="price-period" id="r-period">meses 1 al 3 · con promoción 30%</div>
+        <div class="price-normal">Sin promo: <strong id="r-normal">COP $125.000</strong>/mes desde mes 4</div>
+        <div class="green-badge">✦ Descuento activo</div>
+      </div>
+    </div>
+    <div class="breakdown" id="bdown"></div>
+    <div class="vig-card">
+      <span style="font-size:18px">⏰</span>
+      <div class="vig-text">
+        Promoción válida hasta el <strong id="vig-date">25 de abril de 2026</strong> ·
+        Solo <strong id="vig-cupos">7 cupos</strong> disponibles
+      </div>
+    </div>
+    <div class="inc-title">Lo que incluye tu plan</div>
+    <div class="inc-grid" id="inc-grid"></div>
+  </div>
+
+  <!-- NORMATIVA -->
+  <div class="norm-card">
+    <div class="norm-icon">🛡️</div>
+    <div>
+      <div class="norm-title" id="norm-title">Cumplimiento normativo Colombia</div>
+      <div class="norm-pills" id="norm-pills"></div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="section">
+    <div class="section-label">Soluciones incluidas</div>
+    <div class="section-h" style="margin-bottom:20px">Nuestras <em>soluciones</em></div>
+    <div class="feat-tabs">
+      <button class="feat-tab active" onclick="filterFeat('all',this)">Todas</button>
+      <button class="feat-tab" onclick="filterFeat('atencion',this)">Atención clínica</button>
+      <button class="feat-tab" onclick="filterFeat('gestion',this)">Gestión</button>
+      <button class="feat-tab" onclick="filterFeat('fideliz',this)">Fidelización</button>
+      <button class="feat-tab" onclick="filterFeat('tech',this)">Tecnología</button>
+    </div>
+    <div class="feat-grid" id="feat-grid"></div>
+  </div>
+
+  <!-- TRUST -->
+  <div class="trust-section">
+    <div class="trust-title">La plataforma en números</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num">+15.000</div><div class="stat-lbl">Centros de salud</div></div>
+      <div class="stat-card"><div class="stat-num">+22</div><div class="stat-lbl">Países</div></div>
+      <div class="stat-card"><div class="stat-num">+4.5M</div><div class="stat-lbl">Citas anuales únicas</div></div>
+      <div class="stat-card"><div class="stat-num">+1.5B</div><div class="stat-lbl">USD gasto en salud</div></div>
+    </div>
+    <div class="awards-row">
+      <div class="award-pill">🏆 1er Lugar Healtech LatAm — KAYYAK</div>
+      <div class="award-pill">📊 Forbes Cloud 100 — 2023</div>
+      <div class="award-pill">🌟 Mejor Empresa Ecosistema Digital Salud 360°</div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<div class="footer" id="footer-section" style="display:none">
+  <img id="footer-logo" src="" alt="">
+  <div class="footer-info" id="footer-info">
+    www.softwaremedilink.com<br>
+    "Especialistas en salud, igual que tú"
+  </div>
+</div>
 
 <script>
-/* ═══════════════════════════════════════════════════════════════
-   COTIZACIÓN INTERACTIVA — Frontend
-   Lee hash de URL, carga datos del API, renderiza propuesta
-   ═══════════════════════════════════════════════════════════════ */
+// ── CONFIG ──
+var API = 'https://api.miia-app.com';
+var HASH = (window.location.pathname.match(/([a-f0-9]{8})$/) || [])[1] || '';
+var PRICING_FACTOR = 1;
+var trackTimeout = null;
 
-const API_BASE = 'https://miia-backend-production.up.railway.app';
+// ── DATOS BASE ──
+var PR={CO:{currency:"COP $",sep:".",decs:0,esencial:{base:125000,adic:35000},pro:{base:150000,adic:40000},titanium:{base:225000,adic:55000}},OP:{currency:"USD $",sep:",",decs:2,esencial:{base:45,adic:12},pro:{base:65,adic:13},titanium:{base:85,adic:14}}};
+var DESC={mensual:0.30,semestral:0.15,anual:0.20};
+var MULT={mensual:1,semestral:6,anual:12};
+var PINFO={esencial:{name:"Plan Esencial",tag:"Lo indispensable para una consulta",pill:"pill-e",txt:"ESENCIAL"},pro:{name:"Plan Pro",tag:"Control y visibilidad 360",pill:"pill-p",txt:"PRO"},titanium:{name:"Plan Titanium",tag:"Gestión avanzada con fidelización",pill:"pill-t",txt:"TITANIUM"}};
+var BOLSAS={CO:{wa:{r:[150,350,800,2000],p:[11000,23000,75000,120000]},firma:{r:[50,200,500,1000],p:[15000,30000,70000,140000]},factura:{r:[50,200,500,1000],p:[32000,50000,88000,165000]}},OP:{wa:{r:[150,350,800,2000],p:[15,35,70,170]},firma:{r:[50,200,500,1000],p:[25,40,70,170]},factura:{r:[50,200,500,1000],p:[10,17,35,60]}}};
+var MODS=[{id:"wa",icon:"💬",name:"WhatsApp — Recordatorios automáticos",desc:"Envíos automáticos de recordatorios y confirmaciones de citas."},{id:"firma",icon:"✍️",name:"Firma electrónica digital",desc:"Para consentimientos informados y documentos clínicos."},{id:"factura",icon:"🧾",name:"Facturador electrónico",desc:"Facturación electrónica integrada. Incluye FEV-RIPS en Colombia."}];
+var TIERS=["S","M","L","XL"];
+var NORMS={CO:[{t:"Res. 256/2016 — Calidad servicios",co:true},{t:"Res. 2275/2023 — HC electrónica + RIPS",co:true},{t:"Res. 3100/2019 — Habilitación centros",co:true},{t:"Res. 1888/2024 — Interoperabilidad",co:true},{t:"Ley 1581/2012 — Habeas data",co:false}],OP:[{t:"RGPD / GDPR — Protección datos",co:false},{t:"ISO 27001 — Seguridad certificada",co:false},{t:"Normativa local privacidad clínica",co:false},{t:"Estándares internacionales telemedicina",co:false}]};
+var PINC={esencial:[{i:"📋",t:"Historia clínica personalizable",s:"Por especialidad. CIE-10/CIE-11.",co:false},{i:"📅",t:"Agenda + Link online",s:"Auto-agendamiento para pacientes.",co:false},{i:"🎥",t:"Telemedicina ilimitada",s:"Videoconsultas sin costo extra.",co:false},{i:"✍️",t:"Consentimientos + Firma electrónica",s:"Firma digital de documentos.",co:false}],pro:[{i:"📦",t:"Inventario virtual",s:"Control de stock de insumos.",co:false},{i:"💰",t:"Control gastos y remuneraciones",s:"Comisiones automáticas.",co:false},{i:"📊",t:"+80 reportes Excel",s:"Gestión clínica y administrativa.",co:false},{i:"🏢",t:"Gestión multisucursal",s:"Desde una sola plataforma.",co:false}],titanium:[{i:"😊",t:"Ficha estética facial",s:"Esquema facial intuitivo.",co:false},{i:"💌",t:"Email marketing",s:"Campañas de fidelización activa.",co:false},{i:"⚡",t:"Tareas automáticas",s:"Seguimiento y re-agendamiento.",co:false},{i:"🧪",t:"Laboratorios y exámenes",s:"Solicitudes internas y externas.",co:false}]};
+var BINC=[{i:"💬",t:"WhatsApp — 2.000 recordatorios",s:"Envíos automáticos mensuales.",co:false},{i:"🤖",t:"IA incluida (dictado, resumen, auditoría)",s:"Tokens según plan.",co:false},{i:"🔒",t:"ISO 27001 + AWS",s:"Máxima seguridad de datos.",co:false},{i:"🎓",t:"Capacitación + Soporte",s:"Clases virtuales + soporte L-V.",co:false}];
+var COINC=[{i:"🧾",t:"Facturación electrónica",s:"Sin salir de la plataforma.",co:true},{i:"📊",t:"RIPS + CUPS + FEV",s:"Envío directo al Ministerio.",co:true}];
+var FEATS=[{ico:"📅",n:"Agendamiento Online",d:"Auto-agendamiento, 3 vistas, confirmaciones.",pl:["e","p","t"],cat:"atencion"},{ico:"📋",n:"Ficha Clínica",d:"Personalizable por especialidad. CIE-10/CIE-11.",pl:["e","p","t"],cat:"atencion"},{ico:"🎥",n:"Telemedicina",d:"Videoconsultas ilimitadas integradas.",pl:["e","p","t"],cat:"atencion"},{ico:"✍️",n:"Firma Electrónica",d:"Consentimientos con firma digital.",pl:["e","p","t"],cat:"atencion"},{ico:"💊",n:"Recetas + Vademcéum",d:"Prescripción médica integrada.",pl:["e","p","t"],cat:"atencion"},{ico:"😊",n:"Ficha Estética Facial",d:"Esquema facial para estética.",pl:["t"],cat:"atencion"},{ico:"💰",n:"Control de Gastos",d:"Gastos, costos y flujos de caja.",pl:["p","t"],cat:"gestion"},{ico:"📦",n:"Inventario",d:"Control de stock de insumos.",pl:["p","t"],cat:"gestion"},{ico:"💼",n:"Remuneraciones",d:"Cálculo automático de comisiones.",pl:["p","t"],cat:"gestion"},{ico:"📊",n:"+80 Reportes Excel",d:"Gestión clínica y administrativa.",pl:["p","t"],cat:"gestion"},{ico:"🏢",n:"Gestión Sucursales",d:"Manejo multisucursal.",pl:["p","t"],cat:"gestion"},{ico:"🧪",n:"Laboratorios",d:"Solicitudes internas y externas.",pl:["t"],cat:"gestion"},{ico:"💌",n:"Email Marketing",d:"Campañas de fidelización.",pl:["t"],cat:"fideliz"},{ico:"⚡",n:"Tareas Automáticas",d:"Automatización de seguimiento.",pl:["t"],cat:"fideliz"},{ico:"📝",n:"Encuestas NPS",d:"Mide satisfacción del paciente.",pl:["t"],cat:"fideliz"},{ico:"🔗",n:"API Integraciones",d:"Conecta con tus otros sistemas.",pl:["p","t"],cat:"tech"},{ico:"🤖",n:"IA — Dictado + Resumen",d:"Transcripción y resumen clínico.",pl:["e","p","t"],cat:"tech"},{ico:"🔒",n:"ISO 27001 + AWS",d:"Almacenamiento seguro certificado.",pl:["e","p","t"],cat:"tech"},{ico:"🧾",n:"RIPS + FEV (Colombia)",d:"Envío FEV-RIPS al Ministerio.",pl:["e","p","t"],cat:"tech",co:true}];
 
-// ── STATE ──
-let STATE = {
-  hash: null,
-  data: null,        // respuesta del API
-  selectedPlan: null, // 'esencial' | 'pro' | 'titanium'
-  users: 1,
-  originalParams: null,
-};
+var S={country:"CO",plan:"esencial",mod:"mensual",users:2,fc:"all"};
+var AS={wa:{on:true,tier:0},firma:{on:false,tier:0},factura:{on:false,tier:0}};
 
-// ═══ INIT ═══
-document.addEventListener('DOMContentLoaded', () => {
-  const path = window.location.pathname;
-  // Acepta /p/{hash} y /{negocio}/{hash}
-  const match = path.match(/\/([^/]+)\/([a-f0-9]{8})$/);
-  if (!match) return showError('Enlace invalido', 'Este enlace no tiene el formato correcto.');
-  STATE.hash = match[2];
-  loadPropuesta();
-});
-
-// ═══ LOAD DATA ═══
+// ── LOAD FROM API ──
 async function loadPropuesta() {
+  if (!HASH) { showError(); return; }
   try {
-    const res = await fetch(`${API_BASE}/api/cotizacion/${STATE.hash}`);
-    if (res.status === 404) return showError('Propuesta no encontrada', 'Este enlace no existe o fue eliminado.');
-    if (!res.ok) return showError('Error', 'No pudimos cargar tu propuesta. Intenta de nuevo.');
+    var res = await fetch(API + '/api/cotizacion/' + HASH, {
+      headers: { 'Accept': 'application/json' }
+    });
+    if (!res.ok) { showError(); return; }
+    var data = await res.json();
+    if (data.expired) { window.location.href = '/p/expired.html'; return; }
 
-    const data = await res.json();
-    if (data.expired) {
-      window.location.href = '/p/expired.html';
-      return;
+    // Apply branding
+    var b = data.tenant_config && data.tenant_config.branding;
+    if (b) applyBranding(b);
+
+    // Apply content
+    var c = data.tenant_config && data.tenant_config.content;
+    if (c) applyContent(c, data.lead_name);
+
+    // Apply sections
+    var sec = data.tenant_config && data.tenant_config.sections;
+    if (sec) applySections(sec);
+
+    // Init state from lead params
+    if (data.params) {
+      S.plan = data.params.plan || 'esencial';
+      S.users = data.params.users || 2;
+      S.mod = data.params.modalidad || 'mensual';
+      S.country = data.params.country || 'CO';
+      if (data.params.modulos) {
+        if (data.params.modulos.wa)      AS.wa      = { on: data.params.modulos.wa.on,      tier: data.params.modulos.wa.tier      || 0 };
+        if (data.params.modulos.firma)   AS.firma   = { on: data.params.modulos.firma.on,   tier: data.params.modulos.firma.tier   || 0 };
+        if (data.params.modulos.factura) AS.factura = { on: data.params.modulos.factura.on, tier: data.params.modulos.factura.tier || 0 };
+      }
     }
 
-    STATE.data = data;
-    STATE.originalParams = { ...data.params };
-    STATE.users = data.params.users || data.params.usuarios || 1;
-    STATE.selectedPlan = data.params.plan || 'esencial';
+    PRICING_FACTOR = data.pricing_factor || 1;
 
-    applyBranding(data.tenant_config);
-    renderPropuesta(data);
+    // Sync UI selectors
+    syncPlanUI();
+    syncModUI();
+    syncCountryUI();
+    document.getElementById('user-count').textContent = S.users;
+    document.getElementById('user-label').textContent = S.users + ' usuario' + (S.users > 1 ? 's' : '') + ' · precio base';
+
+    // Show content
+    document.getElementById('loading-state').style.display = 'none';
+    document.getElementById('main-content-bar').style.removeProperty('display');
+    document.getElementById('hero-section').style.removeProperty('display');
+    document.getElementById('country-bar').style.removeProperty('display');
+    document.getElementById('main-wrap').style.removeProperty('display');
+    document.getElementById('footer-section').style.removeProperty('display');
+
+    render();
+
+    // Track viewed
     trackEvent('viewed');
 
-    document.getElementById('loading').style.display = 'none';
-    document.getElementById('propuesta').style.display = 'block';
-  } catch (e) {
-    console.error('Error cargando propuesta:', e);
-    showError('Error de conexion', 'No pudimos conectar con el servidor. Verifica tu conexion a internet.');
+  } catch(e) {
+    console.error('Error loading propuesta:', e);
+    showFallback();
   }
 }
 
-// ═══ APPLY TENANT BRANDING ═══
-function applyBranding(cfg) {
-  if (!cfg) return;
-  const b = cfg.branding || {};
-  const root = document.documentElement.style;
+function showError() {
+  document.getElementById('loading-state').innerHTML = '<div style="text-align:center;padding:40px"><div style="font-size:48px;margin-bottom:16px">😕</div><div style="font-size:18px;font-weight:700;color:#0B3C5A;margin-bottom:8px">Enlace no disponible</div><div style="font-size:13px;color:#6B8A9E">Este enlace ha expirado o no es válido.<br>Contactá a tu asesor para una nueva propuesta.</div></div>';
+}
 
-  if (b.primary_color)   root.setProperty('--primary', b.primary_color);
-  if (b.secondary_color) root.setProperty('--secondary', b.secondary_color);
-  if (b.accent_color)    root.setProperty('--accent', b.accent_color);
+function showFallback() {
+  // If API fails, show page anyway with defaults
+  document.getElementById('loading-state').style.display = 'none';
+  document.getElementById('main-content-bar').style.removeProperty('display');
+  document.getElementById('hero-section').style.removeProperty('display');
+  document.getElementById('country-bar').style.removeProperty('display');
+  document.getElementById('main-wrap').style.removeProperty('display');
+  document.getElementById('footer-section').style.removeProperty('display');
+  render();
+}
+
+function applyBranding(b) {
+  var root = document.documentElement.style;
+  if (b.primary_color)   root.setProperty('--cyan',      b.primary_color);
+  if (b.primary_color)   root.setProperty('--cyan-dark', b.primary_color);
+  if (b.secondary_color) root.setProperty('--navy',      b.secondary_color);
+  if (b.accent_color)    root.setProperty('--green',     b.accent_color);
   if (b.font_body) {
-    root.setProperty('--font-body', b.font_body);
-    loadFont(b.font_body);
+    var lnk = document.createElement('link');
+    lnk.rel = 'stylesheet';
+    lnk.href = 'https://fonts.googleapis.com/css2?family=' + b.font_body.replace(' ','+') + ':wght@300;400;500;600;700;800;900&display=swap';
+    document.head.appendChild(lnk);
+    document.body.style.fontFamily = "'" + b.font_body + "',sans-serif";
   }
-  if (b.font_heading) {
-    root.setProperty('--font-heading', b.font_heading);
-    loadFont(b.font_heading);
+  if (b.logo_url) {
+    document.getElementById('tenant-logo').src = b.logo_url;
+    document.getElementById('footer-logo').src = b.logo_url;
   }
-  if (b.hero_gradient) root.setProperty('--hero-gradient', `linear-gradient(${b.hero_gradient})`);
-  if (b.favicon_url) {
-    const link = document.createElement('link');
-    link.rel = 'icon'; link.href = b.favicon_url;
-    document.head.appendChild(link);
+  if (b.hero_gradient) {
+    document.getElementById('hero-section').style.background = 'linear-gradient(' + b.hero_gradient + ')';
   }
 }
 
-function loadFont(fontName) {
-  if (fontName === 'Poppins') return; // ya cargada
-  const link = document.createElement('link');
-  link.rel = 'stylesheet';
-  link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fontName)}:wght@300;400;500;600;700&display=swap`;
-  document.head.appendChild(link);
+function applyContent(c, leadName) {
+  if (c.company_name) {
+    document.title = c.company_name + ' — Propuesta Comercial';
+  }
+  if (c.tagline && c.website_url) {
+    document.getElementById('hero-sub').textContent = '"' + c.tagline + '" · ' + (c.website_url || '');
+  }
+  if (c.website_url) {
+    document.getElementById('footer-info').innerHTML = c.website_url + '<br>"' + (c.tagline || '') + '"';
+  }
+  if (leadName && c.welcome_message) {
+    var wEl = document.getElementById('hero-welcome');
+    wEl.textContent = c.welcome_message.replace('[lead]', leadName);
+    wEl.style.removeProperty('display');
+  } else if (leadName) {
+    var wEl = document.getElementById('hero-welcome');
+    wEl.textContent = 'Hola ' + leadName + ', esta propuesta fue preparada especialmente para vos.';
+    wEl.style.removeProperty('display');
+  }
+  if (c.cta_text) {
+    // Could add CTA button if needed
+  }
 }
 
-// ═══ RENDER ═══
-function renderPropuesta(data) {
-  const cfg     = data.tenant_config || {};
-  const content = cfg.content || {};
-  const product = cfg.product || {};
-  const sections = cfg.sections || {};
-  const params  = data.params || {};
-  const factor  = data.pricing_factor || 1;
-
-  // Hero
-  if (cfg.branding?.logo_url) {
-    const logo = document.getElementById('hero-logo');
-    logo.src = cfg.branding.logo_url;
-    logo.alt = content.company_name || '';
-    logo.style.display = 'block';
-  }
-  document.getElementById('hero-title').textContent =
-    content.welcome_message || `Tu propuesta personalizada`;
-  if (content.tagline) document.getElementById('hero-tagline').textContent = content.tagline;
-  if (data.lead_name) document.getElementById('hero-lead').textContent = `Preparada para ${data.lead_name}`;
-  document.title = `Propuesta ${content.company_name || ''} — ${data.lead_name || ''}`.trim();
-
-  // Promise
-  if (sections.show_promise) {
-    document.getElementById('sec-promise').style.display = 'block';
-    const promises = [
-      'Acompanamiento personalizado desde el dia 1',
-      'Soporte humano ilimitado por WhatsApp',
-      'Migracion de datos sin costo adicional',
-      'Capacitacion incluida para todo tu equipo',
-    ];
-    document.getElementById('promise-list').innerHTML =
-      promises.map(p => `<li>${p}</li>`).join('');
-  }
-
-  // Plans
-  if (sections.show_plans !== false) renderPlans(params, product, factor);
-  // Users
-  if (sections.show_users !== false) {
-    document.getElementById('sec-users').style.display = 'block';
-    document.getElementById('users-count').textContent = STATE.users;
-  }
-  // Modules
-  if (sections.show_modules !== false) renderModules(params, factor);
-  // Normativa
-  if (sections.show_normativa) renderNormativa(params);
-  // Features
-  if (sections.show_features) renderFeatures();
-  // Stats
-  if (sections.show_stats) renderStats();
-  // Total
-  recalcTotal();
-  // Vigencia
-  if (params.vigencia) {
-    const badge = document.getElementById('vigencia-badge');
-    badge.textContent = `Valida hasta ${params.vigencia}`;
-    badge.style.display = 'inline-flex';
-  }
-  // CTA
-  const ctaBtn = document.getElementById('cta-btn');
-  if (content.cta_url)  ctaBtn.href = content.cta_url;
-  if (content.cta_text) document.getElementById('cta-text').textContent = content.cta_text;
-  if (content.whatsapp_number) {
-    const waNum = content.whatsapp_number.replace(/[^0-9]/g, '');
-    ctaBtn.href = `https://wa.me/${waNum}?text=${encodeURIComponent('Hola! Vi mi propuesta y quiero comenzar')}`;
-  }
-  // Footer
-  const footerParts = [];
-  if (content.company_name) footerParts.push(content.company_name);
-  if (content.website_url) footerParts.push(`<a href="${content.website_url}" target="_blank">${content.website_url}</a>`);
-  if (content.footer_text) footerParts.push(content.footer_text);
-  document.getElementById('footer-text').innerHTML = footerParts.join(' · ') || '';
-}
-
-// ═══ RENDER PLANS ═══
-function renderPlans(params, product, factor) {
-  document.getElementById('sec-plans').style.display = 'block';
-  const grid = document.getElementById('plans-grid');
-  const moneda = params.moneda || params.currency || 'COP';
-  const modalidad = params.modalidad || 'mensual';
-  const descuento = params.descuento || 30;
-  const planNames = product.plan_names || { esencial: 'Esencial', pro: 'Pro', titanium: 'Titanium' };
-
-  // Obtener planes del params (el backend ya los calcula)
-  const planesData = params.planes || {};
-  const planKeys = Object.keys(planesData);
-
-  // Si solo hay un plan, mostrarlo
-  if (planKeys.length === 0) {
-    // Sin datos de planes, mostrar placeholder
-    grid.innerHTML = '<p style="text-align:center;color:var(--text-light)">Plan personalizado</p>';
-    return;
-  }
-
-  grid.innerHTML = planKeys.map(key => {
-    const plan = planesData[key];
-    const isSelected = key === STATE.selectedPlan;
-    const name = planNames[key] || key.charAt(0).toUpperCase() + key.slice(1);
-    const neto = Math.round((plan.neto || plan.subtotal || 0) * factor);
-    const subtotal = Math.round((plan.subtotal || 0) * factor);
-    const hasDiscount = subtotal > neto;
-    const periodLabel = modalidad === 'anual' ? '/ano' : modalidad === 'semestral' ? '/semestre' : '/mes';
-
-    return `
-      <div class="plan-card ${isSelected ? 'selected' : ''}" onclick="selectPlan('${key}')">
-        ${key === 'pro' ? '<span class="plan-badge">Recomendado</span>' : ''}
-        ${hasDiscount ? `<span class="discount-badge">-${descuento}%</span>` : ''}
-        <div class="plan-name">${name}</div>
-        ${hasDiscount ? `<div class="plan-price-original">${fmtMoney(subtotal, moneda)}</div>` : ''}
-        <div class="plan-price">${fmtMoney(neto, moneda)}</div>
-        <div class="plan-price-label">${periodLabel}</div>
-        <div class="plan-desc">${STATE.users} profesional${STATE.users > 1 ? 'es' : ''}</div>
-      </div>
-    `;
-  }).join('');
-}
-
-// ═══ RENDER MODULES ═══
-function renderModules(params, factor) {
-  const bolsas = params.bolsas || {};
-  const keys = Object.keys(bolsas);
-  if (keys.length === 0) return;
-
-  document.getElementById('sec-modules').style.display = 'block';
-  const grid = document.getElementById('modules-grid');
-  const moneda = params.moneda || params.currency || 'COP';
-
-  const moduleInfo = {
-    wa:      { icon: '', name: 'WhatsApp Masivo',       detail: 'Recordatorios y confirmaciones' },
-    firma:   { icon: '', name: 'Firma Digital',         detail: 'Consentimientos informados' },
-    factura: { icon: '', name: 'Facturacion Electronica', detail: 'Cumplimiento tributario' },
+function applySections(s) {
+  var map = {
+    show_promise:   '.section:first-child',
+    show_normativa: '.norm-card',
+    show_features:  '.section:last-of-type',
+    show_stats:     '.trust-section',
   };
-
-  grid.innerHTML = keys.map(key => {
-    const b = bolsas[key];
-    const info = moduleInfo[key] || { icon: '', name: key, detail: '' };
-    const precio = Math.round((b.precio || 0) * factor);
-    return `
-      <div class="module-card">
-        <div class="module-icon">${info.icon}</div>
-        <div class="module-info">
-          <div class="module-name">${info.name}</div>
-          <div class="module-detail">${info.detail} · ${fmtNum(b.limiteEnvios || 0)} envios</div>
-        </div>
-        <div class="module-price">${fmtMoney(precio, moneda)}</div>
-      </div>
-    `;
-  }).join('');
-}
-
-// ═══ RENDER NORMATIVA ═══
-function renderNormativa(params) {
-  const pais = (params.pais || params.country || '').toUpperCase();
-  const textos = {
-    CO: 'Medilink cumple con la Resolucion 2003 de 2014 (habilitacion), la Ley 2015 de 2020 (telesalud) y las normas de la Superintendencia de Salud de Colombia.',
-    CL: 'Medilink cumple con la normativa del Ministerio de Salud de Chile, incluyendo la Ley 20.584 de derechos del paciente y los estandares de la Superintendencia de Salud.',
-    MX: 'Medilink cumple con la NOM-024-SSA3-2012 (expediente clinico electronico) y la normativa de la Secretaria de Salud de Mexico.',
-    ES: 'Medilink cumple con el RGPD (Reglamento General de Proteccion de Datos) y las normativas del Ministerio de Sanidad de Espana.',
-  };
-  const text = textos[pais];
-  if (!text) return;
-  document.getElementById('sec-normativa').style.display = 'block';
-  document.getElementById('normativa-text').textContent = text;
-}
-
-// ═══ RENDER FEATURES ═══
-function renderFeatures() {
-  document.getElementById('sec-features').style.display = 'block';
-  const features = [
-    'Agenda inteligente con recordatorios',
-    'Historia clinica electronica',
-    'Prescripciones y recetas digitales',
-    'Facturacion electronica integrada',
-    'Firma digital de consentimientos',
-    'Reportes y estadisticas en tiempo real',
-    'Soporte ilimitado por WhatsApp',
-    'Migracion de datos incluida',
-    'Capacitacion para tu equipo',
-    'Actualizaciones automaticas',
-    'App movil para pacientes',
-    'Multi-sede y multi-profesional',
-  ];
-  document.getElementById('features-grid').innerHTML =
-    features.map(f => `
-      <div class="feature-item">
-        <span class="feature-check">&#10003;</span>
-        <span class="feature-text">${f}</span>
-      </div>
-    `).join('');
-}
-
-// ═══ RENDER STATS ═══
-function renderStats() {
-  document.getElementById('sec-stats').style.display = 'block';
-  const stats = [
-    { number: '5,000+', label: 'Profesionales activos' },
-    { number: '12', label: 'Paises' },
-    { number: '99.9%', label: 'Uptime garantizado' },
-    { number: '24/7', label: 'Soporte disponible' },
-  ];
-  document.getElementById('stats-grid').innerHTML =
-    stats.map(s => `
-      <div class="stat-item">
-        <div class="stat-number">${s.number}</div>
-        <div class="stat-label">${s.label}</div>
-      </div>
-    `).join('');
-}
-
-// ═══ SELECT PLAN ═══
-function selectPlan(planKey) {
-  if (STATE.selectedPlan === planKey) return;
-  STATE.selectedPlan = planKey;
-  renderPlans(STATE.data.params, STATE.data.tenant_config?.product || {}, STATE.data.pricing_factor || 1);
-  recalcTotal();
-  trackEvent('adjusted', { field: 'plan', value: planKey });
-}
-
-// ═══ ADJUST USERS ═══
-function adjustUsers(delta) {
-  const newVal = STATE.users + delta;
-  if (newVal < 1 || newVal > 100) return;
-  STATE.users = newVal;
-  document.getElementById('users-count').textContent = newVal;
-  document.getElementById('btn-minus').disabled = (newVal <= 1);
-  recalcTotal();
-  trackEvent('adjusted', { field: 'users', value: newVal });
-}
-
-// ═══ RECALCULATE TOTAL ═══
-function recalcTotal() {
-  const params = STATE.data?.params;
-  if (!params) return;
-
-  const factor  = STATE.data.pricing_factor || 1;
-  const moneda  = params.moneda || params.currency || 'COP';
-  const modal   = params.modalidad || 'mensual';
-  const planesData = params.planes || {};
-  const plan    = planesData[STATE.selectedPlan];
-
-  if (!plan) {
-    document.getElementById('total-amount').textContent = '—';
-    return;
-  }
-
-  // Recalcular con usuarios ajustados: neto del plan + adicionales
-  let planTotal = Math.round((plan.neto || plan.subtotal || 0) * factor);
-
-  // Si el usuario cambio la cantidad, ajustar
-  if (STATE.users !== (params.usuarios || params.users || 1)) {
-    const origUsers = params.usuarios || params.users || 1;
-    const precAdic = Math.round((plan.precAdic || 0) * factor);
-    const diff = STATE.users - origUsers;
-    if (diff > 0) planTotal += precAdic * diff;
-    if (diff < 0) planTotal = Math.max(Math.round(plan.base * factor * (1 - (params.descuento || 30) / 100)), planTotal + precAdic * diff);
-  }
-
-  // Bolsas
-  const bolsas = params.bolsas || {};
-  let bolsasTotal = 0;
-  for (const b of Object.values(bolsas)) {
-    bolsasTotal += Math.round((b.precio || 0) * factor);
-  }
-
-  const total = planTotal + bolsasTotal;
-  const periodLabel = modal === 'anual' ? '/ano' : modal === 'semestral' ? '/semestre' : '/mes';
-
-  document.getElementById('total-amount').textContent = fmtMoney(total, moneda);
-  document.getElementById('total-period').textContent = periodLabel;
-
-  // Savings
-  const subtotal = Math.round((plan.subtotal || 0) * factor) + bolsasTotal;
-  if (subtotal > total) {
-    const savings = subtotal - total;
-    const el = document.getElementById('total-savings');
-    el.textContent = `Ahorras ${fmtMoney(savings, moneda)}`;
-    el.style.display = 'inline-block';
+  for (var key in map) {
+    if (s[key] === false) {
+      var els = document.querySelectorAll(map[key]);
+      els.forEach(function(el) { el.style.display = 'none'; });
+    }
   }
 }
 
-// ═══ TRACKING ═══
-async function trackEvent(type, changes) {
-  try {
-    const device = /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
-    await fetch(`${API_BASE}/api/cotizacion/${STATE.hash}/event`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type, changes, device }),
+function syncPlanUI() {
+  ['esencial','pro','titanium'].forEach(function(x) {
+    document.getElementById('card-' + x).className = 'plan-card' + (x === S.plan ? ' sel-' + x[0] : '');
+  });
+}
+
+function syncModUI() {
+  document.querySelectorAll('.mod-btn').forEach(function(b, i) {
+    var mods = ['mensual','semestral','anual'];
+    b.classList.toggle('active', mods[i] === S.mod);
+  });
+}
+
+function syncCountryUI() {
+  document.querySelectorAll('.c-tab').forEach(function(b, i) {
+    b.classList.toggle('active', (i === 0 && S.country === 'CO') || (i === 1 && S.country === 'OP'));
+  });
+  document.getElementById('cur-badge').textContent = PR[S.country].currency;
+}
+
+// ── TRACKING ──
+function trackEvent(type, changes) {
+  if (!HASH) return;
+  fetch(API + '/api/cotizacion/' + HASH + '/event', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      type: type,
+      changes: changes || null,
+      device: /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop'
+    })
+  }).catch(function(){});
+}
+
+function trackAdjusted(changes) {
+  clearTimeout(trackTimeout);
+  trackTimeout = setTimeout(function() { trackEvent('adjusted', changes); }, 2000);
+}
+
+function trackDownload() {
+  trackEvent('downloaded');
+  window.print();
+}
+
+// ── INTERACTION ──
+function setCountry(c, btn) {
+  S.country = c;
+  document.querySelectorAll('.c-tab').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.getElementById('cur-badge').textContent = PR[c].currency;
+  trackAdjusted({ country: c });
+  render();
+}
+
+function setPlan(p) {
+  S.plan = p;
+  syncPlanUI();
+  trackAdjusted({ plan: p });
+  render();
+}
+
+function setMod(m, btn) {
+  S.mod = m;
+  document.querySelectorAll('.mod-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  trackAdjusted({ modalidad: m });
+  render();
+}
+
+function changeUsers(d) {
+  S.users = Math.max(1, Math.min(50, S.users + d));
+  document.getElementById('user-count').textContent = S.users;
+  document.getElementById('user-label').textContent = S.users + ' usuario' + (S.users > 1 ? 's' : '') + ' · incluye precio base';
+  trackAdjusted({ users: S.users });
+  render();
+}
+
+// ── FMT ──
+function fmt(n) {
+  n = n * PRICING_FACTOR;
+  var p = PR[S.country];
+  var s = p.decs > 0 ? n.toFixed(p.decs) : String(Math.round(n));
+  return p.currency + s.replace(/\B(?=(\d{3})+(?!\d))/g, p.sep);
+}
+
+// ── RENDER ADICIONALES ──
+function renderAdic() {
+  var container = document.getElementById('adic-mods');
+  container.innerHTML = '';
+  for (var mi = 0; mi < MODS.length; mi++) {
+    var mod = MODS[mi];
+    var st = AS[mod.id];
+    var b = BOLSAS[S.country][mod.id];
+    var wrap = document.createElement('div');
+    wrap.className = 'amod' + (st.on ? ' on' : '');
+    wrap.id = 'amod-' + mod.id;
+    var head = document.createElement('div');
+    head.className = 'amod-head';
+    head.setAttribute('data-id', mod.id);
+    head.innerHTML = '<div class="toggle"></div><span class="amod-icon">' + mod.icon + '</span><div class="amod-info"><div class="amod-name">' + mod.name + '</div><div class="amod-desc">' + mod.desc + '</div></div><div class="amod-price" id="ap-' + mod.id + '">' + fmt(b.p[st.tier]) + '<span style="font-size:10px;color:var(--muted);font-weight:500">/mes</span></div>';
+    head.addEventListener('click', function(e) {
+      var id = this.getAttribute('data-id');
+      AS[id].on = !AS[id].on;
+      trackAdjusted({ modulos: {} });
+      renderAdic(); calcTotal();
     });
-  } catch (_) { /* silencioso */ }
-}
-
-// ═══ FORMAT HELPERS ═══
-function fmtMoney(value, moneda) {
-  const n = Number(value);
-  if (isNaN(n)) return '—';
-  const symbols = { COP: '$', CLP: '$', MXN: '$', USD: '$', EUR: '€' };
-  const sym = symbols[moneda] || '$';
-
-  if (moneda === 'EUR') return `${sym} ${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
-
-  const sepMiles = (moneda === 'USD' || moneda === 'MXN') ? ',' : '.';
-  if (moneda === 'MXN' && n % 1 !== 0) {
-    const int = Math.floor(n);
-    const dec = Math.round((n - int) * 100).toString().padStart(2, '0');
-    return `${sym} ${int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, sepMiles)}.${dec}`;
+    wrap.appendChild(head);
+    var tierWrap = document.createElement('div');
+    tierWrap.className = 'amod-tiers';
+    tierWrap.innerHTML = '<div class="tier-lbl">Elegí el volumen mensual</div>';
+    var grid = document.createElement('div');
+    grid.className = 'tier-grid';
+    for (var ti = 0; ti < TIERS.length; ti++) {
+      var btn = document.createElement('div');
+      btn.className = 'tier-btn' + (ti === st.tier ? ' active' : '');
+      btn.innerHTML = '<span class="t-name">Bolsa ' + TIERS[ti] + '</span><span class="t-range">hasta ' + b.r[ti].toLocaleString() + ' envíos</span><span class="t-price">' + fmt(b.p[ti]) + '</span>';
+      (function(modId, tierIdx) {
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          AS[modId].tier = tierIdx;
+          trackAdjusted({ modulos: {} });
+          renderAdic(); calcTotal();
+        });
+      })(mod.id, ti);
+      grid.appendChild(btn);
+    }
+    tierWrap.appendChild(grid);
+    wrap.appendChild(tierWrap);
+    container.appendChild(wrap);
   }
-  return `${sym} ${Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, sepMiles)}`;
 }
 
-function fmtNum(n) {
-  return Math.round(Number(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+// ── CALC TOTAL ──
+function calcTotal() {
+  var p = PR[S.country][S.plan];
+  var desc = DESC[S.mod];
+  var mult = MULT[S.mod];
+  var nA = Math.max(0, S.users - 1);
+  var base = (p.base + p.adic * nA) * mult;
+  var dAmt = Math.round(base * desc);
+  var neto = base - dAmt;
+  var adic = 0;
+  var chips = [];
+  for (var mi = 0; mi < MODS.length; mi++) {
+    var mod = MODS[mi];
+    if (AS[mod.id].on) {
+      var bprice = BOLSAS[S.country][mod.id].p[AS[mod.id].tier];
+      adic += bprice * mult;
+      chips.push(mod.icon + ' Bolsa ' + TIERS[AS[mod.id].tier] + ' · ' + fmt(bprice) + '/mes');
+    }
+  }
+  var total = neto + adic;
+  var normal = base + adic;
+  var pm = { mensual: 'Meses 1 al 3 · descuento 30%', semestral: 'Pago semestral · descuento 15%', anual: 'Pago anual · descuento 20%' };
+  document.getElementById('tf-period').textContent = pm[S.mod];
+  document.getElementById('tf-curr').textContent = PR[S.country].currency;
+  document.getElementById('tf-amount').textContent = PR[S.country].decs > 0 ? total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep) : Math.round(total).toString().replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep);
+  document.getElementById('tf-sub').textContent = chips.length > 0 ? 'Plan base con promo + ' + chips.length + ' módulo' + (chips.length > 1 ? 's' : '') + ' adicional' + (chips.length > 1 ? 'es' : '') : 'Solo plan base con promoción';
+  document.getElementById('tf-normal').innerHTML = fmt(normal);
+  var chipsEl = document.getElementById('tf-chips');
+  chipsEl.innerHTML = '';
+  if (chips.length === 0) { var sp = document.createElement('span'); sp.className = 'tf-chip'; sp.textContent = 'Sin módulos adicionales'; chipsEl.appendChild(sp); }
+  else { for (var ci = 0; ci < chips.length; ci++) { var sp = document.createElement('span'); sp.className = 'tf-chip'; sp.textContent = chips[ci]; chipsEl.appendChild(sp); } }
 }
 
-// ═══ ERROR HANDLER ═══
-function showError(title, text) {
-  document.getElementById('loading').style.display = 'none';
-  document.getElementById('error').style.display = 'flex';
-  document.getElementById('error-title').textContent = title;
-  document.getElementById('error-text').textContent = text;
+// ── RENDER DETALLE ──
+function renderDetalle() {
+  var p = PR[S.country][S.plan];
+  var desc = DESC[S.mod];
+  var mult = MULT[S.mod];
+  var nA = Math.max(0, S.users - 1);
+  var base = (p.base + p.adic * nA) * mult;
+  var dAmt = Math.round(base * desc);
+  var neto = base - dAmt;
+  var meta = PINFO[S.plan];
+  document.getElementById('r-pill').className = 'plan-pill ' + meta.pill;
+  document.getElementById('r-pill').textContent = meta.txt;
+  document.getElementById('r-name').textContent = meta.name;
+  document.getElementById('r-tag').textContent = meta.tag;
+  document.getElementById('r-curr').textContent = PR[S.country].currency;
+  document.getElementById('r-price').textContent = PR[S.country].decs > 0 ? neto.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep) : Math.round(neto).toString().replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep);
+  var ml = { mensual: 'meses 1 al 3 · descuento 30%', semestral: 'pago semestral · descuento 15%', anual: 'pago anual · descuento 20%' };
+  document.getElementById('r-period').textContent = ml[S.mod];
+  document.getElementById('r-normal').textContent = fmt(base) + (S.mod === 'mensual' ? '/mes' : '');
+  var bd = '<div class="bd-row"><span class="bd-label">Plan base (' + S.mod + ')</span><span class="bd-value">' + fmt(p.base * mult) + '</span></div>';
+  if (nA > 0) bd += '<div class="bd-row"><span class="bd-label">+' + nA + ' usuario' + (nA > 1 ? 's' : '') + '</span><span class="bd-value">' + fmt(p.adic * nA * mult) + '</span></div>';
+  bd += '<div class="bd-row bonus"><span class="bd-label">Administrativos ilimitados</span><span class="bd-value">♾️ Gratis</span></div>';
+  bd += '<div class="bd-row disc"><span class="bd-label">Descuento ' + Math.round(desc * 100) + '%</span><span class="bd-value">− ' + fmt(dAmt) + '</span></div>';
+  bd += '<div class="bd-row total"><span class="bd-label">Subtotal plan base</span><span class="bd-value">' + fmt(neto) + '</span></div>';
+  document.getElementById('bdown').innerHTML = bd;
+  var today = new Date();
+  var months = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  var vd = today.getDate() < 15 ? 25 : 30;
+  document.getElementById('vig-date').textContent = vd + ' de ' + months[today.getMonth()] + ' de ' + today.getFullYear();
+  document.getElementById('vig-cupos').textContent = (today.getDate() < 15 ? '11' : '7') + ' cupos';
+  var all = (PINC[S.plan] || []).concat(BINC).concat(S.country === 'CO' ? COINC : []);
+  var igEl = document.getElementById('inc-grid');
+  igEl.innerHTML = '';
+  for (var ii = 0; ii < all.length; ii++) {
+    var item = all[ii];
+    var div = document.createElement('div');
+    div.className = 'inc-item' + (item.co ? ' co-item' : '');
+    div.innerHTML = '<span class="inc-icon">' + item.i + '</span><div class="inc-text"><strong>' + item.t + (item.co ? '<span class="co-badge">CO</span>' : '') + '</strong><small>' + item.s + '</small></div>';
+    igEl.appendChild(div);
+  }
+  var norms = NORMS[S.country];
+  document.getElementById('norm-title').textContent = S.country === 'CO' ? 'Cumplimiento normativo Colombia' : 'Cumplimiento normativo internacional';
+  var npEl = document.getElementById('norm-pills');
+  npEl.innerHTML = '';
+  for (var ni = 0; ni < norms.length; ni++) {
+    var sp = document.createElement('span');
+    sp.className = 'norm-pill' + (norms[ni].co ? ' co-sp' : '');
+    sp.textContent = norms[ni].t;
+    npEl.appendChild(sp);
+  }
 }
+
+// ── RENDER FEATURES ──
+function renderFeat() {
+  var fgEl = document.getElementById('feat-grid');
+  fgEl.innerHTML = '';
+  for (var fi = 0; fi < FEATS.length; fi++) {
+    var f = FEATS[fi];
+    if (S.fc !== 'all' && f.cat !== S.fc) continue;
+    if (S.country === 'OP' && f.co) continue;
+    var card = document.createElement('div');
+    card.className = 'feat-card';
+    var dots = (f.pl.indexOf('e') >= 0 ? '<span class="fpd e">Esencial</span>' : '') + (f.pl.indexOf('p') >= 0 ? '<span class="fpd p">Pro</span>' : '') + (f.pl.indexOf('t') >= 0 ? '<span class="fpd t">Titanium</span>' : '');
+    card.innerHTML = '<span class="feat-ico">' + f.ico + '</span><div class="feat-name">' + f.n + (f.co ? '<span class="co-badge" style="margin-left:4px">CO</span>' : '') + '</div><div class="feat-desc">' + f.d + '</div><div class="feat-plan-dots">' + dots + '</div>';
+    fgEl.appendChild(card);
+  }
+}
+
+function filterFeat(cat, btn) {
+  S.fc = cat;
+  document.querySelectorAll('.feat-tab').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderFeat();
+}
+
+function render() { renderAdic(); calcTotal(); renderDetalle(); renderFeat(); }
+
+// ── INIT ──
+loadPropuesta();
 </script>
-
 </body>
 </html>
