@@ -685,7 +685,15 @@ body {
   align-items:center;
   margin-top:12px;
 }
-.footer img { height:28px; filter:brightness(0) invert(1); opacity:.8; }
+.footer-logo-wrap {
+  background:white;
+  border-radius:10px;
+  padding:7px 14px;
+  display:inline-flex;
+  align-items:center;
+  box-shadow:0 2px 8px rgba(0,0,0,.2);
+}
+.footer-logo-wrap img { height:28px; width:auto; display:block; }
 .footer-info { font-size:11px; color:rgba(255,255,255,.45); text-align:right; line-height:1.6; }
 
 /* ── ADICIONALES ── */
@@ -1043,7 +1051,9 @@ body {
 </div><!-- /wrap -->
 
 <div class="footer" id="footer-section" style="display:none">
-  <img id="footer-logo" src="" alt="">
+  <div class="footer-logo-wrap">
+    <img id="footer-logo" src="" alt="Medilink">
+  </div>
   <div class="footer-info" id="footer-info">
     <a href="https://www.softwaremedilink.com" target="_blank" style="color:rgba(255,255,255,.6);text-decoration:none">www.softwaremedilink.com</a><br>
     "Especialistas en salud, igual que tú"
@@ -1130,8 +1140,28 @@ var PLAN_TABLE=[
   ]}
 ];
 
-var S={country:"CO",plan:"esencial",mod:"mensual",users:2,fc:"all"};
-var AS={wa:{on:true,tier:0},firma:{on:false,tier:0},factura:{on:false,tier:0}};
+var COUNTRY_DISPLAY={
+  CO:{flag:"\ud83c\udde8\ud83c\uddf4",name:"Colombia",currency:"COP $"},
+  CL:{flag:"\ud83c\udde8\ud83c\uddf1",name:"Chile",currency:"CLP $"},
+  MX:{flag:"\ud83c\uddf2\ud83c\uddfd",name:"M\u00e9xico",currency:"MXN $"},
+  ES:{flag:"\ud83c\uddea\ud83c\uddf8",name:"Espa\u00f1a",currency:"EUR \u20ac"},
+  AR:{flag:"\ud83c\udde6\ud83c\uddf7",name:"Argentina",currency:"USD $"},
+  DO:{flag:"\ud83c\udde9\ud83c\uddf4",name:"Rep. Dominicana",currency:"USD $"},
+  PE:{flag:"\ud83c\uddf5\ud83c\uddea",name:"Per\u00fa",currency:"USD $"},
+  EC:{flag:"\ud83c\uddea\ud83c\udde8",name:"Ecuador",currency:"USD $"},
+  VE:{flag:"\ud83c\uddfb\ud83c\uddea",name:"Venezuela",currency:"USD $"},
+  UY:{flag:"\ud83c\uddfa\ud83c\uddfe",name:"Uruguay",currency:"USD $"},
+  BO:{flag:"\ud83c\udde7\ud83c\uddf4",name:"Bolivia",currency:"USD $"},
+  PY:{flag:"\ud83c\uddf5\ud83c\uddfe",name:"Paraguay",currency:"USD $"},
+  GT:{flag:"\ud83c\uddec\ud83c\uddf9",name:"Guatemala",currency:"USD $"},
+  CR:{flag:"\ud83c\udde8\ud83c\uddf7",name:"Costa Rica",currency:"USD $"},
+  PA:{flag:"\ud83c\uddf5\ud83c\udde6",name:"Panam\u00e1",currency:"USD $"},
+  US:{flag:"\ud83c\uddfa\ud83c\uddf8",name:"Estados Unidos",currency:"USD $"},
+  INTL:{flag:"\ud83c\udf0e",name:"Internacional",currency:"USD $"}
+};
+
+var S={country:"CO",rawCountry:"CO",plan:"esencial",mod:"mensual",users:2,fc:"all"};
+var AS={wa:{on:true,tier:0},firma:{on:true,tier:0},factura:{on:true,tier:0}};
 
 // ── LOAD FROM API ──
 var VIDEOS=[
@@ -1139,7 +1169,7 @@ var VIDEOS=[
   {t:"Ficha cl\u00ednica",url:"https://youtu.be/caTbynnBRlA",plan:["e","p","t"]},
   {t:"Contact Center IA",url:"https://www.youtube.com/watch?v=BWwrVMafS7o",plan:["e","p","t"]},
   {t:"IA Medilink",url:"https://www.youtube.com/watch?v=VwN9vHXFaTk",plan:["e","p","t"]},
-  {t:"FEV-RIPS",url:"https://www.loom.com/share/8460513bc41a46f9a46c465e3be4c401",plan:["e","p","t"]},
+  {t:"FEV-RIPS",url:"https://www.loom.com/share/8460513bc41a46f9a46c465e3be4c401",plan:["e","p","t"],co:true},
   {t:"Convenios con EPS",url:"https://www.youtube.com/watch?v=brMsWGFUd3M",plan:["p","t"]},
   {t:"Administraci\u00f3n",url:"https://youtu.be/PSA1RMYk97w",plan:["p","t"]},
   {t:"Reportes",url:"https://youtu.be/XXv-f_TgXUA",plan:["p","t"]},
@@ -1181,7 +1211,9 @@ async function loadPropuesta() {
       S.plan = data.params.plan || 'esencial';
       S.users = data.params.users || 2;
       S.mod = data.params.modalidad || 'mensual';
-      S.country = normalizeCountry(data.params.country);
+      var raw = (data.params.country || 'CO').toUpperCase();
+      S.rawCountry = raw;
+      S.country = normalizeCountry(raw);
       function parseMod(m) {
         if (!m || typeof m !== 'object') return null;
         var t = parseInt(m.tier);
@@ -1222,13 +1254,11 @@ async function loadPropuesta() {
     document.getElementById('footer-section').style.removeProperty('display');
 
     // Country badge
-    var cp = PR[S.country];
-    if (cp) {
-      document.getElementById('cb-flag').textContent = cp.flag;
-      document.getElementById('cb-name').textContent = cp.name;
-      document.getElementById('cb-curr').textContent = cp.currency;
-      document.getElementById('country-badge').style.display = 'flex';
-    }
+    var disp = COUNTRY_DISPLAY[S.rawCountry] || COUNTRY_DISPLAY[S.country] || COUNTRY_DISPLAY['INTL'];
+    document.getElementById('cb-flag').textContent = disp.flag;
+    document.getElementById('cb-name').textContent = disp.name;
+    document.getElementById('cb-curr').textContent = disp.currency;
+    document.getElementById('country-badge').style.display = 'flex';
 
     render();
 
@@ -1584,7 +1614,11 @@ function renderDemoVideos() {
   if (!el) return;
   var pMap = {esencial:'e',pro:'p',titanium:'t'};
   var active = pMap[S.plan] || 'e';
-  var filtered = VIDEOS.filter(function(v){ return v.plan.indexOf(active) >= 0; });
+  var filtered = VIDEOS.filter(function(v){
+    if (v.plan.indexOf(active) < 0) return false;
+    if (v.co && S.country !== 'CO') return false;
+    return true;
+  });
   el.innerHTML = filtered.map(function(v){
     return '<a class="demo-video-link" href="' + v.url + '" target="_blank">' + v.t + '</a>';
   }).join('');
