@@ -1068,10 +1068,18 @@ async function loadPropuesta() {
       S.users = data.params.users || 2;
       S.mod = data.params.modalidad || 'mensual';
       S.country = data.params.country || 'CO';
+      function parseMod(m) {
+        if (!m || typeof m !== 'object') return null;
+        var t = parseInt(m.tier);
+        return { on: !!m.on, tier: isNaN(t) ? 0 : Math.min(3, Math.max(0, t)) };
+      }
       if (data.params.modulos) {
-        if (data.params.modulos.wa)      AS.wa      = { on: data.params.modulos.wa.on,      tier: data.params.modulos.wa.tier      || 0 };
-        if (data.params.modulos.firma)   AS.firma   = { on: data.params.modulos.firma.on,   tier: data.params.modulos.firma.tier   || 0 };
-        if (data.params.modulos.factura) AS.factura = { on: data.params.modulos.factura.on, tier: data.params.modulos.factura.tier || 0 };
+        var pm = parseMod(data.params.modulos.wa);
+        if (pm) AS.wa = pm;
+        pm = parseMod(data.params.modulos.firma);
+        if (pm) AS.firma = pm;
+        pm = parseMod(data.params.modulos.factura);
+        if (pm) AS.factura = pm;
       }
     }
 
@@ -1249,7 +1257,7 @@ function changeUsers(d) {
 
 // ── FMT ──
 function fmt(n) {
-  n = n * PRICING_FACTOR;
+  n = (parseFloat(n) || 0) * (PRICING_FACTOR || 1);
   var p = PR[S.country];
   var s = p.decs > 0 ? n.toFixed(p.decs) : String(Math.round(n));
   return p.currency + s.replace(/\B(?=(\d{3})+(?!\d))/g, p.sep);
