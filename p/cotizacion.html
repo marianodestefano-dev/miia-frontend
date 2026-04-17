@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu propuesta personalizada</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ═══ RESET + BASE ═══ */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body, 'Poppins'), sans-serif;
+      background: var(--bg, #f4f7fa);
+      color: var(--text, #1a2332);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ═══ CSS VARIABLES (overridden by tenant branding) ═══ */
+    :root {
+      --primary: #00AEEF;
+      --secondary: #0B3C5A;
+      --accent: #00B388;
+      --font-body: 'Poppins', sans-serif;
+      --font-heading: 'Poppins', sans-serif;
+      --bg: #f4f7fa;
+      --text: #1a2332;
+      --text-light: #5a6978;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --card-shadow: 0 2px 12px rgba(0,0,0,.08);
+      --hero-gradient: linear-gradient(135deg, #0B3C5A 0%, #0D6B99 55%, #00AEEF 100%);
+      --radius: 16px;
+    }
+
+    /* ═══ LOADING STATE ═══ */
+    .loading-screen {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100vh; gap: 20px;
+    }
+    .loading-spinner {
+      width: 48px; height: 48px; border: 4px solid #e2e8f0;
+      border-top-color: var(--primary); border-radius: 50%;
+      animation: spin .8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading-text { color: var(--text-light); font-size: 14px; }
+
+    /* ═══ ERROR STATE ═══ */
+    .error-screen {
+      display: none; flex-direction: column; align-items: center; justify-content: center;
+      min-height: 100vh; gap: 16px; text-align: center; padding: 32px;
+    }
+    .error-screen .icon { font-size: 48px; }
+    .error-screen h2 { font-size: 24px; color: var(--secondary); }
+    .error-screen p { color: var(--text-light); max-width: 400px; }
+
+    /* ═══ MAIN CONTENT (hidden until loaded) ═══ */
+    .propuesta { display: none; }
+
+    /* ═══ HERO ═══ */
+    .hero {
+      background: var(--hero-gradient);
+      color: #fff; padding: 48px 24px 56px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .hero::after {
+      content: ''; position: absolute; bottom: -2px; left: 0; right: 0; height: 40px;
+      background: var(--bg); border-radius: 40px 40px 0 0;
+    }
+    .hero-logo { max-height: 48px; margin-bottom: 16px; filter: brightness(0) invert(1); }
+    .hero h1 { font-family: var(--font-heading); font-size: clamp(22px, 5vw, 32px); font-weight: 700; margin-bottom: 8px; }
+    .hero .tagline { font-size: 16px; opacity: .85; }
+    .hero .lead-name { font-size: 14px; opacity: .7; margin-top: 12px; }
+
+    /* ═══ CONTAINER ═══ */
+    .container { max-width: 900px; margin: 0 auto; padding: 0 16px 48px; }
+
+    /* ═══ SECTION ═══ */
+    .section { margin-bottom: 32px; }
+    .section-title {
+      font-family: var(--font-heading); font-size: 20px; font-weight: 600;
+      color: var(--secondary); margin-bottom: 16px; padding-left: 4px;
+    }
+
+    /* ═══ CARDS ═══ */
+    .card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: var(--radius); padding: 24px; box-shadow: var(--card-shadow);
+    }
+
+    /* ═══ PLAN CARDS ═══ */
+    .plans-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .plan-card {
+      background: var(--card-bg); border: 2px solid var(--card-border);
+      border-radius: var(--radius); padding: 24px; text-align: center;
+      cursor: pointer; transition: all .2s; position: relative;
+    }
+    .plan-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.12); }
+    .plan-card.selected { border-color: var(--primary); background: linear-gradient(180deg, rgba(0,174,239,.04) 0%, transparent 100%); }
+    .plan-card.selected::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: var(--primary); border-radius: var(--radius) var(--radius) 0 0;
+    }
+    .plan-card .plan-name { font-family: var(--font-heading); font-size: 18px; font-weight: 700; color: var(--secondary); text-transform: uppercase; }
+    .plan-card .plan-price { font-size: 28px; font-weight: 700; color: var(--primary); margin: 12px 0 4px; }
+    .plan-card .plan-price-original { font-size: 14px; color: var(--text-light); text-decoration: line-through; }
+    .plan-card .plan-price-label { font-size: 12px; color: var(--text-light); }
+    .plan-card .plan-desc { font-size: 13px; color: var(--text-light); margin-top: 8px; }
+    .plan-badge {
+      display: inline-block; background: var(--accent); color: #fff;
+      font-size: 11px; font-weight: 600; padding: 2px 10px; border-radius: 99px;
+      margin-bottom: 8px;
+    }
+
+    /* ═══ USERS CONTROL ═══ */
+    .users-control {
+      display: flex; align-items: center; gap: 16px;
+      justify-content: center; padding: 20px 0;
+    }
+    .users-control label { font-weight: 500; color: var(--text); }
+    .users-btn {
+      width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--primary);
+      background: transparent; color: var(--primary); font-size: 20px; font-weight: 700;
+      cursor: pointer; transition: all .15s; display: flex; align-items: center; justify-content: center;
+    }
+    .users-btn:hover { background: var(--primary); color: #fff; }
+    .users-btn:disabled { opacity: .3; cursor: not-allowed; }
+    .users-count { font-size: 28px; font-weight: 700; color: var(--primary); min-width: 40px; text-align: center; }
+
+    /* ═══ MODULES ═══ */
+    .modules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .module-card {
+      background: var(--card-bg); border: 1px solid var(--card-border);
+      border-radius: 12px; padding: 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .module-icon { font-size: 24px; }
+    .module-info { flex: 1; }
+    .module-name { font-weight: 600; font-size: 14px; }
+    .module-detail { font-size: 12px; color: var(--text-light); }
+    .module-price { font-weight: 700; color: var(--primary); font-size: 15px; white-space: nowrap; }
+
+    /* ═══ TOTAL ═══ */
+    .total-card {
+      background: var(--secondary); color: #fff; border-radius: var(--radius);
+      padding: 28px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,.15);
+    }
+    .total-label { font-size: 14px; opacity: .8; margin-bottom: 4px; }
+    .total-amount { font-size: 36px; font-weight: 700; }
+    .total-period { font-size: 14px; opacity: .7; margin-top: 4px; }
+    .total-savings {
+      display: inline-block; background: var(--accent); color: #fff;
+      font-size: 13px; font-weight: 600; padding: 4px 16px; border-radius: 99px;
+      margin-top: 12px;
+    }
+
+    /* ═══ PROMISE / NORMATIVA ═══ */
+    .promise-card { background: linear-gradient(135deg, rgba(0,179,136,.08), rgba(0,174,239,.05)); border: 1px solid rgba(0,179,136,.2); }
+    .promise-card h3 { color: var(--accent); font-size: 16px; margin-bottom: 8px; }
+    .promise-card p { font-size: 14px; color: var(--text-light); }
+    .promise-card ul { list-style: none; padding: 0; }
+    .promise-card li { padding: 6px 0; font-size: 14px; color: var(--text); }
+    .promise-card li::before { content: ''; margin-right: 8px; }
+
+    /* ═══ FEATURES ═══ */
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .feature-item { display: flex; align-items: flex-start; gap: 10px; padding: 8px 0; }
+    .feature-check { color: var(--accent); font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+    .feature-text { font-size: 14px; color: var(--text); }
+
+    /* ═══ STATS ═══ */
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 16px; text-align: center; }
+    .stat-item .stat-number { font-size: 28px; font-weight: 700; color: var(--primary); }
+    .stat-item .stat-label { font-size: 12px; color: var(--text-light); }
+
+    /* ═══ CTA ═══ */
+    .cta-section { text-align: center; padding: 32px 0; }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--primary); color: #fff; border: none;
+      font-family: var(--font-heading); font-size: 16px; font-weight: 600;
+      padding: 14px 32px; border-radius: 99px; cursor: pointer;
+      text-decoration: none; transition: all .2s;
+      box-shadow: 0 4px 16px rgba(0,174,239,.3);
+    }
+    .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,174,239,.4); }
+
+    /* ═══ FOOTER ═══ */
+    .footer {
+      text-align: center; padding: 24px 16px; font-size: 12px; color: var(--text-light);
+      border-top: 1px solid var(--card-border); margin-top: 16px;
+    }
+    .footer a { color: var(--primary); text-decoration: none; }
+
+    /* ═══ VIGENCIA BADGE ═══ */
+    .vigencia-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(245,158,11,.1); color: #d97706;
+      font-size: 13px; font-weight: 500; padding: 6px 14px; border-radius: 99px;
+      margin-top: 16px;
+    }
+
+    /* ═══ DISCOUNT BADGE ═══ */
+    .discount-badge {
+      position: absolute; top: -1px; right: 12px;
+      background: #ef4444; color: #fff; font-size: 11px; font-weight: 700;
+      padding: 4px 10px; border-radius: 0 0 8px 8px;
+    }
+
+    /* ═══ RESPONSIVE ═══ */
+    @media (max-width: 640px) {
+      .hero { padding: 36px 16px 44px; }
+      .hero h1 { font-size: 22px; }
+      .plans-grid { grid-template-columns: 1fr; }
+      .total-amount { font-size: 28px; }
+      .container { padding: 0 12px 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOADING -->
+  <div id="loading" class="loading-screen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Cargando tu propuesta...</div>
+  </div>
+
+  <!-- ERROR -->
+  <div id="error" class="error-screen">
+    <div class="icon"></div>
+    <h2 id="error-title">Enlace no disponible</h2>
+    <p id="error-text">Este enlace ha expirado o no es valido. Contacta a tu asesor para una nueva propuesta.</p>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div id="propuesta" class="propuesta">
+
+    <!-- HERO -->
+    <div class="hero" id="hero">
+      <img class="hero-logo" id="hero-logo" src="" alt="" style="display:none">
+      <h1 id="hero-title">Tu propuesta personalizada</h1>
+      <div class="tagline" id="hero-tagline"></div>
+      <div class="lead-name" id="hero-lead"></div>
+    </div>
+
+    <div class="container">
+
+      <!-- PROMISE -->
+      <div class="section" id="sec-promise" style="display:none">
+        <div class="card promise-card">
+          <h3>Nuestra promesa</h3>
+          <ul id="promise-list"></ul>
+        </div>
+      </div>
+
+      <!-- PLANS -->
+      <div class="section" id="sec-plans" style="display:none">
+        <div class="section-title">Elige tu plan</div>
+        <div class="plans-grid" id="plans-grid"></div>
+      </div>
+
+      <!-- USERS -->
+      <div class="section" id="sec-users" style="display:none">
+        <div class="section-title">Profesionales que atienden</div>
+        <div class="card">
+          <div class="users-control">
+            <button class="users-btn" id="btn-minus" onclick="adjustUsers(-1)">-</button>
+            <span class="users-count" id="users-count">1</span>
+            <button class="users-btn" id="btn-plus" onclick="adjustUsers(1)">+</button>
+          </div>
+          <p style="text-align:center;font-size:13px;color:var(--text-light)">
+            Solo profesionales que atienden pacientes por su cuenta. Secretaria, admin, contador = gratis.
+          </p>
+        </div>
+      </div>
+
+      <!-- MODULES -->
+      <div class="section" id="sec-modules" style="display:none">
+        <div class="section-title">Modulos incluidos</div>
+        <div class="modules-grid" id="modules-grid"></div>
+      </div>
+
+      <!-- NORMATIVA -->
+      <div class="section" id="sec-normativa" style="display:none">
+        <div class="card promise-card" id="normativa-card">
+          <h3>Normativa y cumplimiento</h3>
+          <p id="normativa-text"></p>
+        </div>
+      </div>
+
+      <!-- TOTAL -->
+      <div class="section" id="sec-total">
+        <div class="total-card" id="total-card">
+          <div class="total-label" id="total-label">Inversion total</div>
+          <div class="total-amount" id="total-amount">—</div>
+          <div class="total-period" id="total-period"></div>
+          <div class="total-savings" id="total-savings" style="display:none"></div>
+          <div class="vigencia-badge" id="vigencia-badge" style="display:none"></div>
+        </div>
+      </div>
+
+      <!-- FEATURES -->
+      <div class="section" id="sec-features" style="display:none">
+        <div class="section-title">Todo lo que incluye</div>
+        <div class="features-grid" id="features-grid"></div>
+      </div>
+
+      <!-- STATS -->
+      <div class="section" id="sec-stats" style="display:none">
+        <div class="stats-grid" id="stats-grid"></div>
+      </div>
+
+      <!-- CTA -->
+      <div class="cta-section">
+        <a class="cta-btn" id="cta-btn" href="#" target="_blank">
+          <span id="cta-text">Quiero comenzar</span>
+        </a>
+      </div>
+
+      <!-- FOOTER -->
+      <div class="footer" id="footer">
+        <span id="footer-text"></span>
+      </div>
+    </div>
+  </div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   COTIZACIÓN INTERACTIVA — Frontend
+   Lee hash de URL, carga datos del API, renderiza propuesta
+   ═══════════════════════════════════════════════════════════════ */
+
+const API_BASE = 'https://miia-backend-production.up.railway.app';
+
+// ── STATE ──
+let STATE = {
+  hash: null,
+  data: null,        // respuesta del API
+  selectedPlan: null, // 'esencial' | 'pro' | 'titanium'
+  users: 1,
+  originalParams: null,
+};
+
+// ═══ INIT ═══
+document.addEventListener('DOMContentLoaded', () => {
+  const path = window.location.pathname;
+  const match = path.match(/\/p\/([a-f0-9]{8})/);
+  if (!match) return showError('Enlace invalido', 'Este enlace no tiene el formato correcto.');
+  STATE.hash = match[1];
+  loadPropuesta();
+});
+
+// ═══ LOAD DATA ═══
+async function loadPropuesta() {
+  try {
+    const res = await fetch(`${API_BASE}/api/cotizacion/${STATE.hash}`);
+    if (res.status === 404) return showError('Propuesta no encontrada', 'Este enlace no existe o fue eliminado.');
+    if (!res.ok) return showError('Error', 'No pudimos cargar tu propuesta. Intenta de nuevo.');
+
+    const data = await res.json();
+    if (data.expired) {
+      window.location.href = '/p/expired.html';
+      return;
+    }
+
+    STATE.data = data;
+    STATE.originalParams = { ...data.params };
+    STATE.users = data.params.users || data.params.usuarios || 1;
+    STATE.selectedPlan = data.params.plan || 'esencial';
+
+    applyBranding(data.tenant_config);
+    renderPropuesta(data);
+    trackEvent('viewed');
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('propuesta').style.display = 'block';
+  } catch (e) {
+    console.error('Error cargando propuesta:', e);
+    showError('Error de conexion', 'No pudimos conectar con el servidor. Verifica tu conexion a internet.');
+  }
+}
+
+// ═══ APPLY TENANT BRANDING ═══
+function applyBranding(cfg) {
+  if (!cfg) return;
+  const b = cfg.branding || {};
+  const root = document.documentElement.style;
+
+  if (b.primary_color)   root.setProperty('--primary', b.primary_color);
+  if (b.secondary_color) root.setProperty('--secondary', b.secondary_color);
+  if (b.accent_color)    root.setProperty('--accent', b.accent_color);
+  if (b.font_body) {
+    root.setProperty('--font-body', b.font_body);
+    loadFont(b.font_body);
+  }
+  if (b.font_heading) {
+    root.setProperty('--font-heading', b.font_heading);
+    loadFont(b.font_heading);
+  }
+  if (b.hero_gradient) root.setProperty('--hero-gradient', `linear-gradient(${b.hero_gradient})`);
+  if (b.favicon_url) {
+    const link = document.createElement('link');
+    link.rel = 'icon'; link.href = b.favicon_url;
+    document.head.appendChild(link);
+  }
+}
+
+function loadFont(fontName) {
+  if (fontName === 'Poppins') return; // ya cargada
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = `https://fonts.googleapis.com/css2?family=${encodeURIComponent(fontName)}:wght@300;400;500;600;700&display=swap`;
+  document.head.appendChild(link);
+}
+
+// ═══ RENDER ═══
+function renderPropuesta(data) {
+  const cfg     = data.tenant_config || {};
+  const content = cfg.content || {};
+  const product = cfg.product || {};
+  const sections = cfg.sections || {};
+  const params  = data.params || {};
+  const factor  = data.pricing_factor || 1;
+
+  // Hero
+  if (cfg.branding?.logo_url) {
+    const logo = document.getElementById('hero-logo');
+    logo.src = cfg.branding.logo_url;
+    logo.alt = content.company_name || '';
+    logo.style.display = 'block';
+  }
+  document.getElementById('hero-title').textContent =
+    content.welcome_message || `Tu propuesta personalizada`;
+  if (content.tagline) document.getElementById('hero-tagline').textContent = content.tagline;
+  if (data.lead_name) document.getElementById('hero-lead').textContent = `Preparada para ${data.lead_name}`;
+  document.title = `Propuesta ${content.company_name || ''} — ${data.lead_name || ''}`.trim();
+
+  // Promise
+  if (sections.show_promise) {
+    document.getElementById('sec-promise').style.display = 'block';
+    const promises = [
+      'Acompanamiento personalizado desde el dia 1',
+      'Soporte humano ilimitado por WhatsApp',
+      'Migracion de datos sin costo adicional',
+      'Capacitacion incluida para todo tu equipo',
+    ];
+    document.getElementById('promise-list').innerHTML =
+      promises.map(p => `<li>${p}</li>`).join('');
+  }
+
+  // Plans
+  if (sections.show_plans !== false) renderPlans(params, product, factor);
+  // Users
+  if (sections.show_users !== false) {
+    document.getElementById('sec-users').style.display = 'block';
+    document.getElementById('users-count').textContent = STATE.users;
+  }
+  // Modules
+  if (sections.show_modules !== false) renderModules(params, factor);
+  // Normativa
+  if (sections.show_normativa) renderNormativa(params);
+  // Features
+  if (sections.show_features) renderFeatures();
+  // Stats
+  if (sections.show_stats) renderStats();
+  // Total
+  recalcTotal();
+  // Vigencia
+  if (params.vigencia) {
+    const badge = document.getElementById('vigencia-badge');
+    badge.textContent = `Valida hasta ${params.vigencia}`;
+    badge.style.display = 'inline-flex';
+  }
+  // CTA
+  const ctaBtn = document.getElementById('cta-btn');
+  if (content.cta_url)  ctaBtn.href = content.cta_url;
+  if (content.cta_text) document.getElementById('cta-text').textContent = content.cta_text;
+  if (content.whatsapp_number) {
+    const waNum = content.whatsapp_number.replace(/[^0-9]/g, '');
+    ctaBtn.href = `https://wa.me/${waNum}?text=${encodeURIComponent('Hola! Vi mi propuesta y quiero comenzar')}`;
+  }
+  // Footer
+  const footerParts = [];
+  if (content.company_name) footerParts.push(content.company_name);
+  if (content.website_url) footerParts.push(`<a href="${content.website_url}" target="_blank">${content.website_url}</a>`);
+  if (content.footer_text) footerParts.push(content.footer_text);
+  document.getElementById('footer-text').innerHTML = footerParts.join(' · ') || '';
+}
+
+// ═══ RENDER PLANS ═══
+function renderPlans(params, product, factor) {
+  document.getElementById('sec-plans').style.display = 'block';
+  const grid = document.getElementById('plans-grid');
+  const moneda = params.moneda || params.currency || 'COP';
+  const modalidad = params.modalidad || 'mensual';
+  const descuento = params.descuento || 30;
+  const planNames = product.plan_names || { esencial: 'Esencial', pro: 'Pro', titanium: 'Titanium' };
+
+  // Obtener planes del params (el backend ya los calcula)
+  const planesData = params.planes || {};
+  const planKeys = Object.keys(planesData);
+
+  // Si solo hay un plan, mostrarlo
+  if (planKeys.length === 0) {
+    // Sin datos de planes, mostrar placeholder
+    grid.innerHTML = '<p style="text-align:center;color:var(--text-light)">Plan personalizado</p>';
+    return;
+  }
+
+  grid.innerHTML = planKeys.map(key => {
+    const plan = planesData[key];
+    const isSelected = key === STATE.selectedPlan;
+    const name = planNames[key] || key.charAt(0).toUpperCase() + key.slice(1);
+    const neto = Math.round((plan.neto || plan.subtotal || 0) * factor);
+    const subtotal = Math.round((plan.subtotal || 0) * factor);
+    const hasDiscount = subtotal > neto;
+    const periodLabel = modalidad === 'anual' ? '/ano' : modalidad === 'semestral' ? '/semestre' : '/mes';
+
+    return `
+      <div class="plan-card ${isSelected ? 'selected' : ''}" onclick="selectPlan('${key}')">
+        ${key === 'pro' ? '<span class="plan-badge">Recomendado</span>' : ''}
+        ${hasDiscount ? `<span class="discount-badge">-${descuento}%</span>` : ''}
+        <div class="plan-name">${name}</div>
+        ${hasDiscount ? `<div class="plan-price-original">${fmtMoney(subtotal, moneda)}</div>` : ''}
+        <div class="plan-price">${fmtMoney(neto, moneda)}</div>
+        <div class="plan-price-label">${periodLabel}</div>
+        <div class="plan-desc">${STATE.users} profesional${STATE.users > 1 ? 'es' : ''}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══ RENDER MODULES ═══
+function renderModules(params, factor) {
+  const bolsas = params.bolsas || {};
+  const keys = Object.keys(bolsas);
+  if (keys.length === 0) return;
+
+  document.getElementById('sec-modules').style.display = 'block';
+  const grid = document.getElementById('modules-grid');
+  const moneda = params.moneda || params.currency || 'COP';
+
+  const moduleInfo = {
+    wa:      { icon: '', name: 'WhatsApp Masivo',       detail: 'Recordatorios y confirmaciones' },
+    firma:   { icon: '', name: 'Firma Digital',         detail: 'Consentimientos informados' },
+    factura: { icon: '', name: 'Facturacion Electronica', detail: 'Cumplimiento tributario' },
+  };
+
+  grid.innerHTML = keys.map(key => {
+    const b = bolsas[key];
+    const info = moduleInfo[key] || { icon: '', name: key, detail: '' };
+    const precio = Math.round((b.precio || 0) * factor);
+    return `
+      <div class="module-card">
+        <div class="module-icon">${info.icon}</div>
+        <div class="module-info">
+          <div class="module-name">${info.name}</div>
+          <div class="module-detail">${info.detail} · ${fmtNum(b.limiteEnvios || 0)} envios</div>
+        </div>
+        <div class="module-price">${fmtMoney(precio, moneda)}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ═══ RENDER NORMATIVA ═══
+function renderNormativa(params) {
+  const pais = (params.pais || params.country || '').toUpperCase();
+  const textos = {
+    CO: 'Medilink cumple con la Resolucion 2003 de 2014 (habilitacion), la Ley 2015 de 2020 (telesalud) y las normas de la Superintendencia de Salud de Colombia.',
+    CL: 'Medilink cumple con la normativa del Ministerio de Salud de Chile, incluyendo la Ley 20.584 de derechos del paciente y los estandares de la Superintendencia de Salud.',
+    MX: 'Medilink cumple con la NOM-024-SSA3-2012 (expediente clinico electronico) y la normativa de la Secretaria de Salud de Mexico.',
+    ES: 'Medilink cumple con el RGPD (Reglamento General de Proteccion de Datos) y las normativas del Ministerio de Sanidad de Espana.',
+  };
+  const text = textos[pais];
+  if (!text) return;
+  document.getElementById('sec-normativa').style.display = 'block';
+  document.getElementById('normativa-text').textContent = text;
+}
+
+// ═══ RENDER FEATURES ═══
+function renderFeatures() {
+  document.getElementById('sec-features').style.display = 'block';
+  const features = [
+    'Agenda inteligente con recordatorios',
+    'Historia clinica electronica',
+    'Prescripciones y recetas digitales',
+    'Facturacion electronica integrada',
+    'Firma digital de consentimientos',
+    'Reportes y estadisticas en tiempo real',
+    'Soporte ilimitado por WhatsApp',
+    'Migracion de datos incluida',
+    'Capacitacion para tu equipo',
+    'Actualizaciones automaticas',
+    'App movil para pacientes',
+    'Multi-sede y multi-profesional',
+  ];
+  document.getElementById('features-grid').innerHTML =
+    features.map(f => `
+      <div class="feature-item">
+        <span class="feature-check">&#10003;</span>
+        <span class="feature-text">${f}</span>
+      </div>
+    `).join('');
+}
+
+// ═══ RENDER STATS ═══
+function renderStats() {
+  document.getElementById('sec-stats').style.display = 'block';
+  const stats = [
+    { number: '5,000+', label: 'Profesionales activos' },
+    { number: '12', label: 'Paises' },
+    { number: '99.9%', label: 'Uptime garantizado' },
+    { number: '24/7', label: 'Soporte disponible' },
+  ];
+  document.getElementById('stats-grid').innerHTML =
+    stats.map(s => `
+      <div class="stat-item">
+        <div class="stat-number">${s.number}</div>
+        <div class="stat-label">${s.label}</div>
+      </div>
+    `).join('');
+}
+
+// ═══ SELECT PLAN ═══
+function selectPlan(planKey) {
+  if (STATE.selectedPlan === planKey) return;
+  STATE.selectedPlan = planKey;
+  renderPlans(STATE.data.params, STATE.data.tenant_config?.product || {}, STATE.data.pricing_factor || 1);
+  recalcTotal();
+  trackEvent('adjusted', { field: 'plan', value: planKey });
+}
+
+// ═══ ADJUST USERS ═══
+function adjustUsers(delta) {
+  const newVal = STATE.users + delta;
+  if (newVal < 1 || newVal > 100) return;
+  STATE.users = newVal;
+  document.getElementById('users-count').textContent = newVal;
+  document.getElementById('btn-minus').disabled = (newVal <= 1);
+  recalcTotal();
+  trackEvent('adjusted', { field: 'users', value: newVal });
+}
+
+// ═══ RECALCULATE TOTAL ═══
+function recalcTotal() {
+  const params = STATE.data?.params;
+  if (!params) return;
+
+  const factor  = STATE.data.pricing_factor || 1;
+  const moneda  = params.moneda || params.currency || 'COP';
+  const modal   = params.modalidad || 'mensual';
+  const planesData = params.planes || {};
+  const plan    = planesData[STATE.selectedPlan];
+
+  if (!plan) {
+    document.getElementById('total-amount').textContent = '—';
+    return;
+  }
+
+  // Recalcular con usuarios ajustados: neto del plan + adicionales
+  let planTotal = Math.round((plan.neto || plan.subtotal || 0) * factor);
+
+  // Si el usuario cambio la cantidad, ajustar
+  if (STATE.users !== (params.usuarios || params.users || 1)) {
+    const origUsers = params.usuarios || params.users || 1;
+    const precAdic = Math.round((plan.precAdic || 0) * factor);
+    const diff = STATE.users - origUsers;
+    if (diff > 0) planTotal += precAdic * diff;
+    if (diff < 0) planTotal = Math.max(Math.round(plan.base * factor * (1 - (params.descuento || 30) / 100)), planTotal + precAdic * diff);
+  }
+
+  // Bolsas
+  const bolsas = params.bolsas || {};
+  let bolsasTotal = 0;
+  for (const b of Object.values(bolsas)) {
+    bolsasTotal += Math.round((b.precio || 0) * factor);
+  }
+
+  const total = planTotal + bolsasTotal;
+  const periodLabel = modal === 'anual' ? '/ano' : modal === 'semestral' ? '/semestre' : '/mes';
+
+  document.getElementById('total-amount').textContent = fmtMoney(total, moneda);
+  document.getElementById('total-period').textContent = periodLabel;
+
+  // Savings
+  const subtotal = Math.round((plan.subtotal || 0) * factor) + bolsasTotal;
+  if (subtotal > total) {
+    const savings = subtotal - total;
+    const el = document.getElementById('total-savings');
+    el.textContent = `Ahorras ${fmtMoney(savings, moneda)}`;
+    el.style.display = 'inline-block';
+  }
+}
+
+// ═══ TRACKING ═══
+async function trackEvent(type, changes) {
+  try {
+    const device = /Mobi|Android/i.test(navigator.userAgent) ? 'mobile' : 'desktop';
+    await fetch(`${API_BASE}/api/cotizacion/${STATE.hash}/event`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type, changes, device }),
+    });
+  } catch (_) { /* silencioso */ }
+}
+
+// ═══ FORMAT HELPERS ═══
+function fmtMoney(value, moneda) {
+  const n = Number(value);
+  if (isNaN(n)) return '—';
+  const symbols = { COP: '$', CLP: '$', MXN: '$', USD: '$', EUR: '€' };
+  const sym = symbols[moneda] || '$';
+
+  if (moneda === 'EUR') return `${sym} ${n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.')}`;
+
+  const sepMiles = (moneda === 'USD' || moneda === 'MXN') ? ',' : '.';
+  if (moneda === 'MXN' && n % 1 !== 0) {
+    const int = Math.floor(n);
+    const dec = Math.round((n - int) * 100).toString().padStart(2, '0');
+    return `${sym} ${int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, sepMiles)}.${dec}`;
+  }
+  return `${sym} ${Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, sepMiles)}`;
+}
+
+function fmtNum(n) {
+  return Math.round(Number(n)).toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+}
+
+// ═══ ERROR HANDLER ═══
+function showError(title, text) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('error').style.display = 'flex';
+  document.getElementById('error-title').textContent = title;
+  document.getElementById('error-text').textContent = text;
+}
+</script>
+
+</body>
+</html>
