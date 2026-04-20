@@ -314,7 +314,11 @@ body {
 .plan-card.sel-t { border-color:#A78BFA; background:rgba(108,63,200,.14); box-shadow:0 0 0 1px rgba(108,63,200,.4); }
 .plan-emoji { font-size:26px; margin-bottom:7px; display:block; }
 .plan-name { font-size:15px; font-weight:700; color:white; margin-bottom:3px; }
-.plan-desc { font-size:11px; color:rgba(255,255,255,.5); line-height:1.4; margin-bottom:12px; }
+.plan-desc { font-size:11px; color:rgba(255,255,255,.5); line-height:1.4; margin-bottom:8px; }
+.plan-tokens { font-size:11px; color:rgba(255,255,255,.75); line-height:1.4; margin-bottom:12px; padding:6px 8px; background:rgba(255,255,255,.06); border-radius:6px; border:1px solid rgba(255,255,255,.08); }
+.plan-tokens strong { color:#00AEEF; font-weight:700; }
+.plan-card.sel-p .plan-tokens strong { color:#F5A623; }
+.plan-card.sel-t .plan-tokens strong { color:#A78BFA; }
 /* ── VIDEO BUTTON EN PLAN CARD ── */
 .plan-video-btn {
   display:flex; align-items:center; justify-content:center; gap:6px;
@@ -890,6 +894,7 @@ body {
         <span class="plan-emoji">🩺</span>
         <div class="plan-name">Plan Esencial</div>
         <div class="plan-desc">Lo indispensable para una consulta.</div>
+        <div class="plan-tokens">🤖 <strong>80</strong> tokens IA/mes</div>
         <a class="plan-video-btn" href="https://youtu.be/c624nlfNH2w?feature=shared" target="_blank" onclick="event.stopPropagation()">
           <span class="play-ico">▶</span> Ver demo del plan
         </a>
@@ -899,6 +904,7 @@ body {
         <span class="plan-emoji">⭐</span>
         <div class="plan-name">Plan Pro</div>
         <div class="plan-desc">Control y visibilidad 360 de tu centro.</div>
+        <div class="plan-tokens">🤖 <strong>250</strong> tokens IA/mes · 📦 Inventario</div>
         <a class="plan-video-btn" href="https://youtu.be/PZF9bfK-qb8?feature=shared" target="_blank" onclick="event.stopPropagation()">
           <span class="play-ico">▶</span> Ver demo del plan
         </a>
@@ -908,6 +914,7 @@ body {
         <span class="plan-emoji">👑</span>
         <div class="plan-name">Plan Titanium</div>
         <div class="plan-desc">Gestión avanzada + fidelización activa.</div>
+        <div class="plan-tokens">🤖 <strong>400</strong> tokens IA/mes · 😊 Ficha estética · 🧪 Labs</div>
         <a class="plan-video-btn" href="https://youtu.be/n0funFLeWt8?feature=shared" target="_blank" onclick="event.stopPropagation()">
           <span class="play-ico">▶</span> Ver demo del plan
         </a>
@@ -970,7 +977,7 @@ body {
     <div class="step-num">3</div>
     <div class="step-info">
       <div class="step-title">Módulos adicionales</div>
-      <div class="step-sub">WhatsApp, Firma electrónica, Facturación</div>
+      <div class="step-sub" id="modulos-sub">WhatsApp, Firma Electrónica y Facturación</div>
     </div>
   </div>
   <div class="adic-section">
@@ -1008,7 +1015,7 @@ body {
         <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Solo plan base (sin adicionales)</div>
         <div class="price-big"><span class="price-curr" id="r-curr">COP $</span><span id="r-price">87.500</span></div>
         <div class="price-period" id="r-period">meses 1 al 3 · con promoción 30%</div>
-        <div class="price-normal">Sin promo: <strong id="r-normal">COP $125.000</strong> · precio regular desde el mes 4</div>
+        <div class="price-normal">Sin promo: <strong id="r-normal">COP $125.000</strong><span id="r-normal-suffix"> · precio regular desde el mes 4</span></div>
         <div class="green-badge">✦ Descuento activo</div>
       </div>
     </div>
@@ -1118,7 +1125,11 @@ var BOLSAS={
   ES:{wa:{r:[150,350,800,2000],p:[180,396,864,2040]},firma:{r:[50,100,200,500],p:[300,540,960,2400]},factura:{r:[50,100,200,500],p:[120,204,420,720]}},
   OP:{wa:{r:[150,350,800,2000],p:[15,35,70,170]},firma:{r:[50,100,200,500],p:[25,40,70,170]},factura:{r:[50,100,200,500],p:[10,17,35,60]}}
 };
-var MODS=[{id:"wa",icon:"💬",name:"WhatsApp — Recordatorios automáticos",desc:"Envíos automáticos de recordatorios y confirmaciones de citas."},{id:"firma",icon:"✍️",name:"Firma electrónica digital",desc:"Para consentimientos informados y documentos clínicos."},{id:"factura",icon:"🧾",name:"Facturador electrónico",desc:"Facturación electrónica integrada. Incluye FEV-RIPS en Colombia."}];
+var MODS=[
+  {id:"wa",icon:"💬",name:"WhatsApp — Recordatorios automáticos",desc:"Envíos automáticos de recordatorios y confirmaciones de citas.",countries:null},
+  {id:"firma",icon:"✍️",name:"Firma Electrónica",desc:"Para consentimientos informados y documentos clínicos.",countries:null},
+  {id:"factura",icon:"🧾",name:"Facturador electrónico",desc:"Facturación electrónica integrada.",countries:["CO","CL","MX","DO"]}
+];
 var TIERS=["S","M","L","XL"];
 var NORMS={CO:[{t:"Res. 256/2016 — Calidad servicios",co:true},{t:"Res. 2275/2023 — HC electrónica + RIPS",co:true},{t:"Res. 3100/2019 — Habilitación centros",co:true},{t:"Res. 1888/2024 — Interoperabilidad",co:true},{t:"Ley 1581/2012 — Habeas data",co:true}],OP:[{t:"RGPD / GDPR — Protección datos",co:false},{t:"ISO 27001 — Seguridad certificada",co:false},{t:"Normativa local privacidad clínica",co:false},{t:"Estándares internacionales telemedicina",co:false}]};
 var PINC={esencial:[{i:"📋",t:"Historia clínica personalizable",s:"Por especialidad. CIE-10/CIE-11.",co:false},{i:"📅",t:"Agenda + Link online",s:"Auto-agendamiento para pacientes.",co:false},{i:"🎥",t:"Telemedicina ilimitada",s:"Videoconsultas sin costo extra.",co:false},{i:"✍️",t:"Consentimientos + Firma electrónica",s:"Firma digital de documentos.",co:false}],pro:[{i:"📦",t:"Inventario virtual",s:"Control de stock de insumos.",co:false},{i:"💰",t:"Control gastos y remuneraciones",s:"Comisiones automáticas.",co:false},{i:"📊",t:"+80 reportes Excel",s:"Gestión clínica y administrativa.",co:false},{i:"🏢",t:"Gestión multisucursal",s:"Desde una sola plataforma.",co:false}],titanium:[{i:"😊",t:"Ficha estética facial",s:"Esquema facial intuitivo.",co:false},{i:"💌",t:"Email marketing",s:"Campañas de fidelización activa.",co:false},{i:"⚡",t:"Tareas automáticas",s:"Seguimiento y re-agendamiento.",co:false},{i:"🧪",t:"Laboratorios y exámenes",s:"Solicitudes internas y externas.",co:false}]};
@@ -1255,7 +1266,21 @@ async function loadPropuesta() {
         if (pm) AS.factura = pm;
       }
       // Siempre activos — independiente del API
-      AS.wa.on = true; AS.firma.on = true; AS.factura.on = true;
+      AS.wa.on = true; AS.firma.on = true;
+      // Factura activa por defecto solo en paises que la tienen (CO, CL, MX, DO)
+      var PAISES_FACTURA = ['CO','CL','MX','DO'];
+      AS.factura.on = (PAISES_FACTURA.indexOf(S.rawCountry) >= 0);
+
+      // Subtitulo dinamico paso 3
+      var modSub = document.getElementById('modulos-sub');
+      if (modSub) {
+        if (PAISES_FACTURA.indexOf(S.rawCountry) >= 0) {
+          modSub.textContent = 'WhatsApp, Firma Electrónica y Facturación';
+        } else {
+          modSub.textContent = 'WhatsApp y Firma Electrónica';
+        }
+      }
+
     }
 
     // España: solo modalidad anual (precios EUR son anuales)
@@ -1267,6 +1292,11 @@ async function loadPropuesta() {
     }
 
     PRICING_FACTOR = data.pricing_factor || 1;
+
+    // T-H.1.a + T-H.1.c: guardar country_config + descuento_info del backend
+    // (fuente de verdad: countries/*.json). Fallback a hardcoded PR/DESC.
+    window.__COUNTRY_CONFIG = data.country_config || null;
+    window.__DESCUENTO_INFO = data.descuento_info || null;
 
     // Sync UI selectors
     syncPlanUI();
@@ -1460,15 +1490,20 @@ function renderAdic() {
   container.innerHTML = '';
   for (var mi = 0; mi < MODS.length; mi++) {
     var mod = MODS[mi];
+    // Filtrar módulos según país
+    if (mod.countries && mod.countries.indexOf(S.rawCountry) < 0) continue;
     var st = AS[mod.id];
     var b = BOLSAS[S.country][mod.id];
+    // Descripción dinámica: FEV-RIPS solo para Colombia
+    var descText = mod.desc;
+    if (mod.id === 'factura' && S.rawCountry === 'CO') descText += ' Incluye FEV-RIPS.';
     var wrap = document.createElement('div');
     wrap.className = 'amod' + (st.on ? ' on' : '');
     wrap.id = 'amod-' + mod.id;
     var head = document.createElement('div');
     head.className = 'amod-head';
     head.setAttribute('data-id', mod.id);
-    head.innerHTML = '<div class="toggle"></div><span class="amod-icon">' + mod.icon + '</span><div class="amod-info"><div class="amod-name">' + mod.name + '</div><div class="amod-desc">' + mod.desc + '</div></div><div class="amod-price" id="ap-' + mod.id + '">' + fmt(b.p[st.tier]) + '<span style="font-size:10px;color:var(--muted);font-weight:500">/mes</span></div>';
+    head.innerHTML = '<div class="toggle"></div><span class="amod-icon">' + mod.icon + '</span><div class="amod-info"><div class="amod-name">' + mod.name + '</div><div class="amod-desc">' + descText + '</div></div><div class="amod-price" id="ap-' + mod.id + '">' + fmt(b.p[st.tier]) + '<span style="font-size:10px;color:var(--muted);font-weight:500">/mes</span></div>';
     head.addEventListener('click', function(e) {
       var id = this.getAttribute('data-id');
       AS[id].on = !AS[id].on;
@@ -1504,7 +1539,9 @@ function renderAdic() {
 // ── CALC TOTAL ──
 function calcTotal() {
   var p = PR[S.country][S.plan];
-  var desc = DESC[S.mod];
+  // T-H.1.c: preferir descuento_info del backend
+  var di = window.__DESCUENTO_INFO;
+  var desc = (di && typeof di.rate === 'number') ? di.rate : DESC[S.mod];
   var mult = MULT[S.mod];
   var nA = Math.max(0, S.users - 1);
   var base = (p.base + p.adic * nA) * mult;
@@ -1514,6 +1551,7 @@ function calcTotal() {
   var chips = [];
   for (var mi = 0; mi < MODS.length; mi++) {
     var mod = MODS[mi];
+    if (mod.countries && mod.countries.indexOf(S.rawCountry) < 0) continue;
     if (AS[mod.id].on) {
       var bprice = BOLSAS[S.country][mod.id].p[AS[mod.id].tier];
       adic += bprice * mult;
@@ -1522,8 +1560,18 @@ function calcTotal() {
   }
   var total = neto + adic;
   var normal = base + adic;
-  var pm = { mensual: 'Meses 1 al 3 · descuento 30%', semestral: 'Pago semestral · descuento 15%', anual: 'Pago anual · descuento 20%' };
-  document.getElementById('tf-period').textContent = pm[S.mod];
+  var descPct = Math.round(desc * 100);
+  var isTemp = di ? di.isTemporary : (S.mod === 'mensual');
+  var periodLabel;
+  if (isTemp) {
+    var months = (di && di.months) ? di.months : 3;
+    periodLabel = 'Mes 1-' + months + ' · descuento ' + descPct + '%';
+  } else if (S.mod === 'semestral') {
+    periodLabel = 'Pago semestral · descuento ' + descPct + '%';
+  } else {
+    periodLabel = 'Pago anual · descuento ' + descPct + '%';
+  }
+  document.getElementById('tf-period').textContent = periodLabel;
   document.getElementById('tf-curr').textContent = PR[S.country].currency;
   document.getElementById('tf-amount').textContent = PR[S.country].decs > 0 ? total.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep) : Math.round(total).toString().replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep);
   document.getElementById('tf-sub').textContent = chips.length > 0 ? 'Plan base con promo + ' + chips.length + ' módulo' + (chips.length > 1 ? 's' : '') + ' adicional' + (chips.length > 1 ? 'es' : '') : 'Solo plan base con promoción';
@@ -1537,7 +1585,10 @@ function calcTotal() {
 // ── RENDER DETALLE ──
 function renderDetalle() {
   var p = PR[S.country][S.plan];
-  var desc = DESC[S.mod];
+  // T-H.1.c: preferir descuento_info del backend (countries/*.json) si está presente.
+  // Fallback a DESC hardcoded para retrocompat.
+  var di = window.__DESCUENTO_INFO;
+  var desc = (di && typeof di.rate === 'number') ? di.rate : DESC[S.mod];
   var mult = MULT[S.mod];
   var nA = Math.max(0, S.users - 1);
   var base = (p.base + p.adic * nA) * mult;
@@ -1550,9 +1601,26 @@ function renderDetalle() {
   document.getElementById('r-tag').textContent = meta.tag;
   document.getElementById('r-curr').textContent = PR[S.country].currency;
   document.getElementById('r-price').textContent = PR[S.country].decs > 0 ? neto.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep) : Math.round(neto).toString().replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep);
-  var ml = { mensual: 'meses 1 al 3 · descuento 30%', semestral: 'pago semestral · descuento 15%', anual: 'pago anual · descuento 20%' };
-  document.getElementById('r-period').textContent = ml[S.mod];
+
+  // Label del período: temporal (mensual con months=3) vs permanente (semestral/anual)
+  var isTemp = di ? di.isTemporary : (S.mod === 'mensual');
+  var descPct = Math.round(desc * 100);
+  var periodLabel;
+  var suffixLabel = '';
+  if (isTemp) {
+    var months = (di && di.months) ? di.months : 3;
+    periodLabel = 'mes 1-' + months + ' · descuento ' + descPct + '%';
+    suffixLabel = ' · precio regular desde el mes ' + (months + 1);
+  } else if (S.mod === 'semestral') {
+    periodLabel = 'pago semestral · descuento ' + descPct + '%';
+    suffixLabel = ' · valor de renovación sin descuento';
+  } else {
+    periodLabel = 'pago anual · descuento ' + descPct + '%';
+    suffixLabel = ' · valor de renovación sin descuento';
+  }
+  document.getElementById('r-period').textContent = periodLabel;
   document.getElementById('r-normal').textContent = fmt(base);
+  document.getElementById('r-normal-suffix').textContent = suffixLabel;
   var bd = '<div class="bd-row"><span class="bd-label">Plan base (' + S.mod + ')</span><span class="bd-value">' + fmt(p.base * mult) + '</span></div>';
   if (nA > 0) bd += '<div class="bd-row"><span class="bd-label">+' + nA + ' usuario' + (nA > 1 ? 's' : '') + '</span><span class="bd-value">' + fmt(p.adic * nA * mult) + '</span></div>';
   bd += '<div class="bd-row bonus"><span class="bd-label">Administrativos ilimitados</span><span class="bd-value">♾️ Gratis</span></div>';
