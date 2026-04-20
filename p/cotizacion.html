@@ -904,7 +904,7 @@ body {
         <span class="plan-emoji">⭐</span>
         <div class="plan-name">Plan Pro</div>
         <div class="plan-desc">Control y visibilidad 360 de tu centro.</div>
-        <div class="plan-tokens">🤖 <strong>250</strong> tokens IA/mes · 📦 Inventario</div>
+        <div class="plan-tokens">🤖 <strong>250</strong> tokens IA/mes</div>
         <a class="plan-video-btn" href="https://youtu.be/PZF9bfK-qb8?feature=shared" target="_blank" onclick="event.stopPropagation()">
           <span class="play-ico">▶</span> Ver demo del plan
         </a>
@@ -914,7 +914,7 @@ body {
         <span class="plan-emoji">👑</span>
         <div class="plan-name">Plan Titanium</div>
         <div class="plan-desc">Gestión avanzada + fidelización activa.</div>
-        <div class="plan-tokens">🤖 <strong>400</strong> tokens IA/mes · 😊 Ficha estética · 🧪 Labs</div>
+        <div class="plan-tokens">🤖 <strong>400</strong> tokens IA/mes</div>
         <a class="plan-video-btn" href="https://youtu.be/n0funFLeWt8?feature=shared" target="_blank" onclick="event.stopPropagation()">
           <span class="play-ico">▶</span> Ver demo del plan
         </a>
@@ -1122,13 +1122,15 @@ var BOLSAS={
   CO:{wa:{r:[150,350,800,2000],p:[11000,23000,75000,120000]},firma:{r:[50,200,500,1000],p:[15000,30000,70000,140000]},factura:{r:[50,200,500,1000],p:[32000,50000,88000,165000]}},
   CL:{wa:{r:[150,350,800,2000],p:[17780,38894,83671,197556]},firma:{r:[50,200,500,1000],p:[20833,39063,69444,164474]},factura:{r:[50,200,500,1000],p:[10000,13000,20000,30000]}},
   MX:{wa:{r:[150,350,800,2000],p:[210,360,680,1300]},firma:{r:[50,100,200,500],p:[450,790,1400,3300]},factura:{r:[50,100,200,500],p:[160,270,440,500]}},
-  ES:{wa:{r:[150,350,800,2000],p:[180,396,864,2040]},firma:{r:[50,100,200,500],p:[300,540,960,2400]},factura:{r:[50,100,200,500],p:[120,204,420,720]}},
+  ES:{wa:{r:[150,350,800,2000],p:[180,396,864,2040]},firma:{r:[50,100,200,500],p:[300,540,960,2400]}}, // C-342 B.3: ES NO tiene facturador (no está en MODS.factura.countries). Data eliminada por drift risk.
   OP:{wa:{r:[150,350,800,2000],p:[15,35,70,170]},firma:{r:[50,100,200,500],p:[25,40,70,170]},factura:{r:[50,100,200,500],p:[10,17,35,60]}}
 };
 var MODS=[
   {id:"wa",icon:"💬",name:"WhatsApp — Recordatorios automáticos",desc:"Envíos automáticos de recordatorios y confirmaciones de citas.",countries:null},
   {id:"firma",icon:"✍️",name:"Firma Electrónica",desc:"Para consentimientos informados y documentos clínicos.",countries:null},
-  {id:"factura",icon:"🧾",name:"Facturador electrónico",desc:"Facturación electrónica integrada.",countries:["CO","CL","MX","DO"]}
+  {id:"factura",icon:"🧾",name:"Facturador electrónico",desc:"Facturación electrónica integrada.",countries:["CO","CL","MX","DO"]},
+  // Recetas AR: tarifa plana $3 USD por usuario/mes, envíos ILIMITADOS (Res. 404/2023 AR). Sin bolsa.
+  {id:"receta",icon:"💊",name:"Recetas Digitales",desc:"Prescripción electrónica con validez legal en Argentina. Envíos ilimitados.",countries:["AR"],flatPerUser:3}
 ];
 var TIERS=["S","M","L","XL"];
 var NORMS={CO:[{t:"Res. 256/2016 — Calidad servicios",co:true},{t:"Res. 2275/2023 — HC electrónica + RIPS",co:true},{t:"Res. 3100/2019 — Habilitación centros",co:true},{t:"Res. 1888/2024 — Interoperabilidad",co:true},{t:"Ley 1581/2012 — Habeas data",co:true}],OP:[{t:"RGPD / GDPR — Protección datos",co:false},{t:"ISO 27001 — Seguridad certificada",co:false},{t:"Normativa local privacidad clínica",co:false},{t:"Estándares internacionales telemedicina",co:false}]};
@@ -1198,8 +1200,8 @@ var COUNTRY_DISPLAY={
   INTL:{flag:"\ud83c\udf0e",name:"Internacional",currency:"USD $"}
 };
 
-var S={country:"CO",rawCountry:"CO",plan:"esencial",mod:"mensual",users:2,fc:"all"};
-var AS={wa:{on:true,tier:0},firma:{on:true,tier:0},factura:{on:true,tier:0}};
+var S={country:"CO",rawCountry:"CO",plan:"esencial",mod:"mensual",users:2,fc:"all",lockPlan:null};
+var AS={wa:{on:true,tier:0},firma:{on:true,tier:0},factura:{on:true,tier:0},receta:{on:false,tier:0}};
 
 // ── LOAD FROM API ──
 var VIDEOS=[
@@ -1247,6 +1249,14 @@ async function loadPropuesta() {
     // Init state from lead params
     if (data.params) {
       S.plan = data.params.plan || 'esencial';
+      // lockPlan: segmentación por tipo de negocio (ej: estética/derma → solo Titanium)
+      if (data.params.lockPlan) {
+        var lp = String(data.params.lockPlan).toLowerCase();
+        if (['esencial','pro','titanium'].indexOf(lp) >= 0) {
+          S.lockPlan = lp;
+          S.plan = lp;
+        }
+      }
       S.users = data.params.users || 2;
       S.mod = data.params.modalidad || 'mensual';
       var raw = (data.params.country || 'CO').toUpperCase();
@@ -1270,11 +1280,15 @@ async function loadPropuesta() {
       // Factura activa por defecto solo en paises que la tienen (CO, CL, MX, DO)
       var PAISES_FACTURA = ['CO','CL','MX','DO'];
       AS.factura.on = (PAISES_FACTURA.indexOf(S.rawCountry) >= 0);
+      // Recetas Digitales activa por defecto solo en Argentina ($3 USD/usuario, ilimitado)
+      AS.receta.on = (S.rawCountry === 'AR');
 
       // Subtitulo dinamico paso 3
       var modSub = document.getElementById('modulos-sub');
       if (modSub) {
-        if (PAISES_FACTURA.indexOf(S.rawCountry) >= 0) {
+        if (S.rawCountry === 'AR') {
+          modSub.textContent = 'WhatsApp, Firma Electrónica y Recetas Digitales';
+        } else if (PAISES_FACTURA.indexOf(S.rawCountry) >= 0) {
           modSub.textContent = 'WhatsApp, Firma Electrónica y Facturación';
         } else {
           modSub.textContent = 'WhatsApp y Firma Electrónica';
@@ -1411,7 +1425,11 @@ function applySections(s) {
 
 function syncPlanUI() {
   ['esencial','pro','titanium'].forEach(function(x) {
-    document.getElementById('card-' + x).className = 'plan-card' + (x === S.plan ? ' sel-' + x[0] : '');
+    var card = document.getElementById('card-' + x);
+    if (!card) return;
+    // Si hay lockPlan, solo muestro la card bloqueada
+    card.style.display = (S.lockPlan && x !== S.lockPlan) ? 'none' : '';
+    card.className = 'plan-card' + (x === S.plan ? ' sel-' + x[0] : '');
   });
 }
 
@@ -1454,6 +1472,7 @@ function trackDownload() {
 // setCountry removed — country comes from backend data
 
 function setPlan(p) {
+  if (S.lockPlan) return; // plan bloqueado por segmentación de negocio
   S.plan = p;
   syncPlanUI();
   trackAdjusted({ plan: p });
@@ -1493,6 +1512,26 @@ function renderAdic() {
     // Filtrar módulos según país
     if (mod.countries && mod.countries.indexOf(S.rawCountry) < 0) continue;
     var st = AS[mod.id];
+    // Módulo flat (ej: Recetas AR = $3 USD/usuario, sin bolsa)
+    if (mod.flatPerUser) {
+      var flatPrice = mod.flatPerUser * S.users;
+      var wrapF = document.createElement('div');
+      wrapF.className = 'amod' + (st.on ? ' on' : '');
+      wrapF.id = 'amod-' + mod.id;
+      var headF = document.createElement('div');
+      headF.className = 'amod-head';
+      headF.setAttribute('data-id', mod.id);
+      headF.innerHTML = '<div class="toggle"></div><span class="amod-icon">' + mod.icon + '</span><div class="amod-info"><div class="amod-name">' + mod.name + '</div><div class="amod-desc">' + mod.desc + ' $' + mod.flatPerUser + ' USD por usuario/mes.</div></div><div class="amod-price" id="ap-' + mod.id + '">' + fmt(flatPrice) + '<span style="font-size:10px;color:var(--muted);font-weight:500">/mes</span></div>';
+      headF.addEventListener('click', function(e) {
+        var id = this.getAttribute('data-id');
+        AS[id].on = !AS[id].on;
+        trackAdjusted({ modulos: {} });
+        renderAdic(); calcTotal();
+      });
+      wrapF.appendChild(headF);
+      container.appendChild(wrapF);
+      continue;
+    }
     var b = BOLSAS[S.country][mod.id];
     // Descripción dinámica: FEV-RIPS solo para Colombia
     var descText = mod.desc;
@@ -1552,7 +1591,12 @@ function calcTotal() {
   for (var mi = 0; mi < MODS.length; mi++) {
     var mod = MODS[mi];
     if (mod.countries && mod.countries.indexOf(S.rawCountry) < 0) continue;
-    if (AS[mod.id].on) {
+    if (!AS[mod.id].on) continue;
+    if (mod.flatPerUser) {
+      var flatPrice = mod.flatPerUser * S.users;
+      adic += flatPrice * mult;
+      chips.push(mod.icon + ' ' + S.users + ' usuario' + (S.users > 1 ? 's' : '') + ' · ' + fmt(flatPrice) + '/mes');
+    } else {
       var bprice = BOLSAS[S.country][mod.id].p[AS[mod.id].tier];
       adic += bprice * mult;
       chips.push(mod.icon + ' Bolsa ' + TIERS[AS[mod.id].tier] + ' · ' + fmt(bprice) + '/mes');
