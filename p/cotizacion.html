@@ -821,9 +821,89 @@ body {
   color:var(--cyan);
   flex-shrink:0;
 }
+
+/* ── ICONS PROFESIONALES (C-347) ── */
+.mi-icon{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;line-height:1;flex-shrink:0}
+.mi-icon svg{width:100%;height:100%;display:block;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.mi-icon.filled svg{fill:currentColor;stroke:none}
+.mi-icon.cyan{color:var(--cyan)}
+.mi-icon.navy{color:var(--navy)}
+.mi-icon.white{color:#fff}
+.mi-icon.gold{color:var(--gold)}
+.mi-icon.green{color:var(--green)}
 </style>
 </head>
 <body>
+
+<!-- ICONOS PROFESIONALES (C-347) — mapa emoji→SVG y helper ICON() -->
+<script>
+(function(){
+  // Lucide-style (stroke=currentColor). Cada SVG es 24×24, stroke-width=2.
+  var M = {
+    'doc':       '<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>',
+    'download':  '<svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>',
+    'trophy':    '<svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>',
+    'target':    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+    'sparkles':  '<svg viewBox="0 0 24 24"><path d="M12 3l1.88 4.12L18 9l-4.12 1.88L12 15l-1.88-4.12L6 9l4.12-1.88z"/><path d="M5 16l.75 1.75L7.5 18.5l-1.75.75L5 21l-.75-1.75L2.5 18.5l1.75-.75z"/><path d="M19 3l.5 1.5L21 5l-1.5.5L19 7l-.5-1.5L17 5l1.5-.5z"/></svg>',
+    'heart':     '<svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>',
+    'trending':  '<svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>',
+    'check':     '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>',
+    'stethoscope':'<svg viewBox="0 0 24 24"><path d="M4 3v6a5 5 0 0 0 10 0V3"/><path d="M7 3h-3"/><path d="M14 3h-3"/><circle cx="18" cy="14" r="2"/><path d="M18 12v-1a4 4 0 0 0-4-4"/><path d="M9 14v2a5 5 0 0 0 10 0"/></svg>',
+    'bot':       '<svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><circle cx="9" cy="14" r="1" fill="currentColor"/><circle cx="15" cy="14" r="1" fill="currentColor"/><line x1="12" y1="4" x2="12" y2="8"/><line x1="8" y1="20" x2="8" y2="22"/><line x1="16" y1="20" x2="16" y2="22"/></svg>',
+    'star':      '<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>',
+    'crown':     '<svg viewBox="0 0 24 24"><path d="M2 20h20"/><path d="M5 20V9l4 3 3-7 3 7 4-3v11"/></svg>',
+    'infinity':  '<svg viewBox="0 0 24 24"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.739-8z"/></svg>',
+    'sparkle':   '<svg viewBox="0 0 24 24"><path d="M12 3l1.5 6 6 1.5-6 1.5-1.5 6-1.5-6-6-1.5 6-1.5z"/></svg>',
+    'calendar':  '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
+    'film':      '<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M17 2l-5 5"/><path d="M11 2l-5 5"/><path d="M22 7H2"/></svg>',
+    'shield':    '<svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg>',
+    'chart':     '<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>',
+    'star-shine':'<svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg>',
+    'chat':      '<svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    'pen':       '<svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>',
+    'receipt':   '<svg viewBox="0 0 24 24"><path d="M4 2v20l3-2 3 2 3-2 3 2 3-2V2l-3 2-3-2-3 2-3-2z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></svg>',
+    'pill':      '<svg viewBox="0 0 24 24"><path d="M10.5 20.5a4.95 4.95 0 0 1-7-7L13.5 3.5a4.95 4.95 0 0 1 7 7L10.5 20.5z"/><line x1="8.5" y1="8.5" x2="15.5" y2="15.5"/></svg>',
+    'clipboard': '<svg viewBox="0 0 24 24"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>',
+    'video':     '<svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>',
+    'package':   '<svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>',
+    'dollar':    '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 9h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><line x1="12" y1="18" x2="12" y2="6"/></svg>',
+    'building':  '<svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="7" x2="16" y2="7"/><line x1="8" y1="11" x2="16" y2="11"/><line x1="8" y1="15" x2="16" y2="15"/><line x1="8" y1="19" x2="12" y2="19"/></svg>',
+    'smile':     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+    'mail':      '<svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 8l10 6 10-6"/></svg>',
+    'zap':       '<svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    'flask':     '<svg viewBox="0 0 24 24"><path d="M10 2v6l-4 10a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l-4-10V2"/><line x1="9" y1="2" x2="15" y2="2"/><line x1="8" y1="14" x2="16" y2="14"/></svg>',
+    'lock':      '<svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+    'graduation':'<svg viewBox="0 0 24 24"><path d="M22 10v6"/><path d="M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+    'briefcase': '<svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+    'edit':      '<svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+    'link':      '<svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
+    'frown':     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>',
+    'clock':     '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'
+  };
+  // Tabla emoji→key (mapeo semántico). Incluye variaciones con FE0F.
+  var E2K = {
+    '📄':'doc','⬇':'download','⬇️':'download','🏆':'trophy','🎯':'target','✨':'sparkles',
+    '💙':'heart','📈':'trending','✓':'check','🩺':'stethoscope','🤖':'bot','⭐':'star','⭐️':'star',
+    '👑':'crown','♾':'infinity','♾️':'infinity','✦':'sparkle','📅':'calendar','🎬':'film',
+    '🛡':'shield','🛡️':'shield','📊':'chart','🌟':'star-shine','💬':'chat','✍':'pen','✍️':'pen',
+    '🧾':'receipt','💊':'pill','📋':'clipboard','🎥':'video','📦':'package','💰':'dollar',
+    '🏢':'building','😊':'smile','💌':'mail','⚡':'zap','⚡️':'zap','🧪':'flask','🔒':'lock',
+    '🎓':'graduation','💼':'briefcase','📝':'edit','🔗':'link','😕':'frown','⏰':'clock','⏰️':'clock'
+  };
+  window.MI_ICON_SVG = M;
+  window.MI_EMOJI_TO_KEY = E2K;
+  // ICON(keyOrEmoji, size, cls) → string HTML con <span class="mi-icon">…</span>.
+  // Si key desconocida, retorna el input original (fallback seguro).
+  window.ICON = function(keyOrEmoji, size, cls){
+    var key = E2K[keyOrEmoji] || keyOrEmoji;
+    var svg = M[key];
+    if (!svg) return keyOrEmoji || '';
+    size = size || 20;
+    cls  = cls ? (' ' + cls) : '';
+    return '<span class="mi-icon' + cls + '" style="width:' + size + 'px;height:' + size + 'px">' + svg + '</span>';
+  };
+})();
+</script>
 
 <!-- LOADING STATE -->
 <div id="loading-state">
@@ -833,8 +913,8 @@ body {
 
 <!-- DOWNLOAD BAR -->
 <div class="download-bar no-print" style="display:none" id="main-content-bar">
-  <span class="dl-text">📄 Esta propuesta es tuya — ajusta el plan, usuarios y módulos a tu medida</span>
-  <button class="dl-btn" onclick="trackDownload()">⬇ Guardar / Imprimir PDF</button>
+  <span class="dl-text"><span class="mi-icon cyan" style="width:16px;height:16px"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Esta propuesta es tuya — ajusta el plan, usuarios y módulos a tu medida</span>
+  <button class="dl-btn" onclick="trackDownload()"><span class="mi-icon white" style="width:14px;height:14px"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span> Guardar / Imprimir PDF</button>
 </div>
 
 <!-- HERO -->
@@ -845,7 +925,7 @@ body {
     </div>
     <div class="hero-iso">
       <div class="iso-badge">ISO 27001 <span>Certificado</span></div>
-      <div class="iso-badge">🏆 #1 <span>Healtech LatAm</span></div>
+      <div class="iso-badge"><span class="mi-icon gold" style="width:13px;height:13px"><svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span> #1 <span>Healtech LatAm</span></div>
     </div>
   </div>
   <div id="hero-welcome" class="hero-welcome" style="display:none"></div>
@@ -870,10 +950,10 @@ body {
     <div class="section-label">Nuestra propuesta de valor</div>
     <div class="section-h">¿Cuál es la promesa <em>de valor?</em></div>
     <div class="promise-grid">
-      <div class="p-card"><div class="p-icon">🎯</div><div class="p-text"><strong>Atrae más pacientes</strong><small>Aumenta la ocupación de tu clínica y acerca la salud a más personas.</small></div></div>
-      <div class="p-card"><div class="p-icon">✨</div><div class="p-text"><strong>Experiencia clínica extraordinaria</strong><small>Deleita a tus pacientes y colaboradores de principio a fin.</small></div></div>
-      <div class="p-card"><div class="p-icon">💙</div><div class="p-text"><strong>Fideliza a largo plazo</strong><small>Conecta con tus pacientes de por vida con CRM y marketing automatizado.</small></div></div>
-      <div class="p-card"><div class="p-icon">📈</div><div class="p-text"><strong>Aumenta ingresos</strong><small>Convierte tus presupuestos en planes de tratamiento efectivos.</small></div></div>
+      <div class="p-card"><div class="p-icon"><span class="mi-icon cyan" style="width:26px;height:26px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span></div><div class="p-text"><strong>Atrae más pacientes</strong><small>Aumenta la ocupación de tu clínica y acerca la salud a más personas.</small></div></div>
+      <div class="p-card"><div class="p-icon"><span class="mi-icon cyan" style="width:26px;height:26px"><svg viewBox="0 0 24 24"><path d="M12 3l1.88 4.12L18 9l-4.12 1.88L12 15l-1.88-4.12L6 9l4.12-1.88z"/><path d="M5 16l.75 1.75L7.5 18.5l-1.75.75L5 21l-.75-1.75L2.5 18.5l1.75-.75z"/><path d="M19 3l.5 1.5L21 5l-1.5.5L19 7l-.5-1.5L17 5l1.5-.5z"/></svg></span></div><div class="p-text"><strong>Experiencia clínica extraordinaria</strong><small>Deleita a tus pacientes y colaboradores de principio a fin.</small></div></div>
+      <div class="p-card"><div class="p-icon"><span class="mi-icon cyan" style="width:26px;height:26px"><svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span></div><div class="p-text"><strong>Fideliza a largo plazo</strong><small>Conecta con tus pacientes de por vida con CRM y marketing automatizado.</small></div></div>
+      <div class="p-card"><div class="p-icon"><span class="mi-icon cyan" style="width:26px;height:26px"><svg viewBox="0 0 24 24"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg></span></div><div class="p-text"><strong>Aumenta ingresos</strong><small>Convierte tus presupuestos en planes de tratamiento efectivos.</small></div></div>
     </div>
   </div>
 
@@ -890,31 +970,31 @@ body {
     <div class="plan-wrap-sub">Elige el que mejor se adapta a tu centro de salud</div>
     <div class="plan-cards">
       <div class="plan-card sel-e" id="card-esencial" onclick="setPlan('esencial')">
-        <div class="plan-tick">✓</div>
-        <span class="plan-emoji">🩺</span>
+        <div class="plan-tick"><span class="mi-icon white" style="width:12px;height:12px"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+        <span class="plan-emoji"><span class="mi-icon cyan" style="width:40px;height:40px"><svg viewBox="0 0 24 24"><path d="M4 3v6a5 5 0 0 0 10 0V3"/><path d="M7 3h-3"/><path d="M14 3h-3"/><circle cx="18" cy="14" r="2"/><path d="M18 12v-1a4 4 0 0 0-4-4"/><path d="M9 14v2a5 5 0 0 0 10 0"/></svg></span></span>
         <div class="plan-name">Plan Esencial</div>
         <div class="plan-desc">Lo indispensable para una consulta.</div>
-        <div class="plan-tokens">🤖 <strong>80</strong> tokens IA/mes</div>
+        <div class="plan-tokens"><span class="mi-icon cyan" style="width:14px;height:14px"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><circle cx="9" cy="14" r="1" fill="currentColor"/><circle cx="15" cy="14" r="1" fill="currentColor"/><line x1="12" y1="4" x2="12" y2="8"/><line x1="8" y1="20" x2="8" y2="22"/><line x1="16" y1="20" x2="16" y2="22"/></svg></span> <strong>80</strong> tokens IA/mes</div>
         <a class="plan-video-btn" href="https://youtu.be/c624nlfNH2w?feature=shared" target="_blank" onclick="event.stopPropagation()">
           <span class="play-ico">▶</span> Ver demo del plan
         </a>
       </div>
       <div class="plan-card" id="card-pro" onclick="setPlan('pro')">
-        <div class="plan-tick">✓</div>
-        <span class="plan-emoji">⭐</span>
+        <div class="plan-tick"><span class="mi-icon white" style="width:12px;height:12px"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+        <span class="plan-emoji"><span class="mi-icon cyan" style="width:40px;height:40px"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></span></span>
         <div class="plan-name">Plan Pro</div>
         <div class="plan-desc">Control y visibilidad 360 de tu centro.</div>
-        <div class="plan-tokens">🤖 <strong>250</strong> tokens IA/mes</div>
+        <div class="plan-tokens"><span class="mi-icon cyan" style="width:14px;height:14px"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><circle cx="9" cy="14" r="1" fill="currentColor"/><circle cx="15" cy="14" r="1" fill="currentColor"/><line x1="12" y1="4" x2="12" y2="8"/><line x1="8" y1="20" x2="8" y2="22"/><line x1="16" y1="20" x2="16" y2="22"/></svg></span> <strong>250</strong> tokens IA/mes</div>
         <a class="plan-video-btn" href="https://youtu.be/PZF9bfK-qb8?feature=shared" target="_blank" onclick="event.stopPropagation()">
           <span class="play-ico">▶</span> Ver demo del plan
         </a>
       </div>
       <div class="plan-card" id="card-titanium" onclick="setPlan('titanium')">
-        <div class="plan-tick">✓</div>
-        <span class="plan-emoji">👑</span>
+        <div class="plan-tick"><span class="mi-icon white" style="width:12px;height:12px"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span></div>
+        <span class="plan-emoji"><span class="mi-icon cyan" style="width:40px;height:40px"><svg viewBox="0 0 24 24"><path d="M2 20h20"/><path d="M5 20V9l4 3 3-7 3 7 4-3v11"/></svg></span></span>
         <div class="plan-name">Plan Titanium</div>
         <div class="plan-desc">Gestión avanzada + fidelización activa.</div>
-        <div class="plan-tokens">🤖 <strong>400</strong> tokens IA/mes</div>
+        <div class="plan-tokens"><span class="mi-icon cyan" style="width:14px;height:14px"><svg viewBox="0 0 24 24"><rect x="3" y="8" width="18" height="12" rx="2"/><circle cx="9" cy="14" r="1" fill="currentColor"/><circle cx="15" cy="14" r="1" fill="currentColor"/><line x1="12" y1="4" x2="12" y2="8"/><line x1="8" y1="20" x2="8" y2="22"/><line x1="16" y1="20" x2="16" y2="22"/></svg></span> <strong>400</strong> tokens IA/mes</div>
         <a class="plan-video-btn" href="https://youtu.be/n0funFLeWt8?feature=shared" target="_blank" onclick="event.stopPropagation()">
           <span class="play-ico">▶</span> Ver demo del plan
         </a>
@@ -966,7 +1046,7 @@ body {
           <div class="uc-block-label">Administrativos, asistentes y secretarias<small>Acceso ilimitado sin costo adicional</small></div>
           <span class="promo-tag">¡Gratis!</span>
         </div>
-        <div class="counter-row"><span style="font-size:32px">♾️</span></div>
+        <div class="counter-row"><span class="mi-icon green" style="width:32px;height:32px"><svg viewBox="0 0 24 24"><path d="M18.178 8c5.096 0 5.096 8 0 8-5.095 0-7.133-8-12.739-8-4.585 0-4.585 8 0 8 5.606 0 7.644-8 12.739-8z"/></svg></span></div>
         <div class="counter-label" style="margin-top:6px; color:var(--green);">Usuarios ilimitados incluidos de por vida</div>
       </div>
     </div>
@@ -1016,12 +1096,12 @@ body {
         <div class="price-big"><span class="price-curr" id="r-curr">COP $</span><span id="r-price">87.500</span></div>
         <div class="price-period" id="r-period">meses 1 al 3 · con promoción 30%</div>
         <div class="price-normal">Sin promo: <strong id="r-normal">COP $125.000</strong><span id="r-normal-suffix"> · precio regular desde el mes 4</span></div>
-        <div class="green-badge">✦ Descuento activo</div>
+        <div class="green-badge"><span class="mi-icon green" style="width:12px;height:12px"><svg viewBox="0 0 24 24"><path d="M12 3l1.5 6 6 1.5-6 1.5-1.5 6-1.5-6-6-1.5 6-1.5z"/></svg></span> Descuento activo</div>
       </div>
     </div>
     <div class="breakdown" id="bdown"></div>
     <div class="vig-card">
-      <span style="font-size:18px">⏰</span>
+      <span class="mi-icon gold" style="width:18px;height:18px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
       <div class="vig-text">
         Promoción válida hasta el <strong id="vig-date">25 de abril de 2026</strong> ·
         Solo <strong id="vig-cupos">7 cupos</strong> disponibles
@@ -1030,12 +1110,12 @@ body {
     <!-- DEMO CTA -->
     <div class="demo-cta">
       <div class="demo-col demo-col-left">
-        <div class="demo-col-title">📅 Agenda tu demo ahora</div>
+        <div class="demo-col-title"><span class="mi-icon cyan" style="width:16px;height:16px"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span> Agenda tu demo ahora</div>
         <a class="demo-cta-btn" href="https://meetings.hubspot.com/marianodestefano/demomedilink" target="_blank">Reservar mi lugar →</a>
       </div>
       <div class="demo-divider"></div>
       <div class="demo-col demo-col-right">
-        <div class="demo-col-title">🎬 ¿Sin tiempo para la demo?</div>
+        <div class="demo-col-title"><span class="mi-icon cyan" style="width:16px;height:16px"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M17 2l-5 5"/><path d="M11 2l-5 5"/><path d="M22 7H2"/></svg></span> ¿Sin tiempo para la demo?</div>
         <div class="demo-videos" id="demo-videos"></div>
       </div>
     </div>
@@ -1045,7 +1125,7 @@ body {
 
   <!-- NORMATIVA -->
   <div class="norm-card">
-    <div class="norm-icon">🛡️</div>
+    <div class="norm-icon"><span class="mi-icon cyan" style="width:28px;height:28px"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><polyline points="9 12 11 14 15 10"/></svg></span></div>
     <div>
       <div class="norm-title" id="norm-title">Cumplimiento normativo Colombia</div>
       <div class="norm-pills" id="norm-pills"></div>
@@ -1076,9 +1156,9 @@ body {
       <div class="stat-card"><div class="stat-num">+1.5B</div><div class="stat-lbl">USD gasto en salud</div></div>
     </div>
     <div class="awards-row">
-      <div class="award-pill">🏆 1er Lugar Healtech LatAm — KAYYAK</div>
-      <div class="award-pill">📊 Forbes Cloud 100 — 2023</div>
-      <div class="award-pill">🌟 Mejor Empresa Ecosistema Digital Salud 360°</div>
+      <div class="award-pill"><span class="mi-icon gold" style="width:14px;height:14px"><svg viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg></span> 1er Lugar Healtech LatAm — KAYYAK</div>
+      <div class="award-pill"><span class="mi-icon cyan" style="width:14px;height:14px"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg></span> Forbes Cloud 100 — 2023</div>
+      <div class="award-pill"><span class="mi-icon gold" style="width:14px;height:14px"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></span> Mejor Empresa Ecosistema Digital Salud 360°</div>
     </div>
   </div>
 
@@ -1345,7 +1425,7 @@ async function loadPropuesta() {
 }
 
 function showError() {
-  document.getElementById('loading-state').innerHTML = '<div style="text-align:center;padding:40px"><div style="font-size:48px;margin-bottom:16px">😕</div><div style="font-size:18px;font-weight:700;color:#0B3C5A;margin-bottom:8px">Enlace no disponible</div><div style="font-size:13px;color:#6B8A9E">Este enlace ha expirado o no es válido.<br>Contactá a tu asesor para una nueva propuesta.</div></div>';
+  document.getElementById('loading-state').innerHTML = '<div style="text-align:center;padding:40px"><div style="margin-bottom:16px"><span class="mi-icon navy" style="width:48px;height:48px"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg></span></div><div style="font-size:18px;font-weight:700;color:#0B3C5A;margin-bottom:8px">Enlace no disponible</div><div style="font-size:13px;color:#6B8A9E">Este enlace ha expirado o no es válido.<br>Contactá a tu asesor para una nueva propuesta.</div></div>';
 }
 
 function showFallback() {
@@ -1521,7 +1601,7 @@ function renderAdic() {
       var headF = document.createElement('div');
       headF.className = 'amod-head';
       headF.setAttribute('data-id', mod.id);
-      headF.innerHTML = '<div class="toggle"></div><span class="amod-icon">' + mod.icon + '</span><div class="amod-info"><div class="amod-name">' + mod.name + '</div><div class="amod-desc">' + mod.desc + ' $' + mod.flatPerUser + ' USD por usuario/mes.</div></div><div class="amod-price" id="ap-' + mod.id + '">' + fmt(flatPrice) + '<span style="font-size:10px;color:var(--muted);font-weight:500">/mes</span></div>';
+      headF.innerHTML = '<div class="toggle"></div><span class="amod-icon">' + ICON(mod.icon, 22, 'cyan') + '</span><div class="amod-info"><div class="amod-name">' + mod.name + '</div><div class="amod-desc">' + mod.desc + ' $' + mod.flatPerUser + ' USD por usuario/mes.</div></div><div class="amod-price" id="ap-' + mod.id + '">' + fmt(flatPrice) + '<span style="font-size:10px;color:var(--muted);font-weight:500">/mes</span></div>';
       headF.addEventListener('click', function(e) {
         var id = this.getAttribute('data-id');
         AS[id].on = !AS[id].on;
@@ -1542,7 +1622,7 @@ function renderAdic() {
     var head = document.createElement('div');
     head.className = 'amod-head';
     head.setAttribute('data-id', mod.id);
-    head.innerHTML = '<div class="toggle"></div><span class="amod-icon">' + mod.icon + '</span><div class="amod-info"><div class="amod-name">' + mod.name + '</div><div class="amod-desc">' + descText + '</div></div><div class="amod-price" id="ap-' + mod.id + '">' + fmt(b.p[st.tier]) + '<span style="font-size:10px;color:var(--muted);font-weight:500">/mes</span></div>';
+    head.innerHTML = '<div class="toggle"></div><span class="amod-icon">' + ICON(mod.icon, 22, 'cyan') + '</span><div class="amod-info"><div class="amod-name">' + mod.name + '</div><div class="amod-desc">' + descText + '</div></div><div class="amod-price" id="ap-' + mod.id + '">' + fmt(b.p[st.tier]) + '<span style="font-size:10px;color:var(--muted);font-weight:500">/mes</span></div>';
     head.addEventListener('click', function(e) {
       var id = this.getAttribute('data-id');
       AS[id].on = !AS[id].on;
@@ -1595,11 +1675,11 @@ function calcTotal() {
     if (mod.flatPerUser) {
       var flatPrice = mod.flatPerUser * S.users;
       adic += flatPrice * mult;
-      chips.push(mod.icon + ' ' + S.users + ' usuario' + (S.users > 1 ? 's' : '') + ' · ' + fmt(flatPrice) + '/mes');
+      chips.push(ICON(mod.icon, 13, 'white') + ' ' + S.users + ' usuario' + (S.users > 1 ? 's' : '') + ' · ' + fmt(flatPrice) + '/mes');
     } else {
       var bprice = BOLSAS[S.country][mod.id].p[AS[mod.id].tier];
       adic += bprice * mult;
-      chips.push(mod.icon + ' Bolsa ' + TIERS[AS[mod.id].tier] + ' · ' + fmt(bprice) + '/mes');
+      chips.push(ICON(mod.icon, 13, 'white') + ' Bolsa ' + TIERS[AS[mod.id].tier] + ' · ' + fmt(bprice) + '/mes');
     }
   }
   var total = neto + adic;
@@ -1623,7 +1703,7 @@ function calcTotal() {
   var chipsEl = document.getElementById('tf-chips');
   chipsEl.innerHTML = '';
   if (chips.length === 0) { var sp = document.createElement('span'); sp.className = 'tf-chip'; sp.textContent = 'Sin módulos adicionales'; chipsEl.appendChild(sp); }
-  else { for (var ci = 0; ci < chips.length; ci++) { var sp = document.createElement('span'); sp.className = 'tf-chip'; sp.textContent = chips[ci]; chipsEl.appendChild(sp); } }
+  else { for (var ci = 0; ci < chips.length; ci++) { var sp = document.createElement('span'); sp.className = 'tf-chip'; sp.innerHTML = chips[ci]; chipsEl.appendChild(sp); } }
 }
 
 // ── RENDER DETALLE ──
@@ -1667,7 +1747,7 @@ function renderDetalle() {
   document.getElementById('r-normal-suffix').textContent = suffixLabel;
   var bd = '<div class="bd-row"><span class="bd-label">Plan base (' + S.mod + ')</span><span class="bd-value">' + fmt(p.base * mult) + '</span></div>';
   if (nA > 0) bd += '<div class="bd-row"><span class="bd-label">+' + nA + ' usuario' + (nA > 1 ? 's' : '') + '</span><span class="bd-value">' + fmt(p.adic * nA * mult) + '</span></div>';
-  bd += '<div class="bd-row bonus"><span class="bd-label">Administrativos ilimitados</span><span class="bd-value">♾️ Gratis</span></div>';
+  bd += '<div class="bd-row bonus"><span class="bd-label">Administrativos ilimitados</span><span class="bd-value">' + ICON('infinity', 14, 'green') + ' Gratis</span></div>';
   bd += '<div class="bd-row disc"><span class="bd-label">Descuento ' + Math.round(desc * 100) + '%</span><span class="bd-value">− ' + fmt(dAmt) + '</span></div>';
   bd += '<div class="bd-row total"><span class="bd-label">Subtotal plan base</span><span class="bd-value">' + fmt(neto) + '</span></div>';
   document.getElementById('bdown').innerHTML = bd;
@@ -1683,7 +1763,7 @@ function renderDetalle() {
     var item = all[ii];
     var div = document.createElement('div');
     div.className = 'inc-item' + (item.co ? ' co-item' : '');
-    div.innerHTML = '<span class="inc-icon">' + item.i + '</span><div class="inc-text"><strong>' + item.t + (item.co ? '<span class="co-badge">CO</span>' : '') + '</strong><small>' + item.s + '</small></div>';
+    div.innerHTML = '<span class="inc-icon">' + ICON(item.i, 18, 'cyan') + '</span><div class="inc-text"><strong>' + item.t + (item.co ? '<span class="co-badge">CO</span>' : '') + '</strong><small>' + item.s + '</small></div>';
     igEl.appendChild(div);
   }
   var norms = NORMS[S.country] || NORMS['OP'];
@@ -1738,7 +1818,7 @@ function renderFeat() {
     var card = document.createElement('div');
     card.className = 'feat-card';
     var dots = (f.pl.indexOf('e') >= 0 ? '<span class="fpd e">Esencial</span>' : '') + (f.pl.indexOf('p') >= 0 ? '<span class="fpd p">Pro</span>' : '') + (f.pl.indexOf('t') >= 0 ? '<span class="fpd t">Titanium</span>' : '');
-    card.innerHTML = '<span class="feat-ico">' + f.ico + '</span><div class="feat-name">' + f.n + (f.co ? '<span class="co-badge" style="margin-left:4px">CO</span>' : '') + '</div><div class="feat-desc">' + f.d + '</div><div class="feat-plan-dots">' + dots + '</div>';
+    card.innerHTML = '<span class="feat-ico">' + ICON(f.ico, 22, 'cyan') + '</span><div class="feat-name">' + f.n + (f.co ? '<span class="co-badge" style="margin-left:4px">CO</span>' : '') + '</div><div class="feat-desc">' + f.d + '</div><div class="feat-plan-dots">' + dots + '</div>';
     fgEl.appendChild(card);
   }
 }
