@@ -1280,7 +1280,7 @@ var COUNTRY_DISPLAY={
   INTL:{flag:"\ud83c\udf0e",name:"Internacional",currency:"USD $"}
 };
 
-var S={country:"CO",rawCountry:"CO",plan:"esencial",mod:"mensual",users:2,fc:"all",lockPlan:null};
+var S={country:"CO",rawCountry:"CO",plan:"esencial",mod:"mensual",users:2,usuariosBonus:0,lockUsers:false,fc:"all",lockPlan:null};
 var AS={wa:{on:true,tier:0},firma:{on:true,tier:0},factura:{on:true,tier:0},receta:{on:false,tier:0}};
 
 // ── LOAD FROM API ──
@@ -1338,6 +1338,8 @@ async function loadPropuesta() {
         }
       }
       S.users = data.params.users || 2;
+      S.usuariosBonus = parseInt(data.params.usuariosBonus) || 0;
+      S.lockUsers = !!data.params.lockUsers;
       S.mod = data.params.modalidad || 'mensual';
       var raw = (data.params.country || 'CO').toUpperCase();
       S.rawCountry = raw;
@@ -1396,8 +1398,7 @@ async function loadPropuesta() {
     syncPlanUI();
     syncModUI();
     syncCountryUI();
-    document.getElementById('user-count').textContent = S.users;
-    document.getElementById('user-label').textContent = S.users + ' usuario' + (S.users > 1 ? 's' : '') + ' · precio base';
+    syncUserCounterUI();
 
     // Show content
     document.getElementById('loading-state').style.display = 'none';
@@ -1551,6 +1552,52 @@ function trackDownload() {
 // ── INTERACTION ──
 // setCountry removed — country comes from backend data
 
+// Descuento coherente con modalidad actual — lee country_config (fuente de verdad)
+// con fallback al hardcoded DESC. Reemplaza a __DESCUENTO_INFO que quedaba cacheado
+// con la modalidad INICIAL del lead (bug reportado en C-349 sesión Mariano).
+function getDescuentoForMod(mod) {
+  var cc = window.__COUNTRY_CONFIG;
+  if (cc && cc.rules && cc.rules.descuentos && cc.rules.descuentos[mod]) {
+    var d = cc.rules.descuentos[mod];
+    var rate = typeof d.rate === 'number' ? d.rate : DESC[mod];
+    var months = (typeof d.months === 'number' && d.months > 0) ? d.months : null;
+    return { rate: rate, months: months, isTemporary: !!months };
+  }
+  // Fallback hardcoded: mensual = temporal 3 meses; semestral/anual = permanente
+  return { rate: DESC[mod], months: mod === 'mensual' ? 3 : null, isTemporary: mod === 'mensual' };
+}
+
+// Renderiza el contador de usuarios considerando usuariosBonus + lockUsers.
+// Modo normal: "5 usuarios · precio base"
+// Modo bonus (owner cotiza X pagos + Y gratis): "8 usuarios totales"
+//   con sub-label "5 pagos + 3 cortesía gratis ★". Botones +/- ocultos si lockUsers.
+function syncUserCounterUI() {
+  var countEl = document.getElementById('user-count');
+  var labelEl = document.getElementById('user-label');
+  if (!countEl || !labelEl) return;
+  if (S.usuariosBonus > 0) {
+    var totalUsuarios = S.users + S.usuariosBonus;
+    countEl.textContent = totalUsuarios;
+    labelEl.innerHTML = S.users + ' pago' + (S.users > 1 ? 's' : '') +
+      ' + ' + S.usuariosBonus + ' cortesía gratis <span style="color:var(--green);font-weight:700">★</span>';
+  } else {
+    countEl.textContent = S.users;
+    labelEl.textContent = S.users + ' usuario' + (S.users > 1 ? 's' : '') + ' · precio base';
+  }
+  // lockUsers: owner cotizó con bonus fijo — ocultar botones de ajuste
+  var btns = document.querySelectorAll('.counter-row .counter-btn');
+  for (var i = 0; i < btns.length; i++) {
+    btns[i].style.display = S.lockUsers ? 'none' : '';
+  }
+}
+
+// Etiqueta del período según modalidad (chips, /mes vs /semestre vs /año)
+function periodSuffix() {
+  if (S.mod === 'semestral') return '/semestre';
+  if (S.mod === 'anual') return '/año';
+  return '/mes';
+}
+
 function setPlan(p) {
   if (S.lockPlan) return; // plan bloqueado por segmentación de negocio
   S.plan = p;
@@ -1568,9 +1615,9 @@ function setMod(m, btn) {
 }
 
 function changeUsers(d) {
+  if (S.lockUsers) return; // cotización de owner con usuarios fijos
   S.users = Math.max(1, Math.min(50, S.users + d));
-  document.getElementById('user-count').textContent = S.users;
-  document.getElementById('user-label').textContent = S.users + ' usuario' + (S.users > 1 ? 's' : '') + ' · incluye precio base';
+  syncUserCounterUI();
   trackAdjusted({ users: S.users });
   render();
 }
@@ -1594,7 +1641,9 @@ function renderAdic() {
     var st = AS[mod.id];
     // Módulo flat (ej: Recetas AR = $3 USD/usuario, sin bolsa)
     if (mod.flatPerUser) {
-      var flatPrice = mod.flatPerUser * S.users;
+      // AR regla Opción P: usuarios cortesía cuentan para módulos flat (recetas)
+      var flatUsers = S.users + S.usuariosBonus;
+      var flatPrice = mod.flatPerUser * flatUsers;
       var wrapF = document.createElement('div');
       wrapF.className = 'amod' + (st.on ? ' on' : '');
       wrapF.id = 'amod-' + mod.id;
@@ -1658,9 +1707,10 @@ function renderAdic() {
 // ── CALC TOTAL ──
 function calcTotal() {
   var p = PR[S.country][S.plan];
-  // T-H.1.c: preferir descuento_info del backend
-  var di = window.__DESCUENTO_INFO;
-  var desc = (di && typeof di.rate === 'number') ? di.rate : DESC[S.mod];
+  // C-350 fix: recomputar descuento desde country_config según S.mod actual
+  // (antes leía __DESCUENTO_INFO cacheado con la modalidad inicial → bug textos)
+  var dInfo = getDescuentoForMod(S.mod);
+  var desc = dInfo.rate;
   var mult = MULT[S.mod];
   var nA = Math.max(0, S.users - 1);
   var base = (p.base + p.adic * nA) * mult;
@@ -1668,27 +1718,29 @@ function calcTotal() {
   var neto = base - dAmt;
   var adic = 0;
   var chips = [];
+  var pSfx = periodSuffix();
   for (var mi = 0; mi < MODS.length; mi++) {
     var mod = MODS[mi];
     if (mod.countries && mod.countries.indexOf(S.rawCountry) < 0) continue;
     if (!AS[mod.id].on) continue;
     if (mod.flatPerUser) {
-      var flatPrice = mod.flatPerUser * S.users;
+      // AR Opción P: bonus cuenta para recetas
+      var flatUsers = S.users + S.usuariosBonus;
+      var flatPrice = mod.flatPerUser * flatUsers;
       adic += flatPrice * mult;
-      chips.push(ICON(mod.icon, 13, 'white') + ' ' + S.users + ' usuario' + (S.users > 1 ? 's' : '') + ' · ' + fmt(flatPrice) + '/mes');
+      chips.push(ICON(mod.icon, 13, 'white') + ' ' + flatUsers + ' usuario' + (flatUsers > 1 ? 's' : '') + ' · ' + fmt(flatPrice * mult) + pSfx);
     } else {
       var bprice = BOLSAS[S.country][mod.id].p[AS[mod.id].tier];
       adic += bprice * mult;
-      chips.push(ICON(mod.icon, 13, 'white') + ' Bolsa ' + TIERS[AS[mod.id].tier] + ' · ' + fmt(bprice) + '/mes');
+      chips.push(ICON(mod.icon, 13, 'white') + ' Bolsa ' + TIERS[AS[mod.id].tier] + ' · ' + fmt(bprice * mult) + pSfx);
     }
   }
   var total = neto + adic;
   var normal = base + adic;
   var descPct = Math.round(desc * 100);
-  var isTemp = di ? di.isTemporary : (S.mod === 'mensual');
   var periodLabel;
-  if (isTemp) {
-    var months = (di && di.months) ? di.months : 3;
+  if (dInfo.isTemporary) {
+    var months = dInfo.months || 3;
     periodLabel = 'Mes 1-' + months + ' · descuento ' + descPct + '%';
   } else if (S.mod === 'semestral') {
     periodLabel = 'Pago semestral · descuento ' + descPct + '%';
@@ -1709,10 +1761,9 @@ function calcTotal() {
 // ── RENDER DETALLE ──
 function renderDetalle() {
   var p = PR[S.country][S.plan];
-  // T-H.1.c: preferir descuento_info del backend (countries/*.json) si está presente.
-  // Fallback a DESC hardcoded para retrocompat.
-  var di = window.__DESCUENTO_INFO;
-  var desc = (di && typeof di.rate === 'number') ? di.rate : DESC[S.mod];
+  // C-350 fix: recomputar descuento por S.mod actual (ver comentario en calcTotal)
+  var dInfo = getDescuentoForMod(S.mod);
+  var desc = dInfo.rate;
   var mult = MULT[S.mod];
   var nA = Math.max(0, S.users - 1);
   var base = (p.base + p.adic * nA) * mult;
@@ -1727,12 +1778,11 @@ function renderDetalle() {
   document.getElementById('r-price').textContent = PR[S.country].decs > 0 ? neto.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep) : Math.round(neto).toString().replace(/\B(?=(\d{3})+(?!\d))/g, PR[S.country].sep);
 
   // Label del período: temporal (mensual con months=3) vs permanente (semestral/anual)
-  var isTemp = di ? di.isTemporary : (S.mod === 'mensual');
   var descPct = Math.round(desc * 100);
   var periodLabel;
   var suffixLabel = '';
-  if (isTemp) {
-    var months = (di && di.months) ? di.months : 3;
+  if (dInfo.isTemporary) {
+    var months = dInfo.months || 3;
     periodLabel = 'mes 1-' + months + ' · descuento ' + descPct + '%';
     suffixLabel = ' · precio regular desde el mes ' + (months + 1);
   } else if (S.mod === 'semestral') {
@@ -1746,7 +1796,11 @@ function renderDetalle() {
   document.getElementById('r-normal').textContent = fmt(base);
   document.getElementById('r-normal-suffix').textContent = suffixLabel;
   var bd = '<div class="bd-row"><span class="bd-label">Plan base (' + S.mod + ')</span><span class="bd-value">' + fmt(p.base * mult) + '</span></div>';
-  if (nA > 0) bd += '<div class="bd-row"><span class="bd-label">+' + nA + ' usuario' + (nA > 1 ? 's' : '') + '</span><span class="bd-value">' + fmt(p.adic * nA * mult) + '</span></div>';
+  if (nA > 0) bd += '<div class="bd-row"><span class="bd-label">+' + nA + ' usuario' + (nA > 1 ? 's' : '') + ' pago' + (nA > 1 ? 's' : '') + '</span><span class="bd-value">' + fmt(p.adic * nA * mult) + '</span></div>';
+  // C-350: usuarios cortesía (bonus) como estrategia de retención — owner los regala
+  if (S.usuariosBonus > 0) {
+    bd += '<div class="bd-row bonus"><span class="bd-label">+' + S.usuariosBonus + ' usuario' + (S.usuariosBonus > 1 ? 's' : '') + ' cortesía ★</span><span class="bd-value">' + ICON('infinity', 14, 'green') + ' Gratis</span></div>';
+  }
   bd += '<div class="bd-row bonus"><span class="bd-label">Administrativos ilimitados</span><span class="bd-value">' + ICON('infinity', 14, 'green') + ' Gratis</span></div>';
   bd += '<div class="bd-row disc"><span class="bd-label">Descuento ' + Math.round(desc * 100) + '%</span><span class="bd-value">− ' + fmt(dAmt) + '</span></div>';
   bd += '<div class="bd-row total"><span class="bd-label">Subtotal plan base</span><span class="bd-value">' + fmt(neto) + '</span></div>';
