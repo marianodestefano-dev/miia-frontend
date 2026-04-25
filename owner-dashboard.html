@@ -4155,7 +4155,7 @@
       document.getElementById('groupModalName').value = '';
       document.getElementById('groupModalIcon').value = '👥';
       document.getElementById('groupModalTone').value = '';
-      document.getElementById('createGroupModal').classList.add('open');
+      document.getElementById('createGroupModal').classList.remove('hidden');
     }
 
     function openEditGroupModal() {
@@ -4166,11 +4166,11 @@
       document.getElementById('groupModalName').value = g.name || '';
       document.getElementById('groupModalIcon').value = g.icon || '👥';
       document.getElementById('groupModalTone').value = g.tone || '';
-      document.getElementById('createGroupModal').classList.add('open');
+      document.getElementById('createGroupModal').classList.remove('hidden');
     }
 
     function closeGroupModal() {
-      document.getElementById('createGroupModal').classList.remove('open');
+      document.getElementById('createGroupModal').classList.add('hidden');
     }
 
     async function submitGroupModal() {
@@ -7589,7 +7589,7 @@
   </div>
 
   <!-- ══ CREATE / EDIT GROUP MODAL ══ -->
-  <div class="modal-overlay" id="createGroupModal">
+  <div class="modal-overlay hidden" id="createGroupModal">
     <div class="modal-box">
       <h3 id="groupModalTitle">Crear Grupo</h3>
       <div class="form-group">
