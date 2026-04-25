@@ -363,9 +363,8 @@
       <li>Excluir manualmente contactos con relación profesional sensible (médica, legal, financiera).</li>
     </ul>
 
-    <!-- TODO C-410.b: re-publicar sección "Pre-filtro automático de información sensible"
-         cuando Mitigación C (PASO 8 tenant_manager — auto-skip keywords sensibles +
-         log safety_incidents + notify owner self-chat) deploye con tests. -->
+    <h3>Pre-filtro automático de información sensible</h3>
+    <p>MIIA cuenta con un sistema de detección automática de información sensible (finanzas, asuntos judiciales, menores de edad, credenciales, salud según el contexto del negocio del owner) que <strong>excluye los mensajes detectados del entrenamiento del corpus de ADN comercial</strong>. Para casos de severidad alta, MIIA pausa automáticamente la respuesta y notifica al owner. La activación específica por categoría se configura por cuenta y podés consultar el estado actual en el dashboard de privacidad.</p>
   </div>
 
   <!-- Contact -->
