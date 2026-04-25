@@ -273,6 +273,15 @@
       grid-template-columns: 1fr 1fr;
       gap: 24px;
     }
+    /* C-414: forzar grid items a respetar 1fr (default ignora min-content
+       y permite expansión por contenido más ancho — causa barra horizontal
+       cuando .conversation-preview o panel CRM tienen contenido sin wrap).
+       .conversation-preview ya tiene white-space:nowrap + overflow:hidden +
+       text-overflow:ellipsis (línea 330+), pero sin min-width:0 el grid
+       expande igual al ancho de contenido min-content. */
+    .contacts-layout > .card {
+      min-width: 0;
+    }
 
     .card {
       background: var(--bg-white);
