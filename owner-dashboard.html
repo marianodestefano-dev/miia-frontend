@@ -3935,7 +3935,11 @@
 
     async function loadConversations() {
       try {
-        const res = await fetch(`${BACKEND_URL}/api/conversations?uid=${currentUser.uid}`);
+        // C-406.b.crit Pieza E: Authorization Bearer requerido (rrRequireAuth + rrRequireOwnerOfResource).
+        const token = await firebase.auth().currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/conversations?uid=${currentUser.uid}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         const data = await res.json();
         if (!data || !Array.isArray(data)) {
           document.getElementById('conversationsList').innerHTML = '<div class="empty-state"><div class="empty-state-icon"><svg style="width:48px;height:48px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div><p>Sin conversaciónes aún</p></div>';
@@ -5502,9 +5506,14 @@
         const fullContent = sentFile && sentFile.textContent
           ? `${learnContent}\n\n${sentFile.textContent.slice(0, 5000)}`
           : learnContent;
+        // C-406.b.crit Pieza E: Authorization Bearer requerido (rrRequireAuth + rrRequireAdmin).
+        const token = await firebase.auth().currentUser.getIdToken();
         const res = await fetch(`${BACKEND_URL}/api/train`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
           body: JSON.stringify({ message: fullContent })
         });
         const data = await res.json();

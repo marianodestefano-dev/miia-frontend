@@ -1763,7 +1763,16 @@
     const isLearn = message.toUpperCase().startsWith('APRENDE:');
     try {
       if (isLearn) {
-        const res = await fetch(`${BACKEND_URL}/api/train`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ message: message.replace(/^APRENDE:/i,'').trim() }) });
+        // C-406.b.crit Pieza E: Authorization Bearer requerido (rrRequireAuth + rrRequireAdmin).
+        const token = await firebase.auth().currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/train`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({ message: message.replace(/^APRENDE:/i, '').trim() })
+        });
         const data = await res.json();
         const reply = data.response || '✅ Guardado.';
         adminAddChatMsg('adminExpertMessages','miia',reply);
