@@ -505,6 +505,27 @@
     </ul>
   </div>
 
+  <!-- Limitaciones de uso del corpus (C-410 Cimientos §3 C.10 + Mitigación A) -->
+  <div class="legal-section">
+    <h2>Limitaciones de Uso del Corpus de ADN</h2>
+    <p>El corpus comercial extraído de tus conversaciones tiene <strong>4 limitaciones estrictas</strong>, vinculantes para MIIA bajo Ley 1581/2012 CO Art 6.1.f y RGPD Art 6.1.f:</p>
+
+    <h3>1. Uso restringido por contacto</h3>
+    <p>El corpus se usa exclusivamente para responder al <strong>mismo contacto</strong> que generó cada conversación. Nunca para responder a un contacto distinto. Aislamiento contextual cross-contact validado por test automatizado anti-regresión (canary <code>UNICORNIO_FUCSIA_42</code>).</p>
+
+    <h3>2. No análisis cross-contact</h3>
+    <p>MIIA no agrega información de un contacto al perfil de otro. Cada conversación queda en su contenedor lógico aislado.</p>
+
+    <h3>3. No training de modelos globales</h3>
+    <p>Los datos <strong>nunca</strong> se usan para entrenar modelos compartidos entre tenants. El corpus de cada owner es estrictamente <em>per-owner</em>.</p>
+
+    <h3>4. Borrado garantizado al cancelar cuenta</h3>
+    <p>Cuando el Cliente <strong>cancela su cuenta</strong>, MIIA ejecuta <em>cascade delete</em> sobre TODOS los datos asociados en plazo máximo 30 días: corpus, conversaciones, ADN inferido, training data, contact_index, miia_persistent. Verificable en logs de auditoría.</p>
+    <p style="font-size:0.85rem;color:var(--text-muted);"><strong>Nota técnica:</strong> "Cancelar cuenta" es la acción definitiva (endpoint <code>/api/account/delete</code>). "Desvincular WhatsApp" es una acción reversible que solo desconecta la sesión Baileys conservando el corpus para re-vincular limpio. La cláusula de borrado aplica a "cancelar cuenta", no a "desvincular".</p>
+
+    <p style="margin-top:16px;">Estas limitaciones son técnicas (enforced por código + tests) y legales (comprometidas por Términos de Servicio sección 10).</p>
+  </div>
+
   <!-- Contact -->
   <div class="legal-section" style="text-align: center;">
     <h2>Contacto</h2>

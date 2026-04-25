@@ -330,6 +330,44 @@
     </ul>
   </div>
 
+  <!-- Tratamiento de datos de terceros (C-410 Cimientos §3 C.10) -->
+  <div class="legal-section">
+    <h2>10. Tratamiento de Datos de Terceros</h2>
+    <p>Al vincular tu cuenta de WhatsApp con MIIA, aceptás que los mensajes intercambiados entre vos y tus contactos serán procesados por MIIA exclusivamente para los siguientes fines:</p>
+    <ul>
+      <li>Generar respuestas contextuales al <strong>mismo contacto</strong> (no a terceros).</li>
+      <li>Mejorar la personalización de tu comunicación comercial.</li>
+      <li>Mantener historial conversacional para continuidad.</li>
+    </ul>
+
+    <h3>Compromisos de MIIA</h3>
+    <ul>
+      <li><strong>NO</strong> usar el corpus para entrenar modelos globales sobre datos de terceros.</li>
+      <li><strong>NO</strong> vender ni ceder los datos a terceros.</li>
+      <li><strong>Borrar TODOS los datos cascade</strong> al cancelar tu cuenta (plazo máximo 30 días).</li>
+      <li>Aplicar encripción client-side (CMEK — Customer Managed Encryption Keys) cuando esté disponible. Ver Política de Privacidad.</li>
+    </ul>
+
+    <h3>Marco legal aplicable</h3>
+    <ul>
+      <li><strong>Colombia:</strong> Ley 1581/2012 Art 6.1.f (legítimo interés ponderado), Proyecto de Ley 2025 (modernización Habeas Data).</li>
+      <li><strong>Unión Europea:</strong> RGPD Art 6.1.f.</li>
+      <li><strong>Brasil:</strong> LGPD Art 7.</li>
+      <li><strong>Argentina:</strong> Ley 25.326 (Protección de Datos Personales).</li>
+    </ul>
+
+    <h3>Tu responsabilidad como titular de la cuenta WhatsApp</h3>
+    <ul>
+      <li>Informar a tus contactos relevantes sobre el uso de un asistente automatizado. La forma de comunicarlo queda a tu criterio. Por default, MIIA opera como representante del negocio sin identificarse como IA ante consultas; si preferís que MIIA pueda admitir su naturaleza al ser preguntada directamente, podés activarlo configurando <code>revealAsAI</code> en tu perfil (pregunta del onboarding).</li>
+      <li>Respetar opt-out request: si un contacto pide expresamente no ser asistido por IA, debés excluirlo del flujo. Mecanismo actual: contactá soporte en <a href="mailto:hola@miia-app.com">hola@miia-app.com</a> con el número del contacto a excluir, MIIA aplicará la exclusión en su próxima sesión activa. Self-service de exclusión planificado en próximas versiones.</li>
+      <li>Excluir manualmente contactos con relación profesional sensible (médica, legal, financiera).</li>
+    </ul>
+
+    <!-- TODO C-410.b: re-publicar sección "Pre-filtro automático de información sensible"
+         cuando Mitigación C (PASO 8 tenant_manager — auto-skip keywords sensibles +
+         log safety_incidents + notify owner self-chat) deploye con tests. -->
+  </div>
+
   <!-- Contact -->
   <div class="legal-section" style="text-align: center;">
     <h2>Contacto</h2>
