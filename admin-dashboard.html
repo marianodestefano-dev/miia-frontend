@@ -1284,8 +1284,10 @@
 
   // ═══ CEREBRO STATUS ═══
   async function loadCerebroStatus() {
+    // C-406.b Bloque 1b Pieza E: Authorization Bearer en endpoints admin migrados.
+    const authHeaders = currentIdToken ? { Authorization: `Bearer ${currentIdToken}` } : {};
     try {
-      const res = await fetch(`${BACKEND_URL}/api/cerebro/status`);
+      const res = await fetch(`${BACKEND_URL}/api/cerebro/status`, { headers: authHeaders });
       const data = await res.json();
       document.getElementById('brainSize').textContent = data.trainingDataLength?.toLocaleString() || '0';
       document.getElementById('cerebroStatus').innerHTML = `
@@ -1295,7 +1297,7 @@
       document.getElementById('cerebroStatus').innerHTML = '<p style="color:var(--danger);">Error conectando al backend</p>';
     }
     try {
-      const res = await fetch(`${BACKEND_URL}/api/stats`);
+      const res = await fetch(`${BACKEND_URL}/api/stats`, { headers: authHeaders });
       const stats = await res.json();
       document.getElementById('brainConvos').textContent = stats.totalConversations || 0;
     } catch (e) { console.warn('[ADMIN]', e.message || e); }
@@ -1304,7 +1306,11 @@
   async function forceADNMining() {
     if (!await miiaConfirm('Ejecutar ADN Mining ahora?')) return;
     try {
-      const res = await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, { method: 'POST' });
+      // C-406.b Bloque 1b Pieza E: Authorization Bearer.
+      const res = await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, {
+        method: 'POST',
+        headers: currentIdToken ? { Authorization: `Bearer ${currentIdToken}` } : {}
+      });
       const data = await res.json();
       if (res.ok) {
         showToast('ADN Mining iniciado. MIIA analizara las conversaciónes en segundo plano.', 'success');
@@ -1320,7 +1326,11 @@
   async function forceScraperRun() {
     if (!await miiaConfirm('Ejecutar scraper regulatorio ahora?')) return;
     try {
-      const res = await fetch(`${BACKEND_URL}/api/scraper/run`, { method: 'POST' });
+      // C-406.b Bloque 1b Pieza E: Authorization Bearer.
+      const res = await fetch(`${BACKEND_URL}/api/scraper/run`, {
+        method: 'POST',
+        headers: currentIdToken ? { Authorization: `Bearer ${currentIdToken}` } : {}
+      });
       if (res.ok) {
         showToast('Scraper iniciado. Buscara noticias regulatorias en segundo plano.', 'success');
       } else {
@@ -1456,7 +1466,10 @@
     if (!user) return;
     const userDoc = await dbFs.collection('users').doc(user.uid).get();
     const geminiApiKey = userDoc.exists ? (userDoc.data().gemini_api_key || '') : '';
-    const initRes = await fetch(`${BACKEND_URL}/api/tenant/init`, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({ uid: user.uid, geminiApiKey }) });
+    // C-406.b Bloque 1b Pieza E: Authorization Bearer (rrAuth + rrOwnerOfResource('uid','body')).
+    const initHeaders = { 'Content-Type': 'application/json' };
+    if (currentIdToken) initHeaders.Authorization = `Bearer ${currentIdToken}`;
+    const initRes = await fetch(`${BACKEND_URL}/api/tenant/init`, { method: 'POST', headers: initHeaders, body: JSON.stringify({ uid: user.uid, geminiApiKey }) });
     if (!initRes.ok) { showToast('Error al iniciar WhatsApp', 'error'); document.getElementById('qrModal').classList.add('hidden'); return; }
 
     let pollCount = 0;

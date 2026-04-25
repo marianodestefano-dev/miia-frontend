@@ -595,7 +595,12 @@
       const confirmed = await miiaConfirm('🧬 Extracción de ADN\n\n¿Querés que MIIA analice tu historial de WhatsApp para aprender tu estilo de venta?\n\nEste proceso puede tardar varios minutos.');
       if (!confirmed) return;
       try {
-        const res = await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, { method: 'POST' });
+        // C-406.b Bloque 1b Pieza E: Authorization Bearer (rrAuth + rrAdmin).
+        const token = await firebase.auth().currentUser.getIdToken();
+        const res = await fetch(`${BACKEND_URL}/api/cerebro/mine-dna`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}` }
+        });
         const data = await res.json();
         if (res.ok) {
           showToast(data.message + ' — MIIA está procesando tu historial en segundo plano.', 'success', 6000);

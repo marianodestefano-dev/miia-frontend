@@ -5095,9 +5095,14 @@
       const userDoc = await db.collection('users').doc(currentUser.uid).get();
       const geminiApiKey = userDoc.exists ? (userDoc.data().gemini_api_key || '') : '';
 
+      // C-406.b Bloque 1b Pieza E: Authorization Bearer (rrAuth + rrOwnerOfResource('uid','body')).
+      const initToken = await firebase.auth().currentUser.getIdToken();
       const initRes = await fetch(`${BACKEND_URL}/api/tenant/init`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${initToken}`
+        },
         body: JSON.stringify({ uid: currentUser.uid, geminiApiKey })
       });
 
