@@ -1050,11 +1050,22 @@
 
   // ═══ USERS ═══
   async function loadUsers() {
-    const snapshot = await dbFs.collection('users').get();
-    users = [];
-    snapshot.forEach(doc => users.push({ uid: doc.id, ...doc.data() }));
-    renderUsers();
-    updateDashboard();
+    // C-421: try/catch aislado. dbFs.collection('users').get() puede fallar
+    // por Firestore Rules (collection-level list no permitido). Sin este
+    // catch, el throw rompe loadAll() → loadTenants() nunca se llama →
+    // placeholder "Cargando..." infinito en sección Sesiones WhatsApp.
+    try {
+      const snapshot = await dbFs.collection('users').get();
+      users = [];
+      snapshot.forEach(doc => users.push({ uid: doc.id, ...doc.data() }));
+      renderUsers();
+      updateDashboard();
+    } catch (e) {
+      console.error('[loadUsers]', e);
+      users = [];
+      const tbody = document.getElementById('usersTableBody');
+      if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--danger);">Error cargando usuarios: ${e.message || 'permission-denied'}. <button onclick="loadUsers()" style="color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:underline;font-family:inherit;">Reintentar</button></td></tr>`;
+    }
   }
 
   function renderUsers(filtered) {
