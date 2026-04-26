@@ -1268,10 +1268,14 @@
         el.innerHTML = '<p style="color:var(--text-muted);">No hay sesiones WhatsApp activas. <button onclick="loadTenants()" style="color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:underline;font-family:inherit;">Actualizar</button></p>';
         return;
       }
-      el.innerHTML = tenants.map(t => `
+      el.innerHTML = tenants.map(t => {
+        // C-425: render name · whatsapp_number con fallback graceful a UID truncado.
+        const label = t.name || t.email || (t.uid || '').substring(0,12) + '...';
+        const phone = t.whatsapp_number ? ` · ${esc(t.whatsapp_number)}` : '';
+        return `
         <div class="tenant-card">
           <div>
-            <strong>${(t.uid || '').substring(0,20)}...</strong>
+            <strong>${esc(label)}${phone}</strong>
             <div class="tenant-status">
               <span class="dot ${t.isReady ? 'green' : t.hasQR ? 'yellow' : 'red'}"></span>
               <span>${t.isReady ? 'Conectado' : t.hasQR ? 'Esperando QR' : 'Desconectado'}</span>
@@ -1280,7 +1284,8 @@
           </div>
           <button class="btn-sm btn-danger" onclick="disconnectTenant('${t.uid}')">Desconectar</button>
         </div>
-      `).join('');
+      `;
+      }).join('');
     } catch (e) {
       const isTimeout = e.name === 'AbortError';
       el.innerHTML = `<p style="color:var(--danger);">${isTimeout ? 'Timeout — el servidor no respondio a tiempo.' : 'Error: ' + e.message} <button onclick="loadTenants()" style="color:var(--primary);background:none;border:none;cursor:pointer;text-decoration:underline;font-family:inherit;">Reintentar</button></p>`;
