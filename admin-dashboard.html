@@ -1777,6 +1777,9 @@
     try {
       if (isLearn) {
         // C-406.b.crit Pieza E: Authorization Bearer requerido (rrRequireAuth + rrRequireAdmin).
+        // C-418: NO remover APRENDE: prefix antes de enviar — el backend C-413
+        // (server.js APRENDE_REGEX) necesita verlo literal para activar el bypass
+        // del eval Gemini. Sin el prefix, el mensaje cae al eval y devuelve BASURA.
         const token = await firebase.auth().currentUser.getIdToken();
         const res = await fetch(`${BACKEND_URL}/api/train`, {
           method: 'POST',
@@ -1784,7 +1787,7 @@
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({ message: message.replace(/^APRENDE:/i, '').trim() })
+          body: JSON.stringify({ message: message.trim() })
         });
         const data = await res.json();
         const reply = data.response || '✅ Guardado.';

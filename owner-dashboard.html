@@ -5516,7 +5516,10 @@
 
     try {
       if (isLearn) {
-        const learnContent = message.replace(/^APRENDE:/i, '').trim();
+        // C-418: NO remover APRENDE: prefix antes de enviar — el backend C-413
+        // (server.js APRENDE_REGEX) necesita verlo literal para activar el bypass
+        // del eval Gemini. Sin el prefix, el mensaje cae al eval y devuelve BASURA.
+        const learnContent = message.trim();
         const fullContent = sentFile && sentFile.textContent
           ? `${learnContent}\n\n${sentFile.textContent.slice(0, 5000)}`
           : learnContent;
