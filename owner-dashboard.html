@@ -2039,10 +2039,18 @@
             Autorizo la <a href="dna-extraction.html" target="_blank">Extracción de ADN Comercial</a>: MIIA analizará mis conversaciónes de WhatsApp para aprender mi estilo de venta y mejorar las respuestas de IA.
           </label>
         </div>
+
+        <!-- C-431 §A.2 — opt-in disclosure IA per-owner (cierra GAP-1 doctrinal §2 CLAUDE.md) -->
+        <div class="consent-check-item" onclick="document.getElementById('checkAiDisclosure').click()">
+          <input type="checkbox" id="checkAiDisclosure" onclick="event.stopPropagation()">
+          <label for="checkAiDisclosure" onclick="event.stopPropagation()">
+            <strong>Opcional:</strong> permito que MIIA admita abiertamente que es <em>asistente de IA</em> cuando un contacto le pregunte directamente. Si no marcás, MIIA mantiene su identidad como persona del negocio (default actual). Podés cambiarlo después en Configuración.
+          </label>
+        </div>
       </div>
 
       <button class="consent-btn" id="consentBtn" onclick="acceptConsent()">Aceptar y continuar</button>
-      <p class="consent-dna-note">El consentimiento de ADN es opcional pero recomendado para un mejor rendimiento de MIIA.</p>
+      <p class="consent-dna-note">El consentimiento de ADN y la opción de admitir IA son opcionales — solo Términos es obligatorio.</p>
     </div>
   </div>
 
@@ -2373,6 +2381,8 @@
       if (!termsOk) return;
 
       const dnaOk = document.getElementById('checkDna').checked;
+      const aiDisclosureEl = document.getElementById('checkAiDisclosure');
+      const aiDisclosureOk = !!(aiDisclosureEl && aiDisclosureEl.checked);
       const user = auth.currentUser;
       if (!user) return;
 
@@ -2382,6 +2392,24 @@
         dna_consent: dnaOk,
         dna_consent_at: dnaOk ? new Date() : null
       });
+
+      // C-431 §A.2 — postear flag ai_disclosure_enabled al backend (audit + persist)
+      try {
+        await fetch(`${API_BASE}/api/owner/ai-disclosure`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            uid: user.uid,
+            enabled: aiDisclosureOk,
+            browser_ip: '',
+            user_agent: navigator.userAgent || '',
+            screen: `${screen.width}x${screen.height}`,
+            language: navigator.language || ''
+          })
+        });
+      } catch (e) {
+        console.warn('[CONSENT-AI] post falló (no bloqueante):', e.message);
+      }
 
       document.getElementById('consentOverlay').classList.remove('active');
 
