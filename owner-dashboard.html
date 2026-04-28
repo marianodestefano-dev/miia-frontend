@@ -7353,6 +7353,104 @@
     })();
   </script>
 
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <!-- C-443 §A — Mi Reporte Privacy + Export JSON                       -->
+  <!-- Llama GET /api/privacy/report (data) + /api/privacy/report/export -->
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <div id="privacy-report-block" style="margin-top:32px;">
+    <div class="card" style="border-radius:12px; padding:24px;">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:8px;">📊 Mi Reporte de Privacidad (C-443)</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">Vista resumida de qué datos guarda MIIA sobre vos. Solo conteos y resúmenes — nunca contenido sensible. Podés descargar tu reporte completo en formato JSON GDPR-compliant.</p>
+      <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
+        <button id="privacyReportLoadBtn" class="btn btn-primary" style="padding:10px 20px;" onclick="loadPrivacyReport()">Ver mis datos</button>
+        <button id="privacyReportExportBtn" class="btn" style="padding:10px 20px;" onclick="exportPrivacyReport()">⬇ Descargar JSON</button>
+      </div>
+      <div id="privacyReportContent" style="margin-top:16px; display:none;">
+        <table style="width:100%; border-collapse:collapse; font-size:0.92rem;">
+          <thead>
+            <tr style="border-bottom:2px solid var(--border-subtle);">
+              <th style="text-align:left; padding:10px 8px; color:var(--text-muted); font-weight:600;">Categoría</th>
+              <th style="text-align:right; padding:10px 8px; color:var(--text-muted); font-weight:600;">Resumen</th>
+            </tr>
+          </thead>
+          <tbody id="privacyReportTableBody"></tbody>
+        </table>
+        <p id="privacyReportGeneratedAt" style="color:var(--text-muted); font-size:0.78rem; margin-top:12px; font-style:italic;"></p>
+      </div>
+      <div id="privacyReportError" style="display:none; color:#ef4444; margin-top:16px; font-size:0.9rem;"></div>
+    </div>
+  </div>
+
+  <script>
+    // C-443 §A — Privacy Report fetch + render + export.
+    async function loadPrivacyReport() {
+      const uid = (typeof getCurrentUid === 'function' ? getCurrentUid() : window.currentUid);
+      if (!uid) { _privacyError('UID no disponible. Recargá la página.'); return; }
+      const errEl = document.getElementById('privacyReportError');
+      const contentEl = document.getElementById('privacyReportContent');
+      errEl.style.display = 'none';
+      try {
+        const token = await (window.firebase && firebase.auth && firebase.auth().currentUser
+          ? firebase.auth().currentUser.getIdToken()
+          : Promise.resolve(''));
+        const res = await fetch(`/api/privacy/report?userId=${encodeURIComponent(uid)}`, {
+          headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const report = await res.json();
+        _privacyRenderTable(report);
+        contentEl.style.display = 'block';
+      } catch (e) {
+        _privacyError(`Error cargando reporte: ${e.message}`);
+      }
+    }
+
+    async function exportPrivacyReport() {
+      const uid = (typeof getCurrentUid === 'function' ? getCurrentUid() : window.currentUid);
+      if (!uid) { _privacyError('UID no disponible.'); return; }
+      try {
+        const token = await (window.firebase && firebase.auth && firebase.auth().currentUser
+          ? firebase.auth().currentUser.getIdToken()
+          : Promise.resolve(''));
+        const url = `/api/privacy/report/export?userId=${encodeURIComponent(uid)}`;
+        const res = await fetch(url, { headers: { 'Authorization': `Bearer ${token}` } });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        const objUrl = URL.createObjectURL(blob);
+        a.href = objUrl;
+        a.download = `privacy_report_${uid}_${new Date().toISOString().slice(0, 10)}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(objUrl);
+      } catch (e) {
+        _privacyError(`Error descargando JSON: ${e.message}`);
+      }
+    }
+
+    function _privacyRenderTable(report) {
+      const rows = [
+        ['Profile', report.profile.email || '—'],
+        ['Conversaciones', `${report.conversationsSummary.totalContacts} contactos · ${report.conversationsSummary.totalMessages} mensajes`],
+        ['Contactos clasificados', report.contactsClassifications.totalClassified],
+        ['Eventos calendario', `${report.calendarEvents.totalCreated} (${report.calendarEvents.upcoming} próximos)`],
+        ['Cotizaciones', report.quotes.totalGenerated],
+        ['Config flags', `IA disclosure=${report.configFlags.aiDisclosureEnabled ?? '—'}`],
+        ['Audit log', `${report.auditLog.consentRecords} consents · ${report.auditLog.totalEntries} entries`],
+      ];
+      const body = document.getElementById('privacyReportTableBody');
+      body.innerHTML = rows.map(([k, v]) => `<tr style="border-bottom:1px solid var(--border-glass);"><td style="padding:10px 8px;">${k}</td><td style="padding:10px 8px; text-align:right; font-weight:600;">${v}</td></tr>`).join('');
+      document.getElementById('privacyReportGeneratedAt').textContent = `Generado: ${report.generatedAt}`;
+    }
+
+    function _privacyError(msg) {
+      const el = document.getElementById('privacyReportError');
+      el.textContent = msg;
+      el.style.display = 'block';
+    }
+  </script>
+
   <div id="section-contacts" class="page-section section-hidden">
     <div style="max-width:1200px;margin:0 auto;padding:40px 24px 80px;">
     <!-- View tabs — estilo limpio, sin globo -->
