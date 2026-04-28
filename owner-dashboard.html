@@ -7451,6 +7451,90 @@
     }
   </script>
 
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <!-- C-444 §C — Borrar mis datos (forget-me con OTP confirm)           -->
+  <!-- ════════════════════════════════════════════════════════════════ -->
+  <div id="privacy-forgetme-block" style="margin-top:24px;">
+    <div class="card" style="border-radius:12px; padding:24px; border:1px solid rgba(239,68,68,0.3);">
+      <h3 style="font-size:1.1rem; font-weight:700; margin-bottom:8px; color:#ef4444;">⚠️ Borrar todos mis datos (C-444)</h3>
+      <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">Eliminás permanentemente todos tus datos guardados por MIIA: conversaciones, contactos clasificados, eventos calendario, cotizaciones y configuración. El audit log queda preservado anonymizado por compliance legal. Acción <strong>irreversible</strong> después de 24 horas de la confirmación.</p>
+      <button id="forgetMeRequestBtn" class="btn" style="padding:10px 20px; background:#ef4444; color:#fff; border:none; border-radius:8px; cursor:pointer;" onclick="requestForgetMe()">Borrar mis datos</button>
+      <div id="forgetMeOtpForm" style="margin-top:16px; display:none;">
+        <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:8px;">Te enviamos un código de 6 dígitos a tu email. Ingresalo para confirmar:</p>
+        <input id="forgetMeTokenInput" type="text" maxlength="6" pattern="\d{6}" style="padding:10px; border:1px solid var(--border-subtle); border-radius:6px; font-size:1rem; width:120px; letter-spacing:4px; text-align:center;" placeholder="123456" />
+        <button class="btn btn-primary" style="padding:10px 20px; margin-left:8px;" onclick="confirmForgetMe()">Confirmar borrado</button>
+        <button class="btn" style="padding:10px 20px; margin-left:8px;" onclick="cancelForgetMe()">Cancelar</button>
+      </div>
+      <div id="forgetMeStatus" style="margin-top:12px; font-size:0.9rem;"></div>
+    </div>
+  </div>
+
+  <script>
+    async function requestForgetMe() {
+      const uid = (typeof getCurrentUid === 'function' ? getCurrentUid() : window.currentUid);
+      if (!uid) { _forgetMeStatus('UID no disponible.', 'red'); return; }
+      if (!confirm('¿Estás seguro? Esta acción borrará todos tus datos. Te enviaremos un código de confirmación al email.')) return;
+      try {
+        const token = await firebase.auth().currentUser.getIdToken();
+        const res = await fetch('/api/privacy/forget-me', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ userId: uid }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        document.getElementById('forgetMeOtpForm').style.display = 'block';
+        _forgetMeStatus('Código enviado a tu email. Revisá tu bandeja.', 'green');
+      } catch (e) {
+        _forgetMeStatus(`Error: ${e.message}`, 'red');
+      }
+    }
+
+    async function confirmForgetMe() {
+      const uid = (typeof getCurrentUid === 'function' ? getCurrentUid() : window.currentUid);
+      const otp = document.getElementById('forgetMeTokenInput').value.trim();
+      if (!/^\d{6}$/.test(otp)) { _forgetMeStatus('Código debe ser 6 dígitos.', 'red'); return; }
+      try {
+        const token = await firebase.auth().currentUser.getIdToken();
+        const res = await fetch('/api/privacy/forget-me/confirm', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ userId: uid, token: otp }),
+        });
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({}));
+          throw new Error(err.detail || `HTTP ${res.status}`);
+        }
+        _forgetMeStatus('Confirmación recibida. Tus datos se eliminarán en próximo ciclo cron diario. Tenés 24h para cancelar.', 'green');
+        document.getElementById('forgetMeOtpForm').style.display = 'none';
+      } catch (e) {
+        _forgetMeStatus(`Error: ${e.message}`, 'red');
+      }
+    }
+
+    async function cancelForgetMe() {
+      const uid = (typeof getCurrentUid === 'function' ? getCurrentUid() : window.currentUid);
+      try {
+        const token = await firebase.auth().currentUser.getIdToken();
+        const res = await fetch('/api/privacy/forget-me/cancel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ userId: uid }),
+        });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        _forgetMeStatus('Borrado cancelado.', 'green');
+        document.getElementById('forgetMeOtpForm').style.display = 'none';
+      } catch (e) {
+        _forgetMeStatus(`Error: ${e.message}`, 'red');
+      }
+    }
+
+    function _forgetMeStatus(msg, color) {
+      const el = document.getElementById('forgetMeStatus');
+      el.textContent = msg;
+      el.style.color = color === 'red' ? '#ef4444' : '#16a34a';
+    }
+  </script>
+
   <div id="section-contacts" class="page-section section-hidden">
     <div style="max-width:1200px;margin:0 auto;padding:40px 24px 80px;">
     <!-- View tabs — estilo limpio, sin globo -->
