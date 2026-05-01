@@ -68,6 +68,9 @@
         <button class="miia-nav-link" data-section="analitica"
                 data-tooltip="Metricas, reportes, deals y pipeline"
                 onclick="showSection('analitica', this)">Analitica</button>
+        <button class="miia-nav-link" data-section="f1"
+                data-tooltip="F1 en vivo — dashboard Formula 1"
+                onclick="showSection('f1', this)">&#127937; F1</button>
       </div>
 
       <!-- Nav right -->
@@ -276,6 +279,79 @@
           </div>
         </section>
 
+
+        <!-- SECCION: F1 DASHBOARD (MiiaF1 add-on) -->
+        <section id="sec-f1" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">&#127937; F1 <span class="badge-f1-addon">add-on $3/mes</span></h2>
+              <p class="section-subtitle">Temporada 2025 &mdash; <span id="f1LiveBadge" class="f1-live-badge hidden">EN VIVO</span></p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <select id="f1SeasonSelect" class="f1-select" onchange="f1LoadSeason(this.value)">
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- TABS -->
+          <div class="f1-tabs">
+            <button class="f1-tab active" onclick="f1SwitchTab('calendario', this)">Calendario</button>
+            <button class="f1-tab" onclick="f1SwitchTab('standings', this)">Standings</button>
+            <button class="f1-tab" onclick="f1SwitchTab('mipiloto', this)">Mi Piloto</button>
+          </div>
+
+          <!-- TAB: CALENDARIO (F1.5) -->
+          <div id="f1TabCalendario" class="f1-tab-content active">
+            <!-- Proximo GP destacado -->
+            <div id="f1NextGP" class="f1-next-gp-card hidden">
+              <div class="f1-next-label">PROXIMO GP</div>
+              <div class="f1-next-name" id="f1NextName">-</div>
+              <div class="f1-next-circuit" id="f1NextCircuit">-</div>
+              <div class="f1-next-countdown" id="f1NextCountdown">-</div>
+            </div>
+
+            <div id="f1CalendarGrid" class="f1-calendar-grid">
+              <div class="f1-loading">Cargando calendario...</div>
+            </div>
+          </div>
+
+          <!-- TAB: STANDINGS (F1.6) -->
+          <div id="f1TabStandings" class="f1-tab-content">
+            <div class="f1-standings-tabs">
+              <button class="f1-sub-tab active" onclick="f1StandingsTab('pilotos', this)">Pilotos</button>
+              <button class="f1-sub-tab" onclick="f1StandingsTab('constructores', this)">Constructores</button>
+            </div>
+            <div id="f1StandingsPilotos" class="f1-standings-content active">
+              <div class="f1-loading">Cargando standings...</div>
+            </div>
+            <div id="f1StandingsConstructores" class="f1-standings-content">
+              <div class="f1-loading">Cargando constructores...</div>
+            </div>
+          </div>
+
+          <!-- TAB: MI PILOTO (F1.7) -->
+          <div id="f1TabMipiloto" class="f1-tab-content">
+            <div id="f1MyPilotCard" class="f1-my-pilot-card hidden">
+              <div class="f1-pilot-name" id="f1PilotName">-</div>
+              <div class="f1-pilot-team" id="f1PilotTeam">-</div>
+              <button class="btn-ghost btn-sm" onclick="f1ClearPilot()">Cambiar piloto</button>
+            </div>
+
+            <div id="f1PilotGrid" class="f1-pilot-grid">
+              <div class="f1-loading">Cargando pilotos...</div>
+            </div>
+
+            <div style="margin-top:16px;display:flex;align-items:center;gap:12px;">
+              <label class="f1-notif-label">
+                <input type="checkbox" id="f1NotifCheck" onchange="f1ToggleNotifications(this.checked)">
+                Notificaciones WhatsApp post-carrera
+              </label>
+            </div>
+          </div>
+        </section>
+
       </main>
 
       <!-- MODAL: Entrenar MIIA -->
@@ -353,6 +429,11 @@
               data-tooltip="Gestionar" data-tooltip-pos="top">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
         Gestionar
+      </button>
+      <button class="miia-nav-bottom-link" data-section="f1" onclick="showSection('f1', this)"
+              data-tooltip="F1" data-tooltip-pos="top">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        F1
       </button>
       <button class="miia-nav-bottom-link" data-section="mas" onclick="showSection('mas', this)"
               data-tooltip="Mas opciones" data-tooltip-pos="top">
@@ -1555,6 +1636,358 @@
       const theme = localStorage.getItem('miia-theme') || 'dark';
       updateThemeIcon(theme);
     });
+  
+    // ══════════════════════════════════════════════════
+    // MiiaF1 — Dashboard F1.4-F1.7
+    // ══════════════════════════════════════════════════
+    const F1_SEASON = '2025';
+    let f1CurrentTab = 'calendario';
+    let f1AdoptedDriver = null;
+
+    const MEDAL = ['', '🥇', '🥈', '🥉'];
+
+    async function f1ApiGet(path) {
+      try {
+        const token = await firebase.auth().currentUser?.getIdToken();
+        const r = await fetch(`/api/f1/${path}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (!r.ok) return null;
+        return await r.json();
+      } catch (e) {
+        console.error('[F1]', e.message);
+        return null;
+      }
+    }
+
+    async function f1ApiPost(path, body) {
+      try {
+        const token = await firebase.auth().currentUser?.getIdToken();
+        const r = await fetch(`/api/f1/${path}`, {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+        return await r.json();
+      } catch (e) {
+        console.error('[F1]', e.message);
+        return null;
+      }
+    }
+
+    async function f1ApiPatch(path, body) {
+      try {
+        const token = await firebase.auth().currentUser?.getIdToken();
+        await fetch(`/api/f1/${path}`, {
+          method: 'PATCH',
+          headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify(body),
+        });
+      } catch (e) { console.error('[F1]', e.message); }
+    }
+
+    function f1LoadSeason(season) {
+      f1LoadCalendar(season);
+      f1LoadStandings(season);
+    }
+
+    // ── F1.5: Tab Calendario ──────────────────────────
+    async function f1LoadCalendar(season = F1_SEASON) {
+      const data = await f1ApiGet(`calendar/${season}`);
+      if (!data) { document.getElementById('f1CalendarGrid').innerHTML = '<div class="f1-loading">Error cargando calendario</div>'; return; }
+
+      const today = new Date().toISOString().split('T')[0];
+      const nextGp = data.gps.find(gp => gp.date > today && gp.status !== 'completed');
+
+      if (nextGp) {
+        document.getElementById('f1NextName').textContent = nextGp.name;
+        document.getElementById('f1NextCircuit').textContent = `${nextGp.circuit} — ${nextGp.city || ''}`;
+        const days = Math.ceil((new Date(nextGp.date) - new Date(today)) / 86400000);
+        document.getElementById('f1NextCountdown').textContent = days <= 0 ? 'Esta semana!' : `En ${days} dias`;
+        document.getElementById('f1NextGP').classList.remove('hidden');
+      }
+
+      const grid = document.getElementById('f1CalendarGrid');
+      grid.innerHTML = data.gps.map(gp => {
+        const statusLabel = { completed: 'COMPLETADO', scheduled: 'PROXIMO', live: 'EN VIVO', cancelled: 'CANCELADO' }[gp.status] || gp.status;
+        return `<div class="f1-gp-row ${gp.status}">
+          <div class="f1-gp-round">${gp.round || ''}</div>
+          <div>
+            <div class="f1-gp-name">${gp.name}</div>
+            <div class="f1-gp-circuit">${gp.circuit}${gp.sprint ? ' <span style="color:var(--accent);font-size:10px;">SPRINT</span>' : ''}</div>
+          </div>
+          <div class="f1-gp-date">${gp.date}</div>
+          <span class="f1-gp-status ${gp.status}">${statusLabel}</span>
+        </div>`;
+      }).join('');
+    }
+
+    // ── F1.6: Tab Standings ───────────────────────────
+    async function f1LoadStandings(season = F1_SEASON) {
+      const data = await f1ApiGet(`standings/drivers/${season}`);
+      if (!data) return;
+
+      const prefs = await f1ApiGet('prefs');
+      f1AdoptedDriver = prefs?.adopted_driver || null;
+      if (document.getElementById('f1NotifCheck')) {
+        document.getElementById('f1NotifCheck').checked = prefs?.notifications || false;
+      }
+
+      const rows = data.drivers.map((d, i) => {
+        const pos = i + 1;
+        const medal = pos <= 3 ? `<span class="f1-pos-medal">${MEDAL[pos]}</span>` : pos;
+        const isAdopted = d.id === f1AdoptedDriver;
+        return `<tr class="${isAdopted ? 'f1-my-driver-row' : ''}">
+          <td>${medal}</td>
+          <td>
+            <span class="f1-team-dot" style="background:${d.team_color || '#888'}"></span>
+            ${d.name}${isAdopted ? ' &#9733;' : ''}
+          </td>
+          <td style="color:var(--text-2)">${d.team}</td>
+          <td style="font-weight:700">${d.points || 0}</td>
+          <td style="color:var(--text-3);font-size:12px">#${d.number}</td>
+        </tr>`;
+      });
+
+      document.getElementById('f1StandingsPilotos').innerHTML = `
+        <table class="f1-standings-table">
+          <thead><tr><th>Pos</th><th>Piloto</th><th>Equipo</th><th>Puntos</th><th>N°</th></tr></thead>
+          <tbody>${rows.join('')}</tbody>
+        </table>`;
+
+      const consData = await f1ApiGet(`standings/constructors/${season}`);
+      if (consData) {
+        const cRows = consData.constructors.map((c, i) => {
+          const pos = i + 1;
+          const medal = pos <= 3 ? `<span class="f1-pos-medal">${MEDAL[pos]}</span>` : pos;
+          return `<tr><td>${medal}</td><td><span class="f1-team-dot" style="background:${c.team_color || '#888'}"></span>${c.team}</td><td style="font-weight:700">${c.points || 0}</td></tr>`;
+        });
+        document.getElementById('f1StandingsConstructores').innerHTML = `
+          <table class="f1-standings-table">
+            <thead><tr><th>Pos</th><th>Constructor</th><th>Puntos</th></tr></thead>
+            <tbody>${cRows.join('')}</tbody>
+          </table>`;
+      }
+    }
+
+    // ── F1.7: Mi Piloto ───────────────────────────────
+    async function f1LoadPilots(season = F1_SEASON) {
+      const data = await f1ApiGet(`standings/drivers/${season}`);
+      if (!data) return;
+
+      const prefs = await f1ApiGet('prefs');
+      f1AdoptedDriver = prefs?.adopted_driver || null;
+
+      if (f1AdoptedDriver) {
+        const myDriver = data.drivers.find(d => d.id === f1AdoptedDriver);
+        if (myDriver) {
+          document.getElementById('f1PilotName').textContent = myDriver.name;
+          document.getElementById('f1PilotTeam').textContent = myDriver.team;
+          document.getElementById('f1MyPilotCard').classList.remove('hidden');
+          document.getElementById('f1NotifCheck').checked = prefs?.notifications || false;
+        }
+      }
+
+      const grid = document.getElementById('f1PilotGrid');
+      grid.innerHTML = data.drivers.map(d => `
+        <button class="f1-pilot-card ${d.id === f1AdoptedDriver ? 'adopted' : ''}"
+                onclick="f1AdoptPilot('${d.id}', '${d.name}', '${d.team}')">
+          <div class="f1-pilot-number">#${d.number}</div>
+          <div class="f1-pilot-card-name">${d.name}</div>
+          <div class="f1-pilot-card-team">${d.team}</div>
+        </button>`).join('');
+    }
+
+    async function f1AdoptPilot(driverId, name, team) {
+      const res = await f1ApiPost('adopt', { driver_id: driverId, season: F1_SEASON });
+      if (res?.ok) {
+        f1AdoptedDriver = driverId;
+        document.getElementById('f1PilotName').textContent = name;
+        document.getElementById('f1PilotTeam').textContent = team;
+        document.getElementById('f1MyPilotCard').classList.remove('hidden');
+        document.querySelectorAll('.f1-pilot-card').forEach(el => el.classList.remove('adopted'));
+        event.currentTarget.classList.add('adopted');
+        showToast(`Piloto adoptado: ${name}`);
+      }
+    }
+
+    async function f1ClearPilot() {
+      await f1ApiPatch('prefs', { adopted_driver: null });
+      f1AdoptedDriver = null;
+      document.getElementById('f1MyPilotCard').classList.add('hidden');
+      document.querySelectorAll('.f1-pilot-card').forEach(el => el.classList.remove('adopted'));
+      showToast('Piloto removido');
+    }
+
+    async function f1ToggleNotifications(enabled) {
+      await f1ApiPatch('prefs', { notifications: enabled });
+      showToast(enabled ? 'Notificaciones F1 activadas' : 'Notificaciones F1 desactivadas');
+    }
+
+    function f1SwitchTab(tab, el) {
+      f1CurrentTab = tab;
+      document.querySelectorAll('.f1-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.f1-tab-content').forEach(d => d.classList.remove('active'));
+      if (el) el.classList.add('active');
+      document.getElementById(`f1Tab${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+      if (tab === 'mipiloto' && !document.getElementById('f1PilotGrid').querySelector('.f1-pilot-card')) {
+        f1LoadPilots();
+      }
+    }
+
+    function f1StandingsTab(sub, el) {
+      document.querySelectorAll('.f1-sub-tab').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.f1-standings-content').forEach(d => d.classList.remove('active'));
+      if (el) el.classList.add('active');
+      document.getElementById(`f1Standings${sub.charAt(0).toUpperCase() + sub.slice(1)}`).classList.add('active');
+    }
+
+    // Auto-cargar cuando se entra a la seccion F1
+    const _origShowSection = typeof showSection === 'function' ? showSection : null;
+    document.addEventListener('DOMContentLoaded', () => {
+      // Patch showSection para detectar entrada a F1
+      if (typeof showSection === 'function') {
+        const _orig = window.showSection;
+        window.showSection = function(sectionId, el) {
+          _orig(sectionId, el);
+          if (sectionId === 'f1') {
+            f1LoadCalendar(F1_SEASON);
+            f1LoadStandings(F1_SEASON);
+          }
+        };
+      }
+    });
+
   </script>
 </body>
 </html>
+    /* ── MiiaF1 Dashboard (F1.4-F1.7) ─────────────────── */
+    .badge-f1-addon {
+      font-size: 11px; font-weight: 600; padding: 2px 8px;
+      background: rgba(0,229,255,0.12); color: var(--accent);
+      border: 1px solid rgba(0,229,255,0.3); border-radius: 20px;
+      vertical-align: middle; margin-left: 8px;
+    }
+    .f1-live-badge {
+      display: inline-block; font-size: 11px; font-weight: 700;
+      padding: 2px 10px; border-radius: 20px;
+      background: #FF1744; color: #fff; letter-spacing: 1px;
+      animation: f1Pulse 1s infinite;
+    }
+    .f1-live-badge.hidden { display: none; }
+    @keyframes f1Pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+    .f1-select {
+      background: var(--bg-elevated); color: var(--text-1);
+      border: 1px solid var(--border); border-radius: var(--r-sm);
+      padding: 6px 12px; font-size: 13px; cursor: pointer;
+    }
+
+    /* Tabs */
+    .f1-tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+    .f1-tab {
+      background: none; border: none; color: var(--text-2);
+      padding: 10px 18px; font-size: 14px; cursor: pointer;
+      border-bottom: 2px solid transparent; transition: all 200ms;
+    }
+    .f1-tab:hover { color: var(--text-1); }
+    .f1-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+
+    .f1-tab-content { display: none; }
+    .f1-tab-content.active { display: block; }
+
+    /* Sub-tabs standings */
+    .f1-standings-tabs { display: flex; gap: 4px; margin-bottom: 16px; }
+    .f1-sub-tab {
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      color: var(--text-2); padding: 6px 16px; border-radius: var(--r-sm);
+      font-size: 13px; cursor: pointer; transition: all 200ms;
+    }
+    .f1-sub-tab.active { background: rgba(0,229,255,0.1); color: var(--accent); border-color: rgba(0,229,255,0.3); }
+    .f1-standings-content { display: none; }
+    .f1-standings-content.active { display: block; }
+
+    /* Next GP card */
+    .f1-next-gp-card {
+      background: linear-gradient(135deg, rgba(0,229,255,0.08) 0%, rgba(124,58,237,0.08) 100%);
+      border: 1px solid rgba(0,229,255,0.2);
+      border-radius: var(--r-lg); padding: 20px 24px; margin-bottom: 20px;
+    }
+    .f1-next-gp-card.hidden { display: none; }
+    .f1-next-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--accent); margin-bottom: 6px; }
+    .f1-next-name { font-size: 22px; font-weight: 800; color: var(--text-1); }
+    .f1-next-circuit { font-size: 14px; color: var(--text-2); margin-top: 2px; }
+    .f1-next-countdown { font-size: 13px; color: var(--accent); margin-top: 8px; font-weight: 600; }
+
+    /* Calendar grid */
+    .f1-calendar-grid { display: flex; flex-direction: column; gap: 4px; }
+    .f1-gp-row {
+      display: grid; grid-template-columns: 32px 1fr 100px 80px;
+      align-items: center; gap: 12px;
+      padding: 10px 14px; border-radius: var(--r-sm);
+      background: var(--bg-card); border: 1px solid var(--border);
+      transition: background 200ms; cursor: default;
+    }
+    .f1-gp-row:hover { background: var(--bg-elevated); }
+    .f1-gp-row.completed { opacity: 0.7; }
+    .f1-gp-round { font-size: 12px; color: var(--text-3); font-weight: 600; text-align: center; }
+    .f1-gp-name { font-size: 14px; color: var(--text-1); font-weight: 500; }
+    .f1-gp-circuit { font-size: 12px; color: var(--text-2); }
+    .f1-gp-date { font-size: 12px; color: var(--text-2); text-align: right; }
+    .f1-gp-status {
+      font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.5px;
+    }
+    .f1-gp-status.completed { background: rgba(100,255,100,0.1); color: #4ade80; }
+    .f1-gp-status.scheduled { background: rgba(0,229,255,0.1); color: var(--accent); }
+    .f1-gp-status.live { background: rgba(255,23,68,0.15); color: #FF1744; animation: f1Pulse 1s infinite; }
+
+    /* Standings table */
+    .f1-standings-table { width: 100%; border-collapse: collapse; }
+    .f1-standings-table th {
+      text-align: left; font-size: 11px; font-weight: 600;
+      color: var(--text-3); padding: 8px 12px; border-bottom: 1px solid var(--border);
+      letter-spacing: 0.5px; text-transform: uppercase;
+    }
+    .f1-standings-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; }
+    .f1-standings-table tr:hover td { background: var(--bg-elevated); }
+    .f1-pos-medal { font-size: 16px; }
+    .f1-team-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+    .f1-my-driver-row td { background: rgba(0,229,255,0.06); }
+
+    /* My pilot */
+    .f1-my-pilot-card {
+      background: var(--bg-elevated); border: 1px solid rgba(0,229,255,0.3);
+      border-radius: var(--r-md); padding: 16px 20px; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .f1-my-pilot-card.hidden { display: none; }
+    .f1-pilot-name { font-size: 20px; font-weight: 800; color: var(--text-1); flex: 1; }
+    .f1-pilot-team { font-size: 13px; color: var(--text-2); }
+
+    /* Pilot selection grid */
+    .f1-pilot-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px;
+    }
+    .f1-pilot-card {
+      background: var(--bg-card); border: 2px solid var(--border);
+      border-radius: var(--r-md); padding: 12px 14px; cursor: pointer;
+      transition: all 200ms; text-align: left;
+    }
+    .f1-pilot-card:hover { border-color: var(--accent); background: rgba(0,229,255,0.06); }
+    .f1-pilot-card.adopted { border-color: var(--accent); background: rgba(0,229,255,0.1); }
+    .f1-pilot-number { font-size: 24px; font-weight: 900; color: var(--accent); line-height: 1; }
+    .f1-pilot-card-name { font-size: 13px; font-weight: 600; color: var(--text-1); margin-top: 4px; }
+    .f1-pilot-card-team { font-size: 11px; color: var(--text-2); margin-top: 2px; }
+
+    /* Notif toggle */
+    .f1-notif-label { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-2); cursor: pointer; }
+    .f1-notif-label input { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
+
+    .f1-loading { color: var(--text-3); font-size: 14px; padding: 40px; text-align: center; }
+    @media (max-width: 600px) {
+      .f1-gp-row { grid-template-columns: 28px 1fr 60px; }
+      .f1-gp-date { display: none; }
+      .f1-pilot-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+  
