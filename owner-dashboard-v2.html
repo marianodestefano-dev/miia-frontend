@@ -289,6 +289,7 @@
             </div>
             <div style="display:flex;gap:8px;align-items:center;">
               <select id="f1SeasonSelect" class="f1-select" onchange="f1LoadSeason(this.value)">
+                <option value="2026" selected>2026</option>
                 <option value="2025">2025</option>
                 <option value="2024">2024</option>
               </select>
@@ -394,7 +395,7 @@
                 <div>
                   <div style="font-size:18px;font-weight:800;color:var(--text-1);">&#127942; Tu Fantasy Score</div>
                   <div id="f1FantasyScore" style="font-size:36px;font-weight:900;color:var(--accent);margin-top:4px;">-</div>
-                  <div style="font-size:13px;color:var(--text-3);">puntos acumulados en temporada 2025</div>
+                  <div style="font-size:13px;color:var(--text-3);">puntos acumulados en temporada 2026</div>
                 </div>
               </div>
 
@@ -2010,7 +2011,7 @@
     async function f1PollLive() {
       if (_f1LivePaused) return;
       try {
-        const base = window.API_BASE || '';
+        const base = window.API || 'https://api.miia-app.com';
         const resp = await fetch(`${base}/api/f1/live/positions`);
         if (!resp.ok) return;
         const data = await resp.json();
