@@ -1764,7 +1764,7 @@
     async function f1ApiGet(path) {
       try {
         const token = await firebase.auth().currentUser?.getIdToken();
-        const r = await fetch(`/api/f1/${path}`, {
+        const r = await fetch(`${API}/api/f1/${path}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!r.ok) return null;
@@ -1778,7 +1778,7 @@
     async function f1ApiPost(path, body) {
       try {
         const token = await firebase.auth().currentUser?.getIdToken();
-        const r = await fetch(`/api/f1/${path}`, {
+        const r = await fetch(`${API}/api/f1/${path}`, {
           method: 'POST',
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
