@@ -300,6 +300,9 @@
             <button class="f1-tab active" onclick="f1SwitchTab('calendario', this)">Calendario</button>
             <button class="f1-tab" onclick="f1SwitchTab('standings', this)">Standings</button>
             <button class="f1-tab" onclick="f1SwitchTab('mipiloto', this)">Mi Piloto</button>
+            <button class="f1-tab" id="f1TabLiveBtn" onclick="f1SwitchTab('envivo', this)">&#128994; En Vivo</button>
+            <button class="f1-tab" onclick="f1SwitchTab('circuito', this)">&#127939; Circuito</button>
+            <button class="f1-tab" onclick="f1SwitchTab('fantasy', this)">&#127942; Fantasy</button>
           </div>
 
           <!-- TAB: CALENDARIO (F1.5) -->
@@ -348,6 +351,118 @@
                 <input type="checkbox" id="f1NotifCheck" onchange="f1ToggleNotifications(this.checked)">
                 Notificaciones WhatsApp post-carrera
               </label>
+            </div>
+          </div>
+
+          <!-- TAB: CIRCUITO (F1.20) -->
+          <div id="f1TabCircuito" class="f1-tab-content">
+            <div style="display:flex;gap:12px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+              <label style="font-size:13px;color:var(--text-2);">Circuito:</label>
+              <select id="f1CircuitSelect" class="f1-select" onchange="f1LoadCircuit(this.value)" style="min-width:200px;">
+                <option value="monaco">Monaco</option>
+                <option value="britain">Silverstone</option>
+                <option value="italy">Monza</option>
+                <option value="belgium">Spa-Francorchamps</option>
+                <option value="japan">Suzuka</option>
+                <option value="australia">Albert Park</option>
+                <option value="bahrain">Bahrain</option>
+                <option value="netherlands">Zandvoort</option>
+                <option value="singapore">Marina Bay</option>
+                <option value="usa_austin">COTA</option>
+                <option value="brazil">Interlagos</option>
+                <option value="abu_dhabi">Yas Marina</option>
+              </select>
+              <button class="btn-ghost btn-sm" onclick="f1RefreshCircuit()">Actualizar</button>
+            </div>
+            <div id="f1CircuitContainer" style="background:var(--bg-card);border-radius:var(--r-md);padding:16px;text-align:center;max-width:440px;">
+              <div class="f1-loading">Selecciona un circuito...</div>
+            </div>
+            <div id="f1CircuitInfo" style="margin-top:12px;font-size:13px;color:var(--text-2);"></div>
+          </div>
+
+
+          <!-- TAB: FANTASY (F1.32) -->
+          <div id="f1TabFantasy" class="f1-tab-content">
+            <div id="f1AddonGate" style="text-align:center;padding:48px 20px;display:none;">
+              <div style="font-size:40px;margin-bottom:12px;">&#127937;</div>
+              <div style="font-size:18px;font-weight:800;color:var(--text-1);margin-bottom:8px;">MiiaF1 Fantasy</div>
+              <div style="font-size:14px;color:var(--text-2);margin-bottom:20px;">Adopta un piloto, acumula puntos en cada GP y compite contra otros owners de MIIA.</div>
+              <button class="btn-primary" onclick="f1ShowUpgradeModal()">Activar por $3 USD/mes</button>
+            </div>
+            <div id="f1FantasyPanel">
+              <div class="f1-fantasy-header">
+                <div>
+                  <div style="font-size:18px;font-weight:800;color:var(--text-1);">&#127942; Tu Fantasy Score</div>
+                  <div id="f1FantasyScore" style="font-size:36px;font-weight:900;color:var(--accent);margin-top:4px;">-</div>
+                  <div style="font-size:13px;color:var(--text-3);">puntos acumulados en temporada 2025</div>
+                </div>
+              </div>
+
+              <div style="margin-top:24px;">
+                <div style="font-size:14px;font-weight:700;color:var(--text-2);margin-bottom:12px;letter-spacing:1px;">LEADERBOARD OWNERS</div>
+                <div id="f1FantasyLeaderboard" class="f1-loading">Cargando...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- UPGRADE MODAL (F1.33) -->
+          <div id="f1UpgradeModal" class="wizard-overlay" style="display:none;" onclick="if(event.target===this)f1HideUpgradeModal()">
+            <div class="wizard-card" style="max-width:440px;">
+              <button class="wizard-close" onclick="f1HideUpgradeModal()">&times;</button>
+              <div style="text-align:center;padding:8px 0 20px;">
+                <div style="font-size:48px;margin-bottom:12px;">&#127937;</div>
+                <h2 style="color:var(--text-1);margin:0 0 6px;font-size:22px;">MiiaF1 Dashboard</h2>
+                <div style="font-size:28px;font-weight:900;color:var(--accent);margin-bottom:4px;">$3 USD/mes</div>
+                <div style="font-size:13px;color:var(--text-3);margin-bottom:20px;">Add-on a tu plan MIIA</div>
+                <div style="text-align:left;background:var(--bg-card);border-radius:var(--r-md);padding:16px;margin-bottom:20px;">
+                  <div style="font-size:13px;color:var(--text-2);display:flex;flex-direction:column;gap:8px;">
+                    <div>&#9989; Calendario y resultados F1 2025</div>
+                    <div>&#9989; Standings pilotos y constructores</div>
+                    <div>&#9989; Adopta tu piloto favorito</div>
+                    <div>&#9989; Notificaciones WA en vivo y post-carrera</div>
+                    <div>&#9989; SVG circuit maps interactivos</div>
+                    <div>&#9989; Fantasy League vs. otros owners</div>
+                    <div>&#9989; Predicciones IA para el proximo GP</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+                  <button class="btn-primary" onclick="f1SubscribeMercadoPago()" style="background:linear-gradient(135deg,#009EE3,#0062FF);">
+                    MercadoPago
+                  </button>
+                  <button class="btn-primary" onclick="f1SubscribePayPal()" style="background:linear-gradient(135deg,#003087,#009CDE);">
+                    PayPal
+                  </button>
+                </div>
+                <div style="font-size:11px;color:var(--text-3);margin-top:16px;">Cancela cuando quieras. Sin permanencia.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TAB: EN VIVO (F1.12) -->
+          <div id="f1TabEnvivo" class="f1-tab-content">
+            <div id="f1LiveNoRace" style="text-align:center;padding:48px 20px;">
+              <div style="font-size:40px;margin-bottom:12px;">&#127937;</div>
+              <div style="font-size:16px;font-weight:700;color:var(--text-1);margin-bottom:8px;">Sin carrera en vivo</div>
+              <div style="font-size:13px;color:var(--text-3);">Los datos en tiempo real aparecen aqui durante las sesiones de Viernes a Domingo.</div>
+            </div>
+            <div id="f1LiveRacePanel" style="display:none;">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+                <span class="f1-live-badge">EN VIVO</span>
+                <span id="f1LiveRaceName" style="font-size:15px;font-weight:700;color:var(--text-1);">-</span>
+                <span id="f1LiveLap" style="font-size:13px;color:var(--text-2);">-</span>
+                <button class="btn-ghost btn-sm" onclick="f1ToggleLivePolling()" id="f1LiveToggleBtn" style="margin-left:auto;">Pausar</button>
+              </div>
+              <div style="overflow-x:auto;">
+                <table class="f1-live-table">
+                  <thead>
+                    <tr>
+                      <th>POS</th><th>PILOTO</th><th>EQUIPO</th><th>GAP</th><th>NEUMATICO</th><th>VELOCIDAD</th><th>ULTIMO</th>
+                    </tr>
+                  </thead>
+                  <tbody id="f1LiveTableBody">
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </section>
@@ -1858,6 +1973,228 @@
       }
     });
 
+
+    // ─── F1.12 — Live timing table ───────────────────────────────────────
+    let _f1LiveInterval = null;
+    let _f1LivePaused = false;
+    let _f1LiveActive = false;
+
+    function f1StartLivePolling() {
+      if (_f1LiveInterval) return;
+      _f1LiveActive = true;
+      _f1LivePaused = false;
+      f1PollLive();
+      _f1LiveInterval = setInterval(f1PollLive, 2000);
+    }
+
+    function f1StopLivePolling() {
+      if (_f1LiveInterval) { clearInterval(_f1LiveInterval); _f1LiveInterval = null; }
+      _f1LiveActive = false;
+    }
+
+    function f1ToggleLivePolling() {
+      const btn = document.getElementById('f1LiveToggleBtn');
+      if (_f1LivePaused) {
+        _f1LivePaused = false;
+        if (btn) btn.textContent = 'Pausar';
+        f1PollLive();
+        _f1LiveInterval = setInterval(f1PollLive, 2000);
+      } else {
+        _f1LivePaused = true;
+        if (btn) btn.textContent = 'Reanudar';
+        if (_f1LiveInterval) { clearInterval(_f1LiveInterval); _f1LiveInterval = null; }
+      }
+    }
+
+    async function f1PollLive() {
+      if (_f1LivePaused) return;
+      try {
+        const base = window.API_BASE || '';
+        const resp = await fetch(`${base}/api/f1/live/positions`);
+        if (!resp.ok) return;
+        const data = await resp.json();
+        f1UpdateLiveTable(data);
+      } catch(e) { /* network */ }
+    }
+
+    const TYRE_ICONS = { SOFT:'🔴', MEDIUM:'🟡', HARD:'⚪', INTER:'🟢', WET:'🔵' };
+
+    function f1UpdateLiveTable(data) {
+      const isLive = data.isLive || (data.raceStatus && data.raceStatus.isLive);
+      const noRace = document.getElementById('f1LiveNoRace');
+      const panel  = document.getElementById('f1LiveRacePanel');
+      const badge  = document.getElementById('f1LiveBadge');
+
+      if (!isLive || !data.positions || !data.positions.length) {
+        if (noRace) noRace.style.display = '';
+        if (panel)  panel.style.display  = 'none';
+        if (badge)  badge.classList.add('hidden');
+        return;
+      }
+
+      if (noRace) noRace.style.display = 'none';
+      if (panel)  panel.style.display  = '';
+      if (badge)  badge.classList.remove('hidden');
+
+      const rs = data.raceStatus || {};
+      const nameEl = document.getElementById('f1LiveRaceName');
+      const lapEl  = document.getElementById('f1LiveLap');
+      if (nameEl) nameEl.textContent = rs.raceName || 'Carrera en vivo';
+      if (lapEl)  lapEl.textContent  = rs.currentLap ? `Vuelta ${rs.currentLap}/${rs.totalLaps||'?'}` : '';
+
+      const tbody = document.getElementById('f1LiveTableBody');
+      if (!tbody) return;
+
+      const myDriver = f1AdoptedDriver;
+      const rows = data.positions.map(p => {
+        const isMe = myDriver && (p.driverId === myDriver || String(p.number) === String(myDriver));
+        const tyre = TYRE_ICONS[p.tyre] || '⚫';
+        const gap  = p.position === 1 ? 'LEADER' : (p.gap ? `+${p.gap}` : '-');
+        const spd  = p.speed ? `${p.speed} km/h` : '-';
+        const last = p.lastLapTime || '-';
+        const delta = p.positionDelta > 0 ? `<span class="f1-pos-up">▲${p.positionDelta}</span>`
+                    : p.positionDelta < 0 ? `<span class="f1-pos-dn">▼${Math.abs(p.positionDelta)}</span>`
+                    : '';
+        return `<tr class="${isMe ? 'f1-my-driver-row' : ''}">
+          <td><b>${p.position}</b>${delta}</td>
+          <td>${isMe ? '⭐ ' : ''}${p.driverName || p.driverId || '#'+p.number}</td>
+          <td><span class="f1-team-dot" style="background:${p.teamColor||'#888'}"></span>${p.team||'-'}</td>
+          <td>${gap}</td>
+          <td>${tyre}</td>
+          <td>${spd}</td>
+          <td>${last}</td>
+        </tr>`;
+      });
+      tbody.innerHTML = rows.join('');
+    }
+
+    // Hook into tab switch to start/stop polling
+    const _f1SwitchTabOrig = f1SwitchTab;
+    f1SwitchTab = function(tab, el) {
+      // stop live polling if leaving envivo tab
+      if (tab !== 'envivo') { f1StopLivePolling(); }
+      _f1SwitchTabOrig(tab, el);
+      if (tab === 'envivo') { f1StartLivePolling(); }
+    };
+
+
+    // ─── F1.20 — Circuit map ─────────────────────────────────────────────────
+    let _f1CurrentCircuit = null;
+
+    async function f1LoadCircuit(circuitId) {
+      _f1CurrentCircuit = circuitId;
+      const container = document.getElementById('f1CircuitContainer');
+      const info = document.getElementById('f1CircuitInfo');
+      if (!container) return;
+      container.innerHTML = '<div class="f1-loading">Cargando mapa...</div>';
+      try {
+        const base = window.API_BASE || '';
+        const resp = await fetch(`${base}/api/f1/circuit/${circuitId}`);
+        if (!resp.ok) { container.innerHTML = '<div class="f1-loading">Error cargando circuito</div>'; return; }
+        const svg = await resp.text();
+        container.innerHTML = svg;
+        // Info del circuito
+        const circuitResp = await fetch(`${base}/api/f1/circuits`);
+        if (circuitResp.ok) {
+          const data = await circuitResp.json();
+          const c = (data.circuits || []).find(x => x.id === circuitId);
+          if (c && info) info.textContent = `${c.name} · ${c.country} · ${c.laps} vueltas`;
+        }
+      } catch(e) {
+        container.innerHTML = '<div class="f1-loading">Error: ' + e.message + '</div>';
+      }
+    }
+
+    function f1RefreshCircuit() {
+      const sel = document.getElementById('f1CircuitSelect');
+      if (sel) f1LoadCircuit(sel.value);
+    }
+
+
+    // ─── F1.32-F1.33 — Fantasy + Paywall ────────────────────────────────────
+    let _f1AddonActive = null; // null = no verificado
+
+    async function f1CheckAddon() {
+      if (_f1AddonActive !== null) return _f1AddonActive;
+      try {
+        const base = window.API_BASE || '';
+        const resp = await fetch(`${base}/api/f1/addon/status`);
+        if (!resp.ok) { _f1AddonActive = false; return false; }
+        const data = await resp.json();
+        _f1AddonActive = !!data.active;
+        return _f1AddonActive;
+      } catch(e) { _f1AddonActive = false; return false; }
+    }
+
+    async function f1LoadFantasy() {
+      const active = await f1CheckAddon();
+      const gate = document.getElementById('f1AddonGate');
+      const panel = document.getElementById('f1FantasyPanel');
+      if (!active) {
+        if (gate) gate.style.display = '';
+        if (panel) panel.style.display = 'none';
+        return;
+      }
+      if (gate) gate.style.display = 'none';
+      if (panel) panel.style.display = '';
+      // Cargar score propio
+      try {
+        const base = window.API_BASE || '';
+        const [meResp, lbResp] = await Promise.all([
+          fetch(`${base}/api/f1/fantasy/me`),
+          fetch(`${base}/api/f1/fantasy/leaderboard`),
+        ]);
+        if (meResp.ok) {
+          const me = await meResp.json();
+          const el = document.getElementById('f1FantasyScore');
+          if (el) el.textContent = me.fantasy_total || 0;
+        }
+        if (lbResp.ok) {
+          const lb = await lbResp.json();
+          const el = document.getElementById('f1FantasyLeaderboard');
+          if (el) {
+            if (!lb.leaderboard || !lb.leaderboard.length) {
+              el.textContent = 'Sin datos de fantasy aun.';
+              return;
+            }
+            el.innerHTML = `<table class="f1-standings-table">
+              <thead><tr><th>POS</th><th>OWNER</th><th>PILOTO</th><th>PUNTOS</th></tr></thead>
+              <tbody>${lb.leaderboard.slice(0,10).map(e =>
+                `<tr><td><b>${e.rank}</b></td><td>${e.uid.substring(0,8)}...</td><td>${e.driverName}</td><td><b>${e.total}</b></td></tr>`
+              ).join('')}</tbody>
+            </table>`;
+          }
+        }
+      } catch(e) { console.error('[F1-FANTASY]', e.message); }
+    }
+
+    function f1ShowUpgradeModal() {
+      const modal = document.getElementById('f1UpgradeModal');
+      if (modal) modal.style.display = 'flex';
+    }
+
+    function f1HideUpgradeModal() {
+      const modal = document.getElementById('f1UpgradeModal');
+      if (modal) modal.style.display = 'none';
+    }
+
+    function f1SubscribeMercadoPago() {
+      // Redirect al checkout de MercadoPago para el addon F1
+      alert('Redirigiendo a MercadoPago para activar MiiaF1...\n(Integración de pago pendiente de configuración)');
+    }
+
+    function f1SubscribePayPal() {
+      // Redirect al checkout de PayPal
+      alert('Redirigiendo a PayPal para activar MiiaF1...\n(Integración de pago pendiente de configuración)');
+    }
+
+    // Patch f1SwitchTab to load fantasy when tab is selected
+    const _f1SwitchTabFinal = f1SwitchTab;
+    f1SwitchTab = function(tab, el) {
+      _f1SwitchTabFinal(tab, el);
+      if (tab === 'fantasy') { f1LoadFantasy(); }
+    };
+
   </script>
 </body>
 </html>
@@ -1991,3 +2328,17 @@
     }
 
   
+
+    /* ── F1.12 Live Timing Table ── */
+    .f1-live-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .f1-live-table th {
+      padding: 8px 10px; text-align: left; font-size: 11px; font-weight: 700;
+      letter-spacing: 1px; color: var(--text-3); border-bottom: 1px solid var(--border);
+    }
+    .f1-live-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+    .f1-live-table tr:hover td { background: var(--bg-elevated); }
+    .f1-pos-up { color: #4ade80; font-size: 11px; margin-left: 4px; }
+    .f1-pos-dn { color: #FF1744; font-size: 11px; margin-left: 4px; }
+
+    /* F1.32-F1.33 Fantasy */
+    .f1-fantasy-header { display: flex; align-items: flex-start; gap: 16px; padding: 20px; background: var(--bg-card); border-radius: var(--r-md); }
