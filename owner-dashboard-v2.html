@@ -1848,7 +1848,8 @@
         document.getElementById('f1NotifCheck').checked = prefs?.notifications || false;
       }
 
-      const rows = data.drivers.map((d, i) => {
+      const sorted = [...data.drivers].sort((a,b) => (b.points||0)-(a.points||0));
+      const rows = sorted.map((d, i) => {
         const pos = i + 1;
         const medal = pos <= 3 ? `<span class="f1-pos-medal">${MEDAL[pos]}</span>` : pos;
         const isAdopted = d.id === f1AdoptedDriver;
