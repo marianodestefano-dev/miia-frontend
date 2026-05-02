@@ -9,10 +9,16 @@
     "serve": "npx serve . -p 8080"
   },
   "devDependencies": {
+    "@playwright/test": "^1.59.1",
     "http-server": "^14.1.1",
     "serve": "^14.2.1"
   },
-  "keywords": ["frontend", "html", "miia", "web"],
+  "keywords": [
+    "frontend",
+    "html",
+    "miia",
+    "web"
+  ],
   "author": "",
   "license": "ISC"
 }
