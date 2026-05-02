@@ -29,6 +29,10 @@
 
   <!-- Socket.IO -->
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <!-- VI-INTG-1/2: panels LudoMIIA TEC + integration -->
+  <script src="assets/ludomiia-panels/selector-juego.js"></script>
+  <script src="assets/ludomiia-panels/jugar-con-miia-panel.js"></script>
+  <script src="assets/ludomiia-integration.js"></script>
 </head>
 <body>
   <div class="miia-app">
@@ -796,12 +800,11 @@
           <div class="section-header">
             <div>
               <h2 class="section-title">LudoMIIA</h2>
-              <p class="section-subtitle">Modulo Ludo + apuestas (addon)</p>
+              <p class="section-subtitle">Tu juegos + MIIA coach</p>
             </div>
           </div>
-          <div class="card">
-            <p style="color:var(--text-2);font-size:13px;">El modulo LudoMIIA esta disponible como addon. Configuracion en proximas iteraciones.</p>
-          </div>
+          <!-- VI-INTG-1: mount point selector-juego / jugar-con-miia -->
+          <div id="ludomiiaMount" data-status="pending"></div>
         </section>
       </main>
 
@@ -2419,14 +2422,19 @@
     // Auto-cargar cuando se entra a la seccion F1
     const _origShowSection = typeof showSection === 'function' ? showSection : null;
     document.addEventListener('DOMContentLoaded', () => {
-      // Patch showSection para detectar entrada a F1
+      // Patch showSection para detectar entrada a F1 y LudoMIIA (VI-INTG-1)
       if (typeof showSection === 'function') {
         const _orig = window.showSection;
+        let _ludomiiaInitialized = false;
         window.showSection = function(sectionId, el) {
           _orig(sectionId, el);
           if (sectionId === 'f1') {
             f1LoadCalendar(F1_SEASON);
             f1LoadStandings(F1_SEASON);
+          }
+          if (sectionId === 'ludomiia' && !_ludomiiaInitialized) {
+            _ludomiiaInitialized = true;
+            initLudoMiiaSection();
           }
         };
       }
@@ -3070,6 +3078,68 @@
       }
       return true;
     }
+    // VI-INTG-1: init LudoMIIA section
+    async function initLudoMiiaSection() {
+      const host = document.getElementById('ludomiiaMount');
+      if (!host) return;
+      if (!window.LudoMiiaIntegration) {
+        host.innerHTML = '<div class="card"><p style="color:var(--text-2);font-size:13px;">No se cargaron los panels de LudoMIIA.</p></div>';
+        return;
+      }
+      const apiBase = (window.location.origin.includes('localhost') ? 'http://localhost:8080' : '');
+      try {
+        await window.LudoMiiaIntegration.init({
+          host,
+          isProductActive: async (key) => isProductActiveLocal(key),
+          createSelectorJuegoPanel: window.createSelectorJuegoPanel,
+          createJugarConMiiaPanel: window.createJugarConMiiaPanel,
+          getToken: () => firebase.auth().currentUser.getIdToken(),
+          isOwner: true,
+          fetchGames: async (token) => {
+            const r = await fetch(apiBase + '/api/ludo/games', { headers: { Authorization: 'Bearer ' + token } });
+            if (!r.ok) return [];
+            return r.json();
+          },
+          createSession: async (game, token) => {
+            const r = await fetch(apiBase + '/api/ludo/sessions', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              body: JSON.stringify({ gameId: game.id }),
+            });
+            if (!r.ok) throw new Error('create_session_failed');
+            return r.json();
+          },
+          fetchSession: async (id, token) => {
+            const r = await fetch(apiBase + '/api/ludo/sessions/' + id, { headers: { Authorization: 'Bearer ' + token } });
+            if (!r.ok) throw new Error('fetch_session_failed');
+            return r.json();
+          },
+          sendMessage: async (id, msg, token) => {
+            const r = await fetch(apiBase + '/api/ludo/sessions/' + id + '/message', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+              body: JSON.stringify({ message: msg }),
+            });
+            if (!r.ok) throw new Error('send_message_failed');
+            return r.json();
+          },
+          endGame: async (id, token) => {
+            const r = await fetch(apiBase + '/api/ludo/sessions/' + id + '/end', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + token },
+            });
+            if (!r.ok) throw new Error('end_game_failed');
+            return r.json();
+          },
+          onAddGame: () => { window.location.hash = '#ludomiia/add-game'; },
+          locationHash: (h) => { window.location.hash = h; },
+        });
+      } catch (e) {
+        console.warn('[VI-INTG-1] init fail:', e.message);
+        host.innerHTML = '<div class="card"><p style="color:var(--text-2);font-size:13px;">Error inicializando LudoMIIA: ' + e.message + '</p></div>';
+      }
+    }
+
     // VI-BILL-1: cancel subscription
     async function cancelSubscription() {
       if (!confirm('Confirmas cancelar la suscripcion?')) return;
