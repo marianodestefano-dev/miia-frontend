@@ -6,6 +6,10 @@ const PAGES_MIGRATED = [
   'admin-dashboard.html',
   'login.html',
   'index.html',
+  'agent-dashboard.html',
+  'businesses.html',
+  'contacts.html',
+  'documents.html',
 ];
 
 for (const page of PAGES_MIGRATED) {
