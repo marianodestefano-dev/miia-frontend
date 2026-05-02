@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     environment: 'happy-dom',
     globals: false,
+    exclude: ['**/node_modules/**', '**/__tests__/*.spec.js'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
