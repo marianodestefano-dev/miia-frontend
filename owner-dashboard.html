@@ -1078,6 +1078,39 @@
       // Founder ADDONS visibility
       try { await applyFounderAddons(currentUserData); } catch(e) { console.warn('[founder]', e); }
 
+      // VI-AUTH-4: pending_intent (plan/addon) -> redirect al checkout
+      try {
+        const urlPlan = new URLSearchParams(window.location.search).get('plan');
+        const intent = currentUserData && currentUserData.pending_intent;
+        const plan = urlPlan || (intent && intent.plan);
+        const addon = intent && intent.addon;
+        if (plan && currentUserData.payment_status !== 'active') {
+          // Marcar consumido del pending_intent (solo si no llega via URL)
+          if (!urlPlan && intent) {
+            await firebase.firestore().collection('users').doc(currentUserData.uid || firebase.auth().currentUser.uid).update({ pending_intent: firebase.firestore.FieldValue.delete() }).catch(()=>{});
+          }
+          // Llamada al checkout MercadoPago
+          const user = firebase.auth().currentUser;
+          const token = await user.getIdToken();
+          const r = await fetch('/api/mercadopago/subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+            body: JSON.stringify({ uid: user.uid, plan, addon }),
+          });
+          if (r.ok) {
+            const data = await r.json();
+            if (data.init_point || data.checkout_url) {
+              console.log('[VI-AUTH-4] redirect a checkout', plan, addon);
+              window.location.href = data.init_point || data.checkout_url;
+              return;
+            }
+          }
+          console.warn('[VI-AUTH-4] checkout fallo, mantengo dashboard');
+        }
+      } catch (chErr) {
+        console.warn('[VI-AUTH-4]', chErr.message);
+      }
+
       // Verificar trial
       checkTrialStatus(currentUserData);
 
