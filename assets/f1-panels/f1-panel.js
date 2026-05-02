@@ -2,17 +2,7 @@
 /**
  * f1-panel.js - T-MIIAF1-PANEL-1
  *
- * Panel UMD integrable para el dashboard MiiaF1.
- * Tabs: standings (pilotos) | calendario. Botón adoptar piloto.
- *
- * Uso:
- *   const p = createF1Panel({
- *     fetchStandings: async (token) => fetch('/api/f1/standings?token='+token).then(r=>r.json()),
- *     fetchCalendar:  async (token) => fetch('/api/f1/calendar').then(r=>r.json()),
- *     getToken:       () => firebase.auth().currentUser.getIdToken(),
- *     onAdopt:        (driverId, name) => console.log('Adopted', name),
- *   });
- *   container.appendChild(p.element);
+ * Panel UMD: tab standings pilotos, tab calendario GPs, adoptar piloto.
  */
 
 'use strict';
@@ -26,65 +16,161 @@
 }(typeof window !== 'undefined' ? window : globalThis, function () {
 /* c8 ignore stop */
 
+  function el(tag, attrs) {
+    var e = document.createElement(tag);
+    /* c8 ignore next */
+    if (attrs) {
+      var keys = Object.keys(attrs);
+      for (var ki = 0; ki < keys.length; ki++) {
+        var k = keys[ki];
+        if (k === 'style' && typeof attrs[k] === 'object') { Object.assign(e.style, attrs[k]); }
+        else if (k.startsWith('on') && typeof attrs[k] === 'function') { e.addEventListener(k.slice(2).toLowerCase(), attrs[k]); }
+        else if (k === 'className') { e.className = attrs[k]; }
+        /* c8 ignore next */
+        else { e.setAttribute(k, attrs[k]); }
+      }
+    }
+    for (var i = 2; i < arguments.length; i++) {
+      var c = arguments[i];
+      /* c8 ignore next */
+      if (c == null) { continue; }
+      /* c8 ignore next */
+      e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c);
+    }
+    return e;
+  }
+
+  var TODAY = new Date().toISOString().slice(0, 10);
+
+  function renderDriverRow(driver, adoptedId, onAdoptClick) {
+    var adopted = driver.id === adoptedId;
+    var row = el('div', { className: 'f1-driver-row' + (adopted ? ' f1-adopted' : '') });
+    var nameEl = el('span', { className: 'f1-driver-name' });
+    nameEl.textContent = driver.name || 'Unknown';
+    var ptsEl = el('span', { className: 'f1-driver-points' });
+    ptsEl.textContent = String(driver.points || 0);
+    var dId = driver.id;
+    var dName = driver.name || 'Unknown';
+    var btn = el('button', {
+      className: 'f1-adopt-btn',
+      onClick: function() { onAdoptClick(dId, dName); },
+    });
+    btn.textContent = adopted ? 'Adoptado' : 'Adoptar';
+    row.appendChild(nameEl);
+    row.appendChild(ptsEl);
+    row.appendChild(btn);
+    return row;
+  }
+
+  function renderRaceCard(race, foundNext) {
+    var dateStr = race.date || '';
+    var isNext = !foundNext && dateStr >= TODAY;
+    var card = el('div', { className: 'f1-race-card' + (isNext ? ' f1-race-next' : '') });
+    var nameEl = el('span', { className: 'f1-race-name' });
+    nameEl.textContent = race.raceName || 'GP';
+    var dateEl = el('span', { className: 'f1-race-date' });
+    dateEl.textContent = dateStr;
+    card.appendChild(nameEl);
+    card.appendChild(dateEl);
+    if (isNext) {
+      var badge = el('span', { className: 'f1-next-badge' }, 'PROXIMO');
+      card.appendChild(badge);
+    }
+    return { card: card, isNext: isNext };
+  }
+
   function createF1Panel(opts) {
     opts = opts || {};
-    var fetchStandings = opts.fetchStandings || (async function () { return null; });
-    var fetchCalendar  = opts.fetchCalendar  || (async function () { return null; });
-    var getToken       = opts.getToken       || (async function () { return ''; });
-    var onAdopt        = opts.onAdopt        || (function () {});
+    var fetchStandings = opts.fetchStandings || function() { return Promise.resolve(null); };
+    var fetchCalendar  = opts.fetchCalendar  || function() { return Promise.resolve(null); };
+    var getToken       = opts.getToken       || function() { return Promise.resolve(''); };
+    var onAdopt        = opts.onAdopt        || function() {};
 
     var state = {
-      tab:           'standings',
-      standings:     null,
-      calendar:      null,
-      loading:       false,
-      error:         null,
+      tab: 'standings',
+      loading: false,
+      error: null,
+      standings: null,
+      calendar: null,
       adoptedDriver: null,
     };
 
-    var root = document.createElement('div');
-    root.className = 'f1-panel';
+    var rootEl = el('div', { className: 'f1-panel' });
 
-    var tabBar = document.createElement('div');
-    tabBar.className = 'f1-tab-bar';
-
-    var tabStandingsBtn = document.createElement('button');
-    tabStandingsBtn.className = 'f1-tab f1-tab-standings active';
-    tabStandingsBtn.textContent = 'Standings';
-    tabStandingsBtn.addEventListener('click', function () { switchTab('standings'); });
-
-    var tabCalendarBtn = document.createElement('button');
-    tabCalendarBtn.className = 'f1-tab f1-tab-calendar';
+    var tabBar = el('div', { className: 'f1-tab-bar' });
+    var tabStandingsBtn = el('button', {
+      className: 'f1-tab-standings active',
+      onClick: function() { switchTab('standings'); },
+    });
+    tabStandingsBtn.textContent = 'Pilotos';
+    var tabCalendarBtn = el('button', {
+      className: 'f1-tab-calendar',
+      onClick: function() { switchTab('calendar'); },
+    });
     tabCalendarBtn.textContent = 'Calendario';
-    tabCalendarBtn.addEventListener('click', function () { switchTab('calendar'); });
-
     tabBar.appendChild(tabStandingsBtn);
     tabBar.appendChild(tabCalendarBtn);
-    root.appendChild(tabBar);
+    rootEl.appendChild(tabBar);
 
-    var body = document.createElement('div');
-    body.className = 'f1-body';
-    root.appendChild(body);
+    var contentEl = el('div', { className: 'f1-content' });
+    rootEl.appendChild(contentEl);
+
+    function renderStandings() {
+      if (state.standings === null) {
+        var emptyEl = el('div', { className: 'f1-empty' });
+        emptyEl.textContent = 'Sin standings disponibles';
+        contentEl.appendChild(emptyEl);
+        return;
+      }
+      var drivers = state.standings.drivers || [];
+      if (drivers.length === 0) {
+        var emptyMsg = el('p', { className: 'f1-empty-msg' });
+        emptyMsg.textContent = 'Sin pilotos';
+        contentEl.appendChild(emptyMsg);
+        return;
+      }
+      drivers.forEach(function(d) {
+        contentEl.appendChild(renderDriverRow(d, state.adoptedDriver, adoptDriver));
+      });
+    }
+
+    function renderCalendar() {
+      if (state.calendar === null) {
+        var emptyEl = el('div', { className: 'f1-empty' });
+        emptyEl.textContent = 'Sin calendario disponible';
+        contentEl.appendChild(emptyEl);
+        return;
+      }
+      var races = state.calendar.races || [];
+      if (races.length === 0) {
+        var emptyMsg = el('p', { className: 'f1-empty-msg' });
+        emptyMsg.textContent = 'Sin carreras programadas';
+        contentEl.appendChild(emptyMsg);
+        return;
+      }
+      var foundNext = false;
+      races.forEach(function(race) {
+        var result = renderRaceCard(race, foundNext);
+        if (result.isNext) foundNext = true;
+        contentEl.appendChild(result.card);
+      });
+    }
 
     function render() {
-      tabStandingsBtn.className = 'f1-tab f1-tab-standings' + (state.tab === 'standings' ? ' active' : '');
-      tabCalendarBtn.className  = 'f1-tab f1-tab-calendar'  + (state.tab === 'calendar'  ? ' active' : '');
-
-      body.innerHTML = '';
+      tabStandingsBtn.classList.toggle('active', state.tab === 'standings');
+      tabCalendarBtn.classList.toggle('active', state.tab === 'calendar');
+      contentEl.innerHTML = '';
 
       if (state.loading) {
-        var loadEl = document.createElement('div');
-        loadEl.className = 'f1-loading';
-        loadEl.textContent = 'Cargando...';
-        body.appendChild(loadEl);
+        var loadEl = el('div', { className: 'f1-loading' }, 'Cargando...');
+        contentEl.appendChild(loadEl);
         return;
       }
 
       if (state.error) {
-        var errEl = document.createElement('div');
-        errEl.className = 'f1-error';
+        var errEl = el('div', { className: 'f1-error' });
         errEl.textContent = state.error;
-        body.appendChild(errEl);
+        contentEl.appendChild(errEl);
         return;
       }
 
@@ -95,153 +181,69 @@
       }
     }
 
-    function renderStandings() {
-      if (!state.standings) {
-        var emptyEl = document.createElement('div');
-        emptyEl.className = 'f1-empty';
-        emptyEl.textContent = 'Sin standings disponibles';
-        body.appendChild(emptyEl);
-        return;
-      }
-      var drivers = state.standings.drivers || [];
-      var section = document.createElement('div');
-      section.className = 'f1-standings-section';
-      var title = document.createElement('h3');
-      title.className = 'f1-section-title';
-      title.textContent = 'Pilotos';
-      section.appendChild(title);
-      if (drivers.length === 0) {
-        var emptyP = document.createElement('p');
-        emptyP.className = 'f1-empty-msg';
-        emptyP.textContent = 'Sin pilotos';
-        section.appendChild(emptyP);
-      } else {
-        var table = document.createElement('table');
-        table.className = 'f1-table';
-        drivers.forEach(function (d, i) {
-          var tr = document.createElement('tr');
-          tr.className = 'f1-driver-row' + (d.id === state.adoptedDriver ? ' f1-adopted' : '');
-          var tdPos = document.createElement('td');
-          tdPos.textContent = String(i + 1);
-          var tdName = document.createElement('td');
-          tdName.textContent = d.name || 'Unknown';
-          var tdPts = document.createElement('td');
-          tdPts.textContent = String(d.points || 0);
-          var tdBtn = document.createElement('td');
-          var adoptBtn = document.createElement('button');
-          adoptBtn.className = 'f1-adopt-btn';
-          adoptBtn.textContent = d.id === state.adoptedDriver ? 'Adoptado' : 'Adoptar';
-          adoptBtn.addEventListener('click', function () { adoptDriver(d.id, d.name || 'Unknown'); });
-          tdBtn.appendChild(adoptBtn);
-          tr.appendChild(tdPos);
-          tr.appendChild(tdName);
-          tr.appendChild(tdPts);
-          tr.appendChild(tdBtn);
-          table.appendChild(tr);
-        });
-        section.appendChild(table);
-      }
-      body.appendChild(section);
+    function loadStandings() {
+      state.loading = true;
+      state.error = null;
+      render();
+      return Promise.resolve(getToken()).then(function(token) {
+        return fetchStandings(token);
+      }).then(function(data) {
+        state.standings = data;
+        state.loading = false;
+        render();
+      }).catch(function(err) {
+        /* c8 ignore next */
+        state.error = err.message || 'Error al cargar standings';
+        state.loading = false;
+        render();
+      });
     }
 
-    function renderCalendar() {
-      if (!state.calendar) {
-        var emptyEl = document.createElement('div');
-        emptyEl.className = 'f1-empty';
-        emptyEl.textContent = 'Sin calendario disponible';
-        body.appendChild(emptyEl);
-        return;
-      }
-      var races = state.calendar.races || [];
-      var section = document.createElement('div');
-      section.className = 'f1-calendar-section';
-      if (races.length === 0) {
-        var emptyP = document.createElement('p');
-        emptyP.className = 'f1-empty-msg';
-        emptyP.textContent = 'Sin carreras programadas';
-        section.appendChild(emptyP);
-      } else {
-        var today = new Date().toISOString().slice(0, 10);
-        var foundNext = false;
-        races.forEach(function (r) {
-          var isNext = !foundNext && (r.date || '') >= today;
-          if (isNext) { foundNext = true; }
-          var card = document.createElement('div');
-          card.className = 'f1-race-card' + (isNext ? ' f1-race-next' : '');
-          var nextBadge = isNext ? '<span class="f1-next-badge">PROXIMO</span>' : '';
-          card.innerHTML =
-            '<strong class="f1-race-name">' + (r.raceName || 'GP') + '</strong>' + nextBadge +
-            '<div class="f1-race-date">' + (r.date || '') + '</div>';
-          section.appendChild(card);
-        });
-      }
-      body.appendChild(section);
+    function loadCalendar() {
+      state.loading = true;
+      state.error = null;
+      render();
+      return Promise.resolve(getToken()).then(function(token) {
+        return fetchCalendar(token);
+      }).then(function(data) {
+        state.calendar = data;
+        state.loading = false;
+        render();
+      }).catch(function(err) {
+        /* c8 ignore next */
+        state.error = err.message || 'Error al cargar calendario';
+        state.loading = false;
+        render();
+      });
     }
 
     function switchTab(tab) {
-      if (state.tab === tab) { return; }
-      state.tab   = tab;
-      state.error = null;
+      if (tab === state.tab) return;
+      state.tab = tab;
       render();
-      if (tab === 'standings' && !state.standings) {
-        loadStandings();
-      } else if (tab === 'calendar' && !state.calendar) {
+      if (tab === 'calendar' && state.calendar === null) {
         loadCalendar();
+      } else if (tab === 'standings' && state.standings === null) {
+        loadStandings();
       }
     }
 
-    async function loadStandings() {
-      state.loading = true;
-      state.error   = null;
-      render();
-      try {
-        var token = await getToken();
-        var data  = await fetchStandings(token);
-        state.standings = data;
-        state.loading   = false;
-        render();
-      } catch (err) {
-        /* c8 ignore next */
-        state.error   = err.message || 'Error al cargar standings';
-        state.loading = false;
-        render();
-      }
-    }
-
-    async function loadCalendar() {
-      state.loading = true;
-      state.error   = null;
-      render();
-      try {
-        var token = await getToken();
-        var data  = await fetchCalendar(token);
-        state.calendar = data;
-        state.loading  = false;
-        render();
-      } catch (err) {
-        /* c8 ignore next */
-        state.error   = err.message || 'Error al cargar calendario';
-        state.loading = false;
-        render();
-      }
-    }
-
-    function adoptDriver(driverId, name) {
-      state.adoptedDriver = driverId;
-      onAdopt(driverId, name);
+    function adoptDriver(id, name) {
+      state.adoptedDriver = id;
+      onAdopt(id, name);
       render();
     }
 
     render();
 
     return {
-      element:       root,
-      switchTab:     switchTab,
+      element: rootEl,
+      switchTab: switchTab,
       loadStandings: loadStandings,
-      loadCalendar:  loadCalendar,
-      adoptDriver:   adoptDriver,
-      _state:        state,
-      _setState:     function (s) { Object.assign(state, s); render(); },
+      loadCalendar: loadCalendar,
+      adoptDriver: adoptDriver,
+      _state: state,
+      _setState: function(s) { Object.assign(state, s); render(); },
     };
   }
 
