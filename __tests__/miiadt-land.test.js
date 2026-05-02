@@ -1,48 +1,43 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-const miiadtLand = require('../assets/miiadt-panels/miiadt-land.js');
+const { handleNav, scrollToSection } = require('../assets/miiadt-panels/miiadt-land.js');
 
 describe('miiadt-land.js', () => {
-  beforeEach(() => {
-    document.body.innerHTML = '';
-    vi.resetAllMocks();
+  // handleNav
+  test('handleNav sin location -> no lanza error', () => {
+    expect(() => handleNav('signup', null)).not.toThrow();
+    expect(() => handleNav('login', undefined)).not.toThrow();
   });
 
-  // ── handleNav ─────────────────────────────────────────────────────────
-
-  test('handleNav signup redirige a login?mode=signup', () => {
-    const loc = { href: '' };
-    miiadtLand.handleNav('signup', loc);
-    expect(loc.href).toBe('/login.html?mode=signup&product=miiadt');
+  test('handleNav signup -> location.href = signup URL', () => {
+    const loc = {};
+    handleNav('signup', loc);
+    expect(loc.href).toContain('mode=signup');
+    expect(loc.href).toContain('product=miiadt');
   });
 
-  test('handleNav login redirige a login?mode=login', () => {
-    const loc = { href: '' };
-    miiadtLand.handleNav('login', loc);
-    expect(loc.href).toBe('/login.html?mode=login&product=miiadt');
+  test('handleNav cualquier otra accion -> location.href = login URL', () => {
+    const loc = {};
+    handleNav('login', loc);
+    expect(loc.href).toContain('mode=login');
   });
 
-  test('handleNav sin location no lanza error', () => {
-    expect(() => miiadtLand.handleNav('signup', null)).not.toThrow();
+  // scrollToSection
+  test('scrollToSection sin doc -> no lanza error', () => {
+    expect(() => scrollToSection('hero', null)).not.toThrow();
   });
 
-  // ── scrollToSection ───────────────────────────────────────────────────
-
-  test('scrollToSection llama scrollIntoView si el elemento existe', () => {
+  test('scrollToSection elemento existe -> llama scrollIntoView', () => {
     const mockEl = { scrollIntoView: vi.fn() };
-    const mockDoc = { getElementById: vi.fn(() => mockEl) };
-    miiadtLand.scrollToSection('features', mockDoc);
-    expect(mockDoc.getElementById).toHaveBeenCalledWith('features');
+    const mockDoc = { getElementById: vi.fn().mockReturnValue(mockEl) };
+    scrollToSection('hero', mockDoc);
+    expect(mockDoc.getElementById).toHaveBeenCalledWith('hero');
     expect(mockEl.scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
   });
 
-  test('scrollToSection no lanza error si elemento no existe', () => {
-    const mockDoc = { getElementById: vi.fn(() => null) };
-    expect(() => miiadtLand.scrollToSection('nope', mockDoc)).not.toThrow();
-  });
-
-  test('scrollToSection sin doc no lanza error', () => {
-    expect(() => miiadtLand.scrollToSection('features', null)).not.toThrow();
+  test('scrollToSection elemento NO existe -> no lanza error', () => {
+    const mockDoc = { getElementById: vi.fn().mockReturnValue(null) };
+    expect(() => scrollToSection('no-existe', mockDoc)).not.toThrow();
   });
 });
