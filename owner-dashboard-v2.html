@@ -284,7 +284,7 @@
         <section id="sec-f1" class="miia-section">
           <div class="section-header">
             <div>
-              <h2 class="section-title">&#127937; F1 <span class="badge-f1-addon">add-on $3/mes</span></h2>
+              <h2 class="section-title" style="color:#E10600;">MiiaF1 <span class="badge-f1-addon">add-on $3/mes</span></h2>
               <p class="section-subtitle">Temporada 2026 &mdash; <span id="f1LiveBadge" class="f1-live-badge hidden">EN VIVO</span></p>
             </div>
             <div style="display:flex;gap:8px;align-items:center;">
@@ -301,9 +301,9 @@
             <button class="f1-tab active" onclick="f1SwitchTab('calendario', this)">Calendario</button>
             <button class="f1-tab" onclick="f1SwitchTab('standings', this)">Standings</button>
             <button class="f1-tab" onclick="f1SwitchTab('mipiloto', this)">Mi Piloto</button>
-            <button class="f1-tab" id="f1TabLiveBtn" onclick="f1SwitchTab('envivo', this)">&#128994; En Vivo</button>
-            <button class="f1-tab" onclick="f1SwitchTab('circuito', this)">&#127939; Circuito</button>
-            <button class="f1-tab" onclick="f1SwitchTab('fantasy', this)">&#127942; Fantasy</button>
+            <button class="f1-tab" id="f1TabLiveBtn" onclick="f1SwitchTab('envivo', this)">En Vivo</button>
+            <button class="f1-tab" onclick="f1SwitchTab('circuito', this)">Circuito</button>
+            <button class="f1-tab" onclick="f1SwitchTab('fantasy', this)">Fantasy</button>
           </div>
 
           <!-- TAB: CALENDARIO (F1.5) -->
@@ -317,7 +317,9 @@
             </div>
 
             <div id="f1CalendarGrid" class="f1-calendar-grid">
-              <div class="f1-loading">Cargando calendario...</div>
+              <div class="f1-skeleton" style="height:40px;margin-bottom:4px;"></div>
+              <div class="f1-skeleton" style="height:40px;margin-bottom:4px;"></div>
+              <div class="f1-skeleton" style="height:40px;margin-bottom:4px;"></div>
             </div>
           </div>
 
@@ -328,23 +330,36 @@
               <button class="f1-sub-tab" onclick="f1StandingsTab('constructores', this)">Constructores</button>
             </div>
             <div id="f1StandingsPilotos" class="f1-standings-content active">
-              <div class="f1-loading">Cargando standings...</div>
+              <div class="f1-skeleton" style="height:32px;margin-bottom:4px;"></div>
+              <div class="f1-skeleton" style="height:32px;margin-bottom:4px;"></div>
+              <div class="f1-skeleton" style="height:32px;margin-bottom:4px;"></div>
             </div>
             <div id="f1StandingsConstructores" class="f1-standings-content">
-              <div class="f1-loading">Cargando constructores...</div>
+              <div class="f1-skeleton" style="height:32px;margin-bottom:4px;"></div>
+              <div class="f1-skeleton" style="height:32px;margin-bottom:4px;"></div>
             </div>
           </div>
 
           <!-- TAB: MI PILOTO (F1.7) -->
           <div id="f1TabMipiloto" class="f1-tab-content">
             <div id="f1MyPilotCard" class="f1-my-pilot-card hidden">
-              <div class="f1-pilot-name" id="f1PilotName">-</div>
-              <div class="f1-pilot-team" id="f1PilotTeam">-</div>
+              <div style="font-size:36px;font-weight:900;color:#E10600;line-height:1;min-width:56px;" id="f1PilotNumber">#0</div>
+              <div style="flex:1;">
+                <div class="f1-pilot-name" id="f1PilotName">-</div>
+                <div class="f1-pilot-team" id="f1PilotTeam">-</div>
+                <div style="margin-top:4px;font-size:12px;color:var(--text-3);">
+                  Pos <strong id="f1PilotPos" style="color:var(--text-1);">-</strong>
+                  &nbsp;·&nbsp;
+                  <strong id="f1PilotPts" style="color:var(--text-1);">-</strong> pts
+                </div>
+              </div>
               <button class="btn-ghost btn-sm" onclick="f1ClearPilot()">Cambiar piloto</button>
             </div>
 
             <div id="f1PilotGrid" class="f1-pilot-grid">
-              <div class="f1-loading">Cargando pilotos...</div>
+              <div class="f1-skeleton" style="height:80px;"></div>
+              <div class="f1-skeleton" style="height:80px;"></div>
+              <div class="f1-skeleton" style="height:80px;"></div>
             </div>
 
             <div style="margin-top:16px;display:flex;align-items:center;gap:12px;">
@@ -385,15 +400,14 @@
           <!-- TAB: FANTASY (F1.32) -->
           <div id="f1TabFantasy" class="f1-tab-content">
             <div id="f1AddonGate" style="text-align:center;padding:48px 20px;display:none;">
-              <div style="font-size:40px;margin-bottom:12px;">&#127937;</div>
-              <div style="font-size:18px;font-weight:800;color:var(--text-1);margin-bottom:8px;">MiiaF1 Fantasy</div>
+              <div style="font-size:18px;font-weight:800;color:#E10600;margin-bottom:8px;">MiiaF1 Fantasy</div>
               <div style="font-size:14px;color:var(--text-2);margin-bottom:20px;">Adopta un piloto, acumula puntos en cada GP y compite contra otros owners de MIIA.</div>
               <button class="btn-primary" onclick="f1ShowUpgradeModal()">Activar por $3 USD/mes</button>
             </div>
             <div id="f1FantasyPanel">
               <div class="f1-fantasy-header">
                 <div>
-                  <div style="font-size:18px;font-weight:800;color:var(--text-1);">&#127942; Tu Fantasy Score</div>
+                  <div style="font-size:18px;font-weight:800;color:#E10600;">Tu Fantasy Score</div>
                   <div id="f1FantasyScore" style="font-size:36px;font-weight:900;color:var(--accent);margin-top:4px;">-</div>
                   <div style="font-size:13px;color:var(--text-3);">puntos acumulados en temporada 2026</div>
                 </div>
@@ -411,8 +425,8 @@
             <div class="wizard-card" style="max-width:440px;">
               <button class="wizard-close" onclick="f1HideUpgradeModal()">&times;</button>
               <div style="text-align:center;padding:8px 0 20px;">
-                <div style="font-size:48px;margin-bottom:12px;">&#127937;</div>
-                <h2 style="color:var(--text-1);margin:0 0 6px;font-size:22px;">MiiaF1 Dashboard</h2>
+                <div style="font-size:28px;font-weight:900;color:#E10600;margin-bottom:8px;letter-spacing:-1px;">MiiaF1</div>
+                <h2 style="color:var(--text-1);margin:0 0 6px;font-size:22px;">Dashboard</h2>
                 <div style="font-size:28px;font-weight:900;color:var(--accent);margin-bottom:4px;">$3 USD/mes</div>
                 <div style="font-size:13px;color:var(--text-3);margin-bottom:20px;">Add-on a tu plan MIIA</div>
                 <div style="text-align:left;background:var(--bg-card);border-radius:var(--r-md);padding:16px;margin-bottom:20px;">
@@ -442,9 +456,10 @@
           <!-- TAB: EN VIVO (F1.12) -->
           <div id="f1TabEnvivo" class="f1-tab-content">
             <div id="f1LiveNoRace" style="text-align:center;padding:48px 20px;">
-              <div style="font-size:40px;margin-bottom:12px;">&#127937;</div>
+              <div style="font-size:36px;font-weight:900;color:#E10600;margin-bottom:8px;letter-spacing:-1px;">F1</div>
               <div style="font-size:16px;font-weight:700;color:var(--text-1);margin-bottom:8px;">Sin carrera en vivo</div>
               <div style="font-size:13px;color:var(--text-3);">Los datos en tiempo real aparecen aqui durante las sesiones de Viernes a Domingo.</div>
+              <div id="f1LiveCountdown" style="margin-top:16px;font-size:13px;font-weight:600;color:#E10600;"></div>
             </div>
             <div id="f1LiveRacePanel" style="display:none;">
               <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
@@ -1794,7 +1809,7 @@
     async function f1ApiPatch(path, body) {
       try {
         const token = await firebase.auth().currentUser?.getIdToken();
-        await fetch(`/api/f1/${path}`, {
+        await fetch(`${API}/api/f1/${path}`, {
           method: 'PATCH',
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify(body),
@@ -1810,7 +1825,7 @@
     // ── F1.5: Tab Calendario ──────────────────────────
     async function f1LoadCalendar(season = F1_SEASON) {
       const data = await f1ApiGet(`calendar/${season}`);
-      if (!data) { document.getElementById('f1CalendarGrid').innerHTML = '<div class="f1-loading">Error cargando calendario</div>'; return; }
+      if (!data) { document.getElementById('f1CalendarGrid').innerHTML = '<div class="f1-loading" style="color:var(--text-2);">No se pudo cargar el calendario. Verificá tu conexión e intentá de nuevo.</div>'; return; }
 
       const today = new Date().toISOString().split('T')[0];
       const nextGp = data.gps.find(gp => gp.date > today && gp.status !== 'completed');
@@ -1825,7 +1840,8 @@
 
       const grid = document.getElementById('f1CalendarGrid');
       grid.innerHTML = data.gps.map(gp => {
-        const statusLabel = { completed: 'COMPLETADO', scheduled: 'PROXIMO', live: 'EN VIVO', cancelled: 'CANCELADO' }[gp.status] || gp.status;
+        const isNext = nextGp && gp.round === nextGp.round;
+        const statusLabel = { completed: 'COMPLETADO', scheduled: isNext ? 'ACTIVO' : 'PROXIMO', live: 'EN VIVO', cancelled: 'CANCELADO' }[gp.status] || gp.status;
         return `<div class="f1-gp-row ${gp.status}">
           <div class="f1-gp-round">${gp.round || ''}</div>
           <div>
@@ -1833,7 +1849,7 @@
             <div class="f1-gp-circuit">${gp.circuit}${gp.sprint ? ' <span style="color:var(--accent);font-size:10px;">SPRINT</span>' : ''}</div>
           </div>
           <div class="f1-gp-date">${gp.date}</div>
-          <span class="f1-gp-status ${gp.status}">${statusLabel}</span>
+          <span class="f1-gp-status ${gp.status} ${isNext ? 'next' : ''}">${statusLabel}</span>
         </div>`;
       }).join('');
     }
@@ -1874,14 +1890,21 @@
 
       const consData = await f1ApiGet(`standings/constructors/${season}`);
       if (consData) {
+        const leaderPts = consData.constructors[0]?.points || 0;
         const cRows = consData.constructors.map((c, i) => {
           const pos = i + 1;
           const medal = pos <= 3 ? `<span class="f1-pos-medal">${MEDAL[pos]}</span>` : pos;
-          return `<tr><td>${medal}</td><td><span class="f1-team-dot" style="background:${c.team_color || '#888'}"></span>${c.team}</td><td style="font-weight:700">${c.points || 0}</td></tr>`;
+          const gap = i === 0 ? '—' : `-${leaderPts - (c.points || 0)}`;
+          return `<tr>
+            <td>${medal}</td>
+            <td><span class="f1-team-dot" style="background:${c.team_color || '#888'}"></span>${c.team}</td>
+            <td style="font-weight:700">${c.points || 0}</td>
+            <td style="font-size:12px;color:var(--text-3)">${gap}</td>
+          </tr>`;
         });
         document.getElementById('f1StandingsConstructores').innerHTML = `
           <table class="f1-standings-table">
-            <thead><tr><th>Pos</th><th>Constructor</th><th>Puntos</th></tr></thead>
+            <thead><tr><th>Pos</th><th>Constructor</th><th>Pts</th><th>Gap</th></tr></thead>
             <tbody>${cRows.join('')}</tbody>
           </table>`;
       }
@@ -1896,31 +1919,41 @@
       f1AdoptedDriver = prefs?.adopted_driver || null;
 
       if (f1AdoptedDriver) {
-        const myDriver = data.drivers.find(d => d.id === f1AdoptedDriver);
+        const sorted = [...data.drivers].sort((a, b) => (b.points || 0) - (a.points || 0));
+        const myDriver = sorted.find(d => d.id === f1AdoptedDriver);
         if (myDriver) {
+          const pos = sorted.findIndex(d => d.id === f1AdoptedDriver) + 1;
+          document.getElementById('f1PilotNumber').textContent = `#${myDriver.number || '?'}`;
           document.getElementById('f1PilotName').textContent = myDriver.name;
           document.getElementById('f1PilotTeam').textContent = myDriver.team;
+          document.getElementById('f1PilotPos').textContent = pos;
+          document.getElementById('f1PilotPts').textContent = myDriver.points || 0;
           document.getElementById('f1MyPilotCard').classList.remove('hidden');
           document.getElementById('f1NotifCheck').checked = prefs?.notifications || false;
         }
       }
 
+      const sortedPilots = [...data.drivers].sort((a, b) => (b.points || 0) - (a.points || 0));
       const grid = document.getElementById('f1PilotGrid');
-      grid.innerHTML = data.drivers.map(d => `
-        <button class="f1-pilot-card ${d.id === f1AdoptedDriver ? 'adopted' : ''}"
-                onclick="f1AdoptPilot('${d.id}', '${d.name}', '${d.team}')">
-          <div class="f1-pilot-number">#${d.number}</div>
+      grid.innerHTML = sortedPilots.map((d, i) => `
+        <button class="f1-pilot-card ${d.id === f1AdoptedDriver ? 'adopted' : ''}" type="button"
+                onclick="f1AdoptPilot('${d.id}', '${d.name.replace(/'/g, '&apos;')}', '${d.team.replace(/'/g, '&apos;')}', '${d.number || ''}', '${d.points || 0}', '${i + 1}')">
+          <div class="f1-pilot-number">#${d.number || '?'}</div>
           <div class="f1-pilot-card-name">${d.name}</div>
           <div class="f1-pilot-card-team">${d.team}</div>
+          <div style="font-size:11px;color:var(--text-3);margin-top:2px;">${d.points || 0} pts</div>
         </button>`).join('');
     }
 
-    async function f1AdoptPilot(driverId, name, team) {
+    async function f1AdoptPilot(driverId, name, team, number, pts, pos) {
       const res = await f1ApiPost('adopt', { driver_id: driverId, season: F1_SEASON });
       if (res?.ok) {
         f1AdoptedDriver = driverId;
+        document.getElementById('f1PilotNumber').textContent = `#${number || '?'}`;
         document.getElementById('f1PilotName').textContent = name;
         document.getElementById('f1PilotTeam').textContent = team;
+        document.getElementById('f1PilotPos').textContent = pos || '-';
+        document.getElementById('f1PilotPts').textContent = pts || 0;
         document.getElementById('f1MyPilotCard').classList.remove('hidden');
         document.querySelectorAll('.f1-pilot-card').forEach(el => el.classList.remove('adopted'));
         event.currentTarget.classList.add('adopted');
@@ -2210,7 +2243,7 @@
     .f1-live-badge {
       display: inline-block; font-size: 11px; font-weight: 700;
       padding: 2px 10px; border-radius: 20px;
-      background: #FF1744; color: #fff; letter-spacing: 1px;
+      background: #E10600; color: #fff; letter-spacing: 1px;
       animation: f1Pulse 1s infinite;
     }
     .f1-live-badge.hidden { display: none; }
@@ -2230,10 +2263,10 @@
       border-bottom: 2px solid transparent; transition: all 200ms;
     }
     .f1-tab:hover { color: var(--text-1); }
-    .f1-tab.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: 600; }
+    .f1-tab.active { color: #E10600; border-bottom-color: #E10600; font-weight: 600; }
 
-    .f1-tab-content { display: none; }
-    .f1-tab-content.active { display: block; }
+    .f1-tab-content { display: none; opacity: 0; transition: opacity 200ms ease; }
+    .f1-tab-content.active { display: block; opacity: 1; }
 
     /* Sub-tabs standings */
     .f1-standings-tabs { display: flex; gap: 4px; margin-bottom: 16px; }
@@ -2242,21 +2275,21 @@
       color: var(--text-2); padding: 6px 16px; border-radius: var(--r-sm);
       font-size: 13px; cursor: pointer; transition: all 200ms;
     }
-    .f1-sub-tab.active { background: rgba(0,229,255,0.1); color: var(--accent); border-color: rgba(0,229,255,0.3); }
+    .f1-sub-tab.active { background: rgba(225,6,0,0.08); color: #E10600; border-color: rgba(225,6,0,0.3); }
     .f1-standings-content { display: none; }
     .f1-standings-content.active { display: block; }
 
     /* Next GP card */
     .f1-next-gp-card {
-      background: linear-gradient(135deg, rgba(0,229,255,0.08) 0%, rgba(124,58,237,0.08) 100%);
-      border: 1px solid rgba(0,229,255,0.2);
+      background: linear-gradient(135deg, rgba(225,6,0,0.10) 0%, rgba(30,0,0,0.15) 100%);
+      border: 1px solid rgba(225,6,0,0.35);
       border-radius: var(--r-lg); padding: 20px 24px; margin-bottom: 20px;
     }
     .f1-next-gp-card.hidden { display: none; }
-    .f1-next-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: var(--accent); margin-bottom: 6px; }
+    .f1-next-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #E10600; margin-bottom: 6px; }
     .f1-next-name { font-size: 22px; font-weight: 800; color: var(--text-1); }
     .f1-next-circuit { font-size: 14px; color: var(--text-2); margin-top: 2px; }
-    .f1-next-countdown { font-size: 13px; color: var(--accent); margin-top: 8px; font-weight: 600; }
+    .f1-next-countdown { font-size: 13px; color: #E10600; margin-top: 8px; font-weight: 600; }
 
     /* Calendar grid */
     .f1-calendar-grid { display: flex; flex-direction: column; gap: 4px; }
@@ -2277,8 +2310,9 @@
       font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; letter-spacing: 0.5px;
     }
     .f1-gp-status.completed { background: rgba(100,255,100,0.1); color: #4ade80; }
-    .f1-gp-status.scheduled { background: rgba(0,229,255,0.1); color: var(--accent); }
-    .f1-gp-status.live { background: rgba(255,23,68,0.15); color: #FF1744; animation: f1Pulse 1s infinite; }
+    .f1-gp-status.scheduled { background: rgba(0,229,255,0.08); color: var(--text-2); }
+    .f1-gp-status.scheduled.next { background: rgba(225,6,0,0.12); color: #E10600; border: 1px solid rgba(225,6,0,0.3); }
+    .f1-gp-status.live { background: rgba(225,6,0,0.15); color: #E10600; animation: f1Pulse 1s infinite; }
 
     /* Standings table */
     .f1-standings-table { width: 100%; border-collapse: collapse; }
@@ -2291,11 +2325,11 @@
     .f1-standings-table tr:hover td { background: var(--bg-elevated); }
     .f1-pos-medal { font-size: 16px; }
     .f1-team-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 8px; }
-    .f1-my-driver-row td { background: rgba(0,229,255,0.06); }
+    .f1-my-driver-row td { background: rgba(255,200,0,0.10); }
 
     /* My pilot */
     .f1-my-pilot-card {
-      background: var(--bg-elevated); border: 1px solid rgba(0,229,255,0.3);
+      background: var(--bg-elevated); border: 2px solid rgba(225,6,0,0.4);
       border-radius: var(--r-md); padding: 16px 20px; margin-bottom: 20px;
       display: flex; align-items: center; gap: 16px;
     }
@@ -2312,9 +2346,9 @@
       border-radius: var(--r-md); padding: 12px 14px; cursor: pointer;
       transition: all 200ms; text-align: left;
     }
-    .f1-pilot-card:hover { border-color: var(--accent); background: rgba(0,229,255,0.06); }
-    .f1-pilot-card.adopted { border-color: var(--accent); background: rgba(0,229,255,0.1); }
-    .f1-pilot-number { font-size: 24px; font-weight: 900; color: var(--accent); line-height: 1; }
+    .f1-pilot-card:hover { border-color: #E10600; background: rgba(225,6,0,0.06); }
+    .f1-pilot-card.adopted { border-color: #ffd000; background: rgba(255,208,0,0.10); }
+    .f1-pilot-number { font-size: 24px; font-weight: 900; color: #E10600; line-height: 1; }
     .f1-pilot-card-name { font-size: 13px; font-weight: 600; color: var(--text-1); margin-top: 4px; }
     .f1-pilot-card-team { font-size: 11px; color: var(--text-2); margin-top: 2px; }
 
@@ -2323,6 +2357,8 @@
     .f1-notif-label input { accent-color: var(--accent); width: 16px; height: 16px; cursor: pointer; }
 
     .f1-loading { color: var(--text-3); font-size: 14px; padding: 40px; text-align: center; }
+    .f1-skeleton { background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-card) 50%, var(--bg-elevated) 75%); background-size: 200% 100%; animation: f1Shimmer 1.4s infinite; border-radius: var(--r-sm); }
+    @keyframes f1Shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
     @media (max-width: 600px) {
       .f1-gp-row { grid-template-columns: 28px 1fr 60px; }
       .f1-gp-date { display: none; }
