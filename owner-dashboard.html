@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="es" data-theme="dark">
 <head>
-  <script>(function(){var t=localStorage.getItem('miia-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();</script>
+  <script>
+    (function(){var t=localStorage.getItem('miia-theme')||'dark';document.documentElement.setAttribute('data-theme',t);})();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0, user-scalable=yes">
   <meta name="author" content="Mariano De Stefano">
@@ -17,582 +19,315 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles-v2.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
+
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+  <!-- Socket.IO -->
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
-  <style>
-    /* === SIDEBAR LAYOUT (replaces top nav from V2) === */
-    .miia-app { display:flex; min-height:100vh; }
-    .miia-sidebar {
-      width:220px; min-height:100vh; background:var(--bg-elevated);
-      border-right:1px solid var(--border); display:flex;
-      flex-direction:column; flex-shrink:0; position:sticky;
-      top:0; height:100vh; overflow:hidden; transition:width 0.2s ease;
-    }
-    .miia-sidebar.collapsed { width:54px; }
-    .miia-body { flex:1; overflow-x:hidden; display:flex; flex-direction:column; }
-    .sidebar-hdr { display:flex; align-items:center; justify-content:space-between; padding:14px 12px; border-bottom:1px solid var(--border); }
-    .sidebar-logo { display:flex; align-items:center; gap:8px; cursor:pointer; text-decoration:none; }
-    .sidebar-logo-text { font-size:18px; font-weight:900; letter-spacing:-0.5px; color:var(--text-1); }
-    .sidebar-collapse-btn { background:none; border:none; color:var(--text-3); cursor:pointer; padding:4px; border-radius:4px; display:flex; align-items:center; }
-    .sidebar-collapse-btn:hover { color:var(--text-1); background:var(--bg-card); }
-    .sidebar-nav { flex:1; overflow-y:auto; overflow-x:hidden; padding:6px 0; }
-    .sidebar-grp { }
-    .sidebar-grp-hdr { padding:10px 12px 4px; font-size:10px; font-weight:700; letter-spacing:1.5px; color:var(--text-3); text-transform:uppercase; display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
-    .sidebar-grp-hdr:hover { color:var(--text-2); }
-    .sidebar-grp-hdr::after { content:"▾"; font-size:11px; opacity:0.6; transition:transform 0.2s; }
-    .sidebar-grp.collapsed .sidebar-grp-hdr::after { transform:rotate(-90deg); }
-    .sidebar-grp-items { overflow:hidden; max-height:500px; transition:max-height 0.25s ease; }
-    .sidebar-grp.collapsed .sidebar-grp-items { max-height:0 !important; }
-    .sidebar-item { display:flex; align-items:center; gap:9px; padding:7px 12px 7px 16px; font-size:13px; color:var(--text-2); cursor:pointer; width:100%; background:none; border:none; border-left:2px solid transparent; font-family:inherit; text-align:left; white-space:nowrap; transition:background 0.15s,color 0.15s; }
-    .sidebar-item:hover { background:var(--bg-card); color:var(--text-1); }
-    .sidebar-item.active { background:rgba(0,229,255,0.08); color:var(--cyan); font-weight:600; border-left-color:var(--cyan); }
-    .sidebar-foot { padding:10px 12px; border-top:1px solid var(--border); display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
-    .miia-sidebar.collapsed .sidebar-logo-text,
-    .miia-sidebar.collapsed .sidebar-grp-hdr span,
-    .miia-sidebar.collapsed .sidebar-item span,
-    .miia-sidebar.collapsed #waLabel { display:none; }
-    /* Section visibility */
-    .miia-section { display:none; padding:20px 24px; }
-    .miia-section.active { display:block; }
-    /* Mobile */
-    .mobile-nav-top { display:none; align-items:center; padding:10px 16px; background:var(--bg-elevated); border-bottom:1px solid var(--border); position:sticky; top:0; z-index:100; gap:12px; }
-    @media(max-width:768px) {
-      .miia-app { flex-direction:column; }
-      .miia-sidebar { position:fixed; left:-220px; top:0; height:100vh; z-index:200; transition:left 0.25s ease; width:220px !important; }
-      .miia-sidebar.open { left:0; }
-      .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:199; }
-      .sidebar-overlay.visible { display:block; }
-      .mobile-nav-top { display:flex; }
-    }
-    @media(min-width:769px) { .sidebar-overlay { display:none !important; } }
-  </style>
 </head>
 <body>
   <div class="miia-app">
 
+    <!-- ═══ TOP NAV ═══ -->
+    <nav class="miia-nav">
+      <!-- Logo -->
+      <!-- Mobile menu button (hidden on desktop) -->
+      <button class="sidebar-mobile-btn" onclick="openMobileSidebar()" data-tooltip="Abrir menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="#" onclick="showSection('home');return false;" class="miia-nav-logo" data-tooltip="Ir a inicio de MIIA">
+        <svg viewBox="90 118 220 168" fill="none" style="width:52px;height:40px;display:block">
+          <defs>
+            <linearGradient id="lg_nav" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#00E5FF"/>
+              <stop offset="50%" stop-color="#7C3AED"/>
+              <stop offset="100%" stop-color="#FF1744"/>
+            </linearGradient>
+          </defs>
+          <path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#lg_nav)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+          <text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text>
+        </svg>
+      </a>
+
+      <!-- Toggle Negocio / Personal -->
+      <div class="mode-toggle" data-tooltip="Cambia entre modo negocio y vida personal">
+        <button class="active" id="modeNegocio" onclick="switchMode('negocio')">Negocio</button>
+        <button id="modePersonal" onclick="switchMode('personal')">Personal</button>
+      </div>
+
+      <!-- Nav right -->
+      <div class="miia-nav-right">
+        <!-- Theme toggle -->
+        <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()"
+                data-tooltip="Cambiar entre tema oscuro y claro">
+          <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/>
+          </svg>
+        </button>
+
+        <!-- WhatsApp status -->
+        <button class="wa-badge" id="waStatusBadge" onclick="openQRModal()"
+                data-tooltip="Estado de conexion WhatsApp. Click para vincular.">
+          <span class="wa-dot" id="waDot"></span>
+          <span id="waLabel">Sin conectar</span>
+        </button>
+
+        <!-- Avatar -->
+        <div class="nav-avatar" id="navAvatar" onclick="toggleProfileMenu()"
+             data-tooltip="Tu perfil y configuracion">
+          ?
+        </div>
+      </div>
+    </nav>
+
+    <!-- ═══ BODY: MAIN + FEED ═══ -->
+    <div class="miia-body">
+
     <!-- SIDEBAR -->
     <aside class="miia-sidebar" id="sidebarEl">
-      <div class="sidebar-hdr">
-        <a href="#" class="sidebar-logo" onclick="showSection('home');closeMobileSidebar();return false;">
-          <svg viewBox="90 118 220 168" fill="none" style="width:32px;height:25px;flex-shrink:0;">
-            <defs><linearGradient id="lg_sb" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs>
-            <path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#lg_sb)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
-            <text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text>
-          </svg>
-          <span class="sidebar-logo-text">MIIA</span>
-        </a>
-        <button class="sidebar-collapse-btn" onclick="toggleSidebar()" id="sidebarCollapseBtn" data-tooltip="Contraer menu">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+      <div class="sidebar-toggle">
+        <button class="sidebar-toggle-btn" onclick="toggleSidebar()" data-tooltip="Contraer menu">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
         </button>
       </div>
       <nav class="sidebar-nav">
+
         <div class="sidebar-grp" id="grp-miia">
           <div class="sidebar-grp-hdr" onclick="toggleSidebarGroup('grp-miia')"><span>MIIA</span></div>
           <div class="sidebar-grp-items">
-            <button class="sidebar-item active" data-section="home" onclick="showSection('home',this);closeMobileSidebar()"><span>Inicio</span></button>
-            <button class="sidebar-item" data-section="actividad" onclick="showSection('actividad',this);closeMobileSidebar()"><span>Actividad</span></button>
-            <button class="sidebar-item" data-section="gestionar" onclick="showSection('gestionar',this);closeMobileSidebar()"><span>Gestionar</span></button>
-            <button class="sidebar-item" data-section="analitica" onclick="showSection('analitica',this);closeMobileSidebar()"><span>Estadisticas</span></button>
-            <button class="sidebar-item" data-section="documentos" onclick="showSection('documentos',this)"><span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><span class="sidebar-label">Documentos</span></button>
+            <button class="sidebar-item active" data-section="home" onclick="showSection('home',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></span><span class="sidebar-label">Inicio</span></button>
+            <button class="sidebar-item" data-section="actividad" onclick="showSection('actividad',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8z"/></svg></span><span class="sidebar-label">Actividad</span></button>
+            <button class="sidebar-item" data-section="gestionar" onclick="showSection('gestionar',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4z"/></svg></span><span class="sidebar-label">Gestionar</span></button>
+            <button class="sidebar-item" data-section="analitica" onclick="showSection('analitica',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/></svg></span><span class="sidebar-label">Estadisticas</span></button>
           </div>
         </div>
+
         <div class="sidebar-grp" id="grp-cuenta">
           <div class="sidebar-grp-hdr" onclick="toggleSidebarGroup('grp-cuenta')"><span>CUENTA</span></div>
           <div class="sidebar-grp-items">
-            <button class="sidebar-item" data-section="plan" onclick="showSection('plan',this);closeMobileSidebar()"><span>Mi Plan</span></button>
-            <button class="sidebar-item" data-section="seguridad" onclick="showSection('seguridad',this);closeMobileSidebar()"><span>Seguridad</span></button>
-            <button class="sidebar-item" data-section="privacidad" onclick="showSection('privacidad',this);closeMobileSidebar()"><span>Privacidad</span></button>
-            <button class="sidebar-item" data-section="mis-datos" onclick="showSection('mis-datos',this);closeMobileSidebar()"><span>Mis Datos</span></button>
+            <button class="sidebar-item" data-section="plan" onclick="showSection('plan',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg></span><span class="sidebar-label">Mi Plan</span></button>
+            <button class="sidebar-item" data-section="seguridad" onclick="showSection('seguridad',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="sidebar-label">Seguridad</span></button>
+            <button class="sidebar-item" data-section="privacidad" onclick="showSection('privacidad',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="sidebar-label">Privacidad</span></button>
+            <button class="sidebar-item" data-section="mis-datos" onclick="showSection('mis-datos',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span><span class="sidebar-label">Mis Datos</span></button>
           </div>
         </div>
+
         <div class="sidebar-grp" id="grp-conexiones">
           <div class="sidebar-grp-hdr" onclick="toggleSidebarGroup('grp-conexiones')"><span>CONEXIONES</span></div>
           <div class="sidebar-grp-items">
-            <button class="sidebar-item" data-section="whatsapp" onclick="showSection('whatsapp',this);closeMobileSidebar()"><span>WhatsApp</span></button>
-            <button class="sidebar-item" data-section="integraciones" onclick="showSection('integraciones',this);closeMobileSidebar()"><span>Integraciones</span></button>
+            <button class="sidebar-item" data-section="whatsapp" onclick="showSection('whatsapp',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg></span><span class="sidebar-label">WhatsApp</span></button>
+            <button class="sidebar-item" data-section="integraciones" onclick="showSection('integraciones',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><path d="M6 9v3l6 3 6-3V9"/></svg></span><span class="sidebar-label">Integraciones</span></button>
           </div>
         </div>
+
         <div class="sidebar-grp" id="grp-addons" style="display:none;">
           <div class="sidebar-grp-hdr" onclick="toggleSidebarGroup('grp-addons')"><span>ADDONS</span></div>
           <div class="sidebar-grp-items">
-            <button class="sidebar-item" data-section="miiadt" onclick="showSection('miiadt',this);closeMobileSidebar()"><span>MIIADT</span></button>
-            <button class="sidebar-item" data-section="ludomiia" onclick="showSection('ludomiia',this);closeMobileSidebar()"><span>LudoMIIA</span></button>
-            <button class="sidebar-item" data-section="f1" onclick="showSection('f1',this);closeMobileSidebar()"><span>MiiaF1</span></button>
+            <button class="sidebar-item" data-section="miiadt" onclick="showSection('miiadt',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></span><span class="sidebar-label">MIIADT</span></button>
+            <button class="sidebar-item" data-section="ludomiia" onclick="showSection('ludomiia',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 11h4M8 9v4"/><circle cx="15.5" cy="13" r="1.5" fill="currentColor"/><circle cx="18" cy="11" r="1" fill="currentColor"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg></span><span class="sidebar-label">LudoMIIA</span></button>
+            <button class="sidebar-item" data-section="f1" onclick="showSection('f1',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l9-9 9 9-9 7z"/></svg></span><span class="sidebar-label">MiiaF1</span></button>
           </div>
         </div>
+
       </nav>
-      <div class="sidebar-foot">
-        <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()" data-tooltip="Cambiar tema" style="padding:6px;border-radius:6px;">
-          <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-        </button>
-        <button class="wa-badge" id="waStatusBadge" onclick="openQRModal()" data-tooltip="Estado WhatsApp">
-          <span class="wa-dot" id="waDot"></span><span id="waLabel">Sin conectar</span>
-        </button>
-        <div class="nav-avatar" id="navAvatar" onclick="toggleProfileMenu()" style="width:32px;height:32px;font-size:0.85rem;" data-tooltip="Perfil">?</div>
-      </div>
     </aside>
 
-    <!-- Mobile overlay -->
-    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeMobileSidebar()"></div>
 
-    <!-- === BODY === -->
-    <div class="miia-body">
 
-      <!-- Mobile top bar -->
-      <div class="mobile-nav-top" id="mobileNavTop">
-        <button onclick="openMobileSidebar()" style="background:none;border:none;color:var(--text-1);cursor:pointer;padding:4px;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-        </button>
-        <a href="#" onclick="showSection('home');return false;" style="display:flex;align-items:center;gap:6px;text-decoration:none;">
-          <span style="font-size:16px;font-weight:900;color:var(--text-1);">MIIA</span>
-        </a>
-        <div style="margin-left:auto;display:flex;align-items:center;gap:8px;">
-          <div class="mode-toggle">
-            <button class="active" id="modeNegocioM" onclick="switchMode('negocio')">Negocio</button>
-            <button id="modePersonalM" onclick="switchMode('personal')">Personal</button>
-          </div>
-          <div class="nav-avatar" onclick="toggleProfileMenu()" style="width:28px;height:28px;font-size:0.8rem;" id="navAvatarM">?</div>
-        </div>
-      </div>
-
-      <!-- Mode toggle (desktop, inside main) -->
-      <div style="display:flex;justify-content:flex-end;padding:10px 24px 0;gap:8px;align-items:center;">
-        <div class="mode-toggle" data-tooltip="Cambia entre modo negocio y vida personal">
-          <button class="active" id="modeNegocio" onclick="switchMode('negocio')">Negocio</button>
-          <button id="modePersonal" onclick="switchMode('personal')">Personal</button>
-        </div>
-      </div>
-
-      <main class="miia-main" style="padding:0 0 40px;">
+      <!-- CONTENIDO PRINCIPAL -->
+      <main class="miia-main">
 
         <!-- SECCION: HOME -->
         <section id="sec-home" class="miia-section active">
+
+          <!-- Hero -->
           <div class="hero">
             <p class="hero-greeting">Bienvenido de vuelta</p>
             <h1 class="hero-name" id="heroName">...</h1>
           </div>
+
+          <!-- Gradient line -->
           <div class="gline"></div>
+
+          <!-- Stats row -->
           <div class="stats-row">
             <div class="stat-card">
-              <div class="stat-number gradient" id="statConversaciones">0</div>
+              <div class="stat-number gradient" id="statConversaciones">—</div>
               <div class="stat-label">Conversaciones hoy</div>
               <div class="stat-delta up" id="statConvDelta"></div>
             </div>
             <div class="stat-card">
-              <div class="stat-number" id="statLeads">0</div>
+              <div class="stat-number" id="statLeads">—</div>
               <div class="stat-label">Leads activos</div>
               <div class="stat-delta" id="statLeadsDelta"></div>
             </div>
             <div class="stat-card">
-              <div class="stat-number" id="statPreventas">0</div>
+              <div class="stat-number" id="statPreventas">—</div>
               <div class="stat-label">Pre-ventas</div>
               <div class="stat-delta" id="statPreventasDelta"></div>
             </div>
           </div>
+
+          <!-- Timeline de actividad -->
           <div class="card">
             <div class="card-title">Actividad reciente</div>
             <div class="timeline" id="timeline">
-              <div class="timeline-item"><div class="timeline-dot cyan"></div><div class="timeline-text"><strong>MIIA</strong> respondio a un lead nuevo</div><div class="timeline-time">Hace 5 min</div></div>
-              <div class="timeline-item"><div class="timeline-dot violet"></div><div class="timeline-text"><strong>Carlos Garcia</strong> pregunto por precios</div><div class="timeline-time">Hace 12 min</div></div>
-              <div class="timeline-item"><div class="timeline-dot rose"></div><div class="timeline-text"><strong>MIIA</strong> agendo cita con <strong>Maria Lopez</strong></div><div class="timeline-time">Hace 28 min</div></div>
+              <!-- Datos de ejemplo (se reemplazan en FASE B con datos reales) -->
+              <div class="timeline-item">
+                <div class="timeline-dot cyan"></div>
+                <div class="timeline-text"><strong>MIIA</strong> respondio a un lead nuevo</div>
+                <div class="timeline-time">Hace 5 minutos</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot violet"></div>
+                <div class="timeline-text"><strong>Carlos Garcia</strong> pregunto por precios</div>
+                <div class="timeline-time">Hace 12 minutos</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot rose"></div>
+                <div class="timeline-text"><strong>MIIA</strong> agendo una cita con <strong>Maria Lopez</strong></div>
+                <div class="timeline-time">Hace 28 minutos</div>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-dot cyan"></div>
+                <div class="timeline-text"><strong>Ana Ruiz</strong> confirmo su turno de manana</div>
+                <div class="timeline-time">Hace 1 hora</div>
+              </div>
             </div>
           </div>
+
+
+          <!-- WIDGET: WhatsApp status (T158) -->
+          <div class="card" id="waWidgetCard" style="margin-top:16px;">
+            <div class="card-title">WhatsApp</div>
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="wa-dot" id="waWidgetDot"></span>
+                <span id="waWidgetLabel" style="font-size:14px;font-weight:600;">Sin conectar</span>
+              </div>
+              <div style="flex:1;min-width:200px;color:var(--text-2);font-size:13px;" id="waWidgetDetail">Vincula tu numero para que MIIA empiece a responder.</div>
+              <button class="btn btn-primary btn-sm" id="waWidgetBtn" onclick="openQRModal()" data-tooltip="Vincular WhatsApp via QR">Vincular</button>
+            </div>
+          </div>
+          <!-- Estado sin WhatsApp (se muestra si no hay conexion) -->
           <div class="empty-state hidden" id="emptyStateHome">
+            <svg class="empty-state-logo" width="80" height="80" viewBox="90 118 220 168" fill="none" opacity="0.4">
+              <path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z"
+                    fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>
+              <text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60"
+                    fill="currentColor" text-anchor="middle" letter-spacing="-2">MIIA</text>
+            </svg>
             <h2 class="empty-state-title">MIIA esta lista</h2>
             <p class="empty-state-text">Solo necesita tu WhatsApp para empezar a responder por ti.</p>
-            <button class="btn btn-primary" onclick="openQRModal()">Vincular WhatsApp</button>
+            <button class="btn btn-primary" onclick="openQRModal()" data-tooltip="Escanea un QR o usa un codigo para vincular tu WhatsApp">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+              </svg>
+              Vincular WhatsApp
+            </button>
           </div>
         </section>
+
         <!-- SECCION: ACTIVIDAD -->
         <section id="sec-actividad" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">Actividad</h2><p class="section-subtitle">Conversaciones en vivo e historial</p></div></div>
-          <div class="card"><p style="color:var(--text-3);text-align:center;padding:40px;">Conversaciones en vivo disponibles en Fase B.</p></div>
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Actividad</h2>
+              <p class="section-subtitle">Conversaciones en vivo e historial</p>
+            </div>
+          </div>
+          <div class="card">
+            <p style="color: var(--text-3); text-align: center; padding: 40px;">
+              Conversaciones se conectan en FASE B
+            </p>
+          </div>
         </section>
+
         <!-- SECCION: GESTIONAR -->
         <section id="sec-gestionar" class="miia-section">
           <div class="section-header">
-            <div><h2 class="section-title">Gestionar</h2><p class="section-subtitle">Negocios, contactos, agenda y entrenar a MIIA</p></div>
+            <div>
+              <h2 class="section-title">Gestionar</h2>
+              <p class="section-subtitle">Negocios, contactos, agenda y entrenar a MIIA</p>
+            </div>
             <div style="display:flex;gap:8px;align-items:center;">
-              <button class="btn btn-secondary btn-sm" onclick="openOnboardingWizard()" data-tooltip="Guia de configuracion">Guia de setup</button>
-              <button class="btn btn-primary btn-sm" onclick="openTrainingSession()" data-tooltip="Entrena a MIIA">Entrenar MIIA</button>
+              <button class="btn btn-secondary btn-sm" onclick="openOnboardingWizard()"
+                      data-tooltip="Revisa la configuracion inicial de MIIA paso a paso">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
+                </svg>
+                Guia de setup
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="openTrainingSession()" data-tooltip="Ensena a MIIA sobre tu negocio, productos y estilo">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+                </svg>
+                Entrenar MIIA
+              </button>
             </div>
           </div>
+
+          <!-- Tabs de Gestionar -->
           <div class="gestionar-tabs">
             <button class="gtab active" onclick="switchGestionar('negocios')">Negocios</button>
             <button class="gtab" onclick="switchGestionar('contactos')">Contactos</button>
             <button class="gtab" onclick="switchGestionar('grupos')">Grupos</button>
             <button class="gtab" onclick="switchGestionar('agentes')">Agentes</button>
           </div>
+
+          <!-- Sub-secciones -->
           <div id="gest-negocios" class="gest-panel active">
-            <div id="businessList" class="gest-grid"><div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando negocios...</div></div>
+            <div id="businessList" class="gest-grid">
+              <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando negocios...</div>
+            </div>
           </div>
+
           <div id="gest-contactos" class="gest-panel">
+            <!-- Busqueda + filtros -->
             <input type="text" id="contactSearchInput" class="form-input" placeholder="Buscar por nombre o numero..." oninput="filterContacts()" style="margin-bottom:12px;">
             <div class="filter-pills" id="filterPills">
-              <button class="fpill active" onclick="setContactFilter('all',this)">Todos</button>
-              <button class="fpill" onclick="setContactFilter('lead',this)">Leads</button>
-              <button class="fpill" onclick="setContactFilter('cliente',this)">Clientes</button>
-              <button class="fpill" onclick="setContactFilter('familia',this)">Familia</button>
-              <button class="fpill" onclick="setContactFilter('equipo',this)">Equipo</button>
+              <button class="fpill active" onclick="setContactFilter('all', this)">Todos</button>
+              <button class="fpill" onclick="setContactFilter('lead', this)">Leads</button>
+              <button class="fpill" onclick="setContactFilter('cliente', this)">Clientes</button>
+              <button class="fpill" onclick="setContactFilter('familia', this)">Familia</button>
+              <button class="fpill" onclick="setContactFilter('equipo', this)">Equipo</button>
             </div>
-            <div id="contactList"><div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando contactos...</div></div>
+            <div id="contactList">
+              <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando contactos...</div>
+            </div>
           </div>
+
           <div id="gest-grupos" class="gest-panel">
-            <div id="groupList" class="gest-grid"><div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando grupos...</div></div>
+            <div id="groupList" class="gest-grid">
+              <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando grupos...</div>
+            </div>
           </div>
+
           <div id="gest-agentes" class="gest-panel">
-            <div id="agentList"><div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando agentes...</div></div>
+            <div id="agentList">
+              <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando agentes...</div>
+            </div>
           </div>
         </section>
 
-        <!-- SECCION: ESTADISTICAS -->
+        <!-- SECCION: ANALITICA -->
         <section id="sec-analitica" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">Estadisticas</h2><p class="section-subtitle">Metricas, reportes y pipeline</p></div></div>
-          <div class="card"><p style="color:var(--text-3);text-align:center;padding:40px;">Metricas y reportes disponibles en Fase B.</p></div>
-        </section>
-
-        <!-- SECCION: MI PLAN -->
-
-    <!-- DOCUMENTOS -->
-    <section id="sec-documentos" class="miia-section">
-      <h2 class="section-title">Documentos y Recursos</h2>
-      <div class="card-glass" style="padding:20px;">
-        <div class="tabs-row" style="display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:20px;">
-          <button class="doc-tab active" data-doctab="quotes" onclick="switchDocTab('quotes',this)" style="padding:10px 18px;background:none;border:none;border-bottom:2px solid var(--cyan);color:var(--cyan);cursor:pointer;font-size:14px;">Cotizaciones</button>
-          <button class="doc-tab" data-doctab="templates" onclick="switchDocTab('templates',this)" style="padding:10px 18px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-muted);cursor:pointer;font-size:14px;">Templates</button>
-          <button class="doc-tab" data-doctab="knowledge" onclick="switchDocTab('knowledge',this)" style="padding:10px 18px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-muted);cursor:pointer;font-size:14px;">Archivos</button>
-        </div>
-        <div id="doctab-quotes" class="doc-tab-content" style="display:block;">
-          <h3 style="font-size:1.05rem;margin-bottom:16px;">Crear Cotizacion</h3>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
-            <div><label style="display:block;font-size:13px;margin-bottom:4px;">Cliente</label><input type="text" id="quoteClient" class="input-field" placeholder="Ej: Juan Perez"></div>
-            <div><label style="display:block;font-size:13px;margin-bottom:4px;">Producto/Servicio</label><input type="text" id="quoteProduct" class="input-field" placeholder="Ej: Desarrollo Web"></div>
-            <div><label style="display:block;font-size:13px;margin-bottom:4px;">Precio (USD)</label><input type="number" id="quotePrice" class="input-field" placeholder="1000" min="0" step="0.01"></div>
-            <div><label style="display:block;font-size:13px;margin-bottom:4px;">Vencimiento</label><input type="date" id="quoteExpiry" class="input-field"></div>
-          </div>
-          <div style="margin-bottom:12px;"><label style="display:block;font-size:13px;margin-bottom:4px;">Descripcion</label><textarea id="quoteDesc" class="input-field" rows="3" placeholder="Detalles..."></textarea></div>
-          <button class="btn-primary" onclick="generateQuotePDF()">Descargar PDF</button>
-          <div style="margin-top:24px;"><h4 style="font-size:0.95rem;margin-bottom:12px;">Cotizaciones recientes</h4><div id="quotesListItems" class="item-list"><p class="muted-text">Sin cotizaciones aun.</p></div></div>
-        </div>
-        <div id="doctab-templates" class="doc-tab-content" style="display:none;">
-          <h3 style="font-size:1.05rem;margin-bottom:16px;">Crear Template</h3>
-          <div style="margin-bottom:12px;"><label style="display:block;font-size:13px;margin-bottom:4px;">Nombre</label><input type="text" id="templateName" class="input-field" placeholder="Ej: Saludo inicial"></div>
-          <div style="margin-bottom:12px;"><label style="display:block;font-size:13px;margin-bottom:4px;">Texto</label><textarea id="templateText" class="input-field" rows="4" placeholder="Mensaje que MIIA usara..."></textarea></div>
-          <button class="btn-primary" onclick="createTemplate()">Guardar Template</button>
-          <div style="margin-top:24px;"><h4 style="font-size:0.95rem;margin-bottom:12px;">Mis Templates</h4><div id="templatesListItems" class="item-list"><p class="muted-text">Sin templates aun.</p></div></div>
-        </div>
-        <div id="doctab-knowledge" class="doc-tab-content" style="display:none;">
-          <h3 style="font-size:1.05rem;margin-bottom:16px;">Subir Archivos de Conocimiento</h3>
-          <p class="muted-text" style="margin-bottom:16px;">Sube catalogos, PDFs, imagenes, planes. MIIA los usara para responder mejor a tus clientes.</p>
-          <label class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;">Seleccionar archivo<input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.webp,.gif" onchange="uploadFile(event)" style="display:none;"></label>
-          <div style="margin-top:24px;"><h4 style="font-size:0.95rem;margin-bottom:12px;">Archivos subidos</h4><div id="knowledgeListItems" class="item-list"><p class="muted-text">Sin archivos aun.</p></div></div>
-        </div>
-      </div>
-    </section>
-
-        <section id="sec-plan" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">Mi Plan</h2><p class="section-subtitle">Suscripcion, pagos y estado de tu cuenta</p></div></div>
-          <div class="card" style="margin-bottom:20px;">
-            <h3>Plan actual</h3>
-            <div style="display:flex;flex-direction:column;gap:12px;margin-top:12px;">
-              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-2);">Plan</span><span id="planSectionPlan" style="font-weight:600;">Cargando...</span></div>
-              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-2);">Estado</span><span id="planSectionStatus" style="font-weight:600;">-</span></div>
-              <div style="display:flex;justify-content:space-between;"><span style="color:var(--text-2);">Vence</span><span id="planSectionExpiry" style="font-weight:600;">-</span></div>
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Analitica</h2>
+              <p class="section-subtitle">Metricas, reportes y pipeline</p>
             </div>
           </div>
           <div class="card">
-            <h3 style="margin-bottom:16px;">Elegir plan</h3>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;">
-              <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;">
-                <div style="font-weight:700;font-size:0.9rem;">PayPal <span style="font-size:0.75rem;color:var(--text-3);">Tarjetas internacionales</span></div>
-                <button onclick="subscribePayPal('monthly')" class="btn btn-secondary btn-sm" style="text-align:left;">Mensual - 5 USD/mes</button>
-                <button onclick="subscribePayPal('quarterly')" class="btn btn-secondary btn-sm" style="text-align:left;">Trimestral - 9 USD / 3 meses</button>
-                <button onclick="subscribePayPal('semestral')" class="btn btn-secondary btn-sm" style="text-align:left;">Semestral - 9 USD / 6 meses</button>
-                <button onclick="subscribePayPal('annual')" class="btn btn-secondary btn-sm" style="text-align:left;">Anual - 9 USD / anio</button>
-              </div>
-              <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;padding:18px;display:flex;flex-direction:column;gap:10px;">
-                <div style="font-weight:700;font-size:0.9rem;">MercadoPago <span style="font-size:0.75rem;color:var(--text-3);">Nequi, PSE, Efecty, LATAM</span></div>
-                <button onclick="subscribeMP('monthly')" class="btn btn-secondary btn-sm" style="text-align:left;">Mensual - 5 USD/mes</button>
-                <button onclick="subscribeMP('quarterly')" class="btn btn-secondary btn-sm" style="text-align:left;">Trimestral - 9 USD / 3 meses</button>
-                <button onclick="subscribeMP('semestral')" class="btn btn-secondary btn-sm" style="text-align:left;">Semestral - 9 USD / 6 meses</button>
-                <button onclick="subscribeMP('annual')" class="btn btn-secondary btn-sm" style="text-align:left;">Anual - 9 USD / anio</button>
-              </div>
-            </div>
-            <p style="color:var(--text-3);font-size:0.82rem;margin-top:16px;">Dudas? Escribinos a <a href="mailto:hola@miia-app.com" style="color:var(--cyan);">hola@miia-app.com</a></p>
+            <p style="color: var(--text-3); text-align: center; padding: 40px;">
+              Metricas y reportes se conectan en FASE B
+            </p>
           </div>
         </section>
 
-        <!-- SECCION: SEGURIDAD -->
-        <section id="sec-seguridad" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">Seguridad</h2><p class="section-subtitle">Contactos de seguridad: protectores y protegidos</p></div></div>
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;">
-            <div class="card">
-              <h3 style="margin-bottom:12px;">Mis Protectores</h3>
-              <p style="color:var(--text-3);font-size:0.85rem;margin-bottom:16px;">Personas que me cuidan - reciben alertas si me pasa algo.</p>
-              <div id="protectorsListContainer"><p style="color:var(--text-3);" id="protectorsEmpty">Cargando...</p></div>
-            </div>
-            <div class="card">
-              <h3 style="margin-bottom:12px;">Mis Protegidos</h3>
-              <p style="color:var(--text-3);font-size:0.85rem;margin-bottom:16px;">Personas a las que cuido - recibo alertas sobre ellos.</p>
-              <div id="protectedListContainer"><p style="color:var(--text-3);" id="protectedEmpty">Cargando...</p></div>
-            </div>
-          </div>
-          <div class="card" style="margin-bottom:20px;">
-            <h3 style="margin-bottom:12px;">Agregar contacto de seguridad</h3>
-            <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:12px;align-items:end;">
-              <div><label style="font-size:0.85rem;color:var(--text-3);display:block;margin-bottom:4px;">Telefono</label><input type="text" id="securityPhone" placeholder="+5491155..." class="form-input"></div>
-              <div><label style="font-size:0.85rem;color:var(--text-3);display:block;margin-bottom:4px;">Nombre</label><input type="text" id="securityName" placeholder="Mama, Papa..." class="form-input"></div>
-              <div><label style="font-size:0.85rem;color:var(--text-3);display:block;margin-bottom:4px;">Nivel</label>
-                <select id="securityLevel" class="form-input">
-                  <option value="emergencies_only">Solo emergencias</option>
-                  <option value="agenda_visible">Agenda visible</option>
-                  <option value="full_supervision">Supervision completa</option>
-                </select>
-              </div>
-              <button onclick="addSecurityContact()" class="btn btn-primary">Agregar</button>
-            </div>
-          </div>
-          <div class="card">
-            <h3 style="margin-bottom:12px;">Niveles de acceso</h3>
-            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-              <div style="padding:12px;background:rgba(239,68,68,0.08);border-radius:8px;"><strong>Solo emergencias</strong><p style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">SOS, caidas, inactividad.</p></div>
-              <div style="padding:12px;background:rgba(245,158,11,0.08);border-radius:8px;"><strong>Agenda visible</strong><p style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Citas y recordatorios + emergencias.</p></div>
-              <div style="padding:12px;background:rgba(52,211,153,0.08);border-radius:8px;"><strong>Supervision completa</strong><p style="font-size:0.8rem;color:var(--text-3);margin-top:4px;">Agenda, resumenes, puede enviar mensajes via MIIA.</p></div>
-            </div>
-          </div>
-        </section>
-        <!-- SECCION: PRIVACIDAD -->
-        <section id="sec-privacidad" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">Privacidad</h2><p class="section-subtitle">Modo de aviso a contactos, pre-filtro y exclusiones</p></div></div>
-          <div class="card" style="margin-bottom:20px;">
-            <h3 style="margin-bottom:8px;">Modo de aviso a contactos</h3>
-            <p style="color:var(--text-3);font-size:0.9rem;margin-bottom:20px;">Como se informa a los contactos sobre el uso de un asistente automatizado.</p>
-            <div id="disclaimerModeOptions" style="display:flex;flex-direction:column;gap:12px;">
-              <label style="display:flex;align-items:flex-start;gap:12px;padding:16px;border:1px solid var(--border);border-radius:10px;cursor:pointer;" data-mode="A">
-                <input type="radio" name="disclaimerMode" value="A" style="margin-top:2px;accent-color:var(--cyan);">
-                <div style="flex:1;"><div style="font-weight:600;margin-bottom:4px;">Modo A - Silencioso</div><div style="color:var(--text-3);font-size:0.85rem;">Informas vos a tus contactos. MIIA no menciona nada.</div></div>
-              </label>
-              <label style="display:flex;align-items:flex-start;gap:12px;padding:16px;border:1px solid var(--border);border-radius:10px;cursor:pointer;" data-mode="B">
-                <input type="radio" name="disclaimerMode" value="B" style="margin-top:2px;accent-color:var(--cyan);">
-                <div style="flex:1;"><div style="font-weight:600;margin-bottom:4px;">Modo B - Al firmar contrato</div><div style="color:var(--text-3);font-size:0.85rem;">El disclaimer se muestra cuando activas MIIA por primera vez.</div></div>
-              </label>
-              <label style="display:flex;align-items:flex-start;gap:12px;padding:16px;border:1px solid var(--border);border-radius:10px;cursor:pointer;" data-mode="C">
-                <input type="radio" name="disclaimerMode" value="C" style="margin-top:2px;accent-color:var(--cyan);">
-                <div style="flex:1;"><div style="font-weight:600;margin-bottom:4px;">Modo C - Al primer contacto</div><div style="color:var(--text-3);font-size:0.85rem;">MIIA incluye disclaimer en su primer mensaje al contacto.</div></div>
-              </label>
-            </div>
-            <div style="margin-top:16px;display:flex;align-items:center;gap:12px;">
-              <button id="saveDisclaimerModeBtn" class="btn btn-primary" onclick="saveDisclaimerMode()">Guardar modo</button>
-              <span id="disclaimerModeStatus" style="font-size:0.85rem;color:var(--text-3);"></span>
-            </div>
-          </div>
-          <div class="card" style="margin-bottom:20px;">
-            <h3 style="margin-bottom:8px;">Pre-filtro automatico</h3>
-            <p style="color:var(--text-3);font-size:0.9rem;margin-bottom:16px;">MIIA detecta categorias de informacion sensible. Estos mensajes nunca entrenan el ADN comercial.</p>
-            <div id="safetyFilterStatus"><p style="color:var(--text-3);">Cargando...</p></div>
-            <div id="safetyFilterCategories" style="display:none;"><div style="display:grid;grid-template-columns:1fr;gap:8px;" id="safetyCategoriesGrid"></div></div>
-          </div>
-          <div class="card">
-            <h3 style="margin-bottom:8px;">Contactos excluidos</h3>
-            <p style="color:var(--text-3);font-size:0.9rem;margin-bottom:16px;">Contactos donde MIIA esta pausada. Podes restaurar cuando quieras.</p>
-            <div id="exclusionsListContainer"><p style="color:var(--text-3);" id="exclusionsEmpty">Cargando...</p></div>
-          </div>
-        </section>
-
-        <!-- SECCION: MIS DATOS -->
-        <section id="sec-mis-datos" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">Mis Datos</h2><p class="section-subtitle">Reporte de privacidad y borrado de datos</p></div></div>
-          <div class="card" style="margin-bottom:20px;">
-            <h3 style="margin-bottom:12px;">Reporte de privacidad</h3>
-            <p style="color:var(--text-3);font-size:0.9rem;margin-bottom:16px;">Descarga un inventario completo de los datos que MIIA guarda sobre vos.</p>
-            <div style="display:flex;gap:12px;flex-wrap:wrap;">
-              <button class="btn btn-primary" onclick="loadPrivacyReport()">Ver reporte</button>
-              <button class="btn btn-secondary" onclick="exportPrivacyReport()">Exportar JSON</button>
-            </div>
-            <div id="privacyReportContainer" style="margin-top:16px;display:none;">
-              <pre id="privacyReportContent" style="background:var(--bg-surface);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:0.78rem;overflow-x:auto;max-height:400px;white-space:pre-wrap;"></pre>
-            </div>
-          </div>
-          <div class="card" style="border:1px solid rgba(239,68,68,0.3);">
-            <h3 style="margin-bottom:8px;color:#ef4444;">Borrar todos mis datos</h3>
-            <p style="color:var(--text-3);font-size:0.9rem;margin-bottom:20px;">Eliminas permanentemente todos tus datos guardados por MIIA. Accion irreversible despues de 24 horas.</p>
-            <button id="forgetMeRequestBtn" class="btn" style="padding:10px 20px;background:#ef4444;color:#fff;border:none;border-radius:8px;cursor:pointer;" onclick="requestForgetMe()">Borrar mis datos</button>
-            <div id="forgetMeOtpForm" style="margin-top:16px;display:none;">
-              <p style="color:var(--text-3);font-size:0.9rem;margin-bottom:8px;">Te enviamos un codigo de 6 digitos a tu email:</p>
-              <input id="forgetMeTokenInput" type="text" maxlength="6" style="padding:10px;border:1px solid var(--border);border-radius:6px;font-size:1rem;width:120px;letter-spacing:4px;text-align:center;" placeholder="123456">
-              <button class="btn btn-primary" style="padding:10px 20px;margin-left:8px;" onclick="confirmForgetMe()">Confirmar</button>
-              <button class="btn btn-secondary" style="padding:10px 20px;margin-left:8px;" onclick="cancelForgetMe()">Cancelar</button>
-            </div>
-            <div id="forgetMeStatus" style="margin-top:12px;font-size:0.9rem;"></div>
-          </div>
-        </section>
-
-        <!-- SECCION: WHATSAPP -->
-        <section id="sec-whatsapp" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">WhatsApp</h2><p class="section-subtitle">Vincula MIIA con tu WhatsApp y configura el motor de IA</p></div></div>
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;">
-            <!-- Card: WA -->
-            <div class="card" style="display:flex;flex-direction:column;gap:16px;">
-              <div style="display:flex;align-items:flex-start;gap:14px;">
-                <div style="width:44px;height:44px;border-radius:12px;background:rgba(37,211,102,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
-                </div>
-                <div style="flex:1;">
-                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                    <h3 style="font-size:1rem;font-weight:700;margin:0;">WhatsApp</h3>
-                    <span id="connWaStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#ef4444;font-weight:600;">No conectado</span>
-                  </div>
-                  <p style="font-size:0.8rem;color:var(--text-3);margin:0;">MIIA respondera automaticamente tus conversaciones, clasificara leads y cerrara ventas 24/7.</p>
-                </div>
-              </div>
-              <button onclick="openQRModal()" style="width:100%;padding:10px;background:rgba(37,211,102,.1);color:#25D366;border:1px solid rgba(37,211,102,.25);border-radius:8px;cursor:pointer;font-weight:600;font-family:inherit;">Vincular WhatsApp</button>
-              <div id="miningProgressContainer" style="display:none;padding:12px;background:rgba(37,211,102,.05);border:1px solid rgba(37,211,102,.15);border-radius:10px;">
-                <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:0.8rem;font-weight:600;">Analizando historial</span><span id="miningProgressStats" style="font-size:0.72rem;color:var(--text-3);"></span></div>
-                <div style="width:100%;height:6px;background:rgba(37,211,102,.12);border-radius:99px;overflow:hidden;"><div id="miningProgressBar" style="width:0%;height:100%;background:linear-gradient(90deg,#25D366,#128C7E);border-radius:99px;transition:width 0.5s;"></div></div>
-                <p id="miningProgressDetail" style="font-size:0.72rem;color:var(--text-3);margin:6px 0 0;"></p>
-              </div>
-              <div id="miningCompleteContainer" style="display:none;padding:10px 12px;background:rgba(37,211,102,.08);border:1px solid rgba(37,211,102,.2);border-radius:10px;">
-                <span id="miningCompleteText" style="font-size:0.8rem;color:#25D366;font-weight:600;"></span>
-              </div>
-            </div>
-            <!-- Card: IA -->
-            <div class="card" style="display:flex;flex-direction:column;gap:16px;">
-              <div style="display:flex;align-items:flex-start;gap:14px;">
-                <div style="width:44px;height:44px;border-radius:12px;background:rgba(124,58,237,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7C3AED" stroke-width="2"><path d="M12 2a4 4 0 0 0-4 4v2H6a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V10a2 2 0 0 0-2-2h-2V6a4 4 0 0 0-4-4z"/><circle cx="12" cy="15" r="2"/></svg>
-                </div>
-                <div style="flex:1;">
-                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                    <h3 style="font-size:1rem;font-weight:700;margin:0;">Motor de IA</h3>
-                    <span id="connAiStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(124,58,237,.1);color:#7C3AED;font-weight:600;">Gemini (default)</span>
-                  </div>
-                  <p style="font-size:0.8rem;color:var(--text-3);margin:0;">Elige que modelo de IA usa MIIA para pensar y responder: Gemini, GPT o Claude.</p>
-                </div>
-              </div>
-              <div style="display:flex;flex-direction:column;gap:8px;">
-                <select id="aiProviderSelect" onchange="onAiProviderChange()" class="form-input">
-                  <option value="gemini">Google Gemini (default - gratis)</option>
-                  <option value="openai">OpenAI GPT-4</option>
-                  <option value="claude">Anthropic Claude</option>
-                </select>
-                <div id="aiKeyContainer" style="display:none;flex-direction:column;gap:8px;">
-                  <div style="position:relative;">
-                    <input type="password" id="aiApiKeyInput" placeholder="API key" class="form-input" style="padding-right:60px;">
-                    <button onclick="toggleKeyVisibility()" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--text-3);cursor:pointer;font-size:0.75rem;font-family:inherit;" id="aiKeyToggle">mostrar</button>
-                  </div>
-                  <div style="display:flex;gap:8px;">
-                    <button onclick="testAIConnection()" id="aiTestBtn" class="btn btn-secondary btn-sm" style="flex:1;">Probar</button>
-                    <button onclick="saveAIConfig()" id="aiSaveBtn" class="btn btn-primary btn-sm" style="flex:1;">Guardar</button>
-                  </div>
-                </div>
-                <button onclick="resetAIConfig()" id="aiResetBtn" style="display:none;background:none;border:none;color:var(--text-3);font-size:0.75rem;cursor:pointer;text-align:left;padding:2px 0;font-family:inherit;">Restablecer a Gemini</button>
-                <div id="aiStatus" style="font-size:0.78rem;color:var(--text-3);"></div>
-              </div>
-            </div>
-            <!-- Card: Calendar -->
-            <div class="card" style="display:flex;flex-direction:column;gap:16px;">
-              <div style="display:flex;align-items:flex-start;gap:14px;">
-                <div style="width:44px;height:44px;border-radius:12px;background:rgba(66,133,244,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                  <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                </div>
-                <div style="flex:1;">
-                  <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                    <h3 style="font-size:1rem;font-weight:700;margin:0;">Google Calendar</h3>
-                    <span id="connCalStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#ef4444;font-weight:600;">No conectado</span>
-                  </div>
-                  <p style="font-size:0.8rem;color:var(--text-3);margin:0;">MIIA verificara tu disponibilidad y agendara citas automaticamente.</p>
-                </div>
-              </div>
-              <div id="calendarStatus" style="font-size:0.78rem;"></div>
-              <div id="calendarConnectSection">
-                <a href="#" onclick="connectCalendar(event)" style="display:block;text-align:center;padding:10px;background:rgba(66,133,244,.1);color:#4285F4;border:1px solid rgba(66,133,244,.25);border-radius:8px;font-weight:600;font-size:0.85rem;cursor:pointer;text-decoration:none;">Conectar con Google</a>
-              </div>
-              <div id="calendarConnectedSection" style="display:none;flex-direction:column;gap:10px;">
-                <div style="display:flex;align-items:center;justify-content:space-between;">
-                  <span style="font-size:0.85rem;font-weight:600;">Agendamiento automatico</span>
-                  <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
-                    <input type="checkbox" id="calendarAutoToggle" onchange="saveCalendarConfig()" style="accent-color:var(--cyan);">
-                    <span style="font-size:0.78rem;color:var(--text-3);">Activo</span>
-                  </label>
-                </div>
-                <button onclick="disconnectCalendar()" style="width:100%;background:none;border:1px solid rgba(239,68,68,.3);color:#ef4444;border-radius:8px;padding:8px;font-size:0.8rem;cursor:pointer;font-family:inherit;">Desconectar Calendar</button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECCION: INTEGRACIONES -->
-        <section id="sec-integraciones" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">Integraciones</h2><p class="section-subtitle">Correo electronico y otras conexiones</p></div></div>
-          <div class="card" style="display:flex;flex-direction:column;gap:16px;">
-            <div style="display:flex;align-items:flex-start;gap:14px;">
-              <div style="width:44px;height:44px;border-radius:12px;background:rgba(245,158,11,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </div>
-              <div style="flex:1;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                  <h3 style="font-size:1rem;font-weight:700;margin:0;">Correo Electronico</h3>
-                  <span id="connEmailStatus" style="font-size:0.72rem;padding:2px 8px;border-radius:99px;background:rgba(239,68,68,.1);color:#ef4444;font-weight:600;">No conectado</span>
-                </div>
-                <p style="font-size:0.8rem;color:var(--text-3);margin:0;">MIIA puede leer, enviar y gestionar tus correos desde WhatsApp.</p>
-              </div>
-            </div>
-            <div id="emailGmailConnected" style="display:none;">
-              <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;background:rgba(66,133,244,.08);border:1px solid rgba(66,133,244,.2);border-radius:10px;">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4285F4" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
-                <div><span style="font-size:0.85rem;font-weight:600;color:#4285F4;">Gmail conectado via Google</span><p style="font-size:0.73rem;color:var(--text-3);margin:2px 0 0;">MIIA puede leer, enviar y eliminar correos automaticamente.</p></div>
-              </div>
-            </div>
-            <div id="emailNotConnected">
-              <div style="padding:12px 16px;background:rgba(66,133,244,.06);border:1px solid rgba(66,133,244,.15);border-radius:10px;margin-bottom:14px;">
-                <p style="font-size:0.82rem;font-weight:600;margin:0 0 4px;">Forma mas facil: conectar Google</p>
-                <p style="font-size:0.75rem;color:var(--text-3);margin:0 0 8px;">Si conectas Google Calendar en WhatsApp, MIIA accede a tu Gmail automaticamente.</p>
-                <a href="#" onclick="connectCalendar(event)" style="display:block;text-align:center;padding:8px;background:rgba(66,133,244,.1);color:#4285F4;border:1px solid rgba(66,133,244,.25);border-radius:8px;font-weight:600;font-size:0.82rem;cursor:pointer;text-decoration:none;">Conectar con Google</a>
-              </div>
-              <details style="margin-bottom:10px;">
-                <summary style="font-size:0.82rem;cursor:pointer;font-weight:600;">Alternativa: configuracion manual (SMTP + IMAP)</summary>
-                <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
-                  <input type="email" id="emailFrom" placeholder="Tu email (ej: tu@gmail.com)" class="form-input">
-                  <div style="display:grid;grid-template-columns:1fr 72px;gap:8px;">
-                    <input type="text" id="smtpHost" placeholder="SMTP Host (smtp.gmail.com)" class="form-input">
-                    <input type="number" id="smtpPort" placeholder="587" value="587" class="form-input">
-                  </div>
-                  <input type="text" id="smtpUser" placeholder="Usuario SMTP" class="form-input">
-                  <input type="password" id="smtpPass" placeholder="Contrasena o App Password" class="form-input">
-                  <div style="display:flex;gap:8px;">
-                    <button onclick="saveEmailConfig()" class="btn btn-primary btn-sm" style="flex:1;">Guardar</button>
-                    <button onclick="sendTestEmail()" id="emailTestBtn" class="btn btn-secondary btn-sm" style="flex:1;">Enviar prueba</button>
-                  </div>
-                  <div id="emailStatus" style="font-size:0.78rem;color:var(--text-3);"></div>
-                </div>
-              </details>
-            </div>
-          </div>
-        </section>
-
-        <!-- SECCION: MIIADT -->
-        <section id="sec-miiadt" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">MIIADT</h2><p class="section-subtitle">MIIA para Digital Transformation — Proximamente</p></div></div>
-          <div class="card" style="text-align:center;padding:60px 40px;">
-            <div style="font-size:48px;margin-bottom:16px;">🏢</div>
-            <h3 style="font-size:1.3rem;margin-bottom:12px;">MIIA Digital Transformation</h3>
-            <p style="color:var(--text-3);max-width:480px;margin:0 auto 24px;">Suite avanzada de IA para empresas: flujos multi-agente, integraciones enterprise, reportes ejecutivos y automatizacion a escala.</p>
-            <span style="display:inline-block;padding:8px 20px;background:rgba(0,229,255,0.1);color:var(--cyan);border:1px solid rgba(0,229,255,0.3);border-radius:99px;font-size:0.85rem;font-weight:600;">Disponible en Piso 7</span>
-          </div>
-        </section>
-
-        <!-- SECCION: LUDOMIIA -->
-        <section id="sec-ludomiia" class="miia-section">
-          <div class="section-header"><div><h2 class="section-title">LudoMIIA</h2><p class="section-subtitle">MIIA Games — Proximamente</p></div></div>
-          <div class="card" style="text-align:center;padding:60px 40px;">
-            <div style="font-size:48px;margin-bottom:16px;">🎮</div>
-            <h3 style="font-size:1.3rem;margin-bottom:12px;">LudoMIIA Games</h3>
-            <p style="color:var(--text-3);max-width:480px;margin:0 auto 24px;">Plataforma de juegos y entretenimiento con IA: desafios, torneos y experiencias gamificadas para tus clientes y equipo.</p>
-            <span style="display:inline-block;padding:8px 20px;background:rgba(124,58,237,0.1);color:#7C3AED;border:1px solid rgba(124,58,237,0.3);border-radius:99px;font-size:0.85rem;font-weight:600;">Disponible en Piso 7</span>
-          </div>
-        </section>
 
         <!-- SECCION: F1 DASHBOARD (MiiaF1 add-on) -->
         <section id="sec-f1" class="miia-section">
@@ -813,6 +548,166 @@
         </section>
 
 
+        <section id="sec-plan" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Mi Plan</h2>
+              <p class="section-subtitle">Suscripcion, facturacion y metodos de pago</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Plan actual</div>
+            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:16px;">
+              <div style="font-size:24px;font-weight:700;" id="planCurrentName">Trial</div>
+              <div style="color:var(--text-2);font-size:13px;">Vence: <span id="planExpiry">--</span></div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-primary btn-sm" onclick="subscribe('monthly','paypal')">Mensual USD via PayPal</button>
+              <button class="btn btn-primary btn-sm" onclick="subscribe('monthly','mp')">Mensual ARS via Mercado Pago</button>
+              <button class="btn btn-secondary btn-sm" onclick="subscribe('annual','paypal')">Anual (2 meses gratis)</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="sec-seguridad" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Seguridad</h2>
+              <p class="section-subtitle">PIN, 2FA y contactos de seguridad</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Contactos de seguridad</div>
+            <p style="color:var(--text-2);font-size:13px;margin-bottom:12px;">Personas que MIIA puede consultar si detecta un intento de acceso anomalo.</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+              <input type="text" id="secContactName" class="input" placeholder="Nombre">
+              <input type="tel" id="secContactPhone" class="input" placeholder="+54 9 11 ...">
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="addSecurityContact()">Agregar contacto</button>
+          </div>
+        </section>
+
+        <section id="sec-privacidad" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Privacidad</h2>
+              <p class="section-subtitle">Como MIIA se identifica con tus contactos</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Modo de transparencia</div>
+            <p style="color:var(--text-2);font-size:13px;margin-bottom:12px;">Decide si MIIA puede revelar que es IA.</p>
+            <select id="disclaimerModeSelect" class="input" style="max-width:320px;">
+              <option value="hidden">Oculto: MIIA NUNCA dice que es IA</option>
+              <option value="on_request">A pedido: solo si el contacto pregunta</option>
+              <option value="proactive">Proactivo: MIIA aclara que es IA al iniciar</option>
+            </select>
+            <div style="margin-top:12px;"><button class="btn btn-primary btn-sm" onclick="saveDisclaimerMode()">Guardar</button></div>
+          </div>
+        </section>
+
+        <section id="sec-mis-datos" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Mis Datos</h2>
+              <p class="section-subtitle">Reporte de privacidad y derecho al olvido</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Reporte de mis datos</div>
+            <p style="color:var(--text-2);font-size:13px;margin-bottom:12px;">Lista todo lo que MIIA almacena sobre vos y tus contactos.</p>
+            <div id="privacyReportContainer" style="margin-bottom:12px;color:var(--text-2);font-size:13px;">Cargando...</div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-secondary btn-sm" onclick="exportPrivacyReport()">Descargar reporte</button>
+              <button class="btn btn-secondary btn-sm" onclick="requestForgetMe()" style="border-color:var(--red-500);color:var(--red-500);">Solicitar olvido (irreversible)</button>
+            </div>
+            <div id="forgetMeConfirm" style="display:none;margin-top:16px;padding:12px;border:1px solid var(--red-500);border-radius:var(--r-md);">
+              <p style="color:var(--text-1);font-size:13px;margin-bottom:8px;"><strong>Atencion:</strong> Esta accion borra tu cuenta y todos los datos en 30 dias. No se puede deshacer.</p>
+              <button class="btn btn-secondary btn-sm" onclick="confirmForgetMe()" style="border-color:var(--red-500);color:var(--red-500);">Confirmo olvido</button>
+              <button class="btn btn-secondary btn-sm" onclick="cancelForgetMe()">Cancelar</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="sec-whatsapp" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">WhatsApp</h2>
+              <p class="section-subtitle">Conexion, IA y configuracion de respuestas</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Estado de conexion</div>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+              <span class="wa-dot" id="waSecDot"></span>
+              <span id="waSecLabel" style="font-size:14px;font-weight:600;">Sin conectar</span>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openQRModal()">Vincular o reconectar</button>
+          </div>
+          <div class="card" style="margin-top:16px;">
+            <div class="card-title">Proveedor de IA</div>
+            <select id="aiProviderSelect" class="input" style="max-width:320px;margin-bottom:12px;" onchange="onAiProviderChange()">
+              <option value="gemini">Gemini (Google)</option>
+              <option value="openai">OpenAI</option>
+              <option value="anthropic">Anthropic Claude</option>
+            </select>
+            <div id="aiKeyRow" style="margin-bottom:12px;">
+              <label style="display:block;font-size:13px;margin-bottom:4px;color:var(--text-2);">API Key</label>
+              <div style="display:flex;gap:8px;">
+                <input type="password" id="aiApiKeyInput" class="input" style="flex:1;" placeholder="sk-...">
+                <button class="btn btn-secondary btn-sm" onclick="toggleKeyVisibility('aiApiKeyInput',this)">Ver</button>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-primary btn-sm" onclick="saveAIConfig()">Guardar</button>
+              <button class="btn btn-secondary btn-sm" onclick="testAIConnection()">Probar conexion</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="sec-integraciones" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">Integraciones</h2>
+              <p class="section-subtitle">Google Calendar, Gmail, pagos y mas</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title">Google Calendar</div>
+            <p style="color:var(--text-2);font-size:13px;margin-bottom:12px;">Conecta tu Google para que MIIA gestione tu agenda.</p>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+              <span id="calendarStatus" style="font-size:13px;color:var(--text-2);">No conectado</span>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;">
+              <button class="btn btn-primary btn-sm" onclick="connectCalendar()">Conectar</button>
+              <button class="btn btn-secondary btn-sm" onclick="disconnectCalendar()">Desconectar</button>
+            </div>
+          </div>
+        </section>
+
+        <section id="sec-miiadt" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">MIIADT</h2>
+              <p class="section-subtitle">Modulo MIIA Deportivo (addon)</p>
+            </div>
+          </div>
+          <div class="card">
+            <p style="color:var(--text-2);font-size:13px;">El modulo MIIADT esta disponible como addon. Configuracion en proximas iteraciones.</p>
+          </div>
+        </section>
+
+        <section id="sec-ludomiia" class="miia-section">
+          <div class="section-header">
+            <div>
+              <h2 class="section-title">LudoMIIA</h2>
+              <p class="section-subtitle">Modulo Ludo + apuestas (addon)</p>
+            </div>
+          </div>
+          <div class="card">
+            <p style="color:var(--text-2);font-size:13px;">El modulo LudoMIIA esta disponible como addon. Configuracion en proximas iteraciones.</p>
+          </div>
+        </section>
       </main>
 
       <!-- MODAL: Entrenar MIIA -->
@@ -821,7 +716,7 @@
           <button class="wizard-close" onclick="closeTraining()">&times;</button>
           <h2 style="color:var(--text-1);margin:0 0 4px;">Entrenar a MIIA</h2>
           <p style="color:var(--text-3);font-size:13px;margin:0 0 16px;">Contale sobre tu negocio, productos, tono de voz, reglas... MIIA aprende y lo aplica en cada conversacion.</p>
-          <textarea id="trainingInput" rows="8" placeholder="Ej: Mi negocio es una clinica dental en Bogota. Atendemos ortodoncia y blanqueamiento. Quiero que MIIA sea amable y profesional..." style="width:100%;background:var(--bg-2);color:var(--text-1);border:1px solid var(--border-1);border-radius:8px;padding:12px;font-size:14px;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+          <textarea id="trainingInput" rows="8" placeholder="Ej: Mi negocio es una clinica dental en Bogota. Atendemos ortodoncia, blanqueamiento y limpieza. Los turnos se dan de lunes a viernes de 8 a 18hs. Quiero que MIIA sea amable y profesional..." style="width:100%;background:var(--bg-2);color:var(--text-1);border:1px solid var(--border-1);border-radius:8px;padding:12px;font-size:14px;resize:vertical;font-family:inherit;"></textarea>
           <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px;">
             <button class="btn btn-secondary btn-sm" onclick="closeTraining()">Cancelar</button>
             <button class="btn btn-primary btn-sm" id="trainingSaveBtn" onclick="saveTraining()">Guardar</button>
@@ -844,39 +739,38 @@
         </div>
       </div>
 
-      <!-- MODAL: QR WhatsApp -->
-      <div class="wizard-overlay" id="qrModalOverlay" onclick="if(event.target===this)closeQRModal()" style="display:none;">
-        <div class="wizard-card" style="max-width:440px;text-align:center;">
-          <button class="wizard-close" onclick="closeQRModal()">&times;</button>
-          <h2 style="color:var(--text-1);margin:0 0 4px;">Vincular WhatsApp</h2>
-          <p style="color:var(--text-3);font-size:13px;margin:0 0 20px;">Escaneá el QR desde tu WhatsApp para conectar MIIA a tu cuenta.</p>
-          <div id="qrCodeContainer" style="min-height:260px;display:flex;align-items:center;justify-content:center;">
-            <p style="color:var(--text-3);">Cargando QR...</p>
-          </div>
-          <div id="qrStatus" style="margin-top:12px;font-size:13px;color:var(--text-3);"></div>
-          <div id="qrConnected" style="display:none;padding:16px;background:rgba(37,211,102,.1);border-radius:10px;margin-top:12px;">
-            <div style="font-size:18px;font-weight:800;color:#25D366;">Conectado</div>
-            <p style="color:var(--text-3);font-size:13px;margin:4px 0 0;">MIIA ya esta respondiendo en tu WhatsApp.</p>
-          </div>
+      <!-- FEED LATERAL (desktop) -->
+      <aside class="miia-feed">
+        <div class="feed-header">
+          <span class="feed-pulse"></span>
+          MIIA EN VIVO
         </div>
-      </div>
 
-      <!-- PROFILE MENU -->
-      <div id="profileMenu" class="profile-menu" style="display:none;">
-        <div class="profile-menu-header">
-          <div id="profileMenuName" style="font-weight:700;"></div>
-          <div id="profileMenuEmail" style="font-size:12px;color:var(--text-3);"></div>
+        <!-- Burbujas de ejemplo (se reemplazan en FASE B) -->
+        <div class="feed-bubble contact">
+          <div class="feed-bubble-name">Carlos Garcia</div>
+          Hola, queria saber el precio del plan mensual
+          <div class="feed-bubble-time">14:32</div>
         </div>
-        <div class="profile-menu-divider"></div>
-        <button class="profile-menu-item" onclick="showSection('plan');closeProfileMenu()">Mi Plan</button>
-        <button class="profile-menu-item" onclick="showSection('seguridad');closeProfileMenu()">Seguridad</button>
-        <button class="profile-menu-item" onclick="showSection('privacidad');closeProfileMenu()">Privacidad</button>
-        <button class="profile-menu-item" onclick="showSection('mis-datos');closeProfileMenu()">Mis Datos</button>
-        <div class="profile-menu-divider"></div>
-        <button class="profile-menu-item danger" onclick="signOut()">Cerrar sesion</button>
-      </div>
-</div>
-<!-- WIZARD ONBOARDING -->
+        <div class="feed-bubble miia">
+          Hola Carlos! El plan mensual esta a $15 USD/mes. Incluye respuestas ilimitadas y agenda inteligente.
+          <div class="feed-bubble-time">14:32</div>
+        </div>
+        <div class="feed-bubble contact">
+          <div class="feed-bubble-name">Ana Ruiz</div>
+          Confirmo el turno de manana a las 10
+          <div class="feed-bubble-time">14:28</div>
+        </div>
+        <div class="feed-bubble miia">
+          Perfecto Ana, queda confirmado tu turno para manana a las 10:00 am.
+          <div class="feed-bubble-time">14:28</div>
+        </div>
+      </aside>
+
+    </div>
+
+    <!-- NAV BOTTOM (mobile — se activa en FASE C) -->
+    <!-- WIZARD ONBOARDING -->
     <div class="wizard-overlay" id="wizardOverlay">
       <div class="wizard-card">
         <!-- Progress bar -->
@@ -983,7 +877,6 @@
     <div class="toast" id="toast"></div>
 
   </div>
-
 
   <script>
     // ═══════════════════════════════════════════════════
@@ -1135,14 +1028,8 @@
       // Renderizar datos del home
       renderHome(currentUserData);
 
-      // Show addons group for founder/admin
-      const FOUNDER_UID = 'bq2BbtCVF8cZo30tum584zrGATJ3';
-      const isFounder = currentUserData.role === 'admin' || currentUserData.admin_founder === true || currentUserUid === FOUNDER_UID;
-      const addonsGrp = document.getElementById('grp-addons');
-      if (addonsGrp) addonsGrp.style.display = isFounder ? '' : 'none';
-
-      // Load plan info
-      loadPlanInfo(currentUserData);
+      // Founder ADDONS visibility
+      try { applyFounderAddons(currentUserData); } catch(e) { console.warn('[founder]', e); }
 
       // Verificar trial
       checkTrialStatus(currentUserData);
@@ -1725,17 +1612,50 @@
       document.querySelectorAll('.miia-section').forEach(s => s.classList.remove('active'));
       const target = document.getElementById('sec-' + sectionId);
       if (target) target.classList.add('active');
-      // Update sidebar items
+
       document.querySelectorAll('.sidebar-item').forEach(btn => {
         btn.classList.toggle('active', btn.dataset.section === sectionId);
       });
+
+      // Mobile: cerrar drawer al elegir
+      const sb = document.getElementById('sidebarEl');
+      if (sb && window.innerWidth <= 768) sb.classList.remove('mobile-open');
+
+      // Hooks por seccion
       if (sectionId === 'gestionar') switchGestionar('negocios');
-      if (sectionId === 'plan') loadPlanInfo();
-      if (sectionId === 'privacidad') initPrivacySection();
-      if (sectionId === 'mis-datos') loadPrivacyReport();
-      if (sectionId === 'whatsapp') loadAIConfig();
-      if (sectionId === 'documentos') loadDocumentsLists();
+      if (sectionId === 'plan' && typeof loadPlanInfo === 'function') loadPlanInfo();
+      if (sectionId === 'whatsapp' && typeof loadAIConfig === 'function') loadAIConfig();
+      if (sectionId === 'privacidad' && typeof initPrivacySection === 'function') initPrivacySection();
+      if (sectionId === 'mis-datos' && typeof loadPrivacyReport === 'function') loadPrivacyReport();
     }
+
+    function toggleSidebar() {
+      const sb = document.getElementById('sidebarEl');
+      if (!sb) return;
+      sb.classList.toggle('collapsed');
+      try { localStorage.setItem('sidebarCollapsed', sb.classList.contains('collapsed') ? '1' : '0'); } catch(e) {}
+    }
+    function toggleSidebarGroup(grpId) {
+      const grp = document.getElementById(grpId);
+      if (!grp) return;
+      grp.classList.toggle('collapsed');
+    }
+    function openMobileSidebar() {
+      const sb = document.getElementById('sidebarEl');
+      if (sb) sb.classList.add('mobile-open');
+    }
+    function closeMobileSidebar() {
+      const sb = document.getElementById('sidebarEl');
+      if (sb) sb.classList.remove('mobile-open');
+    }
+    (function() {
+      try {
+        if (localStorage.getItem('sidebarCollapsed') === '1') {
+          const sb = document.getElementById('sidebarEl');
+          if (sb) sb.classList.add('collapsed');
+        }
+      } catch(e) {}
+    })();
 
     function switchMode(mode) {
       document.getElementById('modeNegocio').classList.toggle('active', mode === 'negocio');
@@ -2225,21 +2145,6 @@
       }
     }
 
-      const grid = document.getElementById('f1CalendarGrid');
-      grid.innerHTML = data.gps.map(gp => {
-        const isNext = nextGp && gp.round === nextGp.round;
-        const statusLabel = { completed: 'COMPLETADO', scheduled: isNext ? 'ACTIVO' : 'PROXIMO', live: 'EN VIVO', cancelled: 'CANCELADO' }[gp.status] || gp.status;
-        return `<div class="f1-gp-row ${gp.status}">
-          <div class="f1-gp-round">${gp.round || ''}</div>
-          <div>
-            <div class="f1-gp-name">${gp.name}</div>
-            <div class="f1-gp-circuit">${gp.circuit}${gp.sprint ? ' <span style="color:var(--accent);font-size:10px;">SPRINT</span>' : ''}</div>
-          </div>
-          <div class="f1-gp-date">${gp.date}</div>
-          <span class="f1-gp-status ${gp.status} ${isNext ? 'next' : ''}">${statusLabel}</span>
-        </div>`;
-      }).join('');
-    }
 
 
     // ── F1.6: Tab Standings — Jolpica/Ergast real data ───────────
@@ -2321,50 +2226,6 @@
       }
     }
 
-      const sorted = [...data.drivers].sort((a,b) => (b.points||0)-(a.points||0));
-      const rows = sorted.map((d, i) => {
-        const pos = i + 1;
-        const medal = pos <= 3 ? `<span class="f1-pos-medal">${MEDAL[pos]}</span>` : pos;
-        const isAdopted = d.id === f1AdoptedDriver;
-        return `<tr class="${isAdopted ? 'f1-my-driver-row' : ''}">
-          <td>${medal}</td>
-          <td>
-            <span class="f1-team-dot" style="background:${d.team_color || '#888'}"></span>
-            ${d.name}${isAdopted ? ' &#9733;' : ''}
-          </td>
-          <td style="color:var(--text-2)">${d.team}</td>
-          <td style="font-weight:700">${d.points || 0}</td>
-          <td style="color:var(--text-3);font-size:12px">#${d.number}</td>
-        </tr>`;
-      });
-
-      document.getElementById('f1StandingsPilotos').innerHTML = `
-        <table class="f1-standings-table">
-          <thead><tr><th>Pos</th><th>Piloto</th><th>Equipo</th><th>Puntos</th><th>N°</th></tr></thead>
-          <tbody>${rows.join('')}</tbody>
-        </table>`;
-
-      const consData = await f1ApiGet(`standings/constructors/${season}`);
-      if (consData) {
-        const leaderPts = consData.constructors[0]?.points || 0;
-        const cRows = consData.constructors.map((c, i) => {
-          const pos = i + 1;
-          const medal = pos <= 3 ? `<span class="f1-pos-medal">${MEDAL[pos]}</span>` : pos;
-          const gap = i === 0 ? '—' : `-${leaderPts - (c.points || 0)}`;
-          return `<tr>
-            <td>${medal}</td>
-            <td><span class="f1-team-dot" style="background:${c.team_color || '#888'}"></span>${c.team}</td>
-            <td style="font-weight:700">${c.points || 0}</td>
-            <td style="font-size:12px;color:var(--text-3)">${gap}</td>
-          </tr>`;
-        });
-        document.getElementById('f1StandingsConstructores').innerHTML = `
-          <table class="f1-standings-table">
-            <thead><tr><th>Pos</th><th>Constructor</th><th>Pts</th><th>Gap</th></tr></thead>
-            <tbody>${cRows.join('')}</tbody>
-          </table>`;
-      }
-    }
 
     // ── F1.7: Mi Piloto ───────────────────────────────
     async function f1LoadPilots(season = F1_SEASON) {
@@ -2794,309 +2655,169 @@
     };
 
 
-  // ── SIDEBAR ──────────────────────────────────────────────
-  function toggleSidebar() {
-    const sb = document.getElementById('sidebarEl');
-    if (!sb) return;
-    sb.classList.toggle('collapsed');
-    try { localStorage.setItem('sidebarCollapsed', sb.classList.contains('collapsed') ? '1' : '0'); } catch(e) {}
-  }
-  function toggleSidebarGroup(grpId) {
-    const grp = document.getElementById(grpId);
-    if (!grp) return;
-    grp.classList.toggle('open');
-    const items = grp.querySelector('.sidebar-grp-items');
-    if (items) items.style.display = grp.classList.contains('open') ? '' : 'none';
-  }
-  function openMobileSidebar() {
-    const sb = document.getElementById('sidebarEl');
-    if (sb) sb.classList.add('mobile-open');
-  }
-  function closeMobileSidebar() {
-    const sb = document.getElementById('sidebarEl');
-    if (sb) sb.classList.remove('mobile-open');
-  }
-  (function() {
-    try {
-      if (localStorage.getItem('sidebarCollapsed') === '1') {
-        const sb = document.getElementById('sidebarEl');
-        if (sb) sb.classList.add('collapsed');
+    // Sync WA widget en Inicio con el badge top nav
+    function _syncWaWidget(connected, label, detail) {
+      const dot = document.getElementById('waWidgetDot');
+      const lbl = document.getElementById('waWidgetLabel');
+      const det = document.getElementById('waWidgetDetail');
+      const btn = document.getElementById('waWidgetBtn');
+      if (dot) dot.classList.toggle('connected', !!connected);
+      if (lbl) lbl.textContent = label || (connected ? 'Conectado' : 'Sin conectar');
+      if (det) det.textContent = detail || (connected ? 'MIIA esta respondiendo en tu cuenta de WhatsApp.' : 'Vincula tu numero para que MIIA empiece a responder.');
+      if (btn) {
+        btn.textContent = connected ? 'Reconfigurar' : 'Vincular';
+        btn.classList.toggle('btn-secondary', connected);
+        btn.classList.toggle('btn-primary', !connected);
       }
-    } catch(e) {}
-    document.querySelectorAll('.sidebar-grp').forEach(grp => {
-      const items = grp.querySelector('.sidebar-grp-items');
-      if (items && !grp.classList.contains('open')) items.style.display = 'none';
-    });
-    const firstGrp = document.getElementById('grp-miia');
-    if (firstGrp) { firstGrp.classList.add('open'); const it = firstGrp.querySelector('.sidebar-grp-items'); if (it) it.style.display = ''; }
-  })();
-
-
-  // ── PLAN ─────────────────────────────────────────────────
-  async function loadPlanInfo(userData) {
-    const el = document.getElementById('plan-current-name');
-    const expEl = document.getElementById('plan-expiry');
-    if (!el) return;
-    try {
-      const data = userData || (currentUserUid ? (await db.collection('owners').doc(currentUserUid).get()).data() : null);
-      if (!data) { el.textContent = 'Sin plan'; return; }
-      el.textContent = data.plan_name || data.plan || 'Trial';
-      if (expEl) expEl.textContent = data.plan_expiry ? new Date(data.plan_expiry).toLocaleDateString('es-CO') : '—';
-      const monthlyBtn = document.getElementById('btn-plan-monthly');
-      const annualBtn = document.getElementById('btn-plan-annual');
-      if (data.plan === 'monthly' || data.plan === 'annual') {
-        if (monthlyBtn) monthlyBtn.textContent = 'Activo';
-        if (data.plan === 'annual' && annualBtn) annualBtn.textContent = 'Activo';
-      }
-    } catch(e) { console.error('[loadPlanInfo]', e); }
-  }
-  function subscribePayPal(planType) {
-    showToast('Redirigiendo a PayPal...', 'info');
-    setTimeout(() => { window.open('https://miia-app.com/checkout?plan=' + planType + '&method=paypal', '_blank'); }, 800);
-  }
-  function subscribeMP(planType) {
-    showToast('Redirigiendo a Mercado Pago...', 'info');
-    setTimeout(() => { window.open('https://miia-app.com/checkout?plan=' + planType + '&method=mp', '_blank'); }, 800);
-  }
-
-
-  // ── AI CONFIG ────────────────────────────────────────────
-  function onAiProviderChange() {
-    const sel = document.getElementById('ai-provider-select');
-    const keyRow = document.getElementById('ai-key-row');
-    if (sel && keyRow) keyRow.style.display = sel.value === 'gemini' ? '' : 'none';
-  }
-  async function loadAIConfig() {
-    if (!currentUserUid) return;
-    try {
-      const doc = await db.collection('owners').doc(currentUserUid).get();
-      const d = doc.exists ? doc.data() : {};
-      const sel = document.getElementById('ai-provider-select');
-      if (sel) { sel.value = d.ai_provider || 'gemini'; onAiProviderChange(); }
-      const keyIn = document.getElementById('ai-api-key-input');
-      if (keyIn) keyIn.value = d.ai_api_key || '';
-      const waSel = document.getElementById('wa-phone-select');
-      if (waSel) waSel.value = d.whatsapp_phone || '';
-      const status = document.getElementById('wa-connection-status');
-      if (status) { status.textContent = d.wa_connected ? 'Conectado' : 'Desconectado'; status.className = 'conn-badge ' + (d.wa_connected ? 'connected' : 'disconnected'); }
-    } catch(e) { console.error('[loadAIConfig]', e); }
-  }
-  async function saveAIConfig() {
-    if (!currentUserUid) return;
-    const sel = document.getElementById('ai-provider-select');
-    const keyIn = document.getElementById('ai-api-key-input');
-    try {
-      await db.collection('owners').doc(currentUserUid).set({ ai_provider: sel ? sel.value : 'gemini', ai_api_key: keyIn ? keyIn.value : '' }, { merge: true });
-      showToast('Configuracion de IA guardada', 'success');
-    } catch(e) { showToast('Error al guardar: ' + e.message, 'error'); }
-  }
-  async function testAIConnection() {
-    showToast('Probando conexion...', 'info');
-    try {
-      const token = await firebase.auth().currentUser.getIdToken();
-      const res = await fetch('/api/ai/test', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token } });
-      const data = await res.json();
-      showToast(res.ok ? 'Conexion OK: ' + (data.model || 'OK') : 'Error: ' + (data.error || res.status), res.ok ? 'success' : 'error');
-    } catch(e) { showToast('Error de red: ' + e.message, 'error'); }
-  }
-  function resetAIConfig() {
-    const keyIn = document.getElementById('ai-api-key-input');
-    if (keyIn) keyIn.value = '';
-    const sel = document.getElementById('ai-provider-select');
-    if (sel) { sel.value = 'gemini'; onAiProviderChange(); }
-    showToast('Campos limpiados', 'info');
-  }
-  function toggleKeyVisibility(inputId, btn) {
-    const inp = document.getElementById(inputId);
-    if (!inp) return;
-    if (inp.type === 'password') { inp.type = 'text'; if (btn) btn.textContent = 'Ocultar'; }
-    else { inp.type = 'password'; if (btn) btn.textContent = 'Ver'; }
-  }
-
-
-  // ── CALENDAR ─────────────────────────────────────────────
-  async function connectCalendar() {
-    showToast('Iniciando conexion con Google Calendar...', 'info');
-    try {
-      const token = await firebase.auth().currentUser.getIdToken();
-      const res = await fetch('/api/calendar/connect', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
-      const data = await res.json();
-      if (data.authUrl) { window.open(data.authUrl, '_blank'); showToast('Autoriza en la ventana abierta', 'info'); }
-      else showToast('Error: ' + (data.error || 'Sin URL'), 'error');
-    } catch(e) { showToast('Error: ' + e.message, 'error'); }
-  }
-  async function loadCalendarStatus() {
-    if (!currentUserUid) return;
-    try {
-      const doc = await db.collection('owners').doc(currentUserUid).get();
-      const d = doc.exists ? doc.data() : {};
-      const st = document.getElementById('calendar-status');
-      if (st) { st.textContent = d.calendar_connected ? 'Conectado' : 'No conectado'; st.className = 'conn-badge ' + (d.calendar_connected ? 'connected' : 'disconnected'); }
-      const calId = document.getElementById('calendar-id-input');
-      if (calId) calId.value = d.calendar_id || '';
-    } catch(e) { console.error('[loadCalendarStatus]', e); }
-  }
-  async function saveCalendarConfig() {
-    if (!currentUserUid) return;
-    const calId = document.getElementById('calendar-id-input');
-    try {
-      await db.collection('owners').doc(currentUserUid).set({ calendar_id: calId ? calId.value : '' }, { merge: true });
-      showToast('Calendario guardado', 'success');
-    } catch(e) { showToast('Error: ' + e.message, 'error'); }
-  }
-  async function disconnectCalendar() {
-    if (!currentUserUid) return;
-    try {
-      await db.collection('owners').doc(currentUserUid).set({ calendar_connected: false, calendar_id: '' }, { merge: true });
-      showToast('Calendario desconectado', 'success');
-      loadCalendarStatus();
-    } catch(e) { showToast('Error: ' + e.message, 'error'); }
-  }
-  // ── SECURITY ─────────────────────────────────────────────
-  async function addSecurityContact() {
-    const nameEl = document.getElementById('sec-contact-name');
-    const phoneEl = document.getElementById('sec-contact-phone');
-    const name = nameEl ? nameEl.value.trim() : '';
-    const phone = phoneEl ? phoneEl.value.trim() : '';
-    if (!name || !phone) { showToast('Nombre y telefono requeridos', 'error'); return; }
-    try {
-      await db.collection('owners').doc(currentUserUid).set({ security_contacts: firebase.firestore.FieldValue.arrayUnion({ name, phone, addedAt: new Date().toISOString() }) }, { merge: true });
-      showToast('Contacto de seguridad agregado', 'success');
-      if (nameEl) nameEl.value = '';
-      if (phoneEl) phoneEl.value = '';
-    } catch(e) { showToast('Error: ' + e.message, 'error'); }
-  }
-
-
-  // ── PRIVACY ──────────────────────────────────────────────
-  async function saveDisclaimerMode() {
-    if (!currentUserUid) return;
-    const sel = document.getElementById('disclaimer-mode-select');
-    const val = sel ? sel.value : 'hidden';
-    try {
-      await db.collection('owners').doc(currentUserUid).set({ disclaimer_mode: val }, { merge: true });
-      showToast('Modo de transparencia guardado', 'success');
-    } catch(e) { showToast('Error: ' + e.message, 'error'); }
-  }
-  function initPrivacySection() {
-    if (!currentUserUid) return;
-    db.collection('owners').doc(currentUserUid).get().then(doc => {
-      const d = doc.exists ? doc.data() : {};
-      const sel = document.getElementById('disclaimer-mode-select');
-      if (sel) sel.value = d.disclaimer_mode || 'hidden';
-    }).catch(e => console.error('[initPrivacySection]', e));
-  }
-  async function loadPrivacyReport() {
-    const container = document.getElementById('privacy-report-container');
-    if (!container || !currentUserUid) return;
-    container.innerHTML = '<p class="muted-text">Cargando reporte...</p>';
-    try {
-      const token = await firebase.auth().currentUser.getIdToken();
-      const res = await fetch('/api/privacy/report', { headers: { 'Authorization': 'Bearer ' + token } });
-      const data = await res.json();
-      if (!res.ok) { container.innerHTML = '<p class="muted-text">Error al cargar reporte.</p>'; return; }
-      container.innerHTML = '<pre style="font-size:12px;white-space:pre-wrap">' + JSON.stringify(data, null, 2) + '</pre>';
-    } catch(e) { container.innerHTML = '<p class="muted-text">Error: ' + e.message + '</p>'; }
-  }
-  function exportPrivacyReport() {
-    const container = document.getElementById('privacy-report-container');
-    if (!container) return;
-    const blob = new Blob([container.innerText], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a'); a.href = url; a.download = 'miia-privacy-report.txt'; a.click();
-    URL.revokeObjectURL(url);
-  }
-  function requestForgetMe() {
-    document.getElementById('forget-me-confirm') && (document.getElementById('forget-me-confirm').style.display = '');
-  }
-  async function confirmForgetMe() {
-    if (!currentUserUid) return;
-    try {
-      const token = await firebase.auth().currentUser.getIdToken();
-      const res = await fetch('/api/privacy/forget-me', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
-      if (res.ok) { showToast('Solicitud enviada. Tu cuenta sera eliminada en 30 dias.', 'success'); document.getElementById('forget-me-confirm') && (document.getElementById('forget-me-confirm').style.display = 'none'); }
-      else showToast('Error al procesar solicitud', 'error');
-    } catch(e) { showToast('Error: ' + e.message, 'error'); }
-  }
-  function cancelForgetMe() {
-    document.getElementById('forget-me-confirm') && (document.getElementById('forget-me-confirm').style.display = 'none');
-  }
-  // ── EMAIL ────────────────────────────────────────────────
-  async function saveEmailConfig() {
-    if (!currentUserUid) return;
-    const emailIn = document.getElementById('notification-email-input');
-    const email = emailIn ? emailIn.value.trim() : '';
-    if (!email || !email.includes('@')) { showToast('Email invalido', 'error'); return; }
-    try {
-      await db.collection('owners').doc(currentUserUid).set({ notification_email: email }, { merge: true });
-      showToast('Email guardado', 'success');
-    } catch(e) { showToast('Error: ' + e.message, 'error'); }
-  }
-  async function sendTestEmail() {
-    try {
-      const token = await firebase.auth().currentUser.getIdToken();
-      const res = await fetch('/api/notifications/test-email', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token } });
-      showToast(res.ok ? 'Email de prueba enviado' : 'Error al enviar', res.ok ? 'success' : 'error');
-    } catch(e) { showToast('Error: ' + e.message, 'error'); }
-  }
-
-
-  // DOCUMENTOS
-  function switchDocTab(name, btnEl) {
-    document.querySelectorAll('.doc-tab-content').forEach(el => { el.style.display = 'none'; });
-    const target = document.getElementById('doctab-' + name);
-    if (target) target.style.display = 'block';
-    document.querySelectorAll('.doc-tab').forEach(b => {
-      b.style.borderBottomColor = 'transparent';
-      b.style.color = 'var(--text-muted)';
-    });
-    if (btnEl) {
-      btnEl.style.borderBottomColor = 'var(--cyan)';
-      btnEl.style.color = 'var(--cyan)';
     }
-  }
-  async function generateQuotePDF() {
-    const client = (document.getElementById('quoteClient') || {}).value || '';
-    const product = (document.getElementById('quoteProduct') || {}).value || '';
-    const price = (document.getElementById('quotePrice') || {}).value || '';
-    if (!client || !product || !price) { showToast('Cliente, producto y precio requeridos', 'error'); return; }
-    showToast('Generando PDF...', 'info');
-    try {
-      const token = await firebase.auth().currentUser.getIdToken();
-      const res = await fetch('/api/quotes/generate', { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}, body: JSON.stringify({ client, product, price, expiry:(document.getElementById('quoteExpiry')||{}).value, desc:(document.getElementById('quoteDesc')||{}).value }) });
-      if (!res.ok) { showToast('Error al generar PDF', 'error'); return; }
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'cotizacion-'+client+'.pdf'; a.click();
-      URL.revokeObjectURL(url);
-      showToast('PDF descargado', 'success');
-    } catch(e) { showToast('Error: '+e.message, 'error'); }
-  }
-  async function createTemplate() {
-    if (!currentUserUid) return;
-    const name = (document.getElementById('templateName')||{}).value || '';
-    const text = (document.getElementById('templateText')||{}).value || '';
-    if (!name || !text) { showToast('Nombre y texto requeridos', 'error'); return; }
-    try {
-      await db.collection('owners').doc(currentUserUid).collection('templates').add({ name, text, createdAt: new Date().toISOString() });
-      showToast('Template guardado', 'success');
-      document.getElementById('templateName').value = '';
-      document.getElementById('templateText').value = '';
-    } catch(e) { showToast('Error: '+e.message, 'error'); }
-  }
-  async function uploadFile(event) {
-    if (!currentUserUid || !event.target.files || !event.target.files[0]) return;
-    const file = event.target.files[0];
-    showToast('Subiendo '+file.name+'...', 'info');
-    try {
-      const fd = new FormData(); fd.append('file', file);
-      const token = await firebase.auth().currentUser.getIdToken();
-      const res = await fetch('/api/knowledge/upload', { method:'POST', headers:{'Authorization':'Bearer '+token}, body: fd });
-      showToast(res.ok ? 'Archivo subido' : 'Error al subir', res.ok ? 'success' : 'error');
-    } catch(e) { showToast('Error: '+e.message, 'error'); }
-  }
-  function loadDocumentsLists() { /* TODO: load templates/quotes/files lists from Firestore */ }
 
+    // PLAN
+    async function subscribe(period, method) {
+      showToast('Redirigiendo a ' + (method === 'paypal' ? 'PayPal' : 'Mercado Pago') + '...', 'info');
+      setTimeout(() => { window.open('https://miia-app.com/checkout?plan=' + period + '&method=' + method, '_blank'); }, 600);
+    }
+    async function loadPlanInfo() {
+      if (!window.currentUserUid) return;
+      try {
+        const doc = await firebase.firestore().collection('owners').doc(window.currentUserUid).get();
+        const d = doc.exists ? doc.data() : {};
+        const nm = document.getElementById('planCurrentName');
+        const ex = document.getElementById('planExpiry');
+        if (nm) nm.textContent = d.plan_name || d.plan || 'Trial';
+        if (ex) ex.textContent = d.plan_expiry ? new Date(d.plan_expiry).toLocaleDateString('es-CO') : '--';
+      } catch (e) { console.error('[loadPlanInfo]', e); }
+    }
+    async function addSecurityContact() {
+      const n = document.getElementById('secContactName');
+      const p = document.getElementById('secContactPhone');
+      const name = n ? n.value.trim() : '';
+      const phone = p ? p.value.trim() : '';
+      if (!name || !phone) { showToast('Nombre y telefono requeridos', 'error'); return; }
+      try {
+        await firebase.firestore().collection('owners').doc(window.currentUserUid).set({
+          security_contacts: firebase.firestore.FieldValue.arrayUnion({ name, phone, addedAt: new Date().toISOString() })
+        }, { merge: true });
+        showToast('Contacto agregado', 'success');
+        n.value = ''; p.value = '';
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+
+    async function saveDisclaimerMode() {
+      const sel = document.getElementById('disclaimerModeSelect');
+      const v = sel ? sel.value : 'hidden';
+      try {
+        await firebase.firestore().collection('owners').doc(window.currentUserUid).set({ disclaimer_mode: v }, { merge: true });
+        showToast('Modo guardado', 'success');
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+    function initPrivacySection() {
+      if (!window.currentUserUid) return;
+      firebase.firestore().collection('owners').doc(window.currentUserUid).get().then(doc => {
+        const d = doc.exists ? doc.data() : {};
+        const sel = document.getElementById('disclaimerModeSelect');
+        if (sel) sel.value = d.disclaimer_mode || 'hidden';
+      }).catch(e => console.error('[initPrivacy]', e));
+    }
+    async function loadPrivacyReport() {
+      const c = document.getElementById('privacyReportContainer');
+      if (!c) return;
+      c.textContent = 'Cargando...';
+      try {
+        const tok = await firebase.auth().currentUser.getIdToken();
+        const r = await fetch('/api/privacy/report', { headers: { Authorization: 'Bearer ' + tok } });
+        const d = await r.json();
+        c.innerHTML = r.ok ? '<pre style="font-size:12px;white-space:pre-wrap;color:var(--text-2);">' + JSON.stringify(d, null, 2) + '</pre>' : 'Error al cargar.';
+      } catch (e) { c.textContent = 'Error: ' + e.message; }
+    }
+    function exportPrivacyReport() {
+      const c = document.getElementById('privacyReportContainer');
+      if (!c) return;
+      const blob = new Blob([c.innerText], { type: 'text/plain' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob); a.download = 'miia-privacy-report.txt'; a.click();
+      URL.revokeObjectURL(a.href);
+    }
+    function requestForgetMe() { const el = document.getElementById('forgetMeConfirm'); if (el) el.style.display = ''; }
+    async function confirmForgetMe() {
+      try {
+        const tok = await firebase.auth().currentUser.getIdToken();
+        const r = await fetch('/api/privacy/forget-me', { method: 'POST', headers: { Authorization: 'Bearer ' + tok } });
+        showToast(r.ok ? 'Solicitud registrada. Borrado en 30 dias.' : 'Error', r.ok ? 'success' : 'error');
+        cancelForgetMe();
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+    function cancelForgetMe() { const el = document.getElementById('forgetMeConfirm'); if (el) el.style.display = 'none'; }
+
+    function onAiProviderChange() {
+      const sel = document.getElementById('aiProviderSelect');
+      const r = document.getElementById('aiKeyRow');
+      if (sel && r) r.style.display = '';
+    }
+    async function loadAIConfig() {
+      if (!window.currentUserUid) return;
+      try {
+        const doc = await firebase.firestore().collection('owners').doc(window.currentUserUid).get();
+        const d = doc.exists ? doc.data() : {};
+        const s = document.getElementById('aiProviderSelect');
+        const k = document.getElementById('aiApiKeyInput');
+        if (s) { s.value = d.ai_provider || 'gemini'; onAiProviderChange(); }
+        if (k) k.value = d.ai_api_key || '';
+        const dot = document.getElementById('waSecDot');
+        const lab = document.getElementById('waSecLabel');
+        if (dot) dot.classList.toggle('connected', !!d.wa_connected);
+        if (lab) lab.textContent = d.wa_connected ? 'Conectado' : 'Sin conectar';
+      } catch (e) { console.error('[loadAI]', e); }
+    }
+    async function saveAIConfig() {
+      const s = document.getElementById('aiProviderSelect');
+      const k = document.getElementById('aiApiKeyInput');
+      try {
+        await firebase.firestore().collection('owners').doc(window.currentUserUid).set({
+          ai_provider: s ? s.value : 'gemini',
+          ai_api_key: k ? k.value : ''
+        }, { merge: true });
+        showToast('IA guardada', 'success');
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+    async function testAIConnection() {
+      showToast('Probando...', 'info');
+      try {
+        const tok = await firebase.auth().currentUser.getIdToken();
+        const r = await fetch('/api/ai/test', { method: 'POST', headers: { Authorization: 'Bearer ' + tok } });
+        showToast(r.ok ? 'Conexion OK' : 'Error', r.ok ? 'success' : 'error');
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+    function toggleKeyVisibility(id, btn) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.type === 'password') { el.type = 'text'; if (btn) btn.textContent = 'Ocultar'; }
+      else { el.type = 'password'; if (btn) btn.textContent = 'Ver'; }
+    }
+    async function connectCalendar() {
+      try {
+        const tok = await firebase.auth().currentUser.getIdToken();
+        const r = await fetch('/api/calendar/connect', { method: 'POST', headers: { Authorization: 'Bearer ' + tok } });
+        const d = await r.json();
+        if (d.authUrl) { window.open(d.authUrl, '_blank'); showToast('Autoriza en la nueva ventana', 'info'); }
+        else showToast('Error: ' + (d.error || 'Sin URL'), 'error');
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+    async function disconnectCalendar() {
+      try {
+        await firebase.firestore().collection('owners').doc(window.currentUserUid).set({ calendar_connected: false }, { merge: true });
+        showToast('Calendario desconectado', 'success');
+        const st = document.getElementById('calendarStatus');
+        if (st) st.textContent = 'No conectado';
+      } catch (e) { showToast('Error: ' + e.message, 'error'); }
+    }
+
+    const FOUNDER_UID = 'bq2BbtCVF8cZo30tum584zrGATJ3';
+    function applyFounderAddons(userData) {
+      const grp = document.getElementById('grp-addons');
+      if (!grp) return;
+      const isFounder = (userData && (userData.role === 'admin' || userData.admin_founder === true)) || window.currentUserUid === FOUNDER_UID;
+      grp.style.display = isFounder ? '' : 'none';
+    }
   </script>
 
   <style id="f1-addon-styles">
@@ -3250,4 +2971,3 @@
   </style>
   </body>
 </html>
-
