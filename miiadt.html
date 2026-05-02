@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIADT — Fantasy Football LATAM</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/v2-design-system.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #050505;
+      --surface:  #0d0d0d;
+      --card:     rgba(255,255,255,0.03);
+      --tx-1:     #f5f5f7;
+      --tx-2:     #a1a1a6;
+      --accent:   #7C3AED;
+      --accent-2: #00E5FF;
+      --border:   rgba(255,255,255,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--tx-1); font-family: 'Inter', sans-serif; }
+
+    /* ── Nav ── */
+    .mdt-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(5,5,5,0.85); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .mdt-logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
+    .mdt-logo span { background: linear-gradient(90deg,#00E5FF,#7C3AED); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .mdt-nav-btns { display: flex; gap: 12px; }
+
+    /* ── Buttons ── */
+    .btn-mdt-primary {
+      padding: 10px 24px; border-radius: 100px; border: none; cursor: pointer;
+      background: linear-gradient(135deg,#7C3AED,#00E5FF);
+      color: #fff; font-size: .9rem; font-weight: 600; transition: opacity .2s;
+    }
+    .btn-mdt-primary:hover { opacity: .88; }
+    .btn-mdt-secondary {
+      padding: 10px 24px; border-radius: 100px; cursor: pointer;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--tx-1); font-size: .9rem; font-weight: 500; transition: border-color .2s;
+    }
+    .btn-mdt-secondary:hover { border-color: rgba(255,255,255,0.25); }
+
+    /* ── Hero ── */
+    .mdt-hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 120px 24px 80px;
+    }
+    .mdt-hero-badge {
+      display: inline-block; padding: 6px 16px; border-radius: 100px;
+      background: rgba(124,58,237,.15); border: 1px solid rgba(124,58,237,.4);
+      font-size: .8rem; font-weight: 600; color: #9F67FF; margin-bottom: 28px;
+      letter-spacing: .5px;
+    }
+    .mdt-hero h1 {
+      font-size: clamp(2.5rem,8vw,5.5rem); font-weight: 800;
+      line-height: 1.05; letter-spacing: -2px; margin-bottom: 24px;
+    }
+    .mdt-hero h1 .grad {
+      background: linear-gradient(135deg,#00E5FF 0%,#7C3AED 50%,#FF1744 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .mdt-hero p {
+      max-width: 540px; font-size: 1.15rem; line-height: 1.7;
+      color: var(--tx-2); margin-bottom: 40px;
+    }
+    .mdt-hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .mdt-hero-ctas .btn-mdt-primary { font-size: 1.05rem; padding: 14px 36px; }
+    .mdt-hero-ctas .btn-mdt-secondary { font-size: 1.05rem; padding: 14px 36px; }
+
+    /* ── Stats strip ── */
+    .mdt-stats {
+      display: flex; justify-content: center; gap: 64px; flex-wrap: wrap;
+      padding: 48px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .mdt-stat { text-align: center; }
+    .mdt-stat-num { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+    .mdt-stat-num.c1 { color: #00E5FF; }
+    .mdt-stat-num.c2 { color: #7C3AED; }
+    .mdt-stat-num.c3 { color: #FF1744; }
+    .mdt-stat-label { font-size: .85rem; color: var(--tx-2); margin-top: 4px; }
+
+    /* ── Section ── */
+    .mdt-section { padding: 96px 24px; max-width: 1100px; margin: 0 auto; }
+    .mdt-section-tag {
+      font-size: .8rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #9F67FF; margin-bottom: 16px;
+    }
+    .mdt-section-title {
+      font-size: clamp(1.8rem,4vw,3rem); font-weight: 800; letter-spacing: -1px;
+      line-height: 1.1; margin-bottom: 16px;
+    }
+    .mdt-section-sub { color: var(--tx-2); font-size: 1.05rem; line-height: 1.7; max-width: 560px; }
+
+    /* ── Features grid ── */
+    .mdt-features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 24px; margin-top: 56px;
+    }
+    .mdt-feature-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 32px 28px; transition: border-color .25s;
+    }
+    .mdt-feature-card:hover { border-color: rgba(124,58,237,.4); }
+    .mdt-feature-icon { font-size: 2rem; margin-bottom: 20px; }
+    .mdt-feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .mdt-feature-card p { font-size: .9rem; color: var(--tx-2); line-height: 1.6; }
+
+    /* ── Pricing ── */
+    .mdt-pricing-wrap { margin-top: 56px; display: flex; justify-content: center; }
+    .mdt-pricing-card {
+      background: var(--card); border: 1px solid rgba(124,58,237,.5); border-radius: 24px;
+      padding: 48px 40px; max-width: 400px; width: 100%; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .mdt-pricing-card::before {
+      content: ''; position: absolute; inset: -1px; border-radius: 25px;
+      background: linear-gradient(135deg,rgba(124,58,237,.3),rgba(0,229,255,.15));
+      z-index: -1;
+    }
+    .mdt-pricing-badge {
+      display: inline-block; padding: 4px 14px; border-radius: 100px;
+      background: linear-gradient(135deg,#7C3AED,#00E5FF); font-size: .75rem;
+      font-weight: 700; letter-spacing: .5px; margin-bottom: 24px;
+    }
+    .mdt-pricing-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; }
+    .mdt-pricing-price { margin-bottom: 8px; }
+    .mdt-pricing-price .amount { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; }
+    .mdt-pricing-price .curr { font-size: 1.5rem; font-weight: 700; vertical-align: top; margin-top: 14px; display: inline-block; }
+    .mdt-pricing-period { font-size: .9rem; color: var(--tx-2); margin-bottom: 36px; }
+    .mdt-pricing-features { list-style: none; text-align: left; margin-bottom: 40px; }
+    .mdt-pricing-features li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: .95rem; border-bottom: 1px solid var(--border); }
+    .mdt-pricing-features li:last-child { border-bottom: none; }
+    .mdt-pricing-features li::before { content: '\2713'; color: #00E5FF; font-weight: 700; flex-shrink: 0; }
+    .mdt-pricing-cta { display: block; width: 100%; }
+
+    /* ── Footer ── */
+    .mdt-footer {
+      text-align: center; padding: 40px 24px;
+      border-top: 1px solid var(--border); color: var(--tx-2); font-size: .85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="mdt-nav">
+    <div class="mdt-logo"><span>MIIA</span>DT</div>
+    <div class="mdt-nav-btns">
+      <button class="btn-mdt-secondary" id="btn-login" onclick="handleNav('login')">Iniciar sesion</button>
+      <button class="btn-mdt-primary"   id="btn-signup" onclick="handleNav('signup')">Jugar ahora</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="mdt-hero">
+    <div class="mdt-hero-badge">Fantasy Football LATAM #1</div>
+    <h1>El fantasy que<br><span class="grad">te hace vibrar</span></h1>
+    <p>Armá tu equipo, gestioná el mercado y competí en ligas con tus amigos. La experiencia de fantasy mas completa de LATAM, integrada con MIIA.</p>
+    <div class="mdt-hero-ctas">
+      <button class="btn-mdt-primary"   onclick="handleNav('signup')">Empezar gratis</button>
+      <button class="btn-mdt-secondary" onclick="scrollTo('features')">Ver funciones</button>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="mdt-stats">
+    <div class="mdt-stat">
+      <div class="mdt-stat-num c1">50K+</div>
+      <div class="mdt-stat-label">Managers activos</div>
+    </div>
+    <div class="mdt-stat">
+      <div class="mdt-stat-num c2">500+</div>
+      <div class="mdt-stat-label">Ligas activas</div>
+    </div>
+    <div class="mdt-stat">
+      <div class="mdt-stat-num c3">20+</div>
+      <div class="mdt-stat-label">Ligas soportadas</div>
+    </div>
+  </div>
+
+  <!-- Features -->
+  <section class="mdt-section" id="features">
+    <div class="mdt-section-tag">Funciones</div>
+    <div class="mdt-section-title">Todo lo que necesitas para ganar</div>
+    <p class="mdt-section-sub">Desde drafts en vivo hasta IA de analisis, MIIADT te da todas las herramientas.</p>
+    <div class="mdt-features-grid">
+      <div class="mdt-feature-card">
+        <div class="mdt-feature-icon">&#x26BD;</div>
+        <h3>Mercado de transferencias</h3>
+        <p>Comprá y vendé jugadores en pujas en tiempo real. Gana ventaja con alertas de precio inteligentes.</p>
+      </div>
+      <div class="mdt-feature-card">
+        <div class="mdt-feature-icon">&#x1F3C6;</div>
+        <h3>Ligas y copas</h3>
+        <p>Competí en ligas publicas, privadas y torneos copa. Rankings en tiempo real con cada partido.</p>
+      </div>
+      <div class="mdt-feature-card">
+        <div class="mdt-feature-icon">&#x1F4CA;</div>
+        <h3>Estadisticas avanzadas</h3>
+        <p>xG, presiones, duelos aereos, progresion. Datos de elite para decisiones de elite.</p>
+      </div>
+      <div class="mdt-feature-card">
+        <div class="mdt-feature-icon">&#x1F916;</div>
+        <h3>IA coach MIIA</h3>
+        <p>Tu asistente personal que analiza tu equipo, sugiere fichajes y te avisa de lesiones por WhatsApp.</p>
+      </div>
+      <div class="mdt-feature-card">
+        <div class="mdt-feature-icon">&#x1F3AE;</div>
+        <h3>Draft en vivo</h3>
+        <p>Sistema de draft con temporizador, orden serpentina y sala de draft en tiempo real con tu liga.</p>
+      </div>
+      <div class="mdt-feature-card">
+        <div class="mdt-feature-icon">&#x1F4F1;</div>
+        <h3>WhatsApp nativo</h3>
+        <p>Recibí alertas, resultados y tips de MIIA directo en WhatsApp. Sin apps extra.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="mdt-section" id="pricing">
+    <div class="mdt-section-tag">Precios</div>
+    <div class="mdt-section-title">Un plan. Todo incluido.</div>
+    <p class="mdt-section-sub">Sin sorpresas. Sin planes confusos. Premium te da acceso completo a todo MIIADT.</p>
+    <div class="mdt-pricing-wrap">
+      <div class="mdt-pricing-card">
+        <div class="mdt-pricing-badge">MAS POPULAR</div>
+        <div class="mdt-pricing-name">MIIADT Premium</div>
+        <div class="mdt-pricing-price">
+          <span class="curr">USD</span><span class="amount">9.99</span>
+        </div>
+        <div class="mdt-pricing-period">por mes &middot; cancela cuando quieras</div>
+        <ul class="mdt-pricing-features">
+          <li>Ligas ilimitadas</li>
+          <li>Mercado de transferencias completo</li>
+          <li>Estadisticas avanzadas + xG</li>
+          <li>IA coach MIIA por WhatsApp</li>
+          <li>Draft en vivo</li>
+          <li>Copas y torneos</li>
+          <li>Alertas push + WhatsApp</li>
+        </ul>
+        <button class="btn-mdt-primary mdt-pricing-cta" onclick="handleNav('signup')">
+          Empezar ahora &mdash; USD 9.99/mes
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mdt-footer">
+    <p>&copy; 2026 MIIA &mdash; MIIADT Fantasy Football &middot; <a href="privacy.html" style="color:inherit">Privacidad</a> &middot; <a href="terms.html" style="color:inherit">Terminos</a></p>
+  </footer>
+
+  <script src="assets/miiadt-panels/miiadt-land.js"></script>
+  <script>
+    function handleNav(action) {
+      miiadtLand.handleNav(action, window.location);
+    }
+    function scrollTo(sectionId) {
+      miiadtLand.scrollToSection(sectionId, document);
+    }
+  </script>
+
+</body>
+</html>
