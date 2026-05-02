@@ -152,6 +152,23 @@
           <!-- Gradient line -->
           <div class="gline"></div>
 
+
+          <!-- WIDGET: Conectar WhatsApp (T158) -->
+          <div class="wa-widget" id="waWidgetCard">
+            <div class="wa-widget-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+              </svg>
+            </div>
+            <div class="wa-widget-body">
+              <div class="wa-widget-status">
+                <span class="wa-dot" id="waWidgetDot"></span>
+                <span id="waWidgetLabel" class="wa-widget-label">Sin conectar</span>
+              </div>
+              <p class="wa-widget-detail" id="waWidgetDetail">Vincula tu numero para que MIIA empiece a responder por vos.</p>
+            </div>
+            <button class="btn btn-primary" id="waWidgetBtn" onclick="openQRModal()" data-tooltip="Escanea un QR o usa un codigo para vincular tu WhatsApp">Conectar WhatsApp</button>
+          </div>
           <!-- Stats row -->
           <div class="stats-row">
             <div class="stat-card">
@@ -196,20 +213,6 @@
                 <div class="timeline-text"><strong>Ana Ruiz</strong> confirmo su turno de manana</div>
                 <div class="timeline-time">Hace 1 hora</div>
               </div>
-            </div>
-          </div>
-
-
-          <!-- WIDGET: WhatsApp status (T158) -->
-          <div class="card" id="waWidgetCard" style="margin-top:16px;">
-            <div class="card-title">WhatsApp</div>
-            <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
-              <div style="display:flex;align-items:center;gap:10px;">
-                <span class="wa-dot" id="waWidgetDot"></span>
-                <span id="waWidgetLabel" style="font-size:14px;font-weight:600;">Sin conectar</span>
-              </div>
-              <div style="flex:1;min-width:200px;color:var(--text-2);font-size:13px;" id="waWidgetDetail">Vincula tu numero para que MIIA empiece a responder.</div>
-              <button class="btn btn-primary btn-sm" id="waWidgetBtn" onclick="openQRModal()" data-tooltip="Vincular WhatsApp via QR">Vincular</button>
             </div>
           </div>
           <!-- Estado sin WhatsApp (se muestra si no hay conexion) -->
@@ -1117,6 +1120,16 @@
       }
       if (label) {
         label.textContent = connected ? 'Conectado' : 'Sin conectar';
+      }
+      // Sync widget en sec-home con clase .connected
+      const w = document.getElementById('waWidgetCard');
+      if (w) w.classList.toggle('connected', !!connected);
+      if (typeof _syncWaWidget === 'function') {
+        _syncWaWidget(
+          connected,
+          connected ? 'Conectado' : 'Sin conectar',
+          connected ? 'MIIA esta respondiendo en tu cuenta de WhatsApp.' : 'Vincula tu numero para que MIIA empiece a responder por vos.'
+        );
       }
       // Mostrar/ocultar empty state en home
       const emptyState = document.getElementById('emptyStateHome');
