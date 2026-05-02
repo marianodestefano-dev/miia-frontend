@@ -369,6 +369,7 @@
           <p id="pwMatchMsg" class="pw-match-msg" style="display:none;"></p>
         </div>
         <button type="submit" class="btn-submit" id="registerBtn">Crear cuenta</button>
+        <button type="button" id="magicLinkBtn" onclick="handleMagicSignup()" style="margin-top:10px;background:transparent;border:1px solid var(--primary);color:var(--primary);padding:10px 14px;border-radius:8px;width:100%;cursor:pointer;font-size:.86rem;">O entra con magic link (sin contrase&ntilde;a)</button>
       </form>
 
       <!-- OTP Form -->
@@ -482,6 +483,50 @@
         if (regBtn) switchTab('register', regBtn);
       });
     }
+    // VI-AUTH-2/3: prefill plan/addon + handle magic link callback
+    const _urlPlan = new URLSearchParams(window.location.search).get('plan');
+    const _urlAddon = new URLSearchParams(window.location.search).get('addon');
+    const _urlMagic = new URLSearchParams(window.location.search).get('magic');
+    document.addEventListener('DOMContentLoaded', () => {
+      if (_urlPlan) {
+        const sel = document.getElementById('registerPlan');
+        if (sel) {
+          for (const opt of sel.options) { if (opt.value === _urlPlan) { sel.value = _urlPlan; break; } }
+        }
+      }
+      if (_urlMagic === '1' && firebase.auth().isSignInWithEmailLink(window.location.href)) {
+        let email = window.localStorage.getItem('miia_magic_email');
+        if (!email) email = window.prompt('Confirma tu email para completar el ingreso:');
+        if (email) {
+          firebase.auth().signInWithEmailLink(email, window.location.href).then(result => {
+            window.localStorage.removeItem('miia_magic_email');
+            localStorage.setItem('miia_user', JSON.stringify({ uid: result.user.uid, email: result.user.email, logged_in: true }));
+            showSuccess('Bienvenido! Redirigiendo...');
+            setTimeout(() => redirectByRole(result.user), 700);
+          }).catch(e => showError('Magic link invalido o expirado: ' + e.message));
+        }
+      }
+    });
+    async function handleMagicSignup() {
+      const email = (document.getElementById('registerEmail') || {}).value || (document.getElementById('loginEmail') || {}).value;
+      if (!email) { showError('Ingresa tu email primero.'); return; }
+      try {
+        const r = await fetch(API_BASE + '/api/auth/signup-magic', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, plan: _urlPlan || null, addon: _urlAddon || null }),
+        });
+        const data = await r.json();
+        if (!r.ok) { showError(data.error || 'Error al enviar magic link'); return; }
+        window.localStorage.setItem('miia_magic_email', email);
+        if (data.sent) {
+          showSuccess('Te enviamos un link a ' + email + '. Revisa tu bandeja para entrar a MIIA.');
+        } else {
+          showSuccess('Listo. Revisa tu correo para entrar a MIIA.');
+        }
+      } catch (e) { showError('Error: ' + e.message); }
+    }
+
 
     const firebaseConfig = {
       apiKey: "AIzaSyB_d3somFQOR17zBVKyO0wuSftqqT0t4vk",
