@@ -95,6 +95,7 @@
             <button class="sidebar-item" data-section="actividad" onclick="showSection('actividad',this);closeMobileSidebar()"><span>Actividad</span></button>
             <button class="sidebar-item" data-section="gestionar" onclick="showSection('gestionar',this);closeMobileSidebar()"><span>Gestionar</span></button>
             <button class="sidebar-item" data-section="analitica" onclick="showSection('analitica',this);closeMobileSidebar()"><span>Estadisticas</span></button>
+            <button class="sidebar-item" data-section="documentos" onclick="showSection('documentos',this)"><span class="sidebar-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><span class="sidebar-label">Documentos</span></button>
           </div>
         </div>
         <div class="sidebar-grp" id="grp-cuenta">
@@ -253,6 +254,44 @@
         </section>
 
         <!-- SECCION: MI PLAN -->
+
+    <!-- DOCUMENTOS -->
+    <section id="sec-documentos" class="miia-section">
+      <h2 class="section-title">Documentos y Recursos</h2>
+      <div class="card-glass" style="padding:20px;">
+        <div class="tabs-row" style="display:flex;gap:8px;border-bottom:1px solid var(--border);margin-bottom:20px;">
+          <button class="doc-tab active" data-doctab="quotes" onclick="switchDocTab('quotes',this)" style="padding:10px 18px;background:none;border:none;border-bottom:2px solid var(--cyan);color:var(--cyan);cursor:pointer;font-size:14px;">Cotizaciones</button>
+          <button class="doc-tab" data-doctab="templates" onclick="switchDocTab('templates',this)" style="padding:10px 18px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-muted);cursor:pointer;font-size:14px;">Templates</button>
+          <button class="doc-tab" data-doctab="knowledge" onclick="switchDocTab('knowledge',this)" style="padding:10px 18px;background:none;border:none;border-bottom:2px solid transparent;color:var(--text-muted);cursor:pointer;font-size:14px;">Archivos</button>
+        </div>
+        <div id="doctab-quotes" class="doc-tab-content" style="display:block;">
+          <h3 style="font-size:1.05rem;margin-bottom:16px;">Crear Cotizacion</h3>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+            <div><label style="display:block;font-size:13px;margin-bottom:4px;">Cliente</label><input type="text" id="quoteClient" class="input-field" placeholder="Ej: Juan Perez"></div>
+            <div><label style="display:block;font-size:13px;margin-bottom:4px;">Producto/Servicio</label><input type="text" id="quoteProduct" class="input-field" placeholder="Ej: Desarrollo Web"></div>
+            <div><label style="display:block;font-size:13px;margin-bottom:4px;">Precio (USD)</label><input type="number" id="quotePrice" class="input-field" placeholder="1000" min="0" step="0.01"></div>
+            <div><label style="display:block;font-size:13px;margin-bottom:4px;">Vencimiento</label><input type="date" id="quoteExpiry" class="input-field"></div>
+          </div>
+          <div style="margin-bottom:12px;"><label style="display:block;font-size:13px;margin-bottom:4px;">Descripcion</label><textarea id="quoteDesc" class="input-field" rows="3" placeholder="Detalles..."></textarea></div>
+          <button class="btn-primary" onclick="generateQuotePDF()">Descargar PDF</button>
+          <div style="margin-top:24px;"><h4 style="font-size:0.95rem;margin-bottom:12px;">Cotizaciones recientes</h4><div id="quotesListItems" class="item-list"><p class="muted-text">Sin cotizaciones aun.</p></div></div>
+        </div>
+        <div id="doctab-templates" class="doc-tab-content" style="display:none;">
+          <h3 style="font-size:1.05rem;margin-bottom:16px;">Crear Template</h3>
+          <div style="margin-bottom:12px;"><label style="display:block;font-size:13px;margin-bottom:4px;">Nombre</label><input type="text" id="templateName" class="input-field" placeholder="Ej: Saludo inicial"></div>
+          <div style="margin-bottom:12px;"><label style="display:block;font-size:13px;margin-bottom:4px;">Texto</label><textarea id="templateText" class="input-field" rows="4" placeholder="Mensaje que MIIA usara..."></textarea></div>
+          <button class="btn-primary" onclick="createTemplate()">Guardar Template</button>
+          <div style="margin-top:24px;"><h4 style="font-size:0.95rem;margin-bottom:12px;">Mis Templates</h4><div id="templatesListItems" class="item-list"><p class="muted-text">Sin templates aun.</p></div></div>
+        </div>
+        <div id="doctab-knowledge" class="doc-tab-content" style="display:none;">
+          <h3 style="font-size:1.05rem;margin-bottom:16px;">Subir Archivos de Conocimiento</h3>
+          <p class="muted-text" style="margin-bottom:16px;">Sube catalogos, PDFs, imagenes, planes. MIIA los usara para responder mejor a tus clientes.</p>
+          <label class="btn-primary" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer;">Seleccionar archivo<input type="file" id="fileInput" accept=".pdf,.doc,.docx,.txt,.png,.jpg,.jpeg,.webp,.gif" onchange="uploadFile(event)" style="display:none;"></label>
+          <div style="margin-top:24px;"><h4 style="font-size:0.95rem;margin-bottom:12px;">Archivos subidos</h4><div id="knowledgeListItems" class="item-list"><p class="muted-text">Sin archivos aun.</p></div></div>
+        </div>
+      </div>
+    </section>
+
         <section id="sec-plan" class="miia-section">
           <div class="section-header"><div><h2 class="section-title">Mi Plan</h2><p class="section-subtitle">Suscripcion, pagos y estado de tu cuenta</p></div></div>
           <div class="card" style="margin-bottom:20px;">
@@ -1695,6 +1734,7 @@
       if (sectionId === 'privacidad') initPrivacySection();
       if (sectionId === 'mis-datos') loadPrivacyReport();
       if (sectionId === 'whatsapp') loadAIConfig();
+      if (sectionId === 'documentos') loadDocumentsLists();
     }
 
     function switchMode(mode) {
@@ -2999,6 +3039,63 @@
       showToast(res.ok ? 'Email de prueba enviado' : 'Error al enviar', res.ok ? 'success' : 'error');
     } catch(e) { showToast('Error: ' + e.message, 'error'); }
   }
+
+
+  // DOCUMENTOS
+  function switchDocTab(name, btnEl) {
+    document.querySelectorAll('.doc-tab-content').forEach(el => { el.style.display = 'none'; });
+    const target = document.getElementById('doctab-' + name);
+    if (target) target.style.display = 'block';
+    document.querySelectorAll('.doc-tab').forEach(b => {
+      b.style.borderBottomColor = 'transparent';
+      b.style.color = 'var(--text-muted)';
+    });
+    if (btnEl) {
+      btnEl.style.borderBottomColor = 'var(--cyan)';
+      btnEl.style.color = 'var(--cyan)';
+    }
+  }
+  async function generateQuotePDF() {
+    const client = (document.getElementById('quoteClient') || {}).value || '';
+    const product = (document.getElementById('quoteProduct') || {}).value || '';
+    const price = (document.getElementById('quotePrice') || {}).value || '';
+    if (!client || !product || !price) { showToast('Cliente, producto y precio requeridos', 'error'); return; }
+    showToast('Generando PDF...', 'info');
+    try {
+      const token = await firebase.auth().currentUser.getIdToken();
+      const res = await fetch('/api/quotes/generate', { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}, body: JSON.stringify({ client, product, price, expiry:(document.getElementById('quoteExpiry')||{}).value, desc:(document.getElementById('quoteDesc')||{}).value }) });
+      if (!res.ok) { showToast('Error al generar PDF', 'error'); return; }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'cotizacion-'+client+'.pdf'; a.click();
+      URL.revokeObjectURL(url);
+      showToast('PDF descargado', 'success');
+    } catch(e) { showToast('Error: '+e.message, 'error'); }
+  }
+  async function createTemplate() {
+    if (!currentUserUid) return;
+    const name = (document.getElementById('templateName')||{}).value || '';
+    const text = (document.getElementById('templateText')||{}).value || '';
+    if (!name || !text) { showToast('Nombre y texto requeridos', 'error'); return; }
+    try {
+      await db.collection('owners').doc(currentUserUid).collection('templates').add({ name, text, createdAt: new Date().toISOString() });
+      showToast('Template guardado', 'success');
+      document.getElementById('templateName').value = '';
+      document.getElementById('templateText').value = '';
+    } catch(e) { showToast('Error: '+e.message, 'error'); }
+  }
+  async function uploadFile(event) {
+    if (!currentUserUid || !event.target.files || !event.target.files[0]) return;
+    const file = event.target.files[0];
+    showToast('Subiendo '+file.name+'...', 'info');
+    try {
+      const fd = new FormData(); fd.append('file', file);
+      const token = await firebase.auth().currentUser.getIdToken();
+      const res = await fetch('/api/knowledge/upload', { method:'POST', headers:{'Authorization':'Bearer '+token}, body: fd });
+      showToast(res.ok ? 'Archivo subido' : 'Error al subir', res.ok ? 'success' : 'error');
+    } catch(e) { showToast('Error: '+e.message, 'error'); }
+  }
+  function loadDocumentsLists() { /* TODO: load templates/quotes/files lists from Firestore */ }
 
   </script>
 
