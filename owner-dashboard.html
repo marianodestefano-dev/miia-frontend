@@ -217,6 +217,17 @@
               </div>
             </div>
           </div>
+          <!-- VI-DASH-3: Otros productos -- visible solo si hay productos inactivos -->
+          <div class="card miia-other-products hidden" id="otrosProductosCard">
+            <div class="card-title">Otros productos MIIA</div>
+            <p style="color: var(--text-3); font-size: 14px; margin: 4px 0 16px 0;">
+              Sumá capacidades extra a tu MIIA. Activa cuando quieras, cancela cuando quieras.
+            </p>
+            <div class="other-products-grid" id="otrosProductosGrid">
+              <!-- Cards inyectadas por JS segun isProductActiveLocal -->
+            </div>
+          </div>
+
           <!-- Estado sin WhatsApp (se muestra si no hay conexion) -->
           <div class="empty-state hidden" id="emptyStateHome">
             <svg class="empty-state-logo" width="80" height="80" viewBox="90 118 220 168" fill="none" opacity="0.4">
@@ -1065,7 +1076,7 @@
       renderHome(currentUserData);
 
       // Founder ADDONS visibility
-      try { applyFounderAddons(currentUserData); } catch(e) { console.warn('[founder]', e); }
+      try { await applyFounderAddons(currentUserData); } catch(e) { console.warn('[founder]', e); }
 
       // Verificar trial
       checkTrialStatus(currentUserData);
@@ -2982,11 +2993,92 @@
     }
 
     const FOUNDER_UID = 'bq2BbtCVF8cZo30tum584zrGATJ3';
-    function applyFounderAddons(userData) {
-      const grp = document.getElementById('grp-addons');
-      if (!grp) return;
+    // VI-DASH-2: render condicional menus por producto
+    // Cache de permisos para que la UI los consulte
+    window.miiaProductPermissions = null;
+    async function fetchProductPermissions() {
+      try {
+        const user = firebase.auth().currentUser;
+        if (!user) return null;
+        const token = await user.getIdToken();
+        const r = await fetch('/api/products/permissions', { headers: { Authorization: 'Bearer ' + token } });
+        if (!r.ok) return null;
+        const data = await r.json();
+        window.miiaProductPermissions = data.permissions || {};
+        return data.permissions;
+      } catch (e) {
+        console.warn('[VI-DASH-2] fetchProductPermissions error:', e.message);
+        return null;
+      }
+    }
+    function isProductActiveLocal(product) {
+      const p = window.miiaProductPermissions && window.miiaProductPermissions[product];
+      if (!p || !p.active) return false;
+      if (p.expiresAt) {
+        const exp = new Date(p.expiresAt).getTime();
+        if (!isNaN(exp) && exp < Date.now()) return false;
+      }
+      return true;
+    }
+    function applyProductMenusVisibility(userData) {
+      // Founder ve todo (legacy back-compat)
       const isFounder = (userData && (userData.role === 'admin' || userData.admin_founder === true)) || window.currentUserUid === FOUNDER_UID;
-      grp.style.display = isFounder ? '' : 'none';
+      const perms = window.miiaProductPermissions || {};
+      const items = {
+        miiadt:   document.querySelector('#grp-addons [data-section="miiadt"]'),
+        ludomiia: document.querySelector('#grp-addons [data-section="ludomiia"]'),
+        f1:       document.querySelector('#grp-addons [data-section="f1"]'),
+      };
+      let anyActive = false;
+      for (const [key, btn] of Object.entries(items)) {
+        if (!btn) continue;
+        const active = isFounder || isProductActiveLocal(key);
+        btn.style.display = active ? '' : 'none';
+        if (active) anyActive = true;
+      }
+      const grp = document.getElementById('grp-addons');
+      if (grp) grp.style.display = (isFounder || anyActive) ? '' : 'none';
+    }
+    // VI-DASH-3: render "Otros productos" con CTA contratar
+    const PRODUCT_META = {
+      miiadt:   { name: 'MIIADT', desc: 'Avisos automáticos por WhatsApp para eventos deportivos.', plan_url: '/precios#miiadt' },
+      ludomiia: { name: 'LudoMIIA', desc: 'Plataforma de juegos y ludotecas digitales para tu negocio.', plan_url: '/precios#ludomiia' },
+      f1:       { name: 'MiiaF1', desc: 'Dashboard Formula 1 en vivo con telemetría y fantasy.', plan_url: '/precios#miiaf1' },
+    };
+    function renderOtrosProductos() {
+      const card = document.getElementById('otrosProductosCard');
+      const grid = document.getElementById('otrosProductosGrid');
+      if (!card || !grid) return;
+      grid.innerHTML = '';
+      const inactives = [];
+      for (const [key, meta] of Object.entries(PRODUCT_META)) {
+        if (!isProductActiveLocal(key)) inactives.push({ key, meta });
+      }
+      if (inactives.length === 0) { card.classList.add('hidden'); return; }
+      card.classList.remove('hidden');
+      for (const { key, meta } of inactives) {
+        const div = document.createElement('div');
+        div.className = 'other-product-card';
+        div.dataset.product = key;
+        div.innerHTML = '<div class="other-product-name">' + meta.name + '</div>' +
+                        '<div class="other-product-desc">' + meta.desc + '</div>' +
+                        '<button class="other-product-cta" data-product="' + key + '">Contratar</button>';
+        grid.appendChild(div);
+      }
+      grid.querySelectorAll('.other-product-cta').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const p = btn.dataset.product;
+          const url = (PRODUCT_META[p] && PRODUCT_META[p].plan_url) || '/precios';
+          window.location.href = url;
+        });
+      });
+    }
+
+    // Mantener nombre legacy por compat con otros callsites
+    async function applyFounderAddons(userData) {
+      await fetchProductPermissions();
+      applyProductMenusVisibility(userData);
+      renderOtrosProductos();
     }
   </script>
 
@@ -3155,6 +3247,24 @@
 
     /* F1.32-F1.33 Fantasy */
     .f1-fantasy-header { display: flex; align-items: flex-start; gap: 16px; padding: 20px; background: var(--bg-card); border-radius: var(--r-md); }
+
+    /* VI-DASH-3 Otros productos */
+    .other-products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+    .other-product-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--r-md);
+      padding: 16px; display: flex; flex-direction: column; gap: 10px;
+      transition: border-color 200ms, transform 200ms;
+    }
+    .other-product-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .other-product-name { font-size: 16px; font-weight: 700; color: var(--text-1); }
+    .other-product-desc { font-size: 13px; color: var(--text-2); flex: 1; }
+    .other-product-cta {
+      align-self: flex-start; padding: 6px 14px; border-radius: var(--r-sm);
+      background: var(--accent); color: var(--bg-page); border: 0; cursor: pointer;
+      font-size: 13px; font-weight: 600;
+    }
+    .other-product-cta:hover { filter: brightness(1.1); }
+    .miia-other-products.hidden { display: none; }
   </style>
   </body>
 </html>
