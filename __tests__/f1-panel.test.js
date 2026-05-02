@@ -1,22 +1,22 @@
 import { describe, test, expect, beforeEach, vi } from 'vitest';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
-
 const createF1Panel = require('../assets/f1-panels/f1-panel.js');
 
-const DRIVERS = [
-  { id: 'VER', name: 'Verstappen', team: 'Red Bull', team_color: '#3671C6', points: 200, position: 1 },
-  { id: 'HAM', name: 'Hamilton', team: 'Ferrari', team_color: '#E8002D', points: 180, position: 2, adoptedByOwner: true },
-  { id: 'NOR', name: 'Norris', team: 'McLaren', team_color: '#FF8000', points: 160, position: 3 },
-  { id: 'no-name', team: 'Unknown', points: null, position: 4 },
-];
+const STANDINGS_DATA = {
+  drivers: [
+    { id: 'd1', name: 'Max Verstappen', team: 'Red Bull', points: 100 },
+    { id: 'd2', name: 'Lando Norris',   team: 'McLaren',  points: 80 },
+  ],
+};
 
-const GPS = [
-  { id: 'BHR', name: 'GP Bahréin', circuit: 'Sakhir', country: 'Bahréin', date: '2026-03-01', isPast: true },
-  { id: 'SAU', name: 'GP Arabia Saudita', circuit: 'Jeddah', country: 'Arabia Saudita', date: '2026-03-08', isNext: true },
-  { id: 'AUS', name: 'GP Australia', circuit: 'Albert Park', country: 'Australia', date: '2026-03-22' },
-  { id: 'no-name-gp' },
-];
+const CALENDAR_DATA = {
+  races: [
+    { date: undefined,      raceName: undefined },       // no date/name
+    { date: '2099-01-01',   raceName: 'Future GP' },    // next
+    { date: '2099-02-01',   raceName: 'Later GP' },     // after next
+  ],
+};
 
 describe('f1-panel.js', () => {
   beforeEach(() => {
@@ -24,389 +24,325 @@ describe('f1-panel.js', () => {
     vi.resetAllMocks();
   });
 
-  // ── constructor / defaults ──────────────────────────────────────────────────
+  // ── constructor ──────────────────────────────────────────────────────────
 
-  test('crea element HTMLElement', () => {
-    const p = createF1Panel({ getToken: async () => 't' });
-    expect(p.element).toBeInstanceOf(HTMLElement);
-  });
-
-  test('opts undefined no rompe (opts = opts || {})', () => {
-    const p = createF1Panel(undefined);
-    expect(p.element).toBeInstanceOf(HTMLElement);
-  });
-
-  test('opts null no rompe', () => {
+  test('opts null — crea panel sin error', () => {
     const p = createF1Panel(null);
-    expect(p.element).toBeInstanceOf(HTMLElement);
+    expect(p.element).toBeDefined();
+    expect(p._state.tab).toBe('standings');
   });
 
-  test('título MiiaF1 presente', () => {
+  test('initial render — tab standings activo', () => {
     const p = createF1Panel({});
-    expect(p.element.textContent).toContain('MiiaF1');
+    const btn = p.element.querySelector('.f1-tab-standings');
+    expect(btn.classList.contains('active')).toBe(true);
   });
 
-  test('tabs Pilotos y Calendario presentes', () => {
+  // ── loading state ─────────────────────────────────────────────────────────
+
+  test('_setState loading=true muestra Cargando', () => {
     const p = createF1Panel({});
-    const tabs = p.element.querySelectorAll('.f1-tab');
-    expect(tabs.length).toBe(2);
-    expect(tabs[0].textContent).toBe('Pilotos');
-    expect(tabs[1].textContent).toBe('Calendario');
+    p._setState({ loading: true });
+    expect(p.element.querySelector('.f1-loading')).not.toBeNull();
+    expect(p.element.querySelector('.f1-loading').textContent).toBe('Cargando...');
   });
 
-  // ── tab switching ───────────────────────────────────────────────────────────
+  // ── error state ───────────────────────────────────────────────────────────
 
-  test('tab inicial es standings (calendar panel oculto)', () => {
+  test('_setState error muestra mensaje de error', () => {
     const p = createF1Panel({});
-    const calPanel = p.element.querySelector('.f1-calendar-panel');
-    expect(calPanel.style.display).toBe('none');
+    p._setState({ loading: false, error: 'Algo fallo' });
+    expect(p.element.querySelector('.f1-error').textContent).toBe('Algo fallo');
   });
 
-  test('switchTab calendar → muestra calendar, oculta standings', () => {
+  // ── standings tab ─────────────────────────────────────────────────────────
+
+  test('standings null muestra Sin standings disponibles', () => {
     const p = createF1Panel({});
-    p.switchTab('calendar');
-    expect(p._state.activeTab).toBe('calendar');
-    const standPanel = p.element.querySelector('.f1-standings-panel');
-    const calPanel = p.element.querySelector('.f1-calendar-panel');
-    expect(standPanel.style.display).toBe('none');
-    expect(calPanel.style.display).not.toBe('none');
+    p._setState({ loading: false, standings: null });
+    expect(p.element.querySelector('.f1-empty').textContent).toContain('Sin standings');
   });
 
-  test('switchTab standings → muestra standings, oculta calendar', () => {
+  test('standings con drivers renderiza tabla', () => {
     const p = createF1Panel({});
-    p.switchTab('calendar');
-    p.switchTab('standings');
-    expect(p._state.activeTab).toBe('standings');
-    const standPanel = p.element.querySelector('.f1-standings-panel');
-    expect(standPanel.style.display).not.toBe('none');
+    p._setState({ loading: false, standings: STANDINGS_DATA });
+    expect(p.element.querySelectorAll('.f1-driver-row').length).toBe(2);
   });
 
-  test('click tab Calendario dispara switchTab', () => {
+  test('standings drivers vacios muestra Sin pilotos', () => {
     const p = createF1Panel({});
-    const tabs = p.element.querySelectorAll('.f1-tab');
-    tabs[1].click();
-    expect(p._state.activeTab).toBe('calendar');
+    p._setState({ loading: false, standings: { drivers: [] } });
+    expect(p.element.querySelector('.f1-empty-msg').textContent).toBe('Sin pilotos');
   });
 
-  test('click tab Pilotos vuelve a standings', () => {
+  test('standings.drivers usa fallback [] cuando no hay key', () => {
     const p = createF1Panel({});
-    const tabs = p.element.querySelectorAll('.f1-tab');
-    tabs[1].click();
-    tabs[0].click();
-    expect(p._state.activeTab).toBe('standings');
+    p._setState({ loading: false, standings: {} }); // no drivers key
+    expect(p.element.querySelector('.f1-empty-msg').textContent).toBe('Sin pilotos');
   });
 
-  // ── standings loading/error/empty ───────────────────────────────────────────
-
-  test('standingsLoading → skeleton en standings panel', () => {
+  test('driver adoptado tiene clase f1-adopted y boton Adoptado', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: true });
-    const skels = p.element.querySelector('.f1-standings-panel').querySelectorAll('.f1-skeleton');
-    expect(skels.length).toBeGreaterThan(0);
-  });
-
-  test('standingsError → mensaje error en standings panel', () => {
-    const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standingsError: 'Error standings' });
-    expect(p.element.querySelector('.f1-standings-panel').textContent).toContain('Error standings');
-  });
-
-  test('standings null → drivers=[] → "Sin pilotos"', () => {
-    const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: null });
-    expect(p.element.querySelector('.f1-standings-panel').textContent).toContain('Sin pilotos');
-  });
-
-  test('drivers [] → "Sin pilotos"', () => {
-    const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [] } });
-    expect(p.element.querySelector('.f1-standings-panel').textContent).toContain('Sin pilotos');
-  });
-
-  test('drivers presentes → renderiza f1-driver-row', () => {
-    const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: DRIVERS } });
+    p._setState({ loading: false, standings: STANDINGS_DATA, adoptedDriver: 'd1' });
     const rows = p.element.querySelectorAll('.f1-driver-row');
-    expect(rows.length).toBe(4);
+    expect(rows[0].classList.contains('f1-adopted')).toBe(true);
+    expect(rows[0].querySelector('.f1-adopt-btn').textContent).toBe('Adoptado');
   });
 
-  // ── driver row branches ─────────────────────────────────────────────────────
-
-  test('driver adoptedByOwner → borde rojo, sin botón Adoptar', () => {
+  test('driver no adoptado no tiene clase f1-adopted y boton Adoptar', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ id: 'HAM', name: 'Hamilton', adoptedByOwner: true, points: 100, position: 1 }] } });
+    p._setState({ loading: false, standings: STANDINGS_DATA, adoptedDriver: 'd1' });
+    const rows = p.element.querySelectorAll('.f1-driver-row');
+    expect(rows[1].classList.contains('f1-adopted')).toBe(false);
+    expect(rows[1].querySelector('.f1-adopt-btn').textContent).toBe('Adoptar');
+  });
+
+  test('driver sin name usa Unknown', () => {
+    const p = createF1Panel({});
+    p._setState({ loading: false, standings: { drivers: [{ id: 'x', points: 10 }] } });
+    expect(p.element.textContent).toContain('Unknown');
+  });
+
+  test('driver sin points muestra 0', () => {
+    const p = createF1Panel({});
+    p._setState({ loading: false, standings: { drivers: [{ id: 'x', name: 'Piloto' }] } });
     const row = p.element.querySelector('.f1-driver-row');
-    expect(row.style.borderLeft).toContain('#E10600');
-    expect(row.querySelector('.f1-adopt-btn')).toBeNull();
+    expect(row.textContent).toContain('0');
   });
 
-  test('driver NO adoptado → borde transparent, botón Adoptar visible', () => {
+  // ── calendar tab ──────────────────────────────────────────────────────────
+
+  test('calendar null muestra Sin calendario disponible', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ id: 'VER', name: 'Verstappen', points: 200, position: 1 }] } });
-    const row = p.element.querySelector('.f1-driver-row');
-    expect(row.style.borderLeft).toContain('transparent');
-    expect(row.querySelector('.f1-adopt-btn')).toBeTruthy();
+    p._setState({ loading: false, tab: 'calendar', calendar: null });
+    expect(p.element.querySelector('.f1-empty').textContent).toContain('Sin calendario');
   });
 
-  test('driver.name presente → muestra name', () => {
+  test('calendar races vacias muestra Sin carreras', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ id: 'VER', name: 'Verstappen', points: 0, position: 1 }] } });
-    expect(p.element.textContent).toContain('Verstappen');
+    p._setState({ loading: false, tab: 'calendar', calendar: { races: [] } });
+    expect(p.element.querySelector('.f1-empty-msg').textContent).toBe('Sin carreras programadas');
   });
 
-  test('driver sin name pero con id → muestra id', () => {
+  test('calendar races usa fallback [] cuando no hay key', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ id: 'XYZ-ID', points: 0, position: 1 }] } });
-    expect(p.element.textContent).toContain('XYZ-ID');
+    p._setState({ loading: false, tab: 'calendar', calendar: {} }); // no races key
+    expect(p.element.querySelector('.f1-empty-msg').textContent).toBe('Sin carreras programadas');
   });
 
-  test('driver sin name ni id → muestra "Piloto"', () => {
+  test('calendar renderiza race cards', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ points: 10, position: 1 }] } });
-    expect(p.element.textContent).toContain('Piloto');
+    p._setState({ loading: false, tab: 'calendar', calendar: CALENDAR_DATA });
+    expect(p.element.querySelectorAll('.f1-race-card').length).toBe(3);
   });
 
-  test('driver.points=0 → muestra "0" (0 != null)', () => {
+  test('primera carrera futura tiene badge PROXIMO y clase f1-race-next', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ name: 'X', points: 0, position: 1 }] } });
-    expect(p.element.querySelector('.f1-standings-panel').textContent).toContain('0');
+    p._setState({ loading: false, tab: 'calendar', calendar: CALENDAR_DATA });
+    const cards = p.element.querySelectorAll('.f1-race-card');
+    // race index 1 is the first future (2099-01-01) — index 0 has no date → '' < today
+    expect(cards[1].classList.contains('f1-race-next')).toBe(true);
+    expect(cards[1].querySelector('.f1-next-badge')).not.toBeNull();
   });
 
-  test('driver.points=null → muestra "0" (|| 0 fallback)', () => {
+  test('carrera sin date usa string vacio (isNext false)', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ name: 'X', points: null, position: 1 }] } });
-    expect(p.element.querySelector('.f1-standings-panel').textContent).toContain('0');
+    p._setState({ loading: false, tab: 'calendar', calendar: CALENDAR_DATA });
+    const cards = p.element.querySelectorAll('.f1-race-card');
+    // race index 0 has no date
+    expect(cards[0].classList.contains('f1-race-next')).toBe(false);
+    expect(cards[0].querySelector('.f1-race-date').textContent).toBe('');
   });
 
-  test('driver.team_color ausente → dot usa #888', () => {
+  test('carrera sin raceName usa GP', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ name: 'X', points: 5, position: 1 }] } });
-    const row = p.element.querySelector('.f1-driver-row');
-    expect(row).toBeTruthy();
+    p._setState({ loading: false, tab: 'calendar', calendar: CALENDAR_DATA });
+    const cards = p.element.querySelectorAll('.f1-race-card');
+    // race index 0 has no raceName → 'GP'
+    expect(cards[0].querySelector('.f1-race-name').textContent).toBe('GP');
   });
 
-  test('driver.team presente → muestra team', () => {
+  test('segunda carrera futura no tiene badge PROXIMO (foundNext ya true)', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ name: 'X', team: 'McLaren', points: 50, position: 1 }] } });
-    expect(p.element.textContent).toContain('McLaren');
+    p._setState({ loading: false, tab: 'calendar', calendar: CALENDAR_DATA });
+    const cards = p.element.querySelectorAll('.f1-race-card');
+    // race index 2 is after the next GP
+    expect(cards[2].classList.contains('f1-race-next')).toBe(false);
+    expect(cards[2].querySelector('.f1-next-badge')).toBeNull();
   });
 
-  test('driver.position ausente → muestra "—" (|| falsy branch)', () => {
+  // ── tab buttons ───────────────────────────────────────────────────────────
+
+  test('tab standings activo tiene clase active', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: false, standings: { drivers: [{ name: 'X', points: 10 }] } });
-    expect(p.element.querySelector('.f1-standings-panel').textContent).toContain('—');
+    p._setState({ tab: 'standings', loading: false, standings: null });
+    expect(p.element.querySelector('.f1-tab-standings').classList.contains('active')).toBe(true);
+    expect(p.element.querySelector('.f1-tab-calendar').classList.contains('active')).toBe(false);
   });
 
-  // ── adopt button ───────────────────────────────────────────────────────────
+  test('tab calendar activo tiene clase active', () => {
+    const p = createF1Panel({});
+    p._setState({ tab: 'calendar', loading: false, calendar: null });
+    expect(p.element.querySelector('.f1-tab-calendar').classList.contains('active')).toBe(true);
+    expect(p.element.querySelector('.f1-tab-standings').classList.contains('active')).toBe(false);
+  });
 
-  test('click Adoptar llama onAdopt con driverId', async () => {
-    const onAdopt = vi.fn().mockResolvedValue(null);
-    const p = createF1Panel({ onAdopt, getToken: async () => 'tok' });
-    p._setState({ standingsLoading: false, standings: { drivers: [{ id: 'VER', name: 'Verstappen', points: 200, position: 1 }] } });
-    p.element.querySelector('.f1-adopt-btn').click();
+  // ── switchTab ─────────────────────────────────────────────────────────────
+
+  test('switchTab al mismo tab es no-op', () => {
+    const p = createF1Panel({});
+    p._setState({ tab: 'standings', loading: false, standings: null });
+    const before = p._state.tab;
+    p.switchTab('standings');
+    expect(p._state.tab).toBe(before); // no change
+  });
+
+  test('switchTab a calendar cambia tab y llama loadCalendar', async () => {
+    const fetchCalendar = vi.fn().mockResolvedValue(CALENDAR_DATA);
+    const p = createF1Panel({ fetchCalendar });
+    p._setState({ tab: 'standings', loading: false, standings: null, calendar: null });
+    p.switchTab('calendar');
+    expect(p._state.tab).toBe('calendar');
     await new Promise(r => setTimeout(r, 20));
-    expect(onAdopt).toHaveBeenCalledWith('VER', 'tok');
-  });
-
-  test('adoptDriver con driver sin id ni name usa string vacío', async () => {
-    const onAdopt = vi.fn().mockResolvedValue(null);
-    const p = createF1Panel({ onAdopt, getToken: async () => 't' });
-    p._setState({ standingsLoading: false, standings: { drivers: [{ points: 5, position: 1 }] } });
-    p.element.querySelector('.f1-adopt-btn').click();
-    await new Promise(r => setTimeout(r, 20));
-    expect(onAdopt).toHaveBeenCalledWith('', 't');
-  });
-
-  test('default onAdopt no rompe', async () => {
-    const p = createF1Panel({ getToken: async () => 't' });
-    p._setState({ standingsLoading: false, standings: { drivers: [{ id: 'VER', name: 'V', points: 0, position: 1 }] } });
-    expect(() => p.element.querySelector('.f1-adopt-btn').click()).not.toThrow();
-    await new Promise(r => setTimeout(r, 20));
-  });
-
-  // ── calendar loading/error/empty ────────────────────────────────────────────
-
-  test('calendarLoading → skeleton en calendar panel', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: true });
-    const skels = p.element.querySelector('.f1-calendar-panel').querySelectorAll('.f1-skeleton');
-    expect(skels.length).toBeGreaterThan(0);
-  });
-
-  test('calendarError → mensaje error en calendar panel', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendarError: 'Error cal' });
-    expect(p.element.querySelector('.f1-calendar-panel').textContent).toContain('Error cal');
-  });
-
-  test('calendar null → gps=[] → "Sin GPs"', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: null });
-    expect(p.element.querySelector('.f1-calendar-panel').textContent).toContain('Sin GPs');
-  });
-
-  test('gps [] → "Sin GPs"', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [] } });
-    expect(p.element.querySelector('.f1-calendar-panel').textContent).toContain('Sin GPs');
-  });
-
-  test('gps presentes → renderiza f1-gp-item', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: GPS } });
-    const items = p.element.querySelectorAll('.f1-gp-item');
-    expect(items.length).toBe(4);
-  });
-
-  // ── GP item branches ────────────────────────────────────────────────────────
-
-  test('gp.isNext → borde rojo, badge ACTIVO', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [{ id: 'SAU', name: 'GP Arabia', circuit: 'Jeddah', country: 'Arabia', date: '2026-03-08', isNext: true }] } });
-    const item = p.element.querySelector('.f1-gp-item');
-    expect(item.style.borderLeft).toContain('#E10600');
-    expect(item.textContent).toContain('ACTIVO');
-  });
-
-  test('gp.isPast → opacidad 0.55, badge PASADO', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [{ id: 'BHR', name: 'GP Bahréin', circuit: 'Sakhir', country: 'Bahréin', date: '2026-03-01', isPast: true }] } });
-    const item = p.element.querySelector('.f1-gp-item');
-    expect(item.style.opacity).toBe('0.55');
-    expect(item.textContent).toContain('PASADO');
-  });
-
-  test('gp upcoming (no isNext, no isPast) → badge PRÓXIMO', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [{ id: 'AUS', name: 'GP Australia', circuit: 'Albert Park', country: 'Australia', date: '2026-03-22' }] } });
-    const item = p.element.querySelector('.f1-gp-item');
-    expect(item.textContent).toContain('PRÓXIMO');
-  });
-
-  test('gp.name presente → muestra name', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [{ id: 'BHR', name: 'GP Bahréin', date: '2026-03-01' }] } });
-    expect(p.element.textContent).toContain('GP Bahréin');
-  });
-
-  test('gp sin name pero con id → muestra id', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [{ id: 'MY-ID', date: '2026-05-01' }] } });
-    expect(p.element.textContent).toContain('MY-ID');
-  });
-
-  test('gp sin name ni id → muestra "GP"', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [{ date: '2026-05-01' }] } });
-    expect(p.element.textContent).toContain('GP');
-  });
-
-  test('gp.date ausente → muestra "—"', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [{ name: 'GP Test' }] } });
-    expect(p.element.textContent).toContain('—');
-  });
-
-  test('gp.country ausente → circuitEl solo muestra circuit', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [{ name: 'GP Test', circuit: 'Monza', date: '2026-09-07' }] } });
-    expect(p.element.textContent).toContain('Monza');
-  });
-
-  test('gp.circuit y country → "circuit — country"', () => {
-    const p = createF1Panel({});
-    p.switchTab('calendar');
-    p._setState({ calendarLoading: false, calendar: { gps: [{ name: 'GP Italia', circuit: 'Monza', country: 'Italia', date: '2026-09-07' }] } });
-    expect(p.element.textContent).toContain('Monza — Italia');
-  });
-
-  // ── loadStandings / loadCalendar / refresh ──────────────────────────────────
-
-  test('loadStandings exitoso actualiza standings', async () => {
-    const p = createF1Panel({
-      fetchStandings: async () => ({ drivers: DRIVERS }),
-      getToken: async () => 'tok',
-    });
-    await p.loadStandings();
-    expect(p._state.standingsLoading).toBe(false);
-    expect(p._state.standings.drivers.length).toBe(4);
-  });
-
-  test('loadStandings error pone standingsError', async () => {
-    const p = createF1Panel({
-      fetchStandings: async () => { throw new Error('standings fail'); },
-      getToken: async () => 't',
-    });
-    await p.loadStandings();
-    expect(p._state.standingsError).toBe('standings fail');
-    expect(p._state.standingsLoading).toBe(false);
-  });
-
-  test('loadCalendar exitoso actualiza calendar', async () => {
-    const p = createF1Panel({
-      fetchCalendar: async () => ({ gps: GPS }),
-      getToken: async () => 'tok',
-    });
-    await p.loadCalendar();
-    expect(p._state.calendarLoading).toBe(false);
-    expect(p._state.calendar.gps.length).toBe(4);
-  });
-
-  test('loadCalendar error pone calendarError', async () => {
-    const p = createF1Panel({
-      fetchCalendar: async () => { throw new Error('cal fail'); },
-      getToken: async () => 't',
-    });
-    await p.loadCalendar();
-    expect(p._state.calendarError).toBe('cal fail');
-    expect(p._state.calendarLoading).toBe(false);
-  });
-
-  test('refresh() llama loadStandings + loadCalendar', async () => {
-    const fetchStandings = vi.fn().mockResolvedValue({ drivers: [] });
-    const fetchCalendar = vi.fn().mockResolvedValue({ gps: [] });
-    const p = createF1Panel({ fetchStandings, fetchCalendar, getToken: async () => 't' });
-    await p.refresh();
-    expect(fetchStandings).toHaveBeenCalled();
     expect(fetchCalendar).toHaveBeenCalled();
   });
 
-  test('default fetchStandings retorna null → standings=null', async () => {
-    const p = createF1Panel({ getToken: async () => 't' });
+  test('switchTab a calendar cuando ya cargado — no llama loadCalendar', async () => {
+    const fetchCalendar = vi.fn().mockResolvedValue(CALENDAR_DATA);
+    const p = createF1Panel({ fetchCalendar });
+    p._setState({ tab: 'standings', loading: false, standings: null, calendar: CALENDAR_DATA });
+    p.switchTab('calendar');
+    await new Promise(r => setTimeout(r, 20));
+    expect(fetchCalendar).not.toHaveBeenCalled();
+  });
+
+  test('switchTab a standings cuando ya cargado — no llama loadStandings', async () => {
+    const fetchStandings = vi.fn().mockResolvedValue(STANDINGS_DATA);
+    const p = createF1Panel({ fetchStandings });
+    // Pre-load standings
+    p._setState({ tab: 'calendar', loading: false, standings: STANDINGS_DATA });
+    p.switchTab('standings');
+    await new Promise(r => setTimeout(r, 20));
+    expect(fetchStandings).not.toHaveBeenCalled();
+  });
+
+  test('switchTab a standings cuando no cargado — llama loadStandings', async () => {
+    const fetchStandings = vi.fn().mockResolvedValue(STANDINGS_DATA);
+    const p = createF1Panel({ fetchStandings });
+    p._setState({ tab: 'calendar', loading: false, standings: null });
+    p.switchTab('standings');
+    await new Promise(r => setTimeout(r, 20));
+    expect(fetchStandings).toHaveBeenCalled();
+  });
+
+  test('click tab Calendario dispara switchTab', async () => {
+    const fetchCalendar = vi.fn().mockResolvedValue(CALENDAR_DATA);
+    const p = createF1Panel({ fetchCalendar });
+    p._setState({ tab: 'standings', loading: false, standings: null, calendar: null });
+    p.element.querySelector('.f1-tab-calendar').click();
+    await new Promise(r => setTimeout(r, 20));
+    expect(p._state.tab).toBe('calendar');
+  });
+
+  test('click tab Standings dispara switchTab', () => {
+    const p = createF1Panel({});
+    p._setState({ tab: 'calendar', loading: false, calendar: null });
+    p.element.querySelector('.f1-tab-standings').click();
+    expect(p._state.tab).toBe('standings');
+  });
+
+  // ── loadStandings ─────────────────────────────────────────────────────────
+
+  test('loadStandings sets standings + loading=false', async () => {
+    const fetchStandings = vi.fn().mockResolvedValue(STANDINGS_DATA);
+    const p = createF1Panel({ fetchStandings });
+    await p.loadStandings();
+    expect(p._state.standings).toEqual(STANDINGS_DATA);
+    expect(p._state.loading).toBe(false);
+  });
+
+  test('loadStandings error sets error + loading=false', async () => {
+    const fetchStandings = vi.fn().mockRejectedValue(new Error('no data'));
+    const p = createF1Panel({ fetchStandings });
+    await p.loadStandings();
+    expect(p._state.error).toBe('no data');
+    expect(p._state.loading).toBe(false);
+  });
+
+  test('loadStandings sin fetchStandings usa default (retorna null)', async () => {
+    const p = createF1Panel({});
     await p.loadStandings();
     expect(p._state.standings).toBeNull();
   });
 
-  test('default fetchCalendar retorna null → calendar=null', async () => {
-    const p = createF1Panel({ getToken: async () => 't' });
+  test('loadStandings sin getToken usa default (token vacio)', async () => {
+    const fetchStandings = vi.fn().mockResolvedValue(STANDINGS_DATA);
+    const p = createF1Panel({ fetchStandings }); // no getToken
+    await p.loadStandings();
+    expect(fetchStandings).toHaveBeenCalledWith('');
+  });
+
+  // ── loadCalendar ──────────────────────────────────────────────────────────
+
+  test('loadCalendar sets calendar + loading=false', async () => {
+    const fetchCalendar = vi.fn().mockResolvedValue(CALENDAR_DATA);
+    const p = createF1Panel({ fetchCalendar });
+    await p.loadCalendar();
+    expect(p._state.calendar).toEqual(CALENDAR_DATA);
+    expect(p._state.loading).toBe(false);
+  });
+
+  test('loadCalendar error sets error + loading=false', async () => {
+    const fetchCalendar = vi.fn().mockRejectedValue(new Error('cal fail'));
+    const p = createF1Panel({ fetchCalendar });
+    await p.loadCalendar();
+    expect(p._state.error).toBe('cal fail');
+    expect(p._state.loading).toBe(false);
+  });
+
+  test('loadCalendar sin fetchCalendar usa default (retorna null)', async () => {
+    const p = createF1Panel({});
     await p.loadCalendar();
     expect(p._state.calendar).toBeNull();
   });
 
-  test('default getToken → token vacío pasado a fetchStandings', async () => {
-    let capturedToken;
-    const p = createF1Panel({ fetchStandings: async (tok) => { capturedToken = tok; return null; } });
-    await p.loadStandings();
-    expect(capturedToken).toBe('');
+  test('loadCalendar sin getToken usa default (token vacio)', async () => {
+    const fetchCalendar = vi.fn().mockResolvedValue(CALENDAR_DATA);
+    const p = createF1Panel({ fetchCalendar }); // no getToken
+    await p.loadCalendar();
+    expect(fetchCalendar).toHaveBeenCalledWith('');
   });
 
-  test('_setState standingsLoading:true + calendarLoading:true → doble skeleton', () => {
+  // ── adoptDriver ───────────────────────────────────────────────────────────
+
+  test('adoptDriver actualiza adoptedDriver y llama onAdopt', () => {
+    const onAdopt = vi.fn();
+    const p = createF1Panel({ onAdopt });
+    p._setState({ loading: false, standings: STANDINGS_DATA });
+    p.adoptDriver('d1', 'Max Verstappen');
+    expect(p._state.adoptedDriver).toBe('d1');
+    expect(onAdopt).toHaveBeenCalledWith('d1', 'Max Verstappen');
+  });
+
+  test('click boton Adoptar llama adoptDriver', () => {
+    const onAdopt = vi.fn();
+    const p = createF1Panel({ onAdopt });
+    p._setState({ loading: false, standings: STANDINGS_DATA });
+    p.element.querySelector('.f1-adopt-btn').click();
+    expect(onAdopt).toHaveBeenCalled();
+  });
+
+  test('default onAdopt — click no lanza error', () => {
     const p = createF1Panel({});
-    p._setState({ standingsLoading: true, calendarLoading: true });
-    const standSkels = p.element.querySelector('.f1-standings-panel').querySelectorAll('.f1-skeleton');
-    expect(standSkels.length).toBeGreaterThan(0);
+    p._setState({ loading: false, standings: STANDINGS_DATA });
+    expect(() => p.element.querySelector('.f1-adopt-btn').click()).not.toThrow();
+  });
+
+  test('click boton Adoptar en driver sin name usa Unknown', () => {
+    const onAdopt = vi.fn();
+    const p = createF1Panel({ onAdopt });
+    p._setState({ loading: false, standings: { drivers: [{ id: 'x' }] } }); // no name
+    p.element.querySelector('.f1-adopt-btn').click();
+    expect(onAdopt).toHaveBeenCalledWith('x', 'Unknown');
   });
 });
