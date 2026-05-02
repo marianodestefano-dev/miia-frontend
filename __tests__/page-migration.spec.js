@@ -16,6 +16,9 @@ const PAGES_MIGRATED = [
   'privacy.html',
   'terms.html',
   'cookies.html',
+  'dna-extraction.html',
+  'email-signature.html',
+  'miia-logo-preview.html',
 ];
 
 for (const page of PAGES_MIGRATED) {
