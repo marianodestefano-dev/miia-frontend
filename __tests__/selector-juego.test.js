@@ -208,12 +208,36 @@ describe('selector-juego.js panel', () => {
   test('callbacks default no-op no rompen', () => {
     const p = createSelectorJuegoPanel({});
     expect(typeof p.refresh).toBe('function');
-    // Defaults: getToken = async () => '', fetchGames = async () => []
   });
 
   test('refresh con default fetchGames retorna []', async () => {
     const p = createSelectorJuegoPanel({});
     await p.refresh();
     expect(p.element.querySelectorAll('.card').length).toBe(0);
+  });
+
+  // Branch coverage extras: default fallback functions invoked + opts=undefined
+  test('sin opts (undefined) — opts||{} branch', () => {
+    const p = createSelectorJuegoPanel(undefined);
+    expect(p.element).toBeInstanceOf(HTMLElement);
+  });
+
+  test('click card sin onSelect — default no-op invocado', async () => {
+    const p = createSelectorJuegoPanel({ fetchGames: async () => [{ id: 'g1', name: 'Catan' }], getToken: async () => 't' });
+    await p.refresh();
+    // default onSelect = () => {} should be called without throwing
+    expect(() => p.element.querySelector('.card').click()).not.toThrow();
+  });
+
+  test('click Jugar sin onStart — default no-op invocado', async () => {
+    const p = createSelectorJuegoPanel({ fetchGames: async () => [{ id: 'g1', name: 'Catan' }], getToken: async () => 't' });
+    await p.refresh();
+    const card = p.element.querySelector('.card');
+    expect(() => card.querySelector('.btn-primary.btn-sm').click()).not.toThrow();
+  });
+
+  test('click FAB sin onAddGame — default no-op invocado', () => {
+    const p = createSelectorJuegoPanel({ fetchGames: async () => [], getToken: async () => 't', isOwner: true });
+    expect(() => p.element.querySelector('button[title="Agregar juego"]').click()).not.toThrow();
   });
 });
