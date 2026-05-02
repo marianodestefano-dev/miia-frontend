@@ -7,7 +7,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
-      include: ['assets/ludomiia-panels/**/*.js'],
+      include: ['assets/ludomiia-panels/**/*.js', 'assets/f1-panels/**/*.js'],
       exclude: ['**/*.config.js', '**/__tests__/**', '**/node_modules/**'],
       thresholds: {
         lines: 100,
