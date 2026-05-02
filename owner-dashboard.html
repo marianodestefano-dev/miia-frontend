@@ -17,6 +17,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Vi F4.0 design-system tokens (cross-proyecto) — debe cargar ANTES de styles-v2.css para que tokens esten disponibles -->
+  <link rel="stylesheet" href="assets/v2-design-system.css">
   <link rel="stylesheet" href="styles-v2.css">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
 
@@ -514,27 +516,89 @@
             </div>
           </div>
 
-          <!-- TAB: EN VIVO (F1.12) -->
+          <!-- TAB: EN VIVO (F1.12 + scope ampliado 2026-05-02 firma viva Mariano:
+               "ver carrera en vivo por TV y mirar la web de MIIAF1 y ver
+               exactamente los tiempos de un piloto y seguirlo por el circuito")
+          -->
           <div id="f1TabEnvivo" class="f1-tab-content">
             <div id="f1LiveNoRace" style="text-align:center;padding:48px 20px;">
               <div style="font-size:36px;font-weight:900;color:#E10600;margin-bottom:8px;letter-spacing:-1px;">F1</div>
-              <div style="font-size:16px;font-weight:700;color:var(--text-1);margin-bottom:8px;">Sin carrera en vivo</div>
-              <div style="font-size:13px;color:var(--text-3);">Los datos en tiempo real aparecen aqui durante las sesiones de Viernes a Domingo.</div>
+              <div style="font-size:16px;font-weight:700;color:var(--text-1);margin-bottom:8px;">Sin sesion en vivo</div>
+              <div style="font-size:13px;color:var(--text-3);">Practicas, qualys, sprints y carreras aparecen aqui en tiempo real (Vie-Dom).</div>
               <div id="f1LiveCountdown" style="margin-top:16px;font-size:13px;font-weight:600;color:#E10600;"></div>
             </div>
             <div id="f1LiveRacePanel" style="display:none;">
-            <!-- Circuit map con posiciones en vivo -->
-            <div id="f1CircuitMapLive" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;margin-bottom:14px;">
-              <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-3);margin-bottom:8px;">MAPA DE CIRCUITO</div>
-              <svg id="f1MapSvg" viewBox="0 0 500 280" style="width:100%;max-height:180px;display:block;border-radius:6px;"></svg>
-              <div id="f1MapLegend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:11px;color:var(--text-2);"></div>
-            </div>
-              <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+
+              <!-- HEADER SESION ACTIVA (FP1/FP2/FP3/Q/SQ/S/R) -->
+              <div id="f1LiveSessionHeader" style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
                 <span class="f1-live-badge">EN VIVO</span>
+                <span id="f1LiveSessionType" style="font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;color:#E10600;">-</span>
                 <span id="f1LiveRaceName" style="font-size:15px;font-weight:700;color:var(--text-1);">-</span>
                 <span id="f1LiveLap" style="font-size:13px;color:var(--text-2);">-</span>
                 <button class="btn-ghost btn-sm" onclick="f1ToggleLivePolling()" id="f1LiveToggleBtn" style="margin-left:auto;">Pausar</button>
               </div>
+
+              <!-- MAPA DE CIRCUITO con posiciones GPS reales -->
+              <div id="f1CircuitMapLive" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;margin-bottom:14px;">
+                <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-3);margin-bottom:8px;">MAPA DE CIRCUITO — POSICIONES GPS</div>
+                <svg id="f1MapSvg" viewBox="0 0 500 280" style="width:100%;max-height:200px;display:block;border-radius:6px;"></svg>
+                <div id="f1MapLegend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:11px;color:var(--text-2);"></div>
+              </div>
+
+              <!-- PANEL TELEMETRIA PILOTO SELECCIONADO (scope ampliado Mariano 2026-05-02) -->
+              <div id="f1TelemetryPanel" style="background:linear-gradient(135deg,rgba(225,6,0,0.06),rgba(15,0,0,0.10));border:1px solid rgba(225,6,0,0.35);border-radius:var(--r-lg);padding:16px;margin-bottom:14px;">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap;">
+                  <span style="font-size:10px;font-weight:800;letter-spacing:1.5px;color:#E10600;">SEGUIR PILOTO</span>
+                  <select id="f1TelemetryDriverSel" class="input" style="max-width:240px;font-size:13px;">
+                    <option value="">-- elegir piloto --</option>
+                  </select>
+                  <span id="f1TelemetryDriverName" style="font-size:14px;font-weight:700;color:var(--text-1);"></span>
+                </div>
+
+                <!-- METRICAS HEADLINE: Speed + RPM + Gear + DRS -->
+                <div id="f1TelemetryMetrics" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:12px;">
+                  <div class="f1-tel-cell"><div class="f1-tel-label">SPEED</div><div class="f1-tel-value"><span id="f1TelSpeed">-</span> <span class="f1-tel-unit">km/h</span></div></div>
+                  <div class="f1-tel-cell"><div class="f1-tel-label">RPM</div><div class="f1-tel-value" id="f1TelRpm">-</div></div>
+                  <div class="f1-tel-cell"><div class="f1-tel-label">GEAR</div><div class="f1-tel-value" id="f1TelGear">-</div></div>
+                  <div class="f1-tel-cell"><div class="f1-tel-label">DRS</div><div class="f1-tel-value"><span id="f1TelDrs" style="font-size:14px;">-</span></div></div>
+                </div>
+
+                <!-- THROTTLE / BRAKE BARS -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--text-3);margin-bottom:4px;"><span>THROTTLE</span><span id="f1TelThrottlePct">0%</span></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:4px;height:10px;overflow:hidden;"><div id="f1TelThrottleBar" style="height:100%;width:0%;background:#22c55e;transition:width 200ms;"></div></div>
+                  </div>
+                  <div>
+                    <div style="display:flex;justify-content:space-between;font-size:10px;font-weight:700;color:var(--text-3);margin-bottom:4px;"><span>BRAKE</span><span id="f1TelBrakePct">0%</span></div>
+                    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:4px;height:10px;overflow:hidden;"><div id="f1TelBrakeBar" style="height:100%;width:0%;background:#ef4444;transition:width 200ms;"></div></div>
+                  </div>
+                </div>
+
+                <!-- SECTORES S1/S2/S3 + GAP + INTERVAL -->
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-bottom:12px;">
+                  <div class="f1-tel-cell"><div class="f1-tel-label">S1</div><div class="f1-tel-value" id="f1TelS1">-</div></div>
+                  <div class="f1-tel-cell"><div class="f1-tel-label">S2</div><div class="f1-tel-value" id="f1TelS2">-</div></div>
+                  <div class="f1-tel-cell"><div class="f1-tel-label">S3</div><div class="f1-tel-value" id="f1TelS3">-</div></div>
+                  <div class="f1-tel-cell"><div class="f1-tel-label">GAP LIDER</div><div class="f1-tel-value" id="f1TelGap">-</div></div>
+                  <div class="f1-tel-cell"><div class="f1-tel-label">INTERVAL</div><div class="f1-tel-value" id="f1TelInterval">-</div></div>
+                </div>
+
+                <!-- NEUMATICOS + PIT STOPS -->
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+                  <div class="f1-tel-cell"><div class="f1-tel-label">NEUMATICO</div><div class="f1-tel-value"><span id="f1TelTyre">-</span> <span style="font-size:11px;color:var(--text-3);">(<span id="f1TelTyreAge">-</span> vueltas)</span></div></div>
+                  <div class="f1-tel-cell"><div class="f1-tel-label">PIT STOPS</div><div class="f1-tel-value" id="f1TelPits">-</div></div>
+                </div>
+
+                <!-- VUELTA RAPIDA + ULTIMAS 3 VUELTAS -->
+                <div style="margin-top:8px;">
+                  <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-3);margin-bottom:6px;">VUELTAS RECIENTES</div>
+                  <div id="f1TelRecentLaps" style="display:flex;flex-wrap:wrap;gap:6px;font-size:11px;color:var(--text-2);"></div>
+                  <div style="margin-top:6px;font-size:11px;color:#E10600;">FASTEST: <span id="f1TelFastest" style="font-weight:700;">-</span></div>
+                </div>
+              </div>
+
+              <!-- TABLA PRINCIPAL POSICIONES -->
               <div style="overflow-x:auto;">
                 <table class="f1-live-table">
                   <thead>
@@ -2323,6 +2387,7 @@
 
     function f1StopLivePolling() {
       if (_f1LiveInterval) { clearInterval(_f1LiveInterval); _f1LiveInterval = null; }
+      if (_f1TelemetryInterval) { clearInterval(_f1TelemetryInterval); _f1TelemetryInterval = null; }
       _f1LiveActive = false;
     }
 
@@ -2348,8 +2413,131 @@
         if (!resp.ok) return;
         const data = await resp.json();
         f1UpdateLiveTable(data);
+        // F1 telemetria scope ampliado 2026-05-02
+        f1PollSession();
+        f1PopulateTelemetrySelector(data && data.positions);
       } catch(e) { /* network */ }
     }
+
+    // ─── F1 Telemetria scope ampliado Mariano 2026-05-02 ─────────────
+    let _f1TelemetryInterval = null;
+    let _f1SelectedDriverNum = null;
+
+    async function f1PollSession() {
+      try {
+        const r = await fetch(`${API}/api/f1/live/session`);
+        if (!r.ok) return;
+        const d = await r.json();
+        const typeEl = document.getElementById('f1LiveSessionType');
+        if (typeEl) typeEl.textContent = (d.session && (d.session.session_type || d.session.session_name)) || '';
+      } catch (e) { /* */ }
+    }
+
+    function f1PopulateTelemetrySelector(positions) {
+      const sel = document.getElementById('f1TelemetryDriverSel');
+      if (!sel || !positions || !positions.length) return;
+      const cur = sel.value;
+      // Repoblar solo si cambio el numero de pilotos (evitar parpadeo)
+      if (sel.options.length === positions.length + 1) return;
+      sel.innerHTML = '<option value="">-- elegir piloto --</option>' +
+        positions.map(p => {
+          const num = p.driver_number || p.number;
+          const name = p.driverName || p.driver_name || ('#' + num);
+          return `<option value="${num}">${num} — ${name}</option>`;
+        }).join('');
+      if (cur) sel.value = cur;
+    }
+
+    function f1OnTelemetryDriverChange() {
+      const sel = document.getElementById('f1TelemetryDriverSel');
+      const num = sel ? parseInt(sel.value, 10) : NaN;
+      if (_f1TelemetryInterval) { clearInterval(_f1TelemetryInterval); _f1TelemetryInterval = null; }
+      if (!num) { _f1SelectedDriverNum = null; f1ClearTelemetryPanel(); return; }
+      _f1SelectedDriverNum = num;
+      f1FetchSnapshot(num);
+      _f1TelemetryInterval = setInterval(() => f1FetchSnapshot(num), 1500);
+    }
+
+    async function f1FetchSnapshot(driverNum) {
+      try {
+        const r = await fetch(`${API}/api/f1/live/driver/${driverNum}/snapshot`);
+        if (!r.ok) return;
+        const d = await r.json();
+        f1RenderTelemetryPanel(d);
+      } catch (e) { /* */ }
+    }
+
+    function f1FmtNum(n, dec) { if (n == null || isNaN(n)) return '-'; return Number(n).toFixed(dec == null ? 0 : dec); }
+    function f1FmtSec(s) { if (s == null || isNaN(s)) return '-'; const m = Math.floor(s/60); const sec = (s % 60).toFixed(3); return m > 0 ? `${m}:${sec.padStart(6,'0')}` : sec; }
+
+    function f1RenderTelemetryPanel(d) {
+      const snap = d && d.snapshot;
+      const setTxt = (id, v) => { const e = document.getElementById(id); if (e) e.textContent = (v == null ? '-' : v); };
+
+      if (!snap) { f1ClearTelemetryPanel(); return; }
+      const tel = snap.telemetry || {};
+      const stint = snap.stint || {};
+      const intervals = snap.intervals || {};
+      const laps = snap.laps || [];
+      const lastLap = laps.length ? laps[laps.length - 1] : null;
+      const fastest = snap.fastest_lap || null;
+
+      setTxt('f1TelSpeed', f1FmtNum(tel.speed));
+      setTxt('f1TelRpm', f1FmtNum(tel.rpm));
+      setTxt('f1TelGear', tel.n_gear != null ? tel.n_gear : '-');
+      setTxt('f1TelDrs', tel.drs == null ? '-' : (tel.drs >= 10 ? '✅ ABIERTO' : 'CERRADO'));
+
+      const tPct = Math.max(0, Math.min(100, tel.throttle || 0));
+      const bPct = Math.max(0, Math.min(100, tel.brake || 0));
+      setTxt('f1TelThrottlePct', tPct + '%');
+      setTxt('f1TelBrakePct', bPct + '%');
+      const tBar = document.getElementById('f1TelThrottleBar');
+      const bBar = document.getElementById('f1TelBrakeBar');
+      if (tBar) tBar.style.width = tPct + '%';
+      if (bBar) bBar.style.width = bPct + '%';
+
+      setTxt('f1TelS1', lastLap ? f1FmtSec(lastLap.duration_sector_1 || lastLap.sector_1_duration) : '-');
+      setTxt('f1TelS2', lastLap ? f1FmtSec(lastLap.duration_sector_2 || lastLap.sector_2_duration) : '-');
+      setTxt('f1TelS3', lastLap ? f1FmtSec(lastLap.duration_sector_3 || lastLap.sector_3_duration) : '-');
+      setTxt('f1TelGap', intervals.gap_to_leader || '-');
+      setTxt('f1TelInterval', intervals.interval || '-');
+
+      setTxt('f1TelTyre', stint.compound || '-');
+      setTxt('f1TelTyreAge', stint.tyre_age_at_start != null ? stint.tyre_age_at_start : '-');
+      setTxt('f1TelPits', (snap.pits || []).length);
+
+      // Recientes
+      const recent = document.getElementById('f1TelRecentLaps');
+      if (recent) {
+        const last3 = laps.slice(-3);
+        recent.innerHTML = last3.map(l => {
+          const t = f1FmtSec(l.lap_duration);
+          const isFast = fastest && l.lap_number === fastest.lap_number;
+          return `<span class="f1-tel-recent-lap${isFast ? ' fastest' : ''}">L${l.lap_number}: ${t}</span>`;
+        }).join('') || '<span style="color:var(--text-3);">sin vueltas aun</span>';
+      }
+      setTxt('f1TelFastest', fastest ? `L${fastest.lap_number}: ${f1FmtSec(fastest.lap_duration)}` : '-');
+
+      const nameEl = document.getElementById('f1TelemetryDriverName');
+      if (nameEl) nameEl.textContent = (d.session && d.driver_number) ? ('#' + d.driver_number) : '';
+    }
+
+    function f1ClearTelemetryPanel() {
+      ['f1TelSpeed','f1TelRpm','f1TelGear','f1TelDrs','f1TelS1','f1TelS2','f1TelS3','f1TelGap','f1TelInterval','f1TelTyre','f1TelTyreAge','f1TelPits','f1TelFastest','f1TelemetryDriverName']
+        .forEach(id => { const e = document.getElementById(id); if (e) e.textContent = '-'; });
+      const recent = document.getElementById('f1TelRecentLaps');
+      if (recent) recent.innerHTML = '';
+      const tBar = document.getElementById('f1TelThrottleBar');
+      const bBar = document.getElementById('f1TelBrakeBar');
+      if (tBar) tBar.style.width = '0%';
+      if (bBar) bBar.style.width = '0%';
+    }
+
+    // Stop telemetry polling cuando se sale del tab envivo
+    (function attachTelemetryListener() {
+      const sel = document.getElementById('f1TelemetryDriverSel');
+      if (sel) sel.addEventListener('change', f1OnTelemetryDriverChange);
+    })();
 
     const TYRE_ICONS = { SOFT:'🔴', MEDIUM:'🟡', HARD:'⚪', INTER:'🟢', WET:'🔵' };
 
@@ -2947,6 +3135,23 @@
     .f1-live-table tr:hover td { background: var(--bg-elevated); }
     .f1-pos-up { color: #4ade80; font-size: 11px; margin-left: 4px; }
     .f1-pos-dn { color: #FF1744; font-size: 11px; margin-left: 4px; }
+
+    /* Telemetria panel piloto seleccionado (scope ampliado Mariano 2026-05-02) */
+    .f1-tel-cell {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--r-sm); padding: 8px 10px; min-width: 0;
+    }
+    .f1-tel-label {
+      font-size: 9px; font-weight: 800; letter-spacing: 1.4px;
+      color: var(--text-3); margin-bottom: 4px; text-transform: uppercase;
+    }
+    .f1-tel-value {
+      font-size: 18px; font-weight: 700; color: var(--text-1);
+      font-variant-numeric: tabular-nums; line-height: 1.1;
+    }
+    .f1-tel-unit { font-size: 11px; font-weight: 500; color: var(--text-3); }
+    .f1-tel-recent-lap { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; font-variant-numeric: tabular-nums; }
+    .f1-tel-recent-lap.fastest { border-color: rgba(225,6,0,0.55); color: #E10600; font-weight: 700; }
 
     /* F1.32-F1.33 Fantasy */
     .f1-fantasy-header { display: flex; align-items: flex-start; gap: 16px; padding: 20px; background: var(--bg-card); border-radius: var(--r-md); }
