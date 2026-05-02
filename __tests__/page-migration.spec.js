@@ -10,6 +10,12 @@ const PAGES_MIGRATED = [
   'businesses.html',
   'contacts.html',
   'documents.html',
+  'about.html',
+  'features.html',
+  'empresas.html',
+  'privacy.html',
+  'terms.html',
+  'cookies.html',
 ];
 
 for (const page of PAGES_MIGRATED) {
