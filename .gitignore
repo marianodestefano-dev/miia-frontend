@@ -26,3 +26,7 @@ Thumbs.db
 # Claude Code working dir — cartas y specs viven en el repo raíz del proyecto,
 # no en el frontend. Leftover de sesiones pasadas.
 .claude/
+
+# Backup files
+*.bak
+*.pre-*.bak

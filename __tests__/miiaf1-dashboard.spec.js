@@ -115,9 +115,12 @@ test('MiiaF1.25 — f1ApiPatch usa URL absoluta (no relativa)', async () => {
 });
 
 // ── MiiaF1.26 — Season selector sin emoji ────────────────────────────────────
-test('MiiaF1.26 — season selector "2026" sin emoji', async () => {
-  expect(SOURCE_HTML).toContain('<option value="2026" selected>2026</option>');
-  // No emoji junto al selector de temporada
+test('MiiaF1.26 — season badge "2026" (select eliminado) sin emoji', async () => {
+  // Temporada fija como badge <span> (f1SeasonSelect eliminado)
+  expect(SOURCE_HTML).toContain('>2026</span>');
+  // El select con opciones ya no debe estar
+  expect(SOURCE_HTML).not.toContain('<option value="2026" selected>');
+  // No emoji junto al año
   expect(SOURCE_HTML).not.toMatch(/f1SeasonSelect[\s\S]{0,50}&#/);
 });
 

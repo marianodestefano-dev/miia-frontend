@@ -287,13 +287,7 @@
               <h2 class="section-title" style="color:#E10600;">MiiaF1 <span class="badge-f1-addon">add-on $3/mes</span></h2>
               <p class="section-subtitle">Temporada 2026 &mdash; <span id="f1LiveBadge" class="f1-live-badge hidden">EN VIVO</span></p>
             </div>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <select id="f1SeasonSelect" class="f1-select" onchange="f1LoadSeason(this.value)">
-                <option value="2026" selected>2026</option>
-                <option value="2025">2025</option>
-                <option value="2024">2024</option>
-              </select>
-            </div>
+            <span style="font-size:13px;font-weight:700;color:#E10600;background:rgba(225,6,0,0.08);padding:4px 12px;border-radius:4px;border:1px solid rgba(225,6,0,0.2);">2026</span>
           </div>
 
           <!-- TABS -->
@@ -306,21 +300,36 @@
             <button class="f1-tab" onclick="f1SwitchTab('fantasy', this)">Fantasy</button>
           </div>
 
-          <!-- TAB: CALENDARIO (F1.5) -->
+          <!-- TAB: CALENDARIO -->
           <div id="f1TabCalendario" class="f1-tab-content active">
-            <!-- Proximo GP destacado -->
-            <div id="f1NextGP" class="f1-next-gp-card hidden">
-              <div class="f1-next-label">PROXIMO GP</div>
-              <div class="f1-next-name" id="f1NextName">-</div>
-              <div class="f1-next-circuit" id="f1NextCircuit">-</div>
-              <div class="f1-next-countdown" id="f1NextCountdown">-</div>
+            <!-- Estado skeleton -->
+            <div id="f1CalSkeleton">
+              <div class="f1-skeleton" style="height:100px;margin-bottom:8px;border-radius:var(--r-lg);"></div>
+              <div class="f1-skeleton" style="height:70px;border-radius:var(--r-md);"></div>
             </div>
-
-            <div id="f1CalendarGrid" class="f1-calendar-grid">
-              <div class="f1-skeleton" style="height:40px;margin-bottom:4px;"></div>
-              <div class="f1-skeleton" style="height:40px;margin-bottom:4px;"></div>
-              <div class="f1-skeleton" style="height:40px;margin-bottom:4px;"></div>
+            <!-- Banner EN VIVO (sesión activa) -->
+            <div id="f1LiveSessionBanner" style="display:none;background:linear-gradient(135deg,rgba(225,6,0,0.18),rgba(30,0,0,0.22));border:1px solid rgba(225,6,0,0.55);border-radius:var(--r-lg);padding:20px 24px;margin-bottom:12px;">
+              <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+                <span class="f1-live-badge">EN VIVO</span>
+                <span id="f1LiveSessionName" style="font-size:16px;font-weight:800;color:var(--text-1);">-</span>
+              </div>
+              <div id="f1LiveSessionGP" style="font-size:13px;color:var(--text-2);">-</div>
             </div>
+            <!-- Último evento completado -->
+            <div id="f1LastGPCard" style="display:none;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 20px;margin-bottom:12px;opacity:0.75;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:2px;color:var(--text-3);margin-bottom:5px;">ÚLTIMO EVENTO</div>
+              <div id="f1LastGPName" style="font-size:15px;font-weight:700;color:var(--text-1);">-</div>
+              <div id="f1LastGPSession" style="font-size:12px;color:var(--text-2);margin-top:2px;">-</div>
+            </div>
+            <!-- Countdown próxima sesión -->
+            <div id="f1CountdownCard" style="display:none;background:linear-gradient(135deg,rgba(225,6,0,0.10),rgba(30,0,0,0.15));border:1px solid rgba(225,6,0,0.35);border-radius:var(--r-lg);padding:20px 24px;">
+              <div id="f1NextSessionLabel" style="font-size:10px;font-weight:700;letter-spacing:2px;color:#E10600;margin-bottom:6px;">PRÓXIMA SESIÓN</div>
+              <div id="f1NextName" style="font-size:20px;font-weight:800;color:var(--text-1);">-</div>
+              <div id="f1NextCircuit" style="font-size:13px;color:var(--text-2);margin-top:2px;">-</div>
+              <div id="f1NextCountdown" style="font-size:16px;color:#E10600;margin-top:12px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:1px;min-height:24px;">-</div>
+            </div>
+            <!-- legacy id for tests -->
+            <div id="f1CalendarGrid" style="display:none;"></div>
           </div>
 
           <!-- TAB: STANDINGS (F1.6) -->
@@ -404,7 +413,7 @@
               <div style="font-size:14px;color:var(--text-2);margin-bottom:20px;">Adopta un piloto, acumula puntos en cada GP y compite contra otros owners de MIIA.</div>
               <button class="btn-primary" onclick="f1ShowUpgradeModal()">Activar por $3 USD/mes</button>
             </div>
-            <div id="f1FantasyPanel">
+            <div id="f1FantasyPanel" style="display:none;">
               <div class="f1-fantasy-header">
                 <div>
                   <div style="font-size:18px;font-weight:800;color:#E10600;">Tu Fantasy Score</div>
@@ -462,6 +471,12 @@
               <div id="f1LiveCountdown" style="margin-top:16px;font-size:13px;font-weight:600;color:#E10600;"></div>
             </div>
             <div id="f1LiveRacePanel" style="display:none;">
+            <!-- Circuit map con posiciones en vivo -->
+            <div id="f1CircuitMapLive" style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r-md);padding:14px 16px;margin-bottom:14px;">
+              <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--text-3);margin-bottom:8px;">MAPA DE CIRCUITO</div>
+              <svg id="f1MapSvg" viewBox="0 0 500 280" style="width:100%;max-height:180px;display:block;border-radius:6px;"></svg>
+              <div id="f1MapLegend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:11px;color:var(--text-2);"></div>
+            </div>
               <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
                 <span class="f1-live-badge">EN VIVO</span>
                 <span id="f1LiveRaceName" style="font-size:15px;font-weight:700;color:var(--text-1);">-</span>
@@ -1817,26 +1832,105 @@
       } catch (e) { console.error('[F1]', e.message); }
     }
 
-    function f1LoadSeason(season) {
-      f1LoadCalendar(season);
-      f1LoadStandings(season);
-    }
+
+    // ── F1 Calendar — OpenF1 sessions + countdown ────────────────
+    let _f1CountdownTimer = null;
+    const F1_SESSION_LABELS = {
+      'Practice 1':'Práctica Libre #1','Practice 2':'Práctica Libre #2',
+      'Practice 3':'Práctica Libre #3','Sprint Shootout':'Qualy Sprint',
+      'Sprint':'Carrera Sprint','Qualifying':'Qualy','Race':'Carrera'
+    };
+
+    function f1LoadSeason(season) { /* no-op: selector removed */ }
 
     // ── F1.5: Tab Calendario ──────────────────────────
     async function f1LoadCalendar(season = F1_SEASON) {
-      const data = await f1ApiGet(`calendar/${season}`);
-      if (!data) { document.getElementById('f1CalendarGrid').innerHTML = '<div class="f1-loading" style="color:var(--text-2);">No se pudo cargar el calendario. Verificá tu conexión e intentá de nuevo.</div>'; return; }
-
-      const today = new Date().toISOString().split('T')[0];
-      const nextGp = data.gps.find(gp => gp.date > today && gp.status !== 'completed');
-
-      if (nextGp) {
-        document.getElementById('f1NextName').textContent = nextGp.name;
-        document.getElementById('f1NextCircuit').textContent = `${nextGp.circuit} — ${nextGp.city || ''}`;
-        const days = Math.ceil((new Date(nextGp.date) - new Date(today)) / 86400000);
-        document.getElementById('f1NextCountdown').textContent = days <= 0 ? 'Esta semana!' : `En ${days} dias`;
-        document.getElementById('f1NextGP').classList.remove('hidden');
+      const skeleton = document.getElementById('f1CalSkeleton');
+      const liveEl   = document.getElementById('f1LiveSessionBanner');
+      const lastEl   = document.getElementById('f1LastGPCard');
+      const cdEl     = document.getElementById('f1CountdownCard');
+      if (skeleton) skeleton.style.display = '';
+      if (liveEl)   liveEl.style.display   = 'none';
+      if (lastEl)   lastEl.style.display   = 'none';
+      if (cdEl)     cdEl.style.display     = 'none';
+      if (_f1CountdownTimer) { clearInterval(_f1CountdownTimer); _f1CountdownTimer = null; }
+      try {
+        const resp = await fetch(`https://api.openf1.org/v1/sessions?year=${season}`);
+        if (!resp.ok) throw new Error('OpenF1 ' + resp.status);
+        const sessions = await resp.json();
+        if (skeleton) skeleton.style.display = 'none';
+        const now = new Date();
+        // Detect live session
+        const live = sessions.find(s => {
+          const start = new Date(s.date_start);
+          const end   = new Date(s.date_end || s.date_start);
+          end.setHours(end.getHours() + 2);
+          return now >= start && now <= end;
+        });
+        // Last completed session
+        const past = sessions
+          .filter(s => new Date(s.date_end || s.date_start) < now)
+          .sort((a,b) => new Date(b.date_start) - new Date(a.date_start))[0];
+        // Next upcoming session
+        const upcoming = sessions
+          .filter(s => new Date(s.date_start) > now)
+          .sort((a,b) => new Date(a.date_start) - new Date(b.date_start))[0];
+        if (live) {
+          const badge = document.getElementById('f1LiveBadge');
+          if (badge) badge.classList.remove('hidden');
+          const nEl = document.getElementById('f1LiveSessionName');
+          const gEl = document.getElementById('f1LiveSessionGP');
+          if (nEl) nEl.textContent = F1_SESSION_LABELS[live.session_name] || live.session_name || 'Sesión en vivo';
+          if (gEl) gEl.textContent = live.meeting_name || '';
+          if (liveEl) liveEl.style.display = '';
+        }
+        if (past) {
+          const nEl = document.getElementById('f1LastGPName');
+          const sEl = document.getElementById('f1LastGPSession');
+          if (nEl) nEl.textContent = past.meeting_name || '';
+          if (sEl) sEl.textContent = (F1_SESSION_LABELS[past.session_name] || past.session_name || '') +
+            ' · ' + new Date(past.date_start).toLocaleDateString('es-AR',{day:'numeric',month:'short',year:'numeric'});
+          if (lastEl) lastEl.style.display = '';
+        }
+        if (upcoming && !live) {
+          const lbEl  = document.getElementById('f1NextSessionLabel');
+          const nEl   = document.getElementById('f1NextName');
+          const cEl   = document.getElementById('f1NextCircuit');
+          const cdTxt = document.getElementById('f1NextCountdown');
+          const slabel = F1_SESSION_LABELS[upcoming.session_name] || upcoming.session_name || 'Sesión';
+          if (lbEl) lbEl.textContent = slabel.toUpperCase();
+          if (nEl)  nEl.textContent  = upcoming.meeting_name || '';
+          if (cEl)  cEl.textContent  = upcoming.location || '';
+          if (cdEl) cdEl.style.display = '';
+          const target = new Date(upcoming.date_start);
+          function tick() {
+            const diff = target - new Date();
+            if (diff <= 0) {
+              if (cdTxt) cdTxt.textContent = '¡En curso!';
+              clearInterval(_f1CountdownTimer);
+              _f1CountdownTimer = null;
+              f1LoadCalendar(F1_SEASON);
+              return;
+            }
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            const parts = [];
+            if (d > 0) parts.push(d + 'd');
+            parts.push(String(h).padStart(2,'0') + 'h');
+            parts.push(String(m).padStart(2,'0') + 'm');
+            parts.push(String(s).padStart(2,'0') + 's');
+            if (cdTxt) cdTxt.textContent = 'Faltan ' + parts.join(' ');
+          }
+          tick();
+          _f1CountdownTimer = setInterval(tick, 1000);
+        }
+      } catch(e) {
+        if (skeleton) skeleton.innerHTML = '<div class="f1-loading" style="color:var(--text-2);">No se pudo cargar el calendario.</div>';
+        console.error('[F1-CAL]', e.message);
       }
+    }
 
       const grid = document.getElementById('f1CalendarGrid');
       grid.innerHTML = data.gps.map(gp => {
@@ -1854,16 +1948,85 @@
       }).join('');
     }
 
-    // ── F1.6: Tab Standings ───────────────────────────
-    async function f1LoadStandings(season = F1_SEASON) {
-      const data = await f1ApiGet(`standings/drivers/${season}`);
-      if (!data) return;
 
-      const prefs = await f1ApiGet('prefs');
-      f1AdoptedDriver = prefs?.adopted_driver || null;
-      if (document.getElementById('f1NotifCheck')) {
+    // ── F1.6: Tab Standings — Jolpica/Ergast real data ───────────
+    async function f1LoadStandings(season = F1_SEASON) {
+      const F1_COLORS = {
+        'Red Bull Racing':'#3671C6','Ferrari':'#E8002D','McLaren':'#FF8000',
+        'Mercedes':'#27F4D2','Aston Martin':'#229971','Alpine':'#FF87BC',
+        'Williams':'#64C4FF','Racing Bulls':'#6692FF','RB':'#6692FF',
+        'Kick Sauber':'#52E252','Sauber':'#52E252','Haas F1 Team':'#B6BABD',
+        'Haas':'#B6BABD','Visa Cash App RB Formula One Team':'#6692FF',
+      };
+      const skel = '<div class="f1-skeleton" style="height:32px;margin-bottom:4px;"></div>';
+      const skelHtml = skel.repeat(5);
+      const pilEl = document.getElementById('f1StandingsPilotos');
+      const conEl = document.getElementById('f1StandingsConstructores');
+      if (pilEl) pilEl.innerHTML = skelHtml;
+      if (conEl) conEl.innerHTML = skel.repeat(3);
+
+      const prefs = await f1ApiGet('prefs').catch(()=>null);
+      f1AdoptedDriver = prefs?.adopted_driver || f1AdoptedDriver;
+      if (document.getElementById('f1NotifCheck'))
         document.getElementById('f1NotifCheck').checked = prefs?.notifications || false;
+
+      try {
+        const [drResp, coResp] = await Promise.all([
+          fetch(`https://api.jolpi.ca/ergast/f1/${season}/driverStandings.json`),
+          fetch(`https://api.jolpi.ca/ergast/f1/${season}/constructorStandings.json`)
+        ]);
+        if (drResp.ok) {
+          const drJson = await drResp.json();
+          const st = drJson?.MRData?.StandingsTable?.StandingsLists?.[0]?.DriverStandings || [];
+          const rows = st.map((s, i) => {
+            const pos   = i + 1;
+            const medal = pos <= 3 ? `<span class="f1-pos-medal">${MEDAL[pos]}</span>` : pos;
+            const name  = s.Driver ? `${s.Driver.givenName} ${s.Driver.familyName}` : '-';
+            const num   = s.Driver?.permanentNumber || '';
+            const dId   = s.Driver?.driverId || '';
+            const team  = s.Constructors?.[0]?.name || '';
+            const tCol  = F1_COLORS[team] || '#888';
+            const pts   = s.points || 0;
+            const isA   = dId && dId === f1AdoptedDriver;
+            return `<tr class="${isA ? 'f1-my-driver-row' : ''}">
+              <td>${medal}</td>
+              <td><span class="f1-team-dot" style="background:${tCol}"></span>${name}${isA ? ' &#9733;' : ''}</td>
+              <td style="color:var(--text-2)">${team}</td>
+              <td style="font-weight:700">${pts}</td>
+              <td style="color:var(--text-3);font-size:12px">${num ? '#'+num : ''}</td>
+            </tr>`;
+          });
+          if (pilEl) pilEl.innerHTML = `<table class="f1-standings-table">
+            <thead><tr><th>Pos</th><th>Piloto</th><th>Equipo</th><th>Puntos</th><th>N°</th></tr></thead>
+            <tbody>${rows.join('')}</tbody></table>`;
+        }
+        if (coResp.ok) {
+          const coJson = await coResp.json();
+          const cs = coJson?.MRData?.StandingsTable?.StandingsLists?.[0]?.ConstructorStandings || [];
+          const lead = parseFloat(cs[0]?.points || 0);
+          const cRows = cs.map((s, i) => {
+            const pos   = i + 1;
+            const medal = pos <= 3 ? `<span class="f1-pos-medal">${MEDAL[pos]}</span>` : pos;
+            const team  = s.Constructor?.name || '';
+            const tCol  = F1_COLORS[team] || '#888';
+            const pts   = parseFloat(s.points || 0);
+            const gap   = i === 0 ? '&mdash;' : `-${lead - pts}`;
+            return `<tr>
+              <td>${medal}</td>
+              <td><span class="f1-team-dot" style="background:${tCol}"></span>${team}</td>
+              <td style="font-weight:700">${pts}</td>
+              <td style="font-size:12px;color:var(--text-3)">${gap}</td>
+            </tr>`;
+          });
+          if (conEl) conEl.innerHTML = `<table class="f1-standings-table">
+            <thead><tr><th>Pos</th><th>Constructor</th><th>Pts</th><th>Gap</th></tr></thead>
+            <tbody>${cRows.join('')}</tbody></table>`;
+        }
+      } catch(e) {
+        console.error('[F1-STANDINGS]', e.message);
+        if (pilEl) pilEl.innerHTML = '<div class="f1-loading">No se pudieron cargar los standings.</div>';
       }
+    }
 
       const sorted = [...data.drivers].sort((a,b) => (b.points||0)-(a.points||0));
       const rows = sorted.map((d, i) => {
@@ -2044,7 +2207,7 @@
     async function f1PollLive() {
       if (_f1LivePaused) return;
       try {
-        const base = window.API || 'https://api.miia-app.com';
+        const base = API;
         const resp = await fetch(`${base}/api/f1/live/positions`);
         if (!resp.ok) return;
         const data = await resp.json();
@@ -2103,6 +2266,90 @@
       tbody.innerHTML = rows.join('');
     }
 
+
+    // ── F1 Live Circuit Map ───────────────────────────────────────
+    const F1_OVAL_TRACK = 'M250,30 Q400,30 440,140 Q480,250 350,265 Q250,275 150,265 Q20,250 60,140 Q100,30 250,30 Z';
+    const F1_MAP_TEAM_COLORS = {
+      'Red Bull Racing':'#3671C6','Ferrari':'#E8002D','McLaren':'#FF8000',
+      'Mercedes':'#27F4D2','Aston Martin':'#229971','Alpine':'#FF87BC',
+      'Williams':'#64C4FF','Racing Bulls':'#6692FF','RB':'#6692FF',
+      'Kick Sauber':'#52E252','Sauber':'#52E252','Haas F1 Team':'#B6BABD','Haas':'#B6BABD',
+    };
+
+    function f1GetOvalPoint(t) {
+      // Ellipse: cx=250, cy=147, rx=185, ry=115 — driver 1 at top
+      const angle = (t * 2 * Math.PI) - Math.PI / 2;
+      return { x: 250 + 185 * Math.cos(angle), y: 147 + 115 * Math.sin(angle) };
+    }
+
+    function f1RenderCircuitMap(positions) {
+      const svg = document.getElementById('f1MapSvg');
+      const leg = document.getElementById('f1MapLegend');
+      if (!svg) return;
+      const total = positions.length || 1;
+      svg.innerHTML = `
+        <rect width="500" height="280" fill="var(--bg-elevated)" rx="8"/>
+        <path d="${F1_OVAL_TRACK}" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="22" stroke-linejoin="round"/>
+        <path d="${F1_OVAL_TRACK}" fill="none" stroke="rgba(10,10,10,0.9)" stroke-width="14" stroke-linejoin="round"/>
+        <path d="${F1_OVAL_TRACK}" fill="none" stroke="rgba(225,6,0,0.35)" stroke-width="1.5" stroke-dasharray="8,5" stroke-linejoin="round"/>
+        <g id="f1MapGroup"></g>`;
+      const group = svg.querySelector('#f1MapGroup');
+      const adopted = f1AdoptedDriver;
+      const sorted = [...positions].sort((a,b) => (a.position||99) - (b.position||99));
+      let legHtml = '';
+      sorted.forEach((p, i) => {
+        const t = 1 - (p.position - 1) / total;
+        const pt = f1GetOvalPoint(t);
+        const color = F1_MAP_TEAM_COLORS[p.team] || '#888';
+        const isMe = adopted && (p.driverId === adopted || String(p.number) === String(adopted));
+        const r = isMe ? 13 : 9;
+        group.innerHTML += isMe
+          ? `<circle cx="${pt.x}" cy="${pt.y}" r="${r+3}" fill="rgba(255,215,0,0.3)" stroke="#FFD700" stroke-width="2"/>
+             <circle cx="${pt.x}" cy="${pt.y}" r="${r}" fill="${color}" stroke="#FFD700" stroke-width="1.5"/>
+             <text x="${pt.x}" y="${pt.y+4}" text-anchor="middle" font-size="9" font-weight="800" fill="white" font-family="Inter,sans-serif">${p.position}</text>`
+          : `<circle cx="${pt.x}" cy="${pt.y}" r="${r}" fill="${color}" stroke="rgba(0,0,0,0.4)" stroke-width="1"/>
+             <text x="${pt.x}" y="${pt.y+4}" text-anchor="middle" font-size="8" font-weight="700" fill="white" font-family="Inter,sans-serif">${p.position}</text>`;
+        legHtml += `<span style="display:flex;align-items:center;gap:3px;white-space:nowrap;">
+          <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;${isMe?'border:1px solid #FFD700;':''}"></span>
+          <span style="color:${isMe?'#FFD700':'var(--text-2)'};font-weight:${isMe?700:400};">${p.position}. ${p.driverName || '#'+p.number}</span>
+        </span>`;
+      });
+      if (leg) leg.innerHTML = legHtml;
+    }
+
+    let _f1MapPollCount = 0;
+    const _f1PollLiveBase = f1PollLive;
+    f1PollLive = async function() {
+      await _f1PollLiveBase.apply(this, arguments);
+      _f1MapPollCount++;
+      if (_f1MapPollCount % 3 !== 0) return; // every ~6s (3 x 2s)
+      _f1MapPollCount = 0;
+      try {
+        const [posResp, drResp] = await Promise.all([
+          fetch('https://api.openf1.org/v1/position?session_key=latest&limit=25'),
+          fetch('https://api.openf1.org/v1/drivers?session_key=latest')
+        ]);
+        if (!posResp.ok) return;
+        const positions = await posResp.json();
+        const drivers   = drResp.ok ? await drResp.json() : [];
+        const driverMap = {};
+        drivers.forEach(d => { driverMap[d.driver_number] = d; });
+        const latest = {};
+        positions.forEach(p => {
+          if (!latest[p.driver_number] || new Date(p.date) > new Date(latest[p.driver_number].date))
+            latest[p.driver_number] = p;
+        });
+        const posArr = Object.values(latest).map(p => ({
+          position: p.position || 99,
+          number:   p.driver_number,
+          driverId: driverMap[p.driver_number]?.name_acronym || String(p.driver_number),
+          driverName: driverMap[p.driver_number]?.name_acronym || '#' + p.driver_number,
+          team:     driverMap[p.driver_number]?.team_name || '',
+        })).filter(p => p.position < 99);
+        if (posArr.length) f1RenderCircuitMap(posArr);
+      } catch(e) { /* no-op */ }
+    };
+
     // Hook into tab switch to start/stop polling
     const _f1SwitchTabOrig = f1SwitchTab;
     f1SwitchTab = function(tab, el) {
@@ -2113,31 +2360,53 @@
     };
 
 
-    // ─── F1.20 — Circuit map ─────────────────────────────────────────────────
+
+    // ── F1.20 — Circuit map (local data) ────────────────────────
     let _f1CurrentCircuit = null;
+    const F1_CIRCUIT_INFO = {
+      monaco:    {name:'Circuit de Monaco',         country:'Mónaco',       laps:78, km:3.337, turns:19},
+      britain:   {name:'Silverstone Circuit',       country:'Gran Bretaña', laps:52, km:5.891, turns:18},
+      italy:     {name:'Autodromo Nazionale Monza', country:'Italia',       laps:53, km:5.793, turns:11},
+      belgium:   {name:'Circuit de Spa-Francorchamps',country:'Bélgica',   laps:44, km:7.004, turns:20},
+      japan:     {name:'Suzuka Circuit',            country:'Japón',        laps:53, km:5.807, turns:18},
+      australia: {name:'Albert Park Circuit',       country:'Australia',    laps:58, km:5.278, turns:16},
+      bahrain:   {name:'Bahrain International Circuit',country:'Baréin',   laps:57, km:5.412, turns:15},
+      netherlands:{name:'Circuit Zandvoort',        country:'Países Bajos', laps:72, km:4.259, turns:14},
+      singapore: {name:'Marina Bay Street Circuit', country:'Singapur',    laps:62, km:4.940, turns:23},
+      usa_austin:{name:'Circuit of The Americas',   country:'EE.UU.',       laps:56, km:5.513, turns:20},
+      brazil:    {name:'Autódromo José Carlos Pace',country:'Brasil',       laps:71, km:4.309, turns:15},
+      abu_dhabi: {name:'Yas Marina Circuit',        country:'Abu Dabi',     laps:58, km:5.281, turns:16},
+    };
+    const F1_CIRCUIT_PATHS = {
+      monaco:    'M60,160 Q60,80 130,55 Q200,30 270,65 Q310,90 300,130 Q290,170 250,175 Q210,180 215,210 Q220,240 260,250 Q310,260 320,220 Q330,180 290,160',
+      britain:   'M100,80 Q160,40 260,50 Q340,60 360,130 Q380,200 310,240 Q240,280 160,250 Q90,220 80,160 Q70,100 100,80 Z',
+      italy:     'M180,40 L310,40 Q350,40 355,80 L355,190 Q355,240 310,240 L180,240 Q100,240 90,190 Q80,140 120,100 Q160,60 180,40 Z',
+      japan:     'M200,30 Q280,30 320,90 Q360,150 320,200 Q280,250 200,240 Q140,235 100,190 Q60,145 80,90 Q120,30 200,30 Z M200,80 Q240,80 260,110 Q280,140 260,170 Q240,200 200,195 Q160,190 145,165 Q130,140 150,110 Q170,80 200,80 Z',
+      default:   'M250,50 Q380,50 420,140 Q460,230 370,250 Q280,270 190,240 Q80,205 70,140 Q60,75 150,50 Q200,35 250,50 Z',
+    };
 
     async function f1LoadCircuit(circuitId) {
       _f1CurrentCircuit = circuitId;
       const container = document.getElementById('f1CircuitContainer');
-      const info = document.getElementById('f1CircuitInfo');
+      const info      = document.getElementById('f1CircuitInfo');
       if (!container) return;
-      container.innerHTML = '<div class="f1-loading">Cargando mapa...</div>';
-      try {
-        const base = window.API_BASE || '';
-        const resp = await fetch(`${base}/api/f1/circuit/${circuitId}`);
-        if (!resp.ok) { container.innerHTML = '<div class="f1-loading">Error cargando circuito</div>'; return; }
-        const svg = await resp.text();
-        container.innerHTML = svg;
-        // Info del circuito
-        const circuitResp = await fetch(`${base}/api/f1/circuits`);
-        if (circuitResp.ok) {
-          const data = await circuitResp.json();
-          const c = (data.circuits || []).find(x => x.id === circuitId);
-          if (c && info) info.textContent = `${c.name} · ${c.country} · ${c.laps} vueltas`;
-        }
-      } catch(e) {
-        container.innerHTML = '<div class="f1-loading">Error: ' + e.message + '</div>';
-      }
+      const cd   = F1_CIRCUIT_INFO[circuitId] || null;
+      const path = F1_CIRCUIT_PATHS[circuitId] || F1_CIRCUIT_PATHS.default;
+      const cname = cd ? cd.name : circuitId.replace(/_/g,' ').replace(/\b\w/g,c=>c.toUpperCase());
+      container.innerHTML = `<svg viewBox="0 0 500 300" style="width:100%;max-height:260px;display:block;">
+        <rect width="500" height="300" fill="var(--bg-elevated)" rx="10"/>
+        <path d="${path}" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="${path}" fill="none" stroke="rgba(15,15,15,0.85)" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="${path}" fill="none" stroke="rgba(225,6,0,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="6,4"/>
+        <text x="250" y="290" fill="var(--text-3)" font-size="11" text-anchor="middle" font-family="Inter,sans-serif">${cname}</text>
+      </svg>`;
+      if (cd && info) {
+        info.innerHTML = `<span style="color:var(--text-1);font-weight:600;">${cd.name}</span>
+          <span style="color:var(--text-3);margin:0 6px;">&middot;</span><span>${cd.country}</span>
+          <span style="color:var(--text-3);margin:0 6px;">&middot;</span><span>${cd.km} km</span>
+          <span style="color:var(--text-3);margin:0 6px;">&middot;</span><span>${cd.turns} curvas</span>
+          <span style="color:var(--text-3);margin:0 6px;">&middot;</span><span>${cd.laps} vueltas</span>`;
+      } else if (info) { info.textContent = ''; }
     }
 
     function f1RefreshCircuit() {
@@ -2146,13 +2415,14 @@
     }
 
 
+
     // ─── F1.32-F1.33 — Fantasy + Paywall ────────────────────────────────────
     let _f1AddonActive = null; // null = no verificado
 
     async function f1CheckAddon() {
       if (_f1AddonActive !== null) return _f1AddonActive;
       try {
-        const base = window.API_BASE || '';
+        const base = API;
         const resp = await fetch(`${base}/api/f1/addon/status`);
         if (!resp.ok) { _f1AddonActive = false; return false; }
         const data = await resp.json();
@@ -2174,7 +2444,7 @@
       if (panel) panel.style.display = '';
       // Cargar score propio
       try {
-        const base = window.API_BASE || '';
+        const base = API;
         const [meResp, lbResp] = await Promise.all([
           fetch(`${base}/api/f1/fantasy/me`),
           fetch(`${base}/api/f1/fantasy/leaderboard`),
@@ -2189,7 +2459,7 @@
           const el = document.getElementById('f1FantasyLeaderboard');
           if (el) {
             if (!lb.leaderboard || !lb.leaderboard.length) {
-              el.textContent = 'Sin datos de fantasy aun.';
+              el.innerHTML = '<div style="text-align:center;padding:32px 20px;color:var(--text-3);font-size:14px;">Aún no hay posiciones en el leaderboard.</div>';
               return;
             }
             el.innerHTML = `<table class="f1-standings-table">
@@ -2231,9 +2501,9 @@
     };
 
   </script>
-</body>
-</html>
-    /* ── MiiaF1 Dashboard (F1.4-F1.7) ─────────────────── */
+
+  <style id="f1-addon-styles">
+/* ── MiiaF1 Dashboard (F1.4-F1.7) ─────────────────── */
     .badge-f1-addon {
       font-size: 11px; font-weight: 600; padding: 2px 8px;
       background: rgba(0,229,255,0.12); color: var(--accent);
@@ -2380,3 +2650,6 @@
 
     /* F1.32-F1.33 Fantasy */
     .f1-fantasy-header { display: flex; align-items: flex-start; gap: 16px; padding: 20px; background: var(--bg-card); border-radius: var(--r-md); }
+  </style>
+  </body>
+</html>
