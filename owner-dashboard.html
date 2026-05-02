@@ -41,7 +41,7 @@
     .sidebar-grp { }
     .sidebar-grp-hdr { padding:10px 12px 4px; font-size:10px; font-weight:700; letter-spacing:1.5px; color:var(--text-3); text-transform:uppercase; display:flex; align-items:center; justify-content:space-between; cursor:pointer; user-select:none; }
     .sidebar-grp-hdr:hover { color:var(--text-2); }
-    .sidebar-grp-hdr::after { content:"BE"; font-size:9px; transition:transform 0.2s; }
+    .sidebar-grp-hdr::after { content:"▾"; font-size:11px; opacity:0.6; transition:transform 0.2s; }
     .sidebar-grp.collapsed .sidebar-grp-hdr::after { transform:rotate(-90deg); }
     .sidebar-grp-items { overflow:hidden; max-height:500px; transition:max-height 0.25s ease; }
     .sidebar-grp.collapsed .sidebar-grp-items { max-height:0 !important; }
@@ -836,67 +836,8 @@
         <div class="profile-menu-divider"></div>
         <button class="profile-menu-item danger" onclick="signOut()">Cerrar sesion</button>
       </div>
-
-      <!-- FEED LATERAL (desktop) -->
-      <aside class="miia-feed">
-        <div class="feed-header">
-          <span class="feed-pulse"></span>
-          MIIA EN VIVO
-        </div>
-
-        <!-- Burbujas de ejemplo (se reemplazan en FASE B) -->
-        <div class="feed-bubble contact">
-          <div class="feed-bubble-name">Carlos Garcia</div>
-          Hola, queria saber el precio del plan mensual
-          <div class="feed-bubble-time">14:32</div>
-        </div>
-        <div class="feed-bubble miia">
-          Hola Carlos! El plan mensual esta a $15 USD/mes. Incluye respuestas ilimitadas y agenda inteligente.
-          <div class="feed-bubble-time">14:32</div>
-        </div>
-        <div class="feed-bubble contact">
-          <div class="feed-bubble-name">Ana Ruiz</div>
-          Confirmo el turno de manana a las 10
-          <div class="feed-bubble-time">14:28</div>
-        </div>
-        <div class="feed-bubble miia">
-          Perfecto Ana, queda confirmado tu turno para manana a las 10:00 am.
-          <div class="feed-bubble-time">14:28</div>
-        </div>
-      </aside>
-
-    </div>
-
-    <!-- NAV BOTTOM (mobile — se activa en FASE C) -->
-    <nav class="miia-nav-bottom">
-      <button class="miia-nav-bottom-link active" data-section="home" onclick="showSection('home', this)"
-              data-tooltip="Inicio" data-tooltip-pos="top">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-        Inicio
-      </button>
-      <button class="miia-nav-bottom-link" data-section="actividad" onclick="showSection('actividad', this)"
-              data-tooltip="Actividad" data-tooltip-pos="top">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-        Actividad
-      </button>
-      <button class="miia-nav-bottom-link" data-section="gestionar" onclick="showSection('gestionar', this)"
-              data-tooltip="Gestionar" data-tooltip-pos="top">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
-        Gestionar
-      </button>
-      <button class="miia-nav-bottom-link" data-section="f1" onclick="showSection('f1', this)"
-              data-tooltip="F1" data-tooltip-pos="top">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-        F1
-      </button>
-      <button class="miia-nav-bottom-link" data-section="mas" onclick="showSection('mas', this)"
-              data-tooltip="Mas opciones" data-tooltip-pos="top">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-        Mas
-      </button>
-    </nav>
-
-    <!-- WIZARD ONBOARDING -->
+</div>
+<!-- WIZARD ONBOARDING -->
     <div class="wizard-overlay" id="wizardOverlay">
       <div class="wizard-card">
         <!-- Progress bar -->
