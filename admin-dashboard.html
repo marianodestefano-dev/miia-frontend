@@ -1050,14 +1050,15 @@
 
   // ═══ USERS ═══
   async function loadUsers() {
-    // C-421: try/catch aislado. dbFs.collection('users').get() puede fallar
-    // por Firestore Rules (collection-level list no permitido). Sin este
-    // catch, el throw rompe loadAll() → loadTenants() nunca se llama →
-    // placeholder "Cargando..." infinito en sección Sesiones WhatsApp.
+    // C-422: endpoint backend /api/admin/users usa Admin SDK (bypass Firestore rules).
+    // C-421 era try/catch aislando el error; C-422 elimina la causa raiz.
     try {
-      const snapshot = await dbFs.collection('users').get();
-      users = [];
-      snapshot.forEach(doc => users.push({ uid: doc.id, ...doc.data() }));
+      const token = await getIdToken();
+      const res = await fetch(`${BACKEND_URL}/api/admin/users`, {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      if (!res.ok) throw new Error((await res.json()).error || res.statusText);
+      users = await res.json();
       renderUsers();
       updateDashboard();
     } catch (e) {
