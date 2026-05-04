@@ -511,19 +511,21 @@
       const email = (document.getElementById('registerEmail') || {}).value || (document.getElementById('loginEmail') || {}).value;
       if (!email) { showError('Ingresa tu email primero.'); return; }
       try {
-        const r = await fetch(API_BASE + '/api/auth/signup-magic', {
+        // VI-AUTH-3-FIX: Railway bloquea SMTP outbound, usamos sendSignInLinkToEmail (Firebase envia el mail)
+        // 1) Backend solo guarda pending_intent (plan/addon) sin enviar mail
+        await fetch(API_BASE + '/api/auth/signup-magic', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ email, plan: _urlPlan || null, addon: _urlAddon || null }),
-        });
-        const data = await r.json();
-        if (!r.ok) { showError(data.error || 'Error al enviar magic link'); return; }
+        }).catch(() => {});
+        // 2) Cliente Firebase envia el mail directamente
+        const actionCodeSettings = {
+          url: window.location.origin + '/login.html?magic=1',
+          handleCodeInApp: true,
+        };
+        await firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings);
         window.localStorage.setItem('miia_magic_email', email);
-        if (data.sent) {
-          showSuccess('Te enviamos un link a ' + email + '. Revisa tu bandeja para entrar a MIIA.');
-        } else {
-          showSuccess('Listo. Revisa tu correo para entrar a MIIA.');
-        }
+        showSuccess('Te enviamos un link a ' + email + '. Revisa tu bandeja (y SPAM) para entrar a MIIA.');
       } catch (e) { showError('Error: ' + e.message); }
     }
 
