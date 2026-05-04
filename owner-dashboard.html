@@ -3060,6 +3060,8 @@
     }
 
     const FOUNDER_UID = 'bq2BbtCVF8cZo30tum584zrGATJ3';
+    // VI-FOUNDER-FIX: emails con privilegios founder (login con cualquiera dispara cross-grant)
+    const FOUNDER_EMAILS = ['mariano.destefano@gmail.com', 'hola@miia-app.com'];
     // VI-DASH-2: render condicional menus por producto
     // Cache de permisos para que la UI los consulte
     window.miiaProductPermissions = null;
@@ -3078,7 +3080,15 @@
         return null;
       }
     }
+    function isFounderUser() {
+      const email = (currentUserData && currentUserData.email) ? String(currentUserData.email).toLowerCase() : '';
+      return (currentUserData && (currentUserData.role === 'admin' || currentUserData.admin_founder === true))
+          || window.currentUserUid === FOUNDER_UID
+          || FOUNDER_EMAILS.indexOf(email) >= 0;
+    }
     function isProductActiveLocal(product) {
+      // VI-FOUNDER-FIX: founder tiene todos los productos activos
+      if (isFounderUser()) return true;
       const p = window.miiaProductPermissions && window.miiaProductPermissions[product];
       if (!p || !p.active) return false;
       if (p.expiresAt) {
@@ -3240,7 +3250,10 @@
     }
     function applyProductMenusVisibility(userData) {
       // Founder ve todo (legacy back-compat)
-      const isFounder = (userData && (userData.role === 'admin' || userData.admin_founder === true)) || window.currentUserUid === FOUNDER_UID;
+      const userEmail = (userData && userData.email) ? String(userData.email).toLowerCase() : '';
+      const isFounder = (userData && (userData.role === 'admin' || userData.admin_founder === true))
+                     || window.currentUserUid === FOUNDER_UID
+                     || FOUNDER_EMAILS.indexOf(userEmail) >= 0;
       const perms = window.miiaProductPermissions || {};
       const items = {
         miiadt:   document.querySelector('#grp-addons [data-section="miiadt"]'),
@@ -3268,6 +3281,12 @@
       const grid = document.getElementById('otrosProductosGrid');
       if (!card || !grid) return;
       grid.innerHTML = '';
+      // VI-FOUNDER-FIX: founder ve todos los productos via override, no mostramos CTA
+      const userEmail = (currentUserData && currentUserData.email) ? String(currentUserData.email).toLowerCase() : '';
+      const isFounder = (currentUserData && (currentUserData.role === 'admin' || currentUserData.admin_founder === true))
+                     || window.currentUserUid === FOUNDER_UID
+                     || FOUNDER_EMAILS.indexOf(userEmail) >= 0;
+      if (isFounder) { card.classList.add('hidden'); return; }
       const inactives = [];
       for (const [key, meta] of Object.entries(PRODUCT_META)) {
         if (!isProductActiveLocal(key)) inactives.push({ key, meta });
