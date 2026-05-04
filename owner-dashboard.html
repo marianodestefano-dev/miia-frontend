@@ -33,6 +33,11 @@
   <script src="assets/ludomiia-panels/selector-juego.js"></script>
   <script src="assets/ludomiia-panels/jugar-con-miia-panel.js"></script>
   <script src="assets/ludomiia-integration.js"></script>
+  <!-- VI-INTG-MIIADT: panels MIIADT TEC + integration -->
+  <script src="assets/miiadt-panels/liga-panel.js"></script>
+  <script src="assets/miiadt-panels/equipo-panel.js"></script>
+  <script src="assets/miiadt-panels/mercado-panel.js"></script>
+  <script src="assets/miiadt-integration.js"></script>
 </head>
 <body>
   <div class="miia-app">
@@ -788,12 +793,11 @@
           <div class="section-header">
             <div>
               <h2 class="section-title">MIIADT</h2>
-              <p class="section-subtitle">Modulo MIIA Deportivo (addon)</p>
+              <p class="section-subtitle">Fantasy Futbol -- Liga, equipo, mercado</p>
             </div>
           </div>
-          <div class="card">
-            <p style="color:var(--text-2);font-size:13px;">El modulo MIIADT esta disponible como addon. Configuracion en proximas iteraciones.</p>
-          </div>
+          <!-- VI-INTG-MIIADT: mount point liga + equipo + mercado panels -->
+          <div id="miiadtMount" data-status="pending"></div>
         </section>
 
         <section id="sec-ludomiia" class="miia-section">
@@ -2426,6 +2430,7 @@
       if (typeof showSection === 'function') {
         const _orig = window.showSection;
         let _ludomiiaInitialized = false;
+        let _miiadtInitialized = false;
         window.showSection = function(sectionId, el) {
           _orig(sectionId, el);
           if (sectionId === 'f1') {
@@ -2435,6 +2440,10 @@
           if (sectionId === 'ludomiia' && !_ludomiiaInitialized) {
             _ludomiiaInitialized = true;
             initLudoMiiaSection();
+          }
+          if (sectionId === 'miiadt' && !_miiadtInitialized) {
+            _miiadtInitialized = true;
+            initMiiadtSection();
           }
         };
       }
@@ -3078,6 +3087,50 @@
       }
       return true;
     }
+    // VI-INTG-MIIADT: init MIIADT section (Fantasy Futbol)
+    async function initMiiadtSection() {
+      const host = document.getElementById('miiadtMount');
+      if (!host) return;
+      if (!window.MiiadtIntegration) {
+        host.innerHTML = '<div class="card"><p style="color:var(--text-2);font-size:13px;">No se cargaron los panels de MIIADT.</p></div>';
+        return;
+      }
+      const MIIADT_API_BASE_DEFAULT = 'https://api-miiadt-production.up.railway.app';
+      const apiBase = window.MIIADT_API_BASE
+        || (window.location.origin.includes('localhost') ? 'http://localhost:3001' : MIIADT_API_BASE_DEFAULT);
+      try {
+        await window.MiiadtIntegration.init({
+          host,
+          isProductActive: async (key) => isProductActiveLocal(key),
+          createLigaPanel: window.createLigaPanel,
+          createEquipoPanel: window.createEquipoPanel,
+          createMercadoPanel: window.createMercadoPanel,
+          getToken: () => firebase.auth().currentUser.getIdToken(),
+          isOwner: true,
+          fetchLeague: async (token) => {
+            const r = await fetch(apiBase + '/api/miiadt/liga', { headers: { Authorization: 'Bearer ' + token } });
+            if (!r.ok) return null;
+            return r.json();
+          },
+          fetchEquipo: async (token) => {
+            const r = await fetch(apiBase + '/api/miiadt/equipo', { headers: { Authorization: 'Bearer ' + token } });
+            if (!r.ok) return null;
+            return r.json();
+          },
+          fetchMercado: async (token) => {
+            const r = await fetch(apiBase + '/api/miiadt/mercado', { headers: { Authorization: 'Bearer ' + token } });
+            if (!r.ok) return null;
+            return r.json();
+          },
+          onJoin: () => { console.log('[MIIADT] join clicked'); },
+          onCreateTeam: () => { console.log('[MIIADT] create team clicked'); },
+        });
+      } catch (e) {
+        console.warn('[VI-INTG-MIIADT] init fail:', e.message);
+        host.innerHTML = '<div class="card"><p style="color:var(--text-2);font-size:13px;">Error inicializando MIIADT: ' + e.message + '</p></div>';
+      }
+    }
+
     // VI-INTG-1: init LudoMIIA section
     async function initLudoMiiaSection() {
       const host = document.getElementById('ludomiiaMount');
