@@ -3086,7 +3086,11 @@
         host.innerHTML = '<div class="card"><p style="color:var(--text-2);font-size:13px;">No se cargaron los panels de LudoMIIA.</p></div>';
         return;
       }
-      const apiBase = (window.location.origin.includes('localhost') ? 'http://localhost:8080' : '');
+      // VI-INTG-1/2 fix: backend LudoMIIA esta en service Railway separado (miia.games),
+        // NO en api.miia-app.com. Permitir override via window.LUDOMIIA_API_BASE.
+        const LUDOMIIA_API_BASE_DEFAULT = 'https://miiagames-production.up.railway.app';
+        const apiBase = window.LUDOMIIA_API_BASE
+          || (window.location.origin.includes('localhost') ? 'http://localhost:3002' : LUDOMIIA_API_BASE_DEFAULT);
       try {
         await window.LudoMiiaIntegration.init({
           host,
