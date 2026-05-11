@@ -32,6 +32,10 @@
   <!-- VI-INTG-1/2: panels LudoMIIA TEC + integration -->
   <script src="assets/ludomiia-panels/selector-juego.js"></script>
   <script src="assets/ludomiia-panels/jugar-con-miia-panel.js"></script>
+  <!-- VI-INTG-LUDOMIIA-COMPLETE: companion panels ai-coach + puntuacion -->
+  <script src="assets/ludomiia-panels/ai-coach-panel.js"></script>
+  <script src="assets/ludomiia-panels/puntuacion-panel.js"></script>
+  <script src="assets/ludomiia-companion-integration.js"></script>
   <script src="assets/ludomiia-integration.js"></script>
   <!-- VI-INTG-MIIADT: panels MIIADT TEC + integration -->
   <script src="assets/miiadt-panels/liga-panel.js"></script>
@@ -809,6 +813,9 @@
           </div>
           <!-- VI-INTG-1: mount point selector-juego / jugar-con-miia -->
           <div id="ludomiiaMount" data-status="pending"></div>
+          <!-- VI-INTG-LUDOMIIA-COMPLETE: companion panels -->
+          <div id="aiCoachMount" style="margin-top:16px;"></div>
+          <div id="puntuacionMount" style="margin-top:12px;"></div>
         </section>
       </main>
 
@@ -3154,6 +3161,19 @@
         const LUDOMIIA_API_BASE_DEFAULT = 'https://miiagames-production.up.railway.app';
         const apiBase = window.LUDOMIIA_API_BASE
           || (window.location.origin.includes('localhost') ? 'http://localhost:3002' : LUDOMIIA_API_BASE_DEFAULT);
+
+        // VI-INTG-LUDOMIIA-COMPLETE: inicializar companions ai-coach + puntuacion
+        if (window.LudoMiiaCompanionIntegration) {
+          window.LudoMiiaCompanionIntegration.init({
+            aiCoachHost: document.getElementById('aiCoachMount'),
+            puntuacionHost: document.getElementById('puntuacionMount'),
+            getToken: () => firebase.auth().currentUser.getIdToken(),
+            apiBase,
+            createAiCoachPanel: window.createAiCoachPanel,
+            createPuntuacionPanel: window.createPuntuacionPanel,
+          });
+        }
+
       try {
         await window.LudoMiiaIntegration.init({
           host,
@@ -3174,7 +3194,12 @@
               body: JSON.stringify({ gameId: game.id }),
             });
             if (!r.ok) throw new Error('create_session_failed');
-            return r.json();
+            const session = await r.json();
+            // VI-INTG-LUDOMIIA-COMPLETE: montar companions con el sessionId real
+            if (window.LudoMiiaCompanionIntegration) {
+              window.LudoMiiaCompanionIntegration.mountCompanions(session.id || session.sessionId);
+            }
+            return session;
           },
           fetchSession: async (id, token) => {
             const r = await fetch(apiBase + '/api/ludo/sessions/' + id, { headers: { Authorization: 'Bearer ' + token } });
@@ -3196,7 +3221,12 @@
               headers: { Authorization: 'Bearer ' + token },
             });
             if (!r.ok) throw new Error('end_game_failed');
-            return r.json();
+            const result = await r.json();
+            // VI-INTG-LUDOMIIA-COMPLETE: limpiar companions al terminar partida
+            if (window.LudoMiiaCompanionIntegration) {
+              window.LudoMiiaCompanionIntegration.clearCompanions();
+            }
+            return result;
           },
           onAddGame: () => { window.location.hash = '#ludomiia/add-game'; },
           locationHash: (h) => { window.location.hash = h; },
