@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA F1 — Formula 1 con MIIA en tiempo real</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/v2-design-system.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #050505;
+      --surface:  #0d0d0d;
+      --card:     rgba(255,255,255,0.03);
+      --tx-1:     #f5f5f7;
+      --tx-2:     #a1a1a6;
+      --accent:   #E10600;
+      --accent-2: #FF4500;
+      --border:   rgba(255,255,255,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--tx-1); font-family: 'Inter', sans-serif; }
+
+    /* ── Nav ── */
+    .f1l-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(5,5,5,0.85); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .f1l-logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
+    .f1l-logo .red { background: linear-gradient(90deg,#E10600,#FF4500); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .f1l-nav-btns { display: flex; gap: 12px; }
+
+    /* ── Buttons ── */
+    .btn-f1-primary {
+      padding: 10px 24px; border-radius: 100px; border: none; cursor: pointer;
+      background: linear-gradient(135deg,#E10600,#FF4500);
+      color: #fff; font-size: .9rem; font-weight: 700; transition: opacity .2s;
+    }
+    .btn-f1-primary:hover { opacity: .88; }
+    .btn-f1-secondary {
+      padding: 10px 24px; border-radius: 100px; cursor: pointer;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--tx-1); font-size: .9rem; font-weight: 500; transition: border-color .2s;
+    }
+    .btn-f1-secondary:hover { border-color: rgba(255,255,255,0.25); }
+
+    /* ── Hero ── */
+    .f1l-hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 120px 24px 80px;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(225,6,0,.12) 0%, transparent 70%);
+    }
+    .f1l-hero-badge {
+      display: inline-block; padding: 6px 16px; border-radius: 100px;
+      background: rgba(225,6,0,.12); border: 1px solid rgba(225,6,0,.4);
+      font-size: .8rem; font-weight: 600; color: #FF4500; margin-bottom: 28px;
+      letter-spacing: .5px;
+    }
+    .f1l-hero h1 {
+      font-size: clamp(2.5rem,8vw,5.5rem); font-weight: 800;
+      line-height: 1.05; letter-spacing: -2px; margin-bottom: 24px;
+    }
+    .f1l-hero h1 .grad {
+      background: linear-gradient(135deg,#E10600 0%,#FF4500 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .f1l-hero p {
+      max-width: 560px; font-size: 1.15rem; line-height: 1.7;
+      color: var(--tx-2); margin-bottom: 40px;
+    }
+    .f1l-hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .f1l-hero-ctas .btn-f1-primary   { font-size: 1.05rem; padding: 14px 36px; }
+    .f1l-hero-ctas .btn-f1-secondary { font-size: 1.05rem; padding: 14px 36px; }
+
+    /* ── Stats strip ── */
+    .f1l-stats {
+      display: flex; justify-content: center; gap: 64px; flex-wrap: wrap;
+      padding: 48px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .f1l-stat { text-align: center; }
+    .f1l-stat-num { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+    .f1l-stat-num.c1 { color: #E10600; }
+    .f1l-stat-num.c2 { color: #FF4500; }
+    .f1l-stat-num.c3 { color: #00E5FF; }
+    .f1l-stat-label { font-size: .85rem; color: var(--tx-2); margin-top: 4px; }
+
+    /* ── Section ── */
+    .f1l-section { padding: 96px 24px; max-width: 1100px; margin: 0 auto; }
+    .f1l-section-tag {
+      font-size: .8rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #E10600; margin-bottom: 16px;
+    }
+    .f1l-section-title {
+      font-size: clamp(1.8rem,4vw,3rem); font-weight: 800; letter-spacing: -1px;
+      line-height: 1.1; margin-bottom: 16px;
+    }
+    .f1l-section-sub { color: var(--tx-2); font-size: 1.05rem; line-height: 1.7; max-width: 560px; }
+
+    /* ── Panels preview ── */
+    .f1l-panels {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+      gap: 20px; margin-top: 56px;
+    }
+    .f1l-panel {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 28px 24px; position: relative; overflow: hidden;
+      transition: border-color .25s;
+    }
+    .f1l-panel:hover { border-color: rgba(225,6,0,.4); }
+    .f1l-panel-accent {
+      position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg,#E10600,#FF4500);
+    }
+    .f1l-panel-icon { font-size: 1.8rem; margin-bottom: 16px; }
+    .f1l-panel h3 { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+    .f1l-panel p { font-size: .88rem; color: var(--tx-2); line-height: 1.6; }
+    .f1l-panel-tag {
+      display: inline-block; margin-top: 14px; padding: 3px 10px; border-radius: 100px;
+      background: rgba(225,6,0,.12); font-size: .75rem; font-weight: 600; color: #FF4500;
+    }
+
+    /* ── Features grid ── */
+    .f1l-features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 24px; margin-top: 56px;
+    }
+    .f1l-feature-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 32px 28px; transition: border-color .25s;
+    }
+    .f1l-feature-card:hover { border-color: rgba(225,6,0,.35); }
+    .f1l-feature-icon { font-size: 2rem; margin-bottom: 20px; }
+    .f1l-feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .f1l-feature-card p { font-size: .9rem; color: var(--tx-2); line-height: 1.6; }
+
+    /* ── Pricing ── */
+    .f1l-pricing-wrap { margin-top: 56px; display: flex; justify-content: center; }
+    .f1l-pricing-card {
+      background: var(--card); border: 1px solid rgba(225,6,0,.45); border-radius: 24px;
+      padding: 48px 40px; max-width: 400px; width: 100%; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .f1l-pricing-card::before {
+      content: ''; position: absolute; inset: -1px; border-radius: 25px;
+      background: linear-gradient(135deg,rgba(225,6,0,.2),rgba(255,69,0,.1));
+      z-index: -1;
+    }
+    .f1l-pricing-badge {
+      display: inline-block; padding: 4px 14px; border-radius: 100px;
+      background: linear-gradient(135deg,#E10600,#FF4500); font-size: .75rem;
+      font-weight: 700; letter-spacing: .5px; margin-bottom: 24px;
+    }
+    .f1l-pricing-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; }
+    .f1l-pricing-price { margin-bottom: 8px; }
+    .f1l-pricing-price .amount { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; }
+    .f1l-pricing-price .curr { font-size: 1.5rem; font-weight: 700; vertical-align: top; margin-top: 14px; display: inline-block; }
+    .f1l-pricing-period { font-size: .9rem; color: var(--tx-2); margin-bottom: 36px; }
+    .f1l-pricing-features { list-style: none; text-align: left; margin-bottom: 40px; }
+    .f1l-pricing-features li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: .95rem; border-bottom: 1px solid var(--border); }
+    .f1l-pricing-features li:last-child { border-bottom: none; }
+    .f1l-pricing-features li::before { content: '\2713'; color: #E10600; font-weight: 700; flex-shrink: 0; }
+    .f1l-pricing-cta { display: block; width: 100%; }
+    .f1l-pricing-note { font-size: .85rem; color: var(--tx-2); margin-top: 16px; }
+
+    /* ── Footer ── */
+    .f1l-footer {
+      text-align: center; padding: 40px 24px;
+      border-top: 1px solid var(--border); color: var(--tx-2); font-size: .85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="f1l-nav">
+    <div class="f1l-logo">MIIA <span class="red">F1</span></div>
+    <div class="f1l-nav-btns">
+      <button class="btn-f1-secondary" onclick="handleNav('login')">Iniciar sesion</button>
+      <button class="btn-f1-primary"   onclick="handleNav('signup')">Activar ahora</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="f1l-hero">
+    <div class="f1l-hero-badge">Formula 1 &middot; En vivo con MIIA</div>
+    <h1>Vivi la F1<br><span class="grad">como nunca antes</span></h1>
+    <p>Sectores, brechas, telemetria y pit stops en tiempo real integrados en tu dashboard. MIIA analiza cada vuelta mientras la corren.</p>
+    <div class="f1l-hero-ctas">
+      <button class="btn-f1-primary"   onclick="handleNav('signup')">Empezar ahora</button>
+      <button class="btn-f1-secondary" onclick="scrollToSection('paneles')">Ver paneles</button>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="f1l-stats">
+    <div class="f1l-stat">
+      <div class="f1l-stat-num c1">3</div>
+      <div class="f1l-stat-label">Paneles en vivo</div>
+    </div>
+    <div class="f1l-stat">
+      <div class="f1l-stat-num c2">&lt;1s</div>
+      <div class="f1l-stat-label">Latencia de datos</div>
+    </div>
+    <div class="f1l-stat">
+      <div class="f1l-stat-num c3">24</div>
+      <div class="f1l-stat-label">Grandes premios / temporada</div>
+    </div>
+  </div>
+
+  <!-- Paneles en vivo -->
+  <section class="f1l-section" id="paneles">
+    <div class="f1l-section-tag">Paneles en vivo</div>
+    <div class="f1l-section-title">Datos que los equipos usan. Para vos.</div>
+    <p class="f1l-section-sub">Tres paneles de telemetria integrados en tu dashboard MIIA. Activos durante cada carrera.</p>
+    <div class="f1l-panels">
+      <div class="f1l-panel">
+        <div class="f1l-panel-accent"></div>
+        <div class="f1l-panel-icon">&#x23F1;</div>
+        <h3>Sectores por piloto</h3>
+        <p>Tiempos S1, S2, S3 de cada piloto actualizados vuelta a vuelta. Ve quien mejora y quien pierde ritmo en cada sector.</p>
+        <span class="f1l-panel-tag">EN VIVO</span>
+      </div>
+      <div class="f1l-panel">
+        <div class="f1l-panel-accent"></div>
+        <div class="f1l-panel-icon">&#x1F4CA;</div>
+        <h3>Brechas entre pilotos</h3>
+        <p>Gap actual entre todos los coches en tiempo real. Identifica undercuts, safety car windows y momentos de ataque.</p>
+        <span class="f1l-panel-tag">EN VIVO</span>
+      </div>
+      <div class="f1l-panel">
+        <div class="f1l-panel-accent"></div>
+        <div class="f1l-panel-icon">&#x1F6F0;</div>
+        <h3>Telemetria de carrera</h3>
+        <p>Velocidad maxima, uso de DRS, degradacion de neumaticos y stints de pits. La carrera dentro de la carrera.</p>
+        <span class="f1l-panel-tag">EN VIVO</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="f1l-section" id="features">
+    <div class="f1l-section-tag">Funciones</div>
+    <div class="f1l-section-title">Tu centro de comando F1</div>
+    <p class="f1l-section-sub">No solo datos. Contexto, analisis y alertas de MIIA para cada momento de la carrera.</p>
+    <div class="f1l-features-grid">
+      <div class="f1l-feature-card">
+        <div class="f1l-feature-icon">&#x1F916;</div>
+        <h3>Analisis MIIA en tiempo real</h3>
+        <p>MIIA interpreta los datos y te explica por WhatsApp cuando algo importante pasa: pit window, vuelta rapida, SC virtual.</p>
+      </div>
+      <div class="f1l-feature-card">
+        <div class="f1l-feature-icon">&#x1F3C1;</div>
+        <h3>Historial de carreras</h3>
+        <p>Datos de todas las carreras de la temporada. Compara vuelta a vuelta, piloto a piloto, circuito a circuito.</p>
+      </div>
+      <div class="f1l-feature-card">
+        <div class="f1l-feature-icon">&#x26A1;</div>
+        <h3>Alertas instantaneas</h3>
+        <p>Accidente, safety car, penalizacion, mejor vuelta. MIIA te avisa por WhatsApp antes de que lo digan en TV.</p>
+      </div>
+      <div class="f1l-feature-card">
+        <div class="f1l-feature-icon">&#x1F3CE;</div>
+        <h3>Dashboard integrado</h3>
+        <p>Todos los paneles en un solo lugar dentro de tu owner dashboard. Sin ventanas extra. Sin subscripciones de datos.</p>
+      </div>
+      <div class="f1l-feature-card">
+        <div class="f1l-feature-icon">&#x1F3AB;</div>
+        <h3>Calendario de temporada</h3>
+        <p>Todos los grandes premios con fecha, horario y circuito. MIIA te recuerda el domingo de carrera automaticamente.</p>
+      </div>
+      <div class="f1l-feature-card">
+        <div class="f1l-feature-icon">&#x1F4F1;</div>
+        <h3>100% movil</h3>
+        <p>Segui la carrera desde el celular. Los paneles son responsive y funcionan perfectamente en pantalla chica.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="f1l-section" id="pricing">
+    <div class="f1l-section-tag">Precios</div>
+    <div class="f1l-section-title">Una temporada. Precio fijo.</div>
+    <p class="f1l-section-sub">Sin costos de datos externos. Sin sorpresas. Addon MIIA F1 por USD 3/mes.</p>
+    <div class="f1l-pricing-wrap">
+      <div class="f1l-pricing-card">
+        <div class="f1l-pricing-badge">ADDON MIIA</div>
+        <div class="f1l-pricing-name">MIIA F1 Premium</div>
+        <div class="f1l-pricing-price">
+          <span class="curr">USD</span><span class="amount">3</span>
+        </div>
+        <div class="f1l-pricing-period">por mes &middot; cancela cuando quieras</div>
+        <ul class="f1l-pricing-features">
+          <li>3 paneles en vivo (sectores, brechas, telemetria)</li>
+          <li>Historial de carreras completo</li>
+          <li>Alertas WhatsApp de carrera</li>
+          <li>Analisis MIIA en tiempo real</li>
+          <li>Calendario de temporada con recordatorios</li>
+          <li>Dashboard integrado en MIIA</li>
+          <li>Datos de las 24 carreras / temporada</li>
+        </ul>
+        <button class="btn-f1-primary f1l-pricing-cta" onclick="handleNav('signup')">
+          Activar MIIA F1 &mdash; USD 3/mes
+        </button>
+        <p class="f1l-pricing-note">Gratis si ya tenes MIIA activo &#x2713;</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="f1l-footer">
+    <p>&copy; 2026 MIIA &mdash; MIIA F1 Dashboard &middot; <a href="privacy.html" style="color:inherit">Privacidad</a> &middot; <a href="terms.html" style="color:inherit">Terminos</a></p>
+  </footer>
+
+  <script>
+    function handleNav(action) {
+      var base = window.location.origin;
+      if (action === 'login')  window.location.href = base + '/login.html';
+      if (action === 'signup') window.location.href = base + '/signup.html';
+    }
+    function scrollToSection(id) {
+      var el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
+</body>
+</html>
