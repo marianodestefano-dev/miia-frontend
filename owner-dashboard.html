@@ -42,6 +42,11 @@
   <script src="assets/miiadt-panels/equipo-panel.js"></script>
   <script src="assets/miiadt-panels/mercado-panel.js"></script>
   <script src="assets/miiadt-integration.js"></script>
+  <!-- VI-INTG-F1-PANELS: paneles F1 EN VIVO TEC + integration -->
+  <script src="assets/f1-panels/f1-sectors-panel.js"></script>
+  <script src="assets/f1-panels/f1-gap-panel.js"></script>
+  <script src="assets/f1-panels/f1-telemetry-panel.js"></script>
+  <script src="assets/f1-companion-integration.js"></script>
 </head>
 <body>
   <div class="miia-app">
@@ -568,6 +573,11 @@
                 <svg id="f1MapSvg" viewBox="0 0 500 280" style="width:100%;max-height:200px;display:block;border-radius:6px;"></svg>
                 <div id="f1MapLegend" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:11px;color:var(--text-2);"></div>
               </div>
+
+              <!-- VI-INTG-F1-PANELS: mounts sectores / gap / telemetria TEC -->
+              <div id="f1SectorsMount" style="margin-bottom:14px;"></div>
+              <div id="f1GapMount" style="margin-bottom:14px;"></div>
+              <div id="f1TelemetryMount" style="margin-bottom:14px;"></div>
 
               <!-- PANEL TELEMETRIA PILOTO SELECCIONADO (scope ampliado Mariano 2026-05-02) -->
               <div id="f1TelemetryPanel" style="background:linear-gradient(135deg,rgba(225,6,0,0.06),rgba(15,0,0,0.10));border:1px solid rgba(225,6,0,0.35);border-radius:var(--r-lg);padding:16px;margin-bottom:14px;">
@@ -2908,6 +2918,55 @@
       _f1SwitchTabFinal(tab, el);
       if (tab === 'fantasy') { f1LoadFantasy(); }
     };
+
+    // VI-INTG-F1-PANELS: inicializar companion panels cuando se entra al tab EN VIVO
+    (function () {
+      var _f1PanelsInited = false;
+      var _f1SwitchTabWithPanels = f1SwitchTab;
+      f1SwitchTab = function (tab, el) {
+        _f1SwitchTabWithPanels(tab, el);
+        if (tab === 'envivo' && !_f1PanelsInited && typeof F1CompanionIntegration !== 'undefined') {
+          _f1PanelsInited = true;
+          F1CompanionIntegration.init({
+            sectorsMount:   document.getElementById('f1SectorsMount'),
+            gapMount:       document.getElementById('f1GapMount'),
+            telemetryMount: document.getElementById('f1TelemetryMount'),
+            getToken: function () { return auth.currentUser ? auth.currentUser.getIdToken() : Promise.resolve(''); },
+            apiBase: API,
+            createSectorsPanel: function () {
+              return createF1SectorsPanel({
+                getToken: function () { return auth.currentUser ? auth.currentUser.getIdToken() : Promise.resolve(''); },
+                fetchLaps: function (token) {
+                  return fetch(API + '/api/f1/live/laps', { headers: { Authorization: 'Bearer ' + token } }).then(function (r) { return r.json(); });
+                },
+              });
+            },
+            createGapPanel: function () {
+              return createF1GapPanel({
+                getToken: function () { return auth.currentUser ? auth.currentUser.getIdToken() : Promise.resolve(''); },
+                fetchIntervals: function (token) {
+                  return fetch(API + '/api/f1/live/intervals', { headers: { Authorization: 'Bearer ' + token } }).then(function (r) { return r.json(); });
+                },
+              });
+            },
+            createTelemetryPanel: function () {
+              return createF1TelemetryPanel({
+                getToken: function () { return auth.currentUser ? auth.currentUser.getIdToken() : Promise.resolve(''); },
+                fetchStints: function (token) {
+                  return fetch(API + '/api/f1/live/stints', { headers: { Authorization: 'Bearer ' + token } }).then(function (r) { return r.json(); });
+                },
+                fetchPits: function (token) {
+                  return fetch(API + '/api/f1/live/pit', { headers: { Authorization: 'Bearer ' + token } }).then(function (r) { return r.json(); });
+                },
+              });
+            },
+          });
+          F1CompanionIntegration.mountPanels();
+        } else if (tab === 'envivo' && _f1PanelsInited && typeof F1CompanionIntegration !== 'undefined') {
+          F1CompanionIntegration.refreshAll();
+        }
+      };
+    }());
 
 
     // Sync WA widget en Inicio con el badge top nav
