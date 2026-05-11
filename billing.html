@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA — Facturacion</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/v2-design-system.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="assets/billing-integration.js"></script>
+  <style>
+    :root {
+      --bg: #050505; --surface: #0d0d0d; --card: rgba(255,255,255,0.03);
+      --tx-1: #f5f5f7; --tx-2: #a1a1a6; --tx-3: #6e6e73;
+      --accent: #7C3AED; --accent-2: #00E5FF;
+      --green: #22c55e; --red: #ef4444; --amber: #f59e0b;
+      --border: rgba(255,255,255,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--tx-1); font-family: 'Inter', sans-serif; min-height: 100vh; }
+
+    /* Nav */
+    .bill-nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 32px;
+      background: rgba(5,5,5,0.88); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .bill-nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.1rem; text-decoration: none; color: var(--tx-1); }
+    .bill-nav-right { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--tx-2); }
+    .btn-back { background: transparent; border: 1px solid var(--border); color: var(--tx-2); padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; transition: all 200ms; }
+    .btn-back:hover { color: var(--tx-1); border-color: rgba(255,255,255,0.2); }
+
+    /* Layout */
+    .bill-wrap { max-width: 760px; margin: 0 auto; padding: 40px 20px 80px; }
+    .bill-title { font-size: 1.75rem; font-weight: 800; letter-spacing: -1px; margin-bottom: 6px; }
+    .bill-sub { color: var(--tx-2); font-size: 0.95rem; margin-bottom: 32px; }
+
+    /* Cards */
+    .bill-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 16px; padding: 24px; margin-bottom: 16px;
+    }
+    .bill-card-title { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--tx-3); margin-bottom: 16px; }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 4px 12px; border-radius: 100px; font-size: 0.8rem; font-weight: 600;
+    }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* Plan info grid */
+    .plan-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-top: 16px; }
+    .plan-field { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px; }
+    .plan-field-label { font-size: 0.7rem; color: var(--tx-3); margin-bottom: 4px; letter-spacing: 0.5px; text-transform: uppercase; }
+    .plan-field-value { font-size: 0.95rem; font-weight: 600; color: var(--tx-1); }
+
+    /* Addons */
+    .addon-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+    .addon-card {
+      border: 1px solid var(--border); border-radius: 12px; padding: 16px;
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .addon-card-name { font-size: 0.95rem; font-weight: 700; }
+    .addon-card-price { font-size: 1.25rem; font-weight: 800; }
+    .addon-card-price span { font-size: 0.8rem; font-weight: 400; color: var(--tx-3); }
+
+    /* Buttons */
+    .btn-primary-bill {
+      background: linear-gradient(135deg, #7C3AED, #00E5FF); color: #fff;
+      border: none; border-radius: 10px; padding: 10px 20px;
+      font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: opacity 200ms;
+    }
+    .btn-primary-bill:hover { opacity: 0.88; }
+    .btn-primary-bill:disabled { opacity: 0.45; cursor: not-allowed; }
+    .btn-danger { background: transparent; border: 1px solid rgba(239,68,68,0.4); color: var(--red); border-radius: 10px; padding: 10px 20px; font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 200ms; }
+    .btn-danger:hover { background: rgba(239,68,68,0.08); }
+    .btn-danger:disabled { opacity: 0.45; cursor: not-allowed; }
+
+    /* Toast */
+    #billToast {
+      position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px 24px;
+      font-size: 0.88rem; color: var(--tx-1);
+      opacity: 0; transition: opacity 300ms; pointer-events: none;
+      z-index: 999; white-space: nowrap;
+    }
+    #billToast.visible { opacity: 1; }
+
+    .loading-wrap { text-align: center; padding: 80px 20px; color: var(--tx-3); }
+  </style>
+</head>
+<body>
+
+<nav class="bill-nav">
+  <a href="owner-dashboard.html" class="bill-nav-logo">
+    <svg viewBox="90 118 220 168" fill="none" style="width:36px;height:28px;">
+      <defs><linearGradient id="lg_b" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/></linearGradient></defs>
+      <path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z" fill="none" stroke="url(#lg_b)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+      <text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text>
+    </svg>
+    MIIA
+  </a>
+  <div class="bill-nav-right">
+    <span id="navUserEmail" style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
+    <button class="btn-back" onclick="window.location.href='owner-dashboard.html'">&#8592; Dashboard</button>
+  </div>
+</nav>
+
+<div class="bill-wrap">
+  <div id="billLoading" class="loading-wrap">Cargando facturacion...</div>
+  <div id="billContent" style="display:none;">
+    <div class="bill-title">Facturacion</div>
+    <div class="bill-sub">Gestionas tu plan y suscripciones desde aqui.</div>
+
+    <!-- Plan actual -->
+    <div class="bill-card">
+      <div class="bill-card-title">Plan actual</div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <div id="billStatusBadge" class="status-badge">
+          <div id="billStatusDot" class="status-dot"></div>
+          <span id="billStatusLabel">—</span>
+        </div>
+        <div style="font-size:13px;color:var(--tx-3);" id="billSubIdWrap" style="display:none;">
+          Sub ID: <span id="billSubId" style="font-family:monospace;"></span>
+        </div>
+      </div>
+      <div class="plan-grid">
+        <div class="plan-field"><div class="plan-field-label">Activado</div><div class="plan-field-value" id="billActivatedAt">—</div></div>
+        <div class="plan-field"><div class="plan-field-label">Acceso hasta</div><div class="plan-field-value" id="billPlanEnd">—</div></div>
+        <div class="plan-field"><div class="plan-field-label">Proximo cobro</div><div class="plan-field-value" id="billNextCharge">—</div></div>
+      </div>
+    </div>
+
+    <!-- Cancelar suscripcion activa -->
+    <div class="bill-card" id="cancelCard" style="display:none;">
+      <div class="bill-card-title">Cancelar suscripcion</div>
+      <p style="color:var(--tx-2);font-size:13px;margin-bottom:16px;">Cancelas cuando quieras. Mantenes acceso hasta el fin del periodo pagado.</p>
+      <button class="btn-danger" id="cancelBtn" onclick="handleCancel()">Cancelar suscripcion</button>
+      <div id="cancelMsg" style="margin-top:10px;font-size:12px;color:var(--tx-3);"></div>
+    </div>
+
+    <!-- Addons MIIA GAMES -->
+    <div class="bill-card">
+      <div class="bill-card-title">Addons MIIA GAMES — $3 USD/mes c/u</div>
+      <p style="color:var(--tx-2);font-size:13px;margin-bottom:16px;">Gratis al activar MIIA principal. O individualmente si solo queres el addon.</p>
+      <div class="addon-grid">
+        <div class="addon-card" style="border-color:rgba(124,58,237,0.25);">
+          <div class="addon-card-name" style="color:#9F67FF;">MIIADT</div>
+          <div style="font-size:12px;color:var(--tx-3);margin-bottom:4px;">Fantasy football LATAM</div>
+          <div class="addon-card-price">$3 <span>USD/mes</span></div>
+          <button class="btn-primary-bill" id="subMiiadtBtn" onclick="handleSubscribe('miiadt')">Activar via PayPal</button>
+        </div>
+        <div class="addon-card" style="border-color:rgba(0,229,255,0.2);">
+          <div class="addon-card-name" style="color:#00E5FF;">LudoMIIA</div>
+          <div style="font-size:12px;color:var(--tx-3);margin-bottom:4px;">Juegos de mesa con IA</div>
+          <div class="addon-card-price">$3 <span>USD/mes</span></div>
+          <button class="btn-primary-bill" id="subLudoBtn" onclick="handleSubscribe('ludomiia')">Activar via PayPal</button>
+        </div>
+        <div class="addon-card" style="border-color:rgba(225,6,0,0.25);">
+          <div class="addon-card-name" style="color:#E10600;">MiiaF1</div>
+          <div style="font-size:12px;color:var(--tx-3);margin-bottom:4px;">F1 en tiempo real</div>
+          <div class="addon-card-price">$3 <span>USD/mes</span></div>
+          <button class="btn-primary-bill" id="subF1Btn" onclick="handleSubscribe('miiaf1')">Activar via PayPal</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cancelar con datos de usuario no activo -->
+    <div class="bill-card" id="reactivateCard" style="display:none;border-color:rgba(245,158,11,0.25);">
+      <div class="bill-card-title">Reactivar</div>
+      <p style="color:var(--tx-2);font-size:13px;margin-bottom:16px;">Tu suscripcion esta cancelada o con pago fallido. Podes reactivar cualquiera de los planes de arriba.</p>
+    </div>
+  </div>
+</div>
+
+<div id="billToast"></div>
+
+<script>
+  var API = 'https://api.miia-app.com';
+
+  var firebaseConfig = {
+    apiKey: 'AIzaSyBQm3rp1c2o8nHw_l2dvxbFmlyB0Z1FXqI',
+    authDomain: 'miia-app-prod.firebaseapp.com',
+    projectId: 'miia-app-prod',
+  };
+  var app  = firebase.initializeApp(firebaseConfig);
+  var auth = firebase.auth();
+  var db   = firebase.firestore();
+
+  var _currentUser = null;
+  var _billingData = null;
+
+  BillingIntegration.init({
+    apiBase: API,
+    getToken: function() { return _currentUser ? _currentUser.getIdToken() : Promise.resolve(''); },
+  });
+
+  function showToast(msg, ms) {
+    var el = document.getElementById('billToast');
+    el.textContent = msg;
+    el.classList.add('visible');
+    setTimeout(function() { el.classList.remove('visible'); }, ms || 3000);
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    try { return new Date(iso).toLocaleDateString('es-AR', { day:'2-digit', month:'short', year:'numeric' }); }
+    catch(e) { return iso; }
+  }
+
+  function renderUI(data) {
+    var info = BillingIntegration.renderBillingStatus(data);
+    var badge = document.getElementById('billStatusBadge');
+    var dot   = document.getElementById('billStatusDot');
+    document.getElementById('billStatusLabel').textContent = info.label;
+    badge.style.background = info.color + '18';
+    badge.style.border     = '1px solid ' + info.color + '55';
+    dot.style.background   = info.color;
+
+    var subId = info.subscriptionId;
+    if (subId) {
+      document.getElementById('billSubIdWrap').style.display = '';
+      document.getElementById('billSubId').textContent = subId.slice(0, 16) + '...';
+    }
+    document.getElementById('billActivatedAt').textContent = fmtDate(info.activatedAt);
+    document.getElementById('billPlanEnd').textContent     = fmtDate(info.planEndDate);
+    document.getElementById('billNextCharge').textContent  = info.isActive ? 'Automatico' : '—';
+
+    document.getElementById('cancelCard').style.display      = info.isActive && subId ? '' : 'none';
+    document.getElementById('reactivateCard').style.display  = (info.isCancelled || info.isPaymentFailed) ? '' : 'none';
+  }
+
+  function handleSubscribe(product) {
+    var btn = document.getElementById({ miiadt: 'subMiiadtBtn', ludomiia: 'subLudoBtn', miiaf1: 'subF1Btn' }[product]);
+    if (btn) { btn.disabled = true; btn.textContent = 'Redirigiendo...'; }
+    BillingIntegration.subscribe(product).catch(function(err) {
+      showToast('Error: ' + (err.message || 'No se pudo iniciar el pago'), 4000);
+      if (btn) { btn.disabled = false; btn.textContent = 'Activar via PayPal'; }
+    });
+  }
+
+  function handleCancel() {
+    if (!_billingData || !_billingData.paypal_subscription_id) { return; }
+    var btn = document.getElementById('cancelBtn');
+    var msg = document.getElementById('cancelMsg');
+    btn.disabled = true; btn.textContent = 'Cancelando...';
+    BillingIntegration.cancelSubscription(_billingData.paypal_subscription_id).then(function() {
+      msg.textContent = 'Suscripcion cancelada. Acceso activo hasta ' + fmtDate(_billingData.plan_end_date) + '.';
+      document.getElementById('cancelCard').style.display = 'none';
+      showToast('Suscripcion cancelada exitosamente');
+    }).catch(function(err) {
+      msg.textContent = 'Error: ' + (err.message || 'No se pudo cancelar');
+      btn.disabled = false; btn.textContent = 'Cancelar suscripcion';
+    });
+  }
+
+  auth.onAuthStateChanged(function(user) {
+    if (!user) { window.location.href = 'login.html?redirect=billing.html'; return; }
+    _currentUser = user;
+    document.getElementById('navUserEmail').textContent = user.email || '';
+
+    // Verificar si vinimos de PayPal con status
+    var params = new URLSearchParams(window.location.search);
+    if (params.get('status') === 'success') { showToast('Pago procesado. Tu suscripcion estara activa en segundos.', 5000); }
+    if (params.get('status') === 'cancel')  { showToast('Pago cancelado. No se realizaron cargos.', 4000); }
+
+    db.collection('users').doc(user.uid).get().then(function(snap) {
+      _billingData = snap.exists ? snap.data() : {};
+      renderUI(_billingData);
+      document.getElementById('billLoading').style.display  = 'none';
+      document.getElementById('billContent').style.display  = '';
+    }).catch(function(err) {
+      document.getElementById('billLoading').textContent = 'Error al cargar datos: ' + err.message;
+    });
+  });
+</script>
+</body>
+</html>
