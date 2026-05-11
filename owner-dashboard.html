@@ -120,6 +120,7 @@
           <div class="sidebar-grp-hdr" onclick="toggleSidebarGroup('grp-cuenta')"><span>CUENTA</span></div>
           <div class="sidebar-grp-items">
             <button class="sidebar-item" data-section="plan" onclick="showSection('plan',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/></svg></span><span class="sidebar-label">Mi Plan</span></button>
+            <a class="sidebar-item" href="/billing.html" id="sidebar-billing-link"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span><span class="sidebar-label">Mi Suscripcion</span></a>
             <button class="sidebar-item" data-section="seguridad" onclick="showSection('seguridad',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><span class="sidebar-label">Seguridad</span></button>
             <button class="sidebar-item" data-section="privacidad" onclick="showSection('privacidad',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></span><span class="sidebar-label">Privacidad</span></button>
             <button class="sidebar-item" data-section="mis-datos" onclick="showSection('mis-datos',this)"><span class="sidebar-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span><span class="sidebar-label">Mis Datos</span></button>
@@ -798,6 +799,10 @@
           </div>
           <!-- VI-INTG-MIIADT: mount point liga + equipo + mercado panels -->
           <div id="miiadtMount" data-status="pending"></div>
+          <!-- VI-MIIADT-PANELS-MOUNT-PREP: mount points para versus + standings + bots (ARQ pendiente) -->
+          <div id="versusMount" class="mt-12"></div>
+          <div id="standingsMount" class="mt-12"></div>
+          <div id="botsMount" class="mt-12"></div>
         </section>
 
         <section id="sec-ludomiia" class="miia-section">
