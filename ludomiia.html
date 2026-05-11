@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LudoMIIA — Juega en mesa con MIIA</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/v2-design-system.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #050505;
+      --surface:  #0d0d0d;
+      --card:     rgba(255,255,255,0.03);
+      --tx-1:     #f5f5f7;
+      --tx-2:     #a1a1a6;
+      --accent:   #00E5FF;
+      --accent-2: #0EA5E9;
+      --border:   rgba(255,255,255,0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--tx-1); font-family: 'Inter', sans-serif; }
+
+    /* ── Nav ── */
+    .lm-nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 40px;
+      background: rgba(5,5,5,0.85); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+    .lm-logo { font-size: 1.25rem; font-weight: 800; letter-spacing: -0.5px; }
+    .lm-logo span { background: linear-gradient(90deg,#00E5FF,#0EA5E9); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .lm-nav-btns { display: flex; gap: 12px; }
+
+    /* ── Buttons ── */
+    .btn-lm-primary {
+      padding: 10px 24px; border-radius: 100px; border: none; cursor: pointer;
+      background: linear-gradient(135deg,#00E5FF,#0EA5E9);
+      color: #050505; font-size: .9rem; font-weight: 700; transition: opacity .2s;
+    }
+    .btn-lm-primary:hover { opacity: .88; }
+    .btn-lm-secondary {
+      padding: 10px 24px; border-radius: 100px; cursor: pointer;
+      background: transparent; border: 1px solid var(--border);
+      color: var(--tx-1); font-size: .9rem; font-weight: 500; transition: border-color .2s;
+    }
+    .btn-lm-secondary:hover { border-color: rgba(255,255,255,0.25); }
+
+    /* ── Hero ── */
+    .lm-hero {
+      min-height: 100vh; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center;
+      padding: 120px 24px 80px;
+    }
+    .lm-hero-badge {
+      display: inline-block; padding: 6px 16px; border-radius: 100px;
+      background: rgba(0,229,255,.1); border: 1px solid rgba(0,229,255,.35);
+      font-size: .8rem; font-weight: 600; color: #00E5FF; margin-bottom: 28px;
+      letter-spacing: .5px;
+    }
+    .lm-hero h1 {
+      font-size: clamp(2.5rem,8vw,5.5rem); font-weight: 800;
+      line-height: 1.05; letter-spacing: -2px; margin-bottom: 24px;
+    }
+    .lm-hero h1 .grad {
+      background: linear-gradient(135deg,#00E5FF 0%,#0EA5E9 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .lm-hero p {
+      max-width: 560px; font-size: 1.15rem; line-height: 1.7;
+      color: var(--tx-2); margin-bottom: 40px;
+    }
+    .lm-hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+    .lm-hero-ctas .btn-lm-primary   { font-size: 1.05rem; padding: 14px 36px; }
+    .lm-hero-ctas .btn-lm-secondary { font-size: 1.05rem; padding: 14px 36px; }
+
+    /* ── Stats strip ── */
+    .lm-stats {
+      display: flex; justify-content: center; gap: 64px; flex-wrap: wrap;
+      padding: 48px 24px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .lm-stat { text-align: center; }
+    .lm-stat-num { font-size: 2rem; font-weight: 800; letter-spacing: -1px; }
+    .lm-stat-num.c1 { color: #00E5FF; }
+    .lm-stat-num.c2 { color: #0EA5E9; }
+    .lm-stat-num.c3 { color: #38BDF8; }
+    .lm-stat-label { font-size: .85rem; color: var(--tx-2); margin-top: 4px; }
+
+    /* ── Section ── */
+    .lm-section { padding: 96px 24px; max-width: 1100px; margin: 0 auto; }
+    .lm-section-tag {
+      font-size: .8rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+      color: #00E5FF; margin-bottom: 16px;
+    }
+    .lm-section-title {
+      font-size: clamp(1.8rem,4vw,3rem); font-weight: 800; letter-spacing: -1px;
+      line-height: 1.1; margin-bottom: 16px;
+    }
+    .lm-section-sub { color: var(--tx-2); font-size: 1.05rem; line-height: 1.7; max-width: 560px; }
+
+    /* ── How it works ── */
+    .lm-steps {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap: 32px; margin-top: 56px;
+    }
+    .lm-step {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 32px 28px; position: relative;
+    }
+    .lm-step-num {
+      font-size: 3rem; font-weight: 800; letter-spacing: -2px;
+      background: linear-gradient(135deg,#00E5FF,#0EA5E9);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      margin-bottom: 16px; display: block;
+    }
+    .lm-step h3 { font-size: 1.05rem; font-weight: 700; margin-bottom: 10px; }
+    .lm-step p { font-size: .9rem; color: var(--tx-2); line-height: 1.6; }
+
+    /* ── Features grid ── */
+    .lm-features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+      gap: 24px; margin-top: 56px;
+    }
+    .lm-feature-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 20px;
+      padding: 32px 28px; transition: border-color .25s;
+    }
+    .lm-feature-card:hover { border-color: rgba(0,229,255,.4); }
+    .lm-feature-icon { font-size: 2rem; margin-bottom: 20px; }
+    .lm-feature-card h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; }
+    .lm-feature-card p { font-size: .9rem; color: var(--tx-2); line-height: 1.6; }
+
+    /* ── Games grid ── */
+    .lm-games-grid {
+      display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr));
+      gap: 16px; margin-top: 56px;
+    }
+    .lm-game-chip {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 24px 16px; text-align: center; transition: border-color .25s, background .25s;
+    }
+    .lm-game-chip:hover { border-color: rgba(0,229,255,.4); background: rgba(0,229,255,.04); }
+    .lm-game-icon { font-size: 2.2rem; margin-bottom: 12px; }
+    .lm-game-name { font-size: .9rem; font-weight: 600; }
+
+    /* ── Pricing ── */
+    .lm-pricing-wrap { margin-top: 56px; display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .lm-pricing-card {
+      background: var(--card); border: 1px solid rgba(0,229,255,.4); border-radius: 24px;
+      padding: 48px 40px; max-width: 380px; width: 100%; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .lm-pricing-card.featured::before {
+      content: ''; position: absolute; inset: -1px; border-radius: 25px;
+      background: linear-gradient(135deg,rgba(0,229,255,.25),rgba(14,165,233,.12));
+      z-index: -1;
+    }
+    .lm-pricing-badge {
+      display: inline-block; padding: 4px 14px; border-radius: 100px;
+      background: linear-gradient(135deg,#00E5FF,#0EA5E9); font-size: .75rem;
+      font-weight: 700; letter-spacing: .5px; margin-bottom: 24px; color: #050505;
+    }
+    .lm-pricing-name { font-size: 1.3rem; font-weight: 700; margin-bottom: 16px; }
+    .lm-pricing-price { margin-bottom: 8px; }
+    .lm-pricing-price .amount { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; }
+    .lm-pricing-price .curr { font-size: 1.5rem; font-weight: 700; vertical-align: top; margin-top: 14px; display: inline-block; }
+    .lm-pricing-period { font-size: .9rem; color: var(--tx-2); margin-bottom: 36px; }
+    .lm-pricing-features { list-style: none; text-align: left; margin-bottom: 40px; }
+    .lm-pricing-features li { display: flex; align-items: center; gap: 10px; padding: 9px 0; font-size: .95rem; border-bottom: 1px solid var(--border); }
+    .lm-pricing-features li:last-child { border-bottom: none; }
+    .lm-pricing-features li::before { content: '\2713'; color: #00E5FF; font-weight: 700; flex-shrink: 0; }
+    .lm-pricing-cta { display: block; width: 100%; }
+    .lm-pricing-note { font-size: .85rem; color: var(--tx-2); margin-top: 16px; }
+
+    /* ── Footer ── */
+    .lm-footer {
+      text-align: center; padding: 40px 24px;
+      border-top: 1px solid var(--border); color: var(--tx-2); font-size: .85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <nav class="lm-nav">
+    <div class="lm-logo"><span>Ludo</span>MIIA</div>
+    <div class="lm-nav-btns">
+      <button class="btn-lm-secondary" onclick="handleNav('login')">Iniciar sesion</button>
+      <button class="btn-lm-primary"   onclick="handleNav('signup')">Jugar ahora</button>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="lm-hero">
+    <div class="lm-hero-badge">Juegos de mesa &middot; Con MIIA</div>
+    <h1>La mesa que<br><span class="grad">cobra vida</span></h1>
+    <p>Juga tus juegos de mesa favoritos en persona mientras MIIA dirige la partida, lleva el marcador y hace de la reunion algo memorable.</p>
+    <div class="lm-hero-ctas">
+      <button class="btn-lm-primary"   onclick="handleNav('signup')">Empezar gratis</button>
+      <button class="btn-lm-secondary" onclick="scrollToSection('como-funciona')">Como funciona</button>
+    </div>
+  </section>
+
+  <!-- Stats -->
+  <div class="lm-stats">
+    <div class="lm-stat">
+      <div class="lm-stat-num c1">10+</div>
+      <div class="lm-stat-label">Juegos disponibles</div>
+    </div>
+    <div class="lm-stat">
+      <div class="lm-stat-num c2">6</div>
+      <div class="lm-stat-label">Jugadores max por partida</div>
+    </div>
+    <div class="lm-stat">
+      <div class="lm-stat-num c3">0</div>
+      <div class="lm-stat-label">Apps extra que instalar</div>
+    </div>
+  </div>
+
+  <!-- Como funciona -->
+  <section class="lm-section" id="como-funciona">
+    <div class="lm-section-tag">Como funciona</div>
+    <div class="lm-section-title">MIIA se sienta a la mesa con vos</div>
+    <p class="lm-section-sub">Sin descargar nada. Sin configuraciones. Abri el navegador, elegis el juego y MIIA empieza a dirigir.</p>
+    <div class="lm-steps">
+      <div class="lm-step">
+        <span class="lm-step-num">01</span>
+        <h3>Elegis el juego</h3>
+        <p>Selecciona el juego de mesa desde la biblioteca. MIIA carga las reglas y el tablero virtual automaticamente.</p>
+      </div>
+      <div class="lm-step">
+        <span class="lm-step-num">02</span>
+        <h3>Registras los jugadores</h3>
+        <p>Ingresa los nombres de los jugadores presentes. Sin cuentas. Sin invitaciones. Solo los que estan en la mesa.</p>
+      </div>
+      <div class="lm-step">
+        <span class="lm-step-num">03</span>
+        <h3>MIIA dirige la partida</h3>
+        <p>MIIA explica las reglas, registra movimientos, lleva el puntaje y anuncia al ganador. Vos solo jugás.</p>
+      </div>
+      <div class="lm-step">
+        <span class="lm-step-num">04</span>
+        <h3>Termina y recordas</h3>
+        <p>Al finalizar, MIIA guarda el historial de partidas para el owner. Rivalidades, racha ganadora, todo registrado.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Juegos -->
+  <section class="lm-section" id="juegos" style="padding-top:0">
+    <div class="lm-section-tag">Biblioteca</div>
+    <div class="lm-section-title">Juegos incluidos</div>
+    <p class="lm-section-sub">Clasicos de mesa y juegos de cartas dirigidos por MIIA. Mas juegos se agregan con cada update.</p>
+    <div class="lm-games-grid">
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x1F3B2;</div><div class="lm-game-name">Ludo</div></div>
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x265B;</div><div class="lm-game-name">Ajedrez</div></div>
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x2666;</div><div class="lm-game-name">Truco</div></div>
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x1F004;</div><div class="lm-game-name">Domino</div></div>
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x1F3AF;</div><div class="lm-game-name">Dardos</div></div>
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x1F9E9;</div><div class="lm-game-name">Genera</div></div>
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x1F0CF;</div><div class="lm-game-name">Uno</div></div>
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x1F3B4;</div><div class="lm-game-name">Buraco</div></div>
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x1F52E;</div><div class="lm-game-name">Triqui</div></div>
+      <div class="lm-game-chip"><div class="lm-game-icon">&#x2795;</div><div class="lm-game-name">Mas pronto</div></div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="lm-section" id="features">
+    <div class="lm-section-tag">Funciones</div>
+    <div class="lm-section-title">Mas que un marcador</div>
+    <p class="lm-section-sub">MIIA no solo cuenta puntos. Hace de la reunion algo memorable.</p>
+    <div class="lm-features-grid">
+      <div class="lm-feature-card">
+        <div class="lm-feature-icon">&#x1F3AF;</div>
+        <h3>Arbitro virtual</h3>
+        <p>MIIA conoce cada regla de cada juego. Si hay discusion, ella resuelve. Sin googlear.</p>
+      </div>
+      <div class="lm-feature-card">
+        <div class="lm-feature-icon">&#x1F4CA;</div>
+        <h3>Marcador inteligente</h3>
+        <p>Puntaje en tiempo real visible en pantalla compartida. Graficos de avance turno a turno.</p>
+      </div>
+      <div class="lm-feature-card">
+        <div class="lm-feature-icon">&#x1F3C6;</div>
+        <h3>Historial de partidas</h3>
+        <p>Quien gano, cuantas veces, en que juego. El ranking de tu grupo siempre actualizado.</p>
+      </div>
+      <div class="lm-feature-card">
+        <div class="lm-feature-icon">&#x1F916;</div>
+        <h3>MIIA como jugadora</h3>
+        <p>Juega con MIIA como oponente o aliada. Nivel de dificultad ajustable por juego.</p>
+      </div>
+      <div class="lm-feature-card">
+        <div class="lm-feature-icon">&#x1F509;</div>
+        <h3>Narrador de partida</h3>
+        <p>MIIA comenta los momentos epicos, los errores tragicos y los golpes de suerte. La mesa se anima.</p>
+      </div>
+      <div class="lm-feature-card">
+        <div class="lm-feature-icon">&#x1F4F1;</div>
+        <h3>Funciona en cualquier pantalla</h3>
+        <p>Celular, tablet, laptop. Sin instalar nada. Abre el navegador y listo para jugar.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="lm-section" id="pricing">
+    <div class="lm-section-tag">Precios</div>
+    <div class="lm-section-title">Simple y justo</div>
+    <p class="lm-section-sub">Incluido gratis con tu suscripcion MIIA. O disponible como addon independiente.</p>
+    <div class="lm-pricing-wrap">
+      <div class="lm-pricing-card featured">
+        <div class="lm-pricing-badge">ADDON MIIA</div>
+        <div class="lm-pricing-name">LudoMIIA Premium</div>
+        <div class="lm-pricing-price">
+          <span class="curr">USD</span><span class="amount">3</span>
+        </div>
+        <div class="lm-pricing-period">por mes &middot; cancela cuando quieras</div>
+        <ul class="lm-pricing-features">
+          <li>10+ juegos de mesa</li>
+          <li>Jugadores ilimitados por partida</li>
+          <li>Historial de partidas</li>
+          <li>MIIA como jugadora/arbitro</li>
+          <li>Narrador de partida</li>
+          <li>Marcador en pantalla compartida</li>
+          <li>Nuevos juegos cada mes</li>
+        </ul>
+        <button class="btn-lm-primary lm-pricing-cta" onclick="handleNav('signup')">
+          Empezar ahora &mdash; USD 3/mes
+        </button>
+        <p class="lm-pricing-note">Gratis si ya tenes MIIA activo &#x2713;</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="lm-footer">
+    <p>&copy; 2026 MIIA &mdash; LudoMIIA Juegos de Mesa &middot; <a href="privacy.html" style="color:inherit">Privacidad</a> &middot; <a href="terms.html" style="color:inherit">Terminos</a></p>
+  </footer>
+
+  <script>
+    function handleNav(action) {
+      var base = window.location.origin;
+      if (action === 'login')  window.location.href = base + '/login.html';
+      if (action === 'signup') window.location.href = base + '/signup.html';
+    }
+    function scrollToSection(id) {
+      var el = document.getElementById(id);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  </script>
+
+</body>
+</html>
