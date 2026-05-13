@@ -23,6 +23,21 @@ describe('miiadt-land.js', () => {
     expect(loc.href).toContain('mode=login');
   });
 
+  test('handleNav contratar -> intent=contratar (checkout flow)', () => {
+    const loc = {};
+    handleNav('contratar', loc);
+    expect(loc.href).toContain('mode=signup');
+    expect(loc.href).toContain('product=miiadt');
+    expect(loc.href).toContain('intent=contratar');
+  });
+
+  test('handleNav google -> provider=google', () => {
+    const loc = {};
+    handleNav('google', loc);
+    expect(loc.href).toContain('mode=login');
+    expect(loc.href).toContain('provider=google');
+  });
+
   // scrollToSection
   test('scrollToSection sin doc -> no lanza error', () => {
     expect(() => scrollToSection('hero', null)).not.toThrow();

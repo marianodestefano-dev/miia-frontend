@@ -20,6 +20,13 @@
     if (!location) return;
     if (action === 'signup') {
       location.href = '/login.html?mode=signup&product=miiadt';
+    } else if (action === 'contratar') {
+      // Firma Mariano 2026-05-13 spec ciclo pago paso 1:
+      // CTA "Contratar 3 USD/mes" -> checkout MercadoPago/PayPal.
+      location.href = '/login.html?mode=signup&product=miiadt&intent=contratar';
+    } else if (action === 'google') {
+      // CTA "Continuar con Google" -> login Firebase Google popup.
+      location.href = '/login.html?mode=login&product=miiadt&provider=google';
     } else {
       location.href = '/login.html?mode=login&product=miiadt';
     }
