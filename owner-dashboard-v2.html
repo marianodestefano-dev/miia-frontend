@@ -297,7 +297,6 @@
             <button class="f1-tab" onclick="f1SwitchTab('mipiloto', this)">Mi Piloto</button>
             <button class="f1-tab" id="f1TabLiveBtn" onclick="f1SwitchTab('envivo', this)">En Vivo</button>
             <button class="f1-tab" onclick="f1SwitchTab('circuito', this)">Circuito</button>
-            <button class="f1-tab" onclick="f1SwitchTab('fantasy', this)">Fantasy</button>
           </div>
 
           <!-- TAB: CALENDARIO -->
@@ -406,29 +405,6 @@
           </div>
 
 
-          <!-- TAB: FANTASY (F1.32) -->
-          <div id="f1TabFantasy" class="f1-tab-content">
-            <div id="f1AddonGate" style="text-align:center;padding:48px 20px;display:none;">
-              <div style="font-size:18px;font-weight:800;color:#E10600;margin-bottom:8px;">MiiaF1 Fantasy</div>
-              <div style="font-size:14px;color:var(--text-2);margin-bottom:20px;">Adopta un piloto, acumula puntos en cada GP y compite contra otros owners de MIIA.</div>
-              <button class="btn-primary" onclick="f1ShowUpgradeModal()">Activar por $3 USD/mes</button>
-            </div>
-            <div id="f1FantasyPanel" style="display:none;">
-              <div class="f1-fantasy-header">
-                <div>
-                  <div style="font-size:18px;font-weight:800;color:#E10600;">Tu Fantasy Score</div>
-                  <div id="f1FantasyScore" style="font-size:36px;font-weight:900;color:var(--accent);margin-top:4px;">-</div>
-                  <div style="font-size:13px;color:var(--text-3);">puntos acumulados en temporada 2026</div>
-                </div>
-              </div>
-
-              <div style="margin-top:24px;">
-                <div style="font-size:14px;font-weight:700;color:var(--text-2);margin-bottom:12px;letter-spacing:1px;">LEADERBOARD OWNERS</div>
-                <div id="f1FantasyLeaderboard" class="f1-loading">Cargando...</div>
-              </div>
-            </div>
-          </div>
-
           <!-- UPGRADE MODAL (F1.33) -->
           <div id="f1UpgradeModal" class="wizard-overlay" style="display:none;" onclick="if(event.target===this)f1HideUpgradeModal()">
             <div class="wizard-card" style="max-width:440px;">
@@ -445,7 +421,6 @@
                     <div>&#9989; Adopta tu piloto favorito</div>
                     <div>&#9989; Notificaciones WA en vivo y post-carrera</div>
                     <div>&#9989; SVG circuit maps interactivos</div>
-                    <div>&#9989; Fantasy League vs. otros owners</div>
                     <div>&#9989; Predicciones IA para el proximo GP</div>
                   </div>
                 </div>
@@ -2416,8 +2391,8 @@
 
 
 
-    // ─── F1.32-F1.33 — Fantasy + Paywall ────────────────────────────────────
-    let _f1AddonActive = null; // null = no verificado
+    // F1 Addon Status + Upgrade Modal (Fantasy eliminado 2026-05-12 firma Mariano)
+    let _f1AddonActive = null;
 
     async function f1CheckAddon() {
       if (_f1AddonActive !== null) return _f1AddonActive;
@@ -2431,48 +2406,6 @@
       } catch(e) { _f1AddonActive = false; return false; }
     }
 
-    async function f1LoadFantasy() {
-      const active = await f1CheckAddon();
-      const gate = document.getElementById('f1AddonGate');
-      const panel = document.getElementById('f1FantasyPanel');
-      if (!active) {
-        if (gate) gate.style.display = '';
-        if (panel) panel.style.display = 'none';
-        return;
-      }
-      if (gate) gate.style.display = 'none';
-      if (panel) panel.style.display = '';
-      // Cargar score propio
-      try {
-        const base = API;
-        const [meResp, lbResp] = await Promise.all([
-          fetch(`${base}/api/f1/fantasy/me`),
-          fetch(`${base}/api/f1/fantasy/leaderboard`),
-        ]);
-        if (meResp.ok) {
-          const me = await meResp.json();
-          const el = document.getElementById('f1FantasyScore');
-          if (el) el.textContent = me.fantasy_total || 0;
-        }
-        if (lbResp.ok) {
-          const lb = await lbResp.json();
-          const el = document.getElementById('f1FantasyLeaderboard');
-          if (el) {
-            if (!lb.leaderboard || !lb.leaderboard.length) {
-              el.innerHTML = '<div style="text-align:center;padding:32px 20px;color:var(--text-3);font-size:14px;">Aún no hay posiciones en el leaderboard.</div>';
-              return;
-            }
-            el.innerHTML = `<table class="f1-standings-table">
-              <thead><tr><th>POS</th><th>OWNER</th><th>PILOTO</th><th>PUNTOS</th></tr></thead>
-              <tbody>${lb.leaderboard.slice(0,10).map(e =>
-                `<tr><td><b>${e.rank}</b></td><td>${e.uid.substring(0,8)}...</td><td>${e.driverName}</td><td><b>${e.total}</b></td></tr>`
-              ).join('')}</tbody>
-            </table>`;
-          }
-        }
-      } catch(e) { console.error('[F1-FANTASY]', e.message); }
-    }
-
     function f1ShowUpgradeModal() {
       const modal = document.getElementById('f1UpgradeModal');
       if (modal) modal.style.display = 'flex';
@@ -2484,21 +2417,14 @@
     }
 
     function f1SubscribeMercadoPago() {
-      // Redirect al checkout de MercadoPago para el addon F1
-      alert('Redirigiendo a MercadoPago para activar MiiaF1...\n(Integración de pago pendiente de configuración)');
+      alert('Redirigiendo a MercadoPago para activar MiiaF1...
+(Integracion de pago pendiente de configuracion)');
     }
 
     function f1SubscribePayPal() {
-      // Redirect al checkout de PayPal
-      alert('Redirigiendo a PayPal para activar MiiaF1...\n(Integración de pago pendiente de configuración)');
+      alert('Redirigiendo a PayPal para activar MiiaF1...
+(Integracion de pago pendiente de configuracion)');
     }
-
-    // Patch f1SwitchTab to load fantasy when tab is selected
-    const _f1SwitchTabFinal = f1SwitchTab;
-    f1SwitchTab = function(tab, el) {
-      _f1SwitchTabFinal(tab, el);
-      if (tab === 'fantasy') { f1LoadFantasy(); }
-    };
 
   </script>
 
@@ -2648,8 +2574,6 @@
     .f1-pos-up { color: #4ade80; font-size: 11px; margin-left: 4px; }
     .f1-pos-dn { color: #FF1744; font-size: 11px; margin-left: 4px; }
 
-    /* F1.32-F1.33 Fantasy */
-    .f1-fantasy-header { display: flex; align-items: flex-start; gap: 16px; padding: 20px; background: var(--bg-card); border-radius: var(--r-md); }
   </style>
   </body>
 </html>
