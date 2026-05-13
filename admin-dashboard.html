@@ -302,11 +302,7 @@
                 GitHub
                 <span id="svc-dot-github" class="dot green" style="width:8px;height:8px;"></span>
               </a>
-              <a href="https://vendors.paddle.com/" target="_blank" rel="noopener" id="svc-paddle" style="display:inline-flex;align-items:center;gap:6px;padding:6px 14px;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-full);font-size:0.82rem;font-weight:600;color:var(--text-body);text-decoration:none;transition:all 0.2s;cursor:pointer;">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-                Paddle
-                <span id="svc-dot-paddle" class="dot green" style="width:8px;height:8px;"></span>
-              </a>
+              <!-- Paddle link removido 2026-05-12 (firma Mariano FUERA) -->
             </div>
           </div>
 
@@ -606,7 +602,7 @@
           </h3>
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;">
             <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Plan</span><strong id="acBillPlan">&mdash;</strong></div>
-            <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Paddle ID</span><strong id="acPaddleId">&mdash;</strong></div>
+            <!-- Paddle ID removido 2026-05-12 -->
             <div><span style="font-size:0.78rem;color:var(--text-muted);display:block;">Proximo cobro</span><strong id="acNextBill">&mdash;</strong></div>
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
@@ -812,7 +808,7 @@
               ✅ Base de datos (Firestore)<br>
               ✅ Deteccion automatica de admin al reiniciar<br><br>
               <strong style="color:var(--text-dark);">¿Que NO cambia?</strong><br>
-              Las plataformas externas (GitHub, Railway, Vercel, Paddle) usan sus propias cuentas separadas. No dependen de este email.<br><br>
+              Las plataformas externas (GitHub, Railway, Vercel) usan sus propias cuentas separadas. No dependen de este email.<br><br>
               <strong style="color:var(--text-dark);">Unico paso manual post-migracion:</strong><br>
               Ir a <a href="https://railway.com/project/9ee59327-edf5-4e33-b6ac-96670bc9a2fe" target="_blank" style="color:var(--indigo-hi);">Railway → Variables</a> → actualizar <code style="color:var(--indigo-hi);">ADMIN_EMAILS</code> con el nuevo email.
             </div>
@@ -2057,7 +2053,7 @@
 
     // 7. Facturacion
     document.getElementById('acBillPlan').textContent = u.plan || 'trial';
-    document.getElementById('acPaddleId').textContent = u.paddle_subscription_id || '—';
+    // acPaddleId removido 2026-05-12 (Paddle FUERA firma Mariano)
     document.getElementById('acNextBill').textContent = u.next_billing_date?.seconds ? new Date(u.next_billing_date.seconds*1000).toLocaleDateString('es') : '—';
 
     // 8. Metricas (placeholder — se llena con datos reales cuando existan)
