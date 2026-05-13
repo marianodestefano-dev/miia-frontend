@@ -38,6 +38,7 @@
   <script src="assets/miiadt-panels/equipo-panel.js"></script>
   <script src="assets/miiadt-panels/mercado-panel.js"></script>
   <script src="assets/miiadt-integration.js"></script>
+  <script src="assets/c5_post_checkout.js"></script>
 </head>
 <body>
   <div class="miia-app">
@@ -3316,6 +3317,23 @@
       await fetchProductPermissions();
       applyProductMenusVisibility(userData);
       renderOtrosProductos();
+    }
+
+    // C.5: Post-pago refresh dashboard (firma Mariano 2026-05-02)
+    // Logica modular en assets/c5_post_checkout.js (testeable)
+    if (typeof window !== 'undefined' && typeof window.createPostCheckoutHandler === 'function') {
+      const c5 = window.createPostCheckoutHandler({
+        fetchProductPermissions: async () => { await fetchProductPermissions(); return window.miiaProductPermissions; },
+        applyProductMenusVisibility: (u) => applyProductMenusVisibility(u),
+        renderOtrosProductos: () => renderOtrosProductos(),
+        userData: window.currentUserData || {},
+      });
+      const trigger = () => { setTimeout(() => c5.handle().catch(e => console.warn('[C.5]', e.message)), 1500); };
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', trigger);
+      } else {
+        trigger();
+      }
     }
   </script>
 
