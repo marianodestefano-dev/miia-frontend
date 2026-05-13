@@ -26,6 +26,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
 
   <!-- Socket.IO -->
   <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
@@ -39,6 +40,7 @@
   <script src="assets/miiadt-panels/mercado-panel.js"></script>
   <script src="assets/miiadt-integration.js"></script>
   <script src="assets/c5_post_checkout.js"></script>
+  <script src="assets/audios_personalizados.js"></script>
 </head>
 <body>
   <div class="miia-app">
@@ -302,6 +304,7 @@
             <button class="gtab" onclick="switchGestionar('contactos')">Contactos</button>
             <button class="gtab" onclick="switchGestionar('grupos')">Grupos</button>
             <button class="gtab" onclick="switchGestionar('agentes')">Agentes</button>
+            <button class="gtab" onclick="switchGestionar('audios')">Audios Personalizados</button>
           </div>
 
           <!-- Sub-secciones -->
@@ -336,6 +339,14 @@
             <div id="agentList">
               <div class="card" style="text-align:center;padding:40px;color:var(--text-3);">Cargando agentes...</div>
             </div>
+          </div>
+
+          <!-- P3.3 Audios Personalizados (firma Mariano 2026-05-12) -->
+          <div id="gest-audios" class="gest-panel">
+            <p style="color:var(--text-3);font-size:13px;margin:0 0 16px;">
+              Grabá audios con tu voz para situaciones especiales. MIIA los enviará cuando detecte el contexto en conversaciones reales. <strong>MIIA CENTER nunca usa tus audios.</strong>
+            </p>
+            <div id="audiosPersonalizadosMount"></div>
           </div>
         </section>
 
@@ -1353,6 +1364,35 @@
       if (tab === 'contactos') loadContacts();
       if (tab === 'grupos') loadGroups();
       if (tab === 'agentes') loadGestAgents();
+      if (tab === 'audios') initAudiosPersonalizados();
+    }
+
+    // P3.3 Audios Personalizados (firma Mariano 2026-05-12)
+    let _audiosPanelInitialized = false;
+    function initAudiosPersonalizados() {
+      if (_audiosPanelInitialized) return;
+      if (typeof window.createAudiosPersonalizadosPanel !== 'function') return;
+      const mount = document.getElementById('audiosPersonalizadosMount');
+      if (!mount || !currentUser) return;
+      try {
+        const panel = window.createAudiosPersonalizadosPanel({
+          uid: currentUser.uid,
+          getToken: () => currentUser.getIdToken(),
+          uploadFn: async (file, path) => {
+            // Firebase Storage upload
+            const storage = firebase.storage();
+            const ref = storage.ref().child(path);
+            const snap = await ref.put(file);
+            return await snap.ref.getDownloadURL();
+          },
+          apiBase: '',
+        });
+        mount.innerHTML = '';
+        mount.appendChild(panel.element);
+        _audiosPanelInitialized = true;
+      } catch (e) {
+        mount.innerHTML = '<div style="color:var(--danger,#ef4444);padding:16px;">Error inicializando: ' + e.message + '</div>';
+      }
     }
 
     // ── Negocios ──
