@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA — Crear cuenta</title>
+  <link rel="stylesheet" href="assets/v2-design-system.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #00E5FF; --bg-deep: #0F0F0F; --bg-card: #141414;
+      --text-white: #F1F5F9; --text-body: #94A3B8; --text-muted: #64748B;
+      --border: rgba(255,255,255,0.08);
+      --gradient: linear-gradient(135deg, #00E5FF 0%, #7C3AED 50%, #FF1744 100%);
+      --r-md: 12px; --r-lg: 16px; --r-full: 9999px;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-deep); color: var(--text-body);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      padding: 24px;
+    }
+    .registro-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 44px 36px;
+      max-width: 460px; width: 100%; text-align: center;
+      box-shadow: 0 24px 80px rgba(0,0,0,.4);
+    }
+    .registro-logo svg { width: 120px; height: 120px; margin-bottom: 16px; }
+    h1 {
+      font-size: 1.6rem; font-weight: 800; color: var(--text-white);
+      margin-bottom: 12px;
+    }
+    p { font-size: .92rem; line-height: 1.5; margin-bottom: 24px; }
+    .grad { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .btn {
+      display: inline-block; padding: 13px 28px;
+      border-radius: var(--r-full); font-weight: 700; font-size: .95rem;
+      text-decoration: none; transition: all .2s; cursor: pointer;
+      border: none; font-family: inherit; width: 100%; margin-bottom: 10px;
+    }
+    .btn-primary { background: var(--gradient); color: white; }
+    .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+    .btn-secondary {
+      background: transparent; color: var(--text-white);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { border-color: var(--primary); }
+    .step-label { font-size: .76rem; color: var(--text-muted); margin-top: 18px; }
+    .options-list { text-align: left; margin: 20px 0; }
+    .option-item {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+      font-size: .88rem;
+    }
+    .option-item:last-child { border-bottom: 0; }
+    .option-num {
+      flex: 0 0 26px; height: 26px; border-radius: 50%;
+      background: var(--gradient); color: white; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      font-size: .78rem;
+    }
+    .option-text strong { color: var(--text-white); }
+  </style>
+</head>
+<body>
+  <div class="registro-card">
+    <div class="registro-logo">
+      <svg viewBox="90 118 220 168" fill="none">
+        <defs><linearGradient id="lg_reg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#00E5FF"/><stop offset="50%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#FF1744"/>
+        </linearGradient></defs>
+        <path d="M 128,129 Q 100,129 100,157 L 100,229 Q 100,257 128,257 L 148,257 L 136,284 L 174,257 L 272,257 Q 300,257 300,229 L 300,157 Q 300,129 272,129 Z"
+              fill="none" stroke="url(#lg_reg)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+        <text x="200" y="212" font-family="Inter,sans-serif" font-weight="900" font-size="60" fill="white" text-anchor="middle" letter-spacing="-2">MIIA</text>
+      </svg>
+    </div>
+    <h1>Crear cuenta en <span class="grad">MIIA</span></h1>
+    <p>Tu cuenta MIIA es <strong>unica para todos los productos</strong> (MIIA, MIIADT, LudoMIIA, MiiaF1). Tres formas de empezar:</p>
+
+    <div class="options-list">
+      <div class="option-item">
+        <span class="option-num">1</span>
+        <div class="option-text">
+          <strong>Contrata un producto</strong> en cualquier landing. Tu cuenta se crea automaticamente al pagar (recibis magic link en tu email).
+        </div>
+      </div>
+      <div class="option-item">
+        <span class="option-num">2</span>
+        <div class="option-text">
+          <strong>Login con Google</strong> (1 click, sin contrasena).
+        </div>
+      </div>
+      <div class="option-item">
+        <span class="option-num">3</span>
+        <div class="option-text">
+          <strong>Magic link por email</strong> (te enviamos un link, click y entras).
+        </div>
+      </div>
+    </div>
+
+    <a href="login.html" class="btn btn-primary">Continuar a Login</a>
+    <a href="index.html" class="btn btn-secondary">Ver productos primero</a>
+
+    <p class="step-label">Modelo B firma Mariano 2026-05-02 &mdash; cuenta unica, magic link, Google Login</p>
+  </div>
+</body>
+</html>

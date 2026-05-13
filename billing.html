@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA — Suscripciones</title>
+  <link rel="stylesheet" href="assets/v2-design-system.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #00E5FF; --bg-deep: #0F0F0F; --bg-card: #141414;
+      --text-white: #F1F5F9; --text-body: #94A3B8; --text-muted: #64748B;
+      --border: rgba(255,255,255,0.08);
+      --gradient: linear-gradient(135deg, #00E5FF 0%, #7C3AED 50%, #FF1744 100%);
+      --r-md: 12px; --r-lg: 16px; --r-full: 9999px;
+      --success: #10b981; --danger: #ef4444;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-deep); color: var(--text-body);
+      min-height: 100vh; padding: 40px 20px;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+    .page-header { margin-bottom: 32px; }
+    h1 {
+      font-size: 1.8rem; font-weight: 800; color: var(--text-white);
+      margin-bottom: 8px;
+    }
+    .subtitle { color: var(--text-muted); font-size: .92rem; }
+    .product-card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 20px; margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px;
+    }
+    .product-info { flex: 1; }
+    .product-name {
+      font-size: 1rem; font-weight: 700; color: var(--text-white);
+      margin-bottom: 4px;
+    }
+    .product-meta { font-size: .82rem; color: var(--text-muted); }
+    .status-badge {
+      display: inline-block; padding: 3px 10px; border-radius: var(--r-full);
+      font-size: .72rem; font-weight: 700; letter-spacing: .3px;
+    }
+    .status-active { background: rgba(16,185,129,.15); color: var(--success); }
+    .status-inactive { background: rgba(239,68,68,.12); color: var(--danger); }
+    .btn {
+      padding: 9px 18px; border-radius: var(--r-full);
+      font-weight: 600; font-size: .82rem; cursor: pointer;
+      border: 1px solid var(--border); background: transparent;
+      color: var(--text-white); font-family: inherit;
+    }
+    .btn-cancel { color: var(--danger); border-color: rgba(239,68,68,.3); }
+    .btn-cancel:hover { background: rgba(239,68,68,.1); }
+    .btn-contratar { background: var(--gradient); color: white; border: 0; }
+    .empty {
+      text-align: center; padding: 48px 24px;
+      color: var(--text-muted); font-size: .92rem;
+    }
+    .back-link {
+      display: inline-block; margin-bottom: 18px;
+      color: var(--text-muted); text-decoration: none;
+      font-size: .82rem;
+    }
+    .back-link:hover { color: var(--primary); }
+    #unauth {
+      text-align: center; padding: 60px 20px;
+      background: var(--bg-card); border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+</head>
+<body>
+  <div class="container">
+    <a href="owner-dashboard.html" class="back-link">← Volver al dashboard</a>
+    <div class="page-header">
+      <h1>Mis suscripciones</h1>
+      <p class="subtitle">Gestiona los productos MIIA activos en tu cuenta. Firma Mariano 2026-05-02.</p>
+    </div>
+
+    <div id="loading" class="empty">Cargando suscripciones…</div>
+    <div id="unauth" style="display:none;">
+      <h2 style="color:var(--text-white); font-weight:700; font-size:1.2rem; margin-bottom:10px;">Iniciá sesión</h2>
+      <p>Para ver tus suscripciones, primero entrá con tu cuenta.</p>
+      <p style="margin-top:20px;"><a href="login.html" class="btn btn-contratar">Iniciar sesión</a></p>
+    </div>
+    <div id="products" style="display:none;"></div>
+  </div>
+
+  <script>
+    const PRODUCT_LABELS = { miia: 'MIIA', miiadt: 'MIIADT', ludomiia: 'LudoMIIA', f1: 'MiiaF1' };
+    const PRODUCT_PRICE = { miia: 'Varia segun plan', miiadt: '3 USD/mes', ludomiia: '3 USD/mes', f1: '3 USD/mes' };
+
+    firebase.auth().onAuthStateChanged(async (user) => {
+      const loading = document.getElementById('loading');
+      const unauth = document.getElementById('unauth');
+      const productsDiv = document.getElementById('products');
+      if (!user) {
+        loading.style.display = 'none';
+        unauth.style.display = 'block';
+        return;
+      }
+      try {
+        const token = await user.getIdToken();
+        const r = await fetch('/api/products/status?uid=' + encodeURIComponent(user.uid), {
+          headers: { Authorization: 'Bearer ' + token },
+        });
+        if (!r.ok) throw new Error('fetch failed: ' + r.status);
+        const data = await r.json();
+        loading.style.display = 'none';
+        productsDiv.style.display = 'block';
+        renderProducts(data);
+      } catch (e) {
+        loading.textContent = 'Error cargando suscripciones: ' + e.message;
+      }
+    });
+
+    function renderProducts(map) {
+      const productsDiv = document.getElementById('products');
+      productsDiv.innerHTML = '';
+      Object.keys(PRODUCT_LABELS).forEach(key => {
+        const status = map[key] || { active: false };
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        const exp = status.expiresAt ? new Date(status.expiresAt).toLocaleDateString() : 'sin fecha';
+        const plan = status.plan || PRODUCT_PRICE[key];
+        const badge = status.active
+          ? '<span class="status-badge status-active">ACTIVO</span>'
+          : '<span class="status-badge status-inactive">INACTIVO</span>';
+        const action = status.active
+          ? '<button class="btn btn-cancel" onclick="cancelProduct(\\'' + key + '\\')">Cancelar</button>'
+          : '<a href="index.html#' + key + '" class="btn btn-contratar">Contratar</a>';
+        card.innerHTML = '<div class="product-info"><div class="product-name">' +
+          PRODUCT_LABELS[key] + ' ' + badge + '</div><div class="product-meta">' +
+          'Plan: ' + plan + (status.active ? ' &middot; Vence: ' + exp : '') +
+          '</div></div>' + action;
+        productsDiv.appendChild(card);
+      });
+    }
+
+    async function cancelProduct(product) {
+      if (!confirm('¿Cancelar tu suscripcion a ' + PRODUCT_LABELS[product] + '?')) return;
+      const user = firebase.auth().currentUser;
+      if (!user) return;
+      const token = await user.getIdToken();
+      try {
+        const r = await fetch('/api/paypal/cancel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+          body: JSON.stringify({ product, reason: 'user_requested' }),
+        });
+        if (r.ok) {
+          alert('Suscripcion cancelada.');
+          location.reload();
+        } else {
+          alert('Error: ' + r.status);
+        }
+      } catch (e) {
+        alert('Error: ' + e.message);
+      }
+    }
+  </script>
+</body>
+</html>

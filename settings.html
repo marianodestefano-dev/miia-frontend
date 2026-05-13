@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIA — Configuracion</title>
+  <link rel="stylesheet" href="assets/v2-design-system.css">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #00E5FF; --bg-deep: #0F0F0F; --bg-card: #141414;
+      --bg-input: #1A1A1A;
+      --text-white: #F1F5F9; --text-body: #94A3B8; --text-muted: #64748B;
+      --border: rgba(255,255,255,0.08);
+      --gradient: linear-gradient(135deg, #00E5FF 0%, #7C3AED 50%, #FF1744 100%);
+      --r-md: 12px; --r-lg: 16px; --r-full: 9999px;
+      --success: #10b981; --danger: #ef4444;
+    }
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg-deep); color: var(--text-body);
+      min-height: 100vh; padding: 40px 20px;
+    }
+    .container { max-width: 580px; margin: 0 auto; }
+    .back-link {
+      display: inline-block; margin-bottom: 18px;
+      color: var(--text-muted); text-decoration: none; font-size: .82rem;
+    }
+    .back-link:hover { color: var(--primary); }
+    h1 {
+      font-size: 1.8rem; font-weight: 800; color: var(--text-white);
+      margin-bottom: 8px;
+    }
+    .subtitle { color: var(--text-muted); font-size: .92rem; margin-bottom: 32px; }
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: var(--r-lg); padding: 28px; margin-bottom: 18px;
+    }
+    .card-title {
+      font-size: 1.05rem; font-weight: 700; color: var(--text-white);
+      margin-bottom: 8px;
+    }
+    .card-desc { font-size: .85rem; margin-bottom: 18px; }
+    .field { margin-bottom: 16px; }
+    label {
+      display: block; font-size: .78rem; color: var(--text-muted);
+      margin-bottom: 6px; text-transform: uppercase; letter-spacing: .5px;
+    }
+    input[type=password], input[type=email] {
+      width: 100%; padding: 12px 14px;
+      background: var(--bg-input); color: var(--text-white);
+      border: 1px solid var(--border); border-radius: var(--r-md);
+      font-family: inherit; font-size: .95rem;
+    }
+    input:focus { outline: none; border-color: var(--primary); }
+    .btn {
+      padding: 11px 22px; border-radius: var(--r-full);
+      font-weight: 700; font-size: .88rem; cursor: pointer;
+      border: 0; font-family: inherit;
+    }
+    .btn-primary { background: var(--gradient); color: white; }
+    .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+    .msg { padding: 11px 14px; border-radius: var(--r-md); font-size: .82rem; margin-top: 12px; }
+    .msg-success { background: rgba(16,185,129,.1); color: var(--success); border: 1px solid rgba(16,185,129,.25); }
+    .msg-error { background: rgba(239,68,68,.1); color: var(--danger); border: 1px solid rgba(239,68,68,.25); }
+    .user-email {
+      display: block; padding: 12px 14px;
+      background: var(--bg-input); color: var(--text-white);
+      border: 1px solid var(--border); border-radius: var(--r-md);
+      font-size: .92rem;
+    }
+    #unauth {
+      text-align: center; padding: 50px 20px;
+      background: var(--bg-card); border-radius: var(--r-lg);
+      border: 1px solid var(--border);
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js"></script>
+</head>
+<body>
+  <div class="container">
+    <a href="owner-dashboard.html" class="back-link">← Volver al dashboard</a>
+    <h1>Configuracion</h1>
+    <p class="subtitle">Gestiona tu cuenta MIIA. Firma Mariano 2026-05-02 &mdash; password opcional.</p>
+
+    <div id="unauth" style="display:none;">
+      <h2 style="color:var(--text-white); font-weight:700; margin-bottom:10px;">Iniciá sesión primero</h2>
+      <a href="login.html" class="btn btn-primary" style="margin-top:14px; display:inline-block;">Iniciar sesión</a>
+    </div>
+
+    <div id="content" style="display:none;">
+      <div class="card">
+        <div class="card-title">Tu cuenta</div>
+        <p class="card-desc">Esta es la cuenta unica que da acceso a todos los productos MIIA contratados.</p>
+        <div class="field">
+          <label>Email</label>
+          <div class="user-email" id="userEmail">cargando...</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Password (opcional)</div>
+        <p class="card-desc">Con magic link / Google Login no es necesario. Si querés un password para acceso rapido, configurarlo aqui.</p>
+        <form id="setPwForm">
+          <div class="field">
+            <label>Nueva contrasena</label>
+            <input type="password" id="newPassword" minlength="8" placeholder="Min 8 caracteres" required>
+          </div>
+          <div class="field">
+            <label>Repetir contrasena</label>
+            <input type="password" id="newPassword2" minlength="8" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Guardar contrasena</button>
+          <div id="pwMessage"></div>
+        </form>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Cerrar sesion</div>
+        <p class="card-desc">Cerra sesion en este dispositivo.</p>
+        <button class="btn btn-primary" onclick="signOut()">Cerrar sesion</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        document.getElementById('unauth').style.display = 'block';
+        return;
+      }
+      document.getElementById('content').style.display = 'block';
+      document.getElementById('userEmail').textContent = user.email || '(sin email)';
+    });
+
+    document.getElementById('setPwForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const pw1 = document.getElementById('newPassword').value;
+      const pw2 = document.getElementById('newPassword2').value;
+      const msg = document.getElementById('pwMessage');
+      msg.className = '';
+      msg.textContent = '';
+      if (pw1.length < 8) {
+        msg.className = 'msg msg-error';
+        msg.textContent = 'La contrasena debe tener al menos 8 caracteres.';
+        return;
+      }
+      if (pw1 !== pw2) {
+        msg.className = 'msg msg-error';
+        msg.textContent = 'Las contrasenas no coinciden.';
+        return;
+      }
+      const user = firebase.auth().currentUser;
+      if (!user) return;
+      try {
+        await user.updatePassword(pw1);
+        msg.className = 'msg msg-success';
+        msg.textContent = 'Contrasena actualizada. Ya podes loguear con email + password.';
+      } catch (err) {
+        msg.className = 'msg msg-error';
+        msg.textContent = 'Error: ' + err.message;
+      }
+    });
+
+    function signOut() {
+      firebase.auth().signOut().then(() => { location.href = 'login.html'; });
+    }
+  </script>
+</body>
+</html>
