@@ -3042,7 +3042,78 @@
           createLigaPanel: window.createLigaPanel,
           createEquipoPanel: window.createEquipoPanel,
           createMercadoPanel: window.createMercadoPanel,
+          createSponsorsPanel: window.createSponsorsPanel,
+          createInfraestructuraPanel: window.createInfraestructuraPanel,
+          createApuestasPanel: window.createApuestasPanel,
+          createStaffPanel: window.createStaffPanel,
           getToken: () => firebase.auth().currentUser.getIdToken(),
+          fetchSponsor: async (token) => {
+            const r = await fetch(apiBase + '/api/miiadt/v1/club/me/sponsor', { headers: { Authorization: 'Bearer ' + token } });
+            if (!r.ok) return null;
+            return r.json();
+          },
+          saveSponsor: async (sponsorId, token) => {
+            const r = await fetch(apiBase + '/api/miiadt/v1/club/me/sponsor', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ sponsorId }),
+            });
+            return r.json();
+          },
+          fetchInfraestructura: async (token) => {
+            const r = await fetch(apiBase + '/api/miiadt/v1/club/me/facilities', { headers: { Authorization: 'Bearer ' + token } });
+            if (!r.ok) return {};
+            return r.json();
+          },
+          upgradeFacility: async (facilityType, token) => {
+            const r = await fetch(apiBase + '/api/miiadt/v1/club/me/facilities/upgrade', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ facilityType }),
+            });
+            return r.json();
+          },
+          fetchBets: async (token) => {
+            const r = await fetch(apiBase + '/api/miiadt/v1/bets/me', { headers: { Authorization: 'Bearer ' + token } });
+            if (!r.ok) return [];
+            return r.json();
+          },
+          proposeBet: async (data, token) => {
+            const r = await fetch(apiBase + '/api/miiadt/v1/bets/propose', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+              body: JSON.stringify(data),
+            });
+            return r.json();
+          },
+          respondBet: async (betId, response, token) => {
+            const r = await fetch(apiBase + '/api/miiadt/v1/bets/' + betId + '/respond', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ response }),
+            });
+            return r.json();
+          },
+          fetchPayroll: async (token) => {
+            const r = await fetch(apiBase + '/api/miiadt/v1/club/me/staff/payroll', { headers: { Authorization: 'Bearer ' + token } });
+            if (!r.ok) return { payroll: 0, staffCount: 0 };
+            return r.json();
+          },
+          hireStaff: async (staffType, qualityTier, token) => {
+            const gen = await fetch(apiBase + '/api/miiadt/v1/staff/generate', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ staffType, qualityTier }),
+            });
+            const generated = await gen.json();
+            if (!generated || !generated.staffId) return { ok: false, error: 'GENERATE_FAIL' };
+            const hire = await fetch(apiBase + '/api/miiadt/v1/staff/' + generated.staffId + '/hire', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + token, 'Content-Type': 'application/json' },
+              body: JSON.stringify({ ownerId: 'me' }),
+            });
+            return hire.json();
+          },
           isOwner: true,
           fetchLeague: async (token) => {
             const r = await fetch(apiBase + '/api/miiadt/liga', { headers: { Authorization: 'Bearer ' + token } });

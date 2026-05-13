@@ -101,9 +101,63 @@
     });
     mercadoMount.appendChild(mercado.element);
 
+    // ═════════ PANELES ARQ firma Mariano 2026-05-12 21:30 COT ═════════
     const panels = { liga, equipo, mercado };
 
-    // Refresh inicial paralelo
+    // Sponsors (firma 02/05 §5)
+    const sponsorsFactory = deps && deps.createSponsorsPanel;
+    if (typeof sponsorsFactory === 'function') {
+      const sponsorsMount = mountSection(host, 'Sponsors', doc);
+      const sponsors = sponsorsFactory({
+        fetchCurrent: deps.fetchSponsor || (async () => null),
+        saveSponsor: deps.saveSponsor || (async () => ({ ok: true })),
+        getToken: deps.getToken || (async () => ''),
+      });
+      sponsorsMount.appendChild(sponsors.element);
+      panels.sponsors = sponsors;
+    }
+
+    // Infraestructura (firma 02/05 §8 + v2/v3)
+    const infraFactory = deps && deps.createInfraestructuraPanel;
+    if (typeof infraFactory === 'function') {
+      const infraMount = mountSection(host, 'Infraestructura', doc);
+      const infra = infraFactory({
+        fetchLevels: deps.fetchInfraestructura || (async () => ({})),
+        upgrade: deps.upgradeFacility || (async () => ({ ok: true })),
+        getToken: deps.getToken || (async () => ''),
+      });
+      infraMount.appendChild(infra.element);
+      panels.infraestructura = infra;
+    }
+
+    // Apuestas P2P (firma 02/05 §9 + v3)
+    const apuestasFactory = deps && deps.createApuestasPanel;
+    if (typeof apuestasFactory === 'function') {
+      const apuestasMount = mountSection(host, 'Apuestas Versus', doc);
+      const apuestas = apuestasFactory({
+        fetchBets: deps.fetchBets || (async () => []),
+        propose: deps.proposeBet || (async () => ({ ok: true })),
+        respond: deps.respondBet || (async () => ({ ok: true })),
+        getToken: deps.getToken || (async () => ''),
+      });
+      apuestasMount.appendChild(apuestas.element);
+      panels.apuestas = apuestas;
+    }
+
+    // Staff (IDEA #051 §10 v3)
+    const staffFactory = deps && deps.createStaffPanel;
+    if (typeof staffFactory === 'function') {
+      const staffMount = mountSection(host, 'Staff', doc);
+      const staff = staffFactory({
+        fetchPayroll: deps.fetchPayroll || (async () => ({ payroll: 0, staffCount: 0 })),
+        generateAndHire: deps.hireStaff || (async () => ({ ok: true })),
+        getToken: deps.getToken || (async () => ''),
+      });
+      staffMount.appendChild(staff.element);
+      panels.staff = staff;
+    }
+
+    // Refresh inicial paralelo (3 viejos + 4 nuevos opcionales)
     const refreshes = [];
     for (const key of Object.keys(panels)) {
       const p = panels[key];
