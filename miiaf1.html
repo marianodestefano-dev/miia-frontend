@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MIIAF1 — Dashboard live de Formula 1 | MIIA</title>
+  <meta name="description" content="MIIAF1 es el dashboard live de F1 dentro de MIIA. Poné la carrera en TV y abrí MIIAF1 para ver el circuito real con los puntos de colores corriendo, los tiempos de cada piloto, comandos por WhatsApp.">
+  <meta property="og:title" content="MIIAF1 — Dashboard live de Formula 1">
+  <meta property="og:description" content="Mirá la carrera por TV y MIIAF1 te muestra el circuito real con los autos moviéndose en tiempo real. $3 USD/mes.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/v2-design-system.css">
+  <style>
+    .landing-hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 24px 48px;
+      text-align: center;
+    }
+    .landing-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #E1060022, #FF174422);
+      border: 1px solid #E1060055;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .landing-title {
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 0 0 16px;
+      background: linear-gradient(135deg, #E10600 0%, #FF1744 50%, #FFC400 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .landing-subtitle {
+      font-size: clamp(18px, 2.4vw, 22px);
+      color: var(--text-secondary, #ccc);
+      max-width: 700px;
+      margin: 0 auto 36px;
+      line-height: 1.5;
+    }
+    .landing-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+    .landing-features {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .feat-card {
+      padding: 24px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .feat-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .feat-card p {
+      margin: 0;
+      color: var(--text-secondary, #aaa);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .feat-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .landing-screenshot {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px;
+    }
+    .landing-screenshot svg {
+      width: 100%;
+      max-width: 800px;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 229, 255, 0.15);
+    }
+    .landing-pricing {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .price-amount {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--text-primary, #fff);
+    }
+    .price-period {
+      font-size: 18px;
+      color: var(--text-secondary, #aaa);
+    }
+    footer.landing-footer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-secondary, #888);
+      font-size: 13px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    footer.landing-footer a {
+      color: var(--accent-cyan, #00E5FF);
+      text-decoration: none;
+      margin: 0 8px;
+    }
+  </style>
+</head>
+<body class="miia-body">
+  <main class="miia-main">
+    <section class="landing-hero">
+      <div class="landing-badge">🏁 Add-on de MIIA · $3 USD/mes</div>
+      <h1 class="landing-title">MIIAF1</h1>
+      <p class="landing-subtitle">
+        Poné la carrera en la TV y abrí MIIAF1. Ves el circuito <strong>real</strong>,
+        los puntos de colores corriendo alrededor en tiempo real, los tiempos de cada
+        piloto. Hacé click en un punto y MIIA te dice quién es.
+      </p>
+      <div class="landing-cta">
+        <button id="btn-checkout" class="btn btn-primary">
+          Contratar MIIAF1 — $3 USD/mes
+        </button>
+        <button id="btn-google" class="btn btn-secondary">
+          Continuar con Google
+        </button>
+      </div>
+    </section>
+
+    <section class="landing-screenshot">
+      <img src="/api/f1/live/circuit/monaco" alt="Monaco circuit live preview" onerror="this.style.display='none'" />
+    </section>
+
+    <section class="landing-features">
+      <div class="feat-card">
+        <div class="feat-icon">🏎️</div>
+        <h3>Circuito real en tiempo real</h3>
+        <p>Trazados verificados de los 24 GP del calendario. Puntos de colores moviéndose con los datos GPS oficiales (vía OpenF1). Update cada 1-2 segundos durante carrera.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⏱️</div>
+        <h3>Tiempos por vuelta</h3>
+        <p>Vuelta rápida, gap al líder, intervalo al de delante. Estado de neumáticos, paradas en pits. Todo desde el feed live oficial.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">⭐</div>
+        <h3>Tu piloto favorito</h3>
+        <p>Adoptá un piloto y MIIA te avisa por WhatsApp cuando hace algo importante: pole, vuelta rápida, posición ganada, DNF.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">💬</div>
+        <h3>Comandos WhatsApp</h3>
+        <p><code>/f1 posiciones</code>, <code>/f1 mipiloto</code>, <code>/f1 siguiente</code>, <code>/f1 circuito</code>. Pedile a MIIA lo que necesites sin salir de la app.</p>
+      </div>
+    </section>
+
+    <section class="landing-pricing">
+      <div class="price-amount">$3 USD<span class="price-period"> / mes</span></div>
+      <p>Suscripción mensual. Cancelá cuando quieras. MercadoPago (LATAM) o PayPal.</p>
+      <div class="landing-cta">
+        <button id="btn-checkout-bottom" class="btn btn-primary">
+          Contratar ahora
+        </button>
+      </div>
+    </section>
+
+    <footer class="landing-footer">
+      <p>
+        <a href="/">MIIA</a> ·
+        <a href="/features.html">Features</a> ·
+        <a href="/about.html">Sobre nosotros</a> ·
+        <a href="/cookies.html">Cookies</a>
+      </p>
+      <p>© 2026 MIIA · MIIAF1 es un add-on de MIIA · Datos F1 cortesía OpenF1.org y formula1.com</p>
+    </footer>
+  </main>
+
+  <script src="/assets/landing-checkout.js"></script>
+  <script>
+    (function () {
+      var setup = window.MIIA_landing && window.MIIA_landing.setupLanding;
+      if (!setup) return;
+      setup({
+        product: 'miiaf1',
+        checkoutEndpoint: '/api/f1/billing/checkout',
+        googleClientId: window.MIIA_GOOGLE_CLIENT_ID || '',
+        dashboardUrl: '/owner-dashboard.html?addon=miiaf1',
+      });
+      // Botón "Contratar ahora" en la sección pricing → mismo handler
+      var bottomBtn = document.getElementById('btn-checkout-bottom');
+      var topBtn = document.getElementById('btn-checkout');
+      if (bottomBtn && topBtn) {
+        bottomBtn.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          topBtn.click();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

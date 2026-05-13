@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LudoMIIA — Asistente IA para juegos de mesa físicos | MIIA</title>
+  <meta name="description" content="LudoMIIA es el asistente IA de MIIA para jugar juegos de mesa físicos. Reglas en vivo, MIIA como rival opcional, OCR de cartas. 100% presencial. $3 USD/mes.">
+  <meta property="og:title" content="LudoMIIA — Asistente IA para juegos de mesa físicos">
+  <meta property="og:description" content="Jugá Catan, Fallen Land, Marvel United y más con MIIA. Reglas en vivo, foto de cartas, MIIA como rival. 100% presencial. $3 USD/mes.">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/assets/v2-design-system.css">
+  <style>
+    .landing-hero {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 24px 48px;
+      text-align: center;
+    }
+    .landing-badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #00E5FF22, #7C3AED22);
+      border: 1px solid #00E5FF55;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .landing-title {
+      font-size: clamp(36px, 6vw, 56px);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin: 0 0 16px;
+      background: linear-gradient(135deg, #00E5FF 0%, #7C3AED 50%, #FF1744 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+    .landing-subtitle {
+      font-size: clamp(18px, 2.4vw, 22px);
+      color: var(--text-secondary, #ccc);
+      max-width: 700px;
+      margin: 0 auto 36px;
+      line-height: 1.5;
+    }
+    .landing-cta {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 32px;
+    }
+    .landing-features {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    .feat-card {
+      padding: 24px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .feat-card h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .feat-card p {
+      margin: 0;
+      color: var(--text-secondary, #aaa);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .feat-icon {
+      font-size: 28px;
+      margin-bottom: 12px;
+    }
+    .landing-presencial {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-secondary, #aaa);
+    }
+    .landing-presencial strong {
+      color: var(--text-primary, #fff);
+    }
+    .landing-pricing {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .price-amount {
+      font-size: 48px;
+      font-weight: 800;
+      color: var(--text-primary, #fff);
+    }
+    .price-period {
+      font-size: 18px;
+      color: var(--text-secondary, #aaa);
+    }
+    footer.landing-footer {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 24px;
+      text-align: center;
+      color: var(--text-secondary, #888);
+      font-size: 13px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    footer.landing-footer a {
+      color: var(--accent-cyan, #00E5FF);
+      text-decoration: none;
+      margin: 0 8px;
+    }
+  </style>
+</head>
+<body class="miia-body">
+  <main class="miia-main">
+    <section class="landing-hero">
+      <div class="landing-badge">🎲 Add-on de MIIA · $3 USD/mes</div>
+      <h1 class="landing-title">LudoMIIA</h1>
+      <p class="landing-subtitle">
+        El asistente IA para tus juegos de mesa <strong>físicos</strong>.
+        Aprendé reglas en vivo, jugá contra MIIA como rival, o mostrale las cartas
+        para que te diga qué tenés en mano.
+      </p>
+      <div class="landing-cta">
+        <button id="btn-checkout" class="btn btn-primary">
+          Contratar LudoMIIA — $3 USD/mes
+        </button>
+        <button id="btn-google" class="btn btn-secondary">
+          Continuar con Google
+        </button>
+      </div>
+    </section>
+
+    <section class="landing-features">
+      <div class="feat-card">
+        <div class="feat-icon">📜</div>
+        <h3>Reglas en vivo</h3>
+        <p>¿Se puede construir una ciudad en una casilla de desierto? MIIA te responde al instante con la regla exacta del juego.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">🤖</div>
+        <h3>MIIA como rival</h3>
+        <p>Jugás solo o querés un jugador extra? MIIA juega como "Nova", "Zara", "Max" o otra personalidad. Tira dados, hace movimientos, te complica.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📸</div>
+        <h3>Foto de cartas</h3>
+        <p>Sacale foto a tus cartas y MIIA te dice qué tenés, sugiere jugadas, te recomienda recursos a construir.</p>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">📚</div>
+        <h3>40+ juegos curados</h3>
+        <p>Fallen Land, Marvel United, Zombicide, Game of Thrones, Dead of Winter, Stranger Things, y muchos más. Ampliable via BoardGameGeek.</p>
+      </div>
+    </section>
+
+    <section class="landing-presencial">
+      <p>
+        <strong>100% presencial.</strong> LudoMIIA es para jugar con MIIA y otros humanos en el mismo lugar.
+        No es multiplayer remoto, no es Tabletop Simulator, no es BGA.
+        Vos tenés el juego físico en la mesa, MIIA te asiste por WhatsApp o por la web.
+      </p>
+    </section>
+
+    <section class="landing-pricing">
+      <div class="price-amount">$3 USD<span class="price-period"> / mes</span></div>
+      <p>Suscripción mensual. Cancelá cuando quieras. MercadoPago (LATAM) o PayPal.</p>
+      <div class="landing-cta">
+        <button id="btn-checkout-bottom" class="btn btn-primary">
+          Contratar ahora
+        </button>
+      </div>
+    </section>
+
+    <footer class="landing-footer">
+      <p>
+        <a href="/">MIIA</a> ·
+        <a href="/features.html">Features</a> ·
+        <a href="/about.html">Sobre nosotros</a> ·
+        <a href="/cookies.html">Cookies</a>
+      </p>
+      <p>© 2026 MIIA · LudoMIIA es un add-on de MIIA</p>
+    </footer>
+  </main>
+
+  <script src="/assets/landing-checkout.js"></script>
+  <script>
+    (function () {
+      var setup = window.MIIA_landing && window.MIIA_landing.setupLanding;
+      if (!setup) return;
+      setup({
+        product: 'ludomiia',
+        checkoutEndpoint: '/api/ludomiia/checkout',
+        googleClientId: window.MIIA_GOOGLE_CLIENT_ID || '',
+        dashboardUrl: '/owner-dashboard.html?addon=ludomiia',
+      });
+      // Botón "Contratar ahora" en la sección pricing → mismo handler
+      var bottomBtn = document.getElementById('btn-checkout-bottom');
+      var topBtn = document.getElementById('btn-checkout');
+      if (bottomBtn && topBtn) {
+        bottomBtn.addEventListener('click', function (ev) {
+          ev.preventDefault();
+          topBtn.click();
+        });
+      }
+    })();
+  </script>
+</body>
+</html>

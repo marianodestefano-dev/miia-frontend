@@ -8,7 +8,7 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'lcov'],
-      include: ['assets/ludomiia-panels/**/*.js', 'assets/f1-panels/**/*.js', 'assets/miiadt-panels/**/*.js', 'assets/c5_post_checkout.js'],
+      include: ['assets/ludomiia-panels/**/*.js', 'assets/f1-panels/**/*.js', 'assets/miiadt-panels/**/*.js', 'assets/c5_post_checkout.js', 'assets/landing-checkout.js'],
       exclude: ['**/*.config.js', '**/__tests__/**', '**/node_modules/**'],
       thresholds: {
         lines: 100,
